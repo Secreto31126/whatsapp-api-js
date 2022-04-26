@@ -15,9 +15,8 @@ Get the API token, either a temporal or a permanent one.
 Now, you can install the module using the following command:
 
 ```
-npm install whatsapp-js
+npm install whatsapp-api-js
 ```
-(Just joking, the code isn't available on npm yet, I'm working on that)
 
 
 Now you can write code like this:
