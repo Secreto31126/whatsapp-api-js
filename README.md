@@ -1,4 +1,4 @@
-# whatsapp-js
+# whatsapp-api-js
 A Whatsapp Official API helper for Node.js (WIP)
 
 ## Disclaimer
