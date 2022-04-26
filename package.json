@@ -1,0 +1,18 @@
+{
+  "name": "whatsapp-js",
+  "version": "0.0.1",
+  "description": "A Whatsapp Official API helper for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --inspect test.js",
+    "debug": "node --inspect index.js"
+  },
+  "keywords": [
+    "whatsapp"
+  ],
+  "author": "Secreto31126",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
