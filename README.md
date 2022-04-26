@@ -79,4 +79,4 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 The code still doesn't support 100% of the functionalities, like interactive and template messages,
 but I am working on adding them ASAP.
 
-Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app.script.
+Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.
