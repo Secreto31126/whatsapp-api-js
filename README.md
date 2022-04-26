@@ -12,19 +12,18 @@ First, you need a Facebook app with the Whatsapp API activated.
 You can create your first app following [this steps](https://developers.facebook.com/docs/whatsapp/getting-started/signing-up).
 Get the API token, either a temporal or a permanent one.
 
-Now, you can install the module using the following command:
+In your server you can install the module using npm:
 
 ```
 npm install whatsapp-api-js
 ```
 
-
 Now you can write code like this:
 
 ```js
-const WhatsAppAPI = require("whatsapp-js").WhatsApp;
-const Handler = require("whatsapp-js").Handlers;
-const { name, phone, birthday } = require("whatsapp-js").Contacts;
+const WhatsAppAPI = require("whatsapp-api-js").WhatsApp;
+const Handler = require("whatsapp-api-js").Handlers;
+const { name, phone, birthday } = require("whatsapp-api-js").Contacts;
 
 const Token = "YOUR_TOKEN";
 
@@ -65,7 +64,7 @@ While setting up, you will be asked a Verify Token. This can be any string you w
 The app also has a GET wizard for the webhook authentication:
 
 ```js
-const Handler = require("whatsapp-js").Handlers;
+const Handler = require("whatsapp-api-js").Handlers;
 
 // Assuming get is called on a GET request to your server
 function get(e) {
