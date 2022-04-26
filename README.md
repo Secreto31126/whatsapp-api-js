@@ -46,7 +46,7 @@ function onMessage(phoneID, phone, message, name, raw_data) {
 
     if (message.type === "video") Whatsapp.sendVideoMessage(phoneID, phone, "a_video_url_goes_here");
 
-    if (message.type === "sticker") Whatsapp.sendStickerMessage(phoneID, phone, message.sticker.id);
+    if (message.type === "sticker") Whatsapp.sendStickerMessage(phoneID, phone, "a_sticker_url_goes_here");
 
     if (message.type === "audio") Whatsapp.sendAudioMessage(phoneID, phone, message.audio.id, true);
     

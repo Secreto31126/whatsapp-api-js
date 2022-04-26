@@ -1,6 +1,7 @@
 class addresses {
     /**
-     * Builds an address object for a contact
+     * Builds an address object for a contact.
+     * A contact can contain multiple addresses.
      * 
      * @param {String} country Full country name
      * @param {String} country_code Two-letter country abbreviation
@@ -25,9 +26,10 @@ class birthday {
     /**
      * Builds a birthday object for a contact
      * 
-     * @param {String} year Year of birth
-     * @param {String} month Month of birth
-     * @param {String} day Day of birth
+     * @param {String} year Year of birth (YYYY)
+     * @param {String} month Month of birth (MM)
+     * @param {String} day Day of birth (DD)
+     * @throws {Error} If the year, month, or day don't have a valid length
      */
     constructor(year, month, day) {
         if (year.length !== 4) throw new Error("Year must be 4 digits");
@@ -39,7 +41,8 @@ class birthday {
 
 class emails {
     /**
-     * Builds an email object for a contact
+     * Builds an email object for a contact.
+     * A contact can contain multiple emails.
      * 
      * @param {String} email Email address
      * @param {String} type Email type. Standard Values: HOME, WORK
@@ -52,7 +55,8 @@ class emails {
 
 class name {
     /**
-     * Builds a name object for a contact, required for the contact
+     * Builds a name object for a contact, required for contacts.
+     * The object requires a formatted_name and at least another property.
      * 
      * @param {String} formatted_name Full name, as it normally appears
      * @param {String} first_name First name
@@ -60,6 +64,8 @@ class name {
      * @param {String} middle_name Middle name
      * @param {String} suffix Name suffix
      * @param {String} prefix Name prefix
+     * @throws {Error} If formatted_name is not defined
+     * @throws {Error} If no other component apart from formattd_name is defined
      */
     constructor(formatted_name, first_name, last_name, middle_name, suffix, prefix) {
         if (!formatted_name) throw new Error("Name must have a formatted_name");
@@ -92,9 +98,10 @@ class org {
 
 class phones {
     /**
-     * Builds a phone object for a contact
+     * Builds a phone object for a contact.
+     * A contact can contain multiple phones.
      * 
-     * @param {String} number Phone number
+     * @param {String} number Phone number, automatically populated with the wa_id value as a formatted phone number
      * @param {String} type Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
      * @param {String} wa_id WhatsApp ID. If present, number will be ignored. Usually it's the numeric part of the phone number
      */
@@ -107,7 +114,8 @@ class phones {
 
 class urls {
     /**
-     * Builds a url object for a contact
+     * Builds a url object for a contact.
+     * A contact can contain multiple urls.
      * 
      * @param {String} url URL
      * @param {String} type URL type. Standard Values: HOME, WORK

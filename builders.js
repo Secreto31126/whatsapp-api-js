@@ -1,8 +1,8 @@
 /**
- * Turns the contacts components into something the API can understand
+ * Create an API compatible contacts element
  * 
- * @param  {...Array} contactsList Array of arrays of contact components
- * @returns {Object} The contacts objects, each contact contained in Object.contacts array
+ * @param {Array} contactsList Array of arrays of contact components
+ * @returns {Object} The API compatible contacts objects
  */
 function contacts(contactsList) {
     const contacts = [];
@@ -40,9 +40,7 @@ function contacts(contactsList) {
  * @param {Object} header The header of the message
  * @param {String} footer The footer of the message
  */
-function interactive(type, action, body, header = undefined, footer = undefined) {
-
-}
+// function interactive(type, action, body, header = undefined, footer = undefined) {}
 
 // function action(type, button, buttons, sections) {
 //     return {
@@ -68,7 +66,16 @@ function interactive(type, action, body, header = undefined, footer = undefined)
 //     });
 // }
 
-function location(longitude, latitude, name = undefined, address = undefined) {
+/**
+ * Create an API compatible location element
+ * 
+ * @param {Number} longitude
+ * @param {Number} latitude
+ * @param {String} name
+ * @param {String} address
+ * @returns {Object} The API compatible location object
+ */
+function location(longitude, latitude, name, address) {
     const location = {
         longitude,
         latitude
@@ -80,7 +87,17 @@ function location(longitude, latitude, name = undefined, address = undefined) {
     };
 }
 
-function media(type, media, isItAnID = false, caption = undefined, filename = undefined) {
+/**
+ * Create an API compatible media element
+ * 
+ * @param {String} type The type of media, can be either image, audio, video, document, sticker
+ * @param {String} media The media's link or id
+ * @param {Boolean} isItAnID Whether media is an id (true) or a link (false, default). Videos and stickers must use links.
+ * @param {String} caption Describes the specified document or image media. Do not use with audio media.
+ * @param {String} filename Describes the filename for the specific document. Use only with document media
+ * @returns {Object} The API compatible media object
+ */
+function media(type, media, isItAnID = false, caption, filename) {
     const object = {};
     if (isItAnID) object.id = media; else object.link = media;
     if (caption) object.caption = caption;
@@ -90,6 +107,13 @@ function media(type, media, isItAnID = false, caption = undefined, filename = un
     };
 }
 
+/**
+ * Create an API compatible text element
+ * 
+ * @param {String} body The text of the text message which can contain URLs which begin with http:// or https:// and formatting
+ * @param {Boolean} preview_url Set this field to true if you want to include a URL preview box. Defaults to false.
+ * @returns {Object} The API compatible text object
+ */
 function text(body, preview_url = false) {
     return {
         text: JSON.stringify({

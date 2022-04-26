@@ -27,13 +27,13 @@ function get(params, verify_token) {
 }
 
 /**
- * POST helper, must be called inside the doPost function of your code
- * When setting up the webhook, only subscribe to messages
+ * POST helper, must be called inside the post function of your code.
+ * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
  * 
  * @param {Object} data The post data sent by Whatsapp, already parsed to object
  * @param {Function} callback The function to be called if the post request is valid. The callback is called with the bot's phoneID {String}, the user's phone number {String}, the messages object {Object}, the username {String}, and last the raw data from the API {Object}
- * @returns {Number} 200, it's the expected http response code
- * @throws {Number} 400 if the post request isn't valid
+ * @returns {Number} 200, it's the expected http/s response code
+ * @throws {Number} 400 if the POST request isn't valid
  */
 function post(data, callback) {
     // Validate the webhook
@@ -58,5 +58,4 @@ function post(data, callback) {
     }
 }
 
-exports.get = get;
-exports.post = post;
+exports.handlers = { get, post };
