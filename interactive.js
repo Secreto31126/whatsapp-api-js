@@ -64,7 +64,7 @@ class Header {
      * Builds a header object for an interactive message
      * 
      * @param {String} type The header type you would like to use. Possible values: "text", "image", "video" or "document"
-     * @param {Object} param The message object for the header. If type is text, it must be built with the text module, else it must be built with the media module of the same type.
+     * @param {(Document|Image|Text|Video)} param The message object for the header. If type is text, it must be built with the text module, else it must be built with the media module of the same type.
      */
     constructor(type, param) {
         if (!["text", "video", "image", "document"].includes(type)) throw new Error("Header must have a type object, either text, video, image or document");
