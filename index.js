@@ -1,4 +1,4 @@
-const Fetch = require('./fetch').fetch;
+const fetch = require('./fetch').fetch;
 
 class WhatsAppAPI {
     /**
@@ -19,20 +19,22 @@ class WhatsAppAPI {
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @returns {Promise} The fetch promise
-     */
+     */ 
     sendMessage(phoneID, to, object) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
-        return Fetch.messages(this.token, this.v, phoneID, to, object);
+        if (!object._) throw new Error("There has been a breaking update in whatsapp-api-js@0.0.4 and @0.1.0, please check the documentation for more information on how to use the new version, or downgrade using 'npm i whatsapp-api-js@0.0.3'. Sorry for any inconvenience :/");
+        return fetch.messages(this.token, this.v, phoneID, to, object);
     }
 }
 
 module.exports = {
-    WhatsApp: WhatsAppAPI,
-    Handlers: require('./requests').handlers,
+    WhatsAppAPI,
+    Handlers: require('./requests'),
     Types: {
         Contacts: require('./types/contacts'),
+        Interactive: require('./types/interactive'),
         Location: require('./types/location'),
         Media: require('./types/media'),
         Text: require('./types/text'),

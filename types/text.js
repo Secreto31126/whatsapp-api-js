@@ -10,6 +10,7 @@ class Text {
         if (body.length > 1024) throw new Error("Text body must be less than 1024 characters");
         this.body = body;
         if (preview_url) this.preview_url = preview_url;
+        this._ = "text";
     }
 }
 

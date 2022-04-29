@@ -11,6 +11,7 @@ class Audio {
     constructor(audio, isItAnID = false) {
         if (!audio) throw new Error("Audio must have an audio link or id");
         this[isItAnID ? "id" : "link"] = audio;
+        this._ = "audio";
     }
 }
 
@@ -31,6 +32,7 @@ class Document {
         this[isItAnID ? "id" : "link"] = document;
         if (caption) this.caption = caption;
         if (filename) this.filename = filename;
+        this._ = "document";
     }
 }
 
@@ -49,6 +51,7 @@ class Image {
         if (!image) throw new Error("Image must have an image link or id");
         this[isItAnID ? "id" : "link"] = image;
         if (caption) this.caption = caption;
+        this._ = "image";
     }
 }
 
@@ -64,6 +67,7 @@ class Sticker {
     constructor(sticker) {
         if (!sticker) throw new Error("Sticker must have a sticker link");
         this.sticker = sticker;
+        this._ = "sticker";
     }
 }
 
@@ -79,6 +83,7 @@ class Video {
     constructor(video) {
         if (!video) throw new Error("Video must have a video link");
         this.video = video;
+        this._ = "video";
     }
 }
 

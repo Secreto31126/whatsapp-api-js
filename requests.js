@@ -49,7 +49,7 @@ function post(data, callback) {
 
         const message = value.messages[0];
 
-        callback(phoneID, phone, message, name, data);
+        callback(phoneID, phone, id, message, name, data);
 
         return 200;
     } else {
@@ -58,4 +58,4 @@ function post(data, callback) {
     }
 }
 
-exports.handlers = { get, post };
+module.exports = { get, post };

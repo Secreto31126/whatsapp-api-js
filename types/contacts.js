@@ -2,7 +2,7 @@ class Contacts {
     /**
      * Create a Contacts object for the API
      * 
-     * @param {...Array} contact Array of contact's components, built using the contact's builder module. They can be: addresses, birthday, emails, name, org, phones and urls.
+     * @param {...Array} contact Array of contact's components, built using the contact's builder module. They can be: Address, Birthday, Email, Name, Organization, Phone and Url.
      */
     constructor(...contact) {
         if (!contact.length) throw new Error("Contacts must have at least one contact");
@@ -13,7 +13,8 @@ class Contacts {
             const contact = {};
 
             for (const component of components) {
-                const name = component.constructor.name.toLowerCase();
+                const name = component._;
+                delete component._;
 
                 if (name === "birthday") contact.birthday = component.birthday;
                 else if (name === "name") contact.name = component;
@@ -25,16 +26,18 @@ class Contacts {
                 }
             }
 
-            if (!contact.name) throw new Error("Contact must have a name object");
+            if (!contact.name) throw new Error("Contact must have a name component");
             this.contacts.push(contact);
         }
+
+        this._ = "contacts";
     }
 }
 
 /**
  * Contacts Component
  */
-class Addresses {
+class Address {
     /**
      * Builds an address object for a contact.
      * A contact can contain multiple addresses.
@@ -55,6 +58,7 @@ class Addresses {
         if (street) this.street = street;
         if (zip) this.zip = zip;
         if (type) this.type = type;
+        this._ = "addresses";
     }
 }
 
@@ -75,13 +79,14 @@ class Birthday {
         if (month.length !== 2) throw new Error("Month must be 2 digits");
         if (day.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
+        this._ = "birthday";
     }
 }
 
 /**
  * Contacts Component
  */
-class Emails {
+class Email {
     /**
      * Builds an email object for a contact.
      * A contact can contain multiple emails.
@@ -92,6 +97,7 @@ class Emails {
     constructor(email, type) {
         if (email) this.email = email;
         if (type) this.type = type;
+        this._ = "emails";
     }
 }
 
@@ -123,13 +129,14 @@ class Name {
         if (prefix) this.prefix = prefix;
 
         if (Object.keys(this).length < 2) throw new Error("Name must have at least one of the following: first_name, last_name, middle_name, prefix, suffix");
+        this._ = "name";
     }
 }
 
 /**
  * Contacts Component
  */
-class Org {
+class Organization {
     /**
      * Builds an organization object for a contact
      * 
@@ -141,13 +148,14 @@ class Org {
         if (company) this.company = company;
         if (department) this.department = department;
         if (title) this.title = title;
+        this._ = "org";
     }
 }
 
 /**
  * Contacts Component
  */
-class Phones {
+class Phone {
     /**
      * Builds a phone object for a contact.
      * A contact can contain multiple phones.
@@ -160,15 +168,16 @@ class Phones {
         if (phone && !wa_id) this.phone = phone;
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
+        this._ = "phones";
     }
 }
 
 /**
  * Contacts Component
  */
-class Urls {
+class Url {
     /**
-     * Builds a url object for a contact.
+     * Builds an url object for a contact.
      * A contact can contain multiple urls.
      * 
      * @param {String} url URL
@@ -177,7 +186,8 @@ class Urls {
     constructor(url, type) {
         if (url) this.url = url;
         if (type) this.type = type;
+        this._ = "urls";
     }
 }
 
-module.exports = { Contacts, Addresses, Birthday, Emails, Name, Org, Phones, Urls };
+module.exports = { Contacts, Address, Birthday, Email, Name, Organization, Phone, Url };

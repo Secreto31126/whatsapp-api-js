@@ -14,6 +14,7 @@ class Location {
         this.latitude = latitude;
         if (name) this.name = name;
         if (address) this.address = address;
+        this._ = "location";
     }
 }
 

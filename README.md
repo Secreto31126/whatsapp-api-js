@@ -23,10 +23,8 @@ npm install whatsapp-api-js
 Now you can write code like this:
 
 ```js
-const WhatsAppAPI = require("whatsapp-api-js").WhatsApp;
-const Handler = require("whatsapp-api-js").Handlers;
+const { WhatsAppAPI, Handlers } = require("whatsapp-api-js");
 const { Text, Media, Contacts } = require("whatsapp-api-js").Types;
-const { Name, Phones, Birthday } = Contacts;
 
 const Token = "YOUR_TOKEN";
 
@@ -35,7 +33,7 @@ const Whatsapp = new WhatsAppAPI(Token);
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The Handlers work with any middleware, as long as you pass the correct data
-    return Handler.post(JSON.parse(e.data), onMessage);
+    return Handlers.post(JSON.parse(e.data), onMessage);
 }
 
 function onMessage(phoneID, phone, message, name, raw_data) {
@@ -45,11 +43,18 @@ function onMessage(phoneID, phone, message, name, raw_data) {
 
     if (message.type === "document") Whatsapp.sendMessage(phoneID, phone, new Media.Document(message.document.id, true, undefined, "Our document"));
 
-    if (message.type === "contacts") Whatsapp.sendMessage(phoneID, phone, new Contacts.Contacts([
-        new Name(name, "First name", "Last name"),
-        new Phones(phone),
-        new Birthday("2022", "04", "25"),
-    ]));
+    if (message.type === "contacts") Whatsapp.sendMessage(phoneID, phone, new Contacts.Contacts(
+        [
+            new Contacts.Name(name, "First name", "Last name"),
+            new Contacts.Phone(phone),
+            new Contacts.Birthday("2022", "04", "25"),
+        ],
+        [
+            new Contacts.Name("John", "First name", "Last name"),
+            new Contacts.Organization("Company", "Department", "Title"),
+            new Contacts.Url("https://www.google.com", "WORK"),
+        ]
+    ));
 }
 ```
 
@@ -59,12 +64,12 @@ While setting up, you will be asked a Verify Token. This can be any string you w
 The app also has a GET wizard for the webhook authentication:
 
 ```js
-const Handler = require("whatsapp-api-js").Handlers;
+const { Handlers } = require("whatsapp-api-js");
 
 // Assuming get is called on a GET request to your server
 function get(e) {
     // The Handlers work with any middleware, as long as you pass the correct data
-    return Handler.get(JSON.parse(e.params), "your_verify_token");
+    return Handlers.get(JSON.parse(e.params), "your_verify_token");
 }
 ```
 
