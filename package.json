@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Whatsapp Official API helper for Node.js",
   "main": "index.js",
   "scripts": {

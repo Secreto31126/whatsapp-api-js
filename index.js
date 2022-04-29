@@ -32,9 +32,9 @@ module.exports = {
     WhatsApp: WhatsAppAPI,
     Handlers: require('./requests').handlers,
     Types: {
-        Contacts: require('./contacts'),
-        Location: require('./location'),
-        Media: require('./media'),
-        Text: require('./text'),
+        Contacts: require('./types/contacts'),
+        Location: require('./types/location'),
+        Media: require('./types/media'),
+        Text: require('./types/text'),
     }
 };

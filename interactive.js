@@ -22,7 +22,9 @@
 //     };
 // }
 
-class Interactive {}
+class Interactive {
+    constructor(type, params) {}
+}
 
 /**
  * Interactive Component
@@ -69,7 +71,7 @@ class Header {
     constructor(type, param) {
         if (!["text", "video", "image", "document"].includes(type)) throw new Error("Header must have a type object, either text, video, image or document");
         if (!param) throw new Error(`Header must have a ${type} media object, built using the ${type}'s builder module`);
-        if (param.constructor.name !== type) throw new Error(`Expected a ${type} object as param, but recieved a ${param.constructor.name} one`);
+        if (param.constructor.name.toLowerCase() !== type) throw new Error(`Expected a ${type} object as param, but recieved a ${param.constructor.name} one`);
         this.type = type;
         this.param = param;
     }
