@@ -1,4 +1,40 @@
-class addresses {
+class Contacts {
+    /**
+     * Create a Contacts object for the API
+     * 
+     * @param {...Array} contact Array of contact's components, built using the contact's builder module. They can be: addresses, birthday, emails, name, org, phones and urls.
+     */
+    constructor(...contact) {
+        if (!contact.length) throw new Error("Contacts must have at least one contact");
+
+        this.contacts = [];
+
+        for (const components of contact) {
+            const contact = {};
+
+            for (const component of components) {
+                const name = component.constructor.name.toLowerCase();
+
+                if (name === "birthday") contact.birthday = component.birthday;
+                else if (name === "name") contact.name = component;
+                else if (name === "org") contact.org = component;
+
+                else {
+                    if (!contact[name]) contact[name] = [];
+                    contact[name].push(component);
+                }
+            }
+
+            if (!contact.name) throw new Error("Contact must have a name object");
+            this.contacts.push(contact);
+        }
+    }
+}
+
+/**
+ * Contacts Component
+ */
+class Addresses {
     /**
      * Builds an address object for a contact.
      * A contact can contain multiple addresses.
@@ -8,7 +44,7 @@ class addresses {
      * @param {String} state State abbreviation
      * @param {String} city City name
      * @param {String} street Street number and name
-     * @param {(String|Number)} zip ZIP code
+     * @param {String} zip ZIP code
      * @param {String} type Address type. Standard Values: HOME, WORK
      */
     constructor(country, country_code, state, city, street, zip, type) {
@@ -22,7 +58,10 @@ class addresses {
     }
 }
 
-class birthday {
+/**
+ * Contacts Component
+ */
+class Birthday {
     /**
      * Builds a birthday object for a contact
      * 
@@ -39,7 +78,10 @@ class birthday {
     }
 }
 
-class emails {
+/**
+ * Contacts Component
+ */
+class Emails {
     /**
      * Builds an email object for a contact.
      * A contact can contain multiple emails.
@@ -53,7 +95,10 @@ class emails {
     }
 }
 
-class name {
+/**
+ * Contacts Component
+ */
+class Name {
     /**
      * Builds a name object for a contact, required for contacts.
      * The object requires a formatted_name and at least another property.
@@ -81,7 +126,10 @@ class name {
     }
 }
 
-class org {
+/**
+ * Contacts Component
+ */
+class Org {
     /**
      * Builds an organization object for a contact
      * 
@@ -96,23 +144,29 @@ class org {
     }
 }
 
-class phones {
+/**
+ * Contacts Component
+ */
+class Phones {
     /**
      * Builds a phone object for a contact.
      * A contact can contain multiple phones.
      * 
-     * @param {String} number Phone number, automatically populated with the wa_id value as a formatted phone number
+     * @param {String} phone Phone number, automatically populated with the wa_id value as a formatted phone number
      * @param {String} type Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
      * @param {String} wa_id WhatsApp ID. If present, number will be ignored. Usually it's the numeric part of the phone number
      */
-    constructor(number, type, wa_id) {
-        if (number && !wa_id) this.number = number;
+    constructor(phone, type, wa_id) {
+        if (phone && !wa_id) this.phone = phone;
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
     }
 }
 
-class urls {
+/**
+ * Contacts Component
+ */
+class Urls {
     /**
      * Builds a url object for a contact.
      * A contact can contain multiple urls.
@@ -126,4 +180,4 @@ class urls {
     }
 }
 
-exports.contacts = { addresses, birthday, emails, name, org, phones, urls };
+module.exports = { Contacts, Addresses, Birthday, Emails, Name, Org, Phones, Urls };
