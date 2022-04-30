@@ -27,6 +27,19 @@ class WhatsAppAPI {
         if (!object._) throw new Error("There has been a breaking update in whatsapp-api-js@0.0.4 and @0.1.0, please check the documentation for more information on how to use the new version, or downgrade using 'npm i whatsapp-api-js@0.0.3'. Sorry for any inconvenience :/");
         return fetch.messages(this.token, this.v, phoneID, to, object);
     }
+
+    /**
+     * Mark a message as read
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} messageId The message ID
+     * @returns {Promise} The fetch promise
+     */
+    markAsRead(phoneID, messageId) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!messageId) throw new Error("To must be specified");
+        return fetch.read(this.token, this.v, phoneID, messageId);
+    }
 }
 
 module.exports = {

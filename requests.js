@@ -49,7 +49,7 @@ function post(data, callback) {
 
         const message = value.messages[0];
 
-        callback(phoneID, phone, id, message, name, data);
+        callback(phoneID, phone, message, name, data);
 
         return 200;
     } else {

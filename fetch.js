@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 /**
- * Make the post request to the API
+ * Make a message post request to the API
  * 
  * @param {String} token The API token
  * @param {String} v The API version
@@ -34,4 +34,28 @@ function messages(token, v, phoneID, to, object) {
     });
 }
 
-exports.fetch = { messages };
+/**
+ * Mark a message as read
+ * 
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {String} message_id The message id
+ * @returns {Promise} The fetch promise
+ */
+function read(token, v, phoneID, message_id) {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
+        method: "PUT",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: {
+            messaging_product: "whatsapp",
+            status: "read",
+            message_id,
+        }
+    });
+}
+
+exports.fetch = { messages, read };

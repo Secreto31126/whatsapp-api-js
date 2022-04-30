@@ -55,6 +55,8 @@ function onMessage(phoneID, phone, message, name, raw_data) {
             new Contacts.Url("https://www.google.com", "WORK"),
         ]
     ));
+
+    Whatsapp.markAsRead(phoneID, message.id);
 }
 ```
 
