@@ -45,16 +45,16 @@ function messages(token, v, phoneID, to, object) {
  */
 function read(token, v, phoneID, message_id) {
     return fetch(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
-        method: "PUT",
+        method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
-        body: {
+        body: JSON.stringify({
             messaging_product: "whatsapp",
             status: "read",
             message_id,
-        }
+        }),
     });
 }
 
