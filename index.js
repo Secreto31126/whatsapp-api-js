@@ -56,6 +56,7 @@ module.exports = {
         Interactive: require('./types/interactive'),
         Location: require('./types/location'),
         Media: require('./types/media'),
+        Template: require('./types/template'),
         Text: require('./types/text'),
     }
 };

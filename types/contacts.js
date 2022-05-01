@@ -2,10 +2,14 @@ class Contacts {
     /**
      * Create a Contacts object for the API
      * 
-     * @param {...Array} contact Array of contact's components, built using the contact's builder module. They can be: Address, Birthday, Email, Name, Organization, Phone and Url.
+     * @param {...Array<(Address|Birthday|Email|Name|Organization|Phone|Url)>} contact Array of contact's components
+     * @throws {Error} If contact is not provided
+     * @throws {Error} If contact contains more than one name component
+     * @throws {Error} If contact contains more than one birthday component
+     * @throws {Error} If contact contains more than one organization component
      */
     constructor(...contact) {
-        if (!contact.length) throw new Error("Contacts must have at least one contact");
+        if (!contact?.length) throw new Error("Contacts must have at least one contact");
 
         this.contacts = [];
 
@@ -16,9 +20,9 @@ class Contacts {
                 const name = component._;
                 delete component._;
 
-                if (name === "birthday") contact.birthday = component.birthday;
-                else if (name === "name") contact.name = component;
-                else if (name === "org") contact.org = component;
+                if (name === "birthday") if (!contact.birthday) contact.birthday = component.birthday; else throw new Error("Contacts can only have one birthday component");
+                else if (name === "name") if (!contact.name) contact.name = component; else throw new Error("Contacts can only have one name component");
+                else if (name === "org") if (!contact.org) contact.org = component; else throw new Error("Contacts can only have one organization component");
 
                 else {
                     if (!contact[name]) contact[name] = [];
@@ -110,13 +114,13 @@ class Name {
      * The object requires a formatted_name and at least another property.
      * 
      * @param {String} formatted_name Full name, as it normally appears
-     * @param {String} first_name First name
-     * @param {String} last_name Last name
-     * @param {String} middle_name Middle name
-     * @param {String} suffix Name suffix
-     * @param {String} prefix Name prefix
+     * @param {(String|void)} first_name First name
+     * @param {(String|void)} last_name Last name
+     * @param {(String|void)} middle_name Middle name
+     * @param {(String|void)} suffix Name suffix
+     * @param {(String|void)} prefix Name prefix
      * @throws {Error} If formatted_name is not defined
-     * @throws {Error} If no other component apart from formattd_name is defined
+     * @throws {Error} If no other component apart from formatted_name is defined
      */
     constructor(formatted_name, first_name, last_name, middle_name, suffix, prefix) {
         if (!formatted_name) throw new Error("Name must have a formatted_name");

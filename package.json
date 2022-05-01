@@ -8,7 +8,9 @@
     "debug": "node --inspect index.js"
   },
   "keywords": [
-    "whatsapp"
+    "whatsapp",
+    "api",
+    "helper"
   ],
   "author": "Secreto31126",
   "license": "MIT",
