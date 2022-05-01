@@ -3,6 +3,8 @@ const fetch = require('node-fetch');
 /**
  * Make a message post request to the API
  * 
+ * @package
+ * @ignore
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
@@ -37,6 +39,8 @@ function messages(token, v, phoneID, to, object) {
 /**
  * Mark a message as read
  * 
+ * @package
+ * @ignore
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id

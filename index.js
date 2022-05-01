@@ -1,5 +1,8 @@
 const fetch = require('./fetch').fetch;
 
+/**
+ * The main class
+ */
 class WhatsAppAPI {
     /**
      * Initiate the Whatsapp API app
@@ -42,6 +45,9 @@ class WhatsAppAPI {
     }
 }
 
+/**
+ * Document this please
+ */
 module.exports = {
     WhatsAppAPI,
     Handlers: require('./requests'),

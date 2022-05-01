@@ -23,8 +23,8 @@ npm install whatsapp-api-js
 Now you can write code like this:
 
 ```js
-const { WhatsAppAPI, Handlers } = require("whatsapp-api-js");
-const { Text, Media, Contacts } = require("whatsapp-api-js").Types;
+const { WhatsAppAPI, Handlers, Types } = require("whatsapp-api-js");
+const { Text, Media, Contacts } = Types;
 
 const Token = "YOUR_TOKEN";
 
@@ -79,7 +79,7 @@ Once you are done, click administrate, and set the webhook to subscribe to messa
 There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
-The code still doesn't support 100% of the functionalities, like interactive and template messages,
+The code still doesn't support 100% of the functionalities, like template messages,
 but I am working on adding them ASAP.
 
 Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.
