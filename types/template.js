@@ -1,3 +1,6 @@
+const Text = require("./text");
+const { Image, Document, Video } = require("./media");
+
 class Template {
     /**
      * Create a Template object for the API
@@ -5,14 +8,19 @@ class Template {
      * @param {String} name Name of the template
      * @param {(String|Language)} language The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} component Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @throws {Error} If name is not provided
+     * @throws {Error} If language is not provided
      */
     constructor(name, language, ...component) {
         if (!name) throw new Error("Template must have a name");
         if (!language) throw new Error("Template must have a language");
 
+        const indexes = component.filter(e => e instanceof ButtonComponent).map(e => e.index);
+        if (indexes.length !== new Set(indexes).size) throw new Error("ButtonComponents must have unique ids");
+
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
-        if (component) this.component = component;
+        if (component) this.components = component;
 
         this._ = "template";
     }
@@ -103,11 +111,11 @@ class PayloadButton {
     /**
      * Builds a header component for a Template message
      * 
-     * @param {...Parameter} parameters Parameters of the body component
+     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "header";
-        if (parameters) this.parameters = parameters;
+        if (parameters) this.parameters = parameters.map(e => e instanceof Parameter ? e : new Parameter(e));
     }
 }
 
@@ -118,11 +126,11 @@ class BodyComponent {
     /**
      * Builds a body component for a Template message
      * 
-     * @param  {...Parameter} parameters Parameters of the body component
+     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "body";
-        if (parameters) this.parameters = parameters;
+        if (parameters) this.parameters = parameters.map(e => new Parameter(e));
     }
 }
 
@@ -142,7 +150,8 @@ class Parameter {
         if (!parameter) throw new Error("Parameter must have a parameter");
         this.type = parameter._;
         delete parameter._;
-        this[this.type] = parameter;
+        // Text type can go to hell
+        if (this.type === "text") this.text = parameter.body; else this[this.type] = parameter;
     }
 }
 

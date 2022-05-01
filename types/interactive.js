@@ -1,3 +1,6 @@
+const Text = require("./text");
+const { Image, Document, Video } = require("./media");
+
 class Interactive {
     /**
      * Create an Interactive object for the API
@@ -39,6 +42,7 @@ class Body {
     constructor(text) {
         if (!text) throw new Error("Body must have a text object");
         if (text.length > 1024) throw new Error("Body text must be less than 1024 characters");
+
         this.text = text;
     }
 }
@@ -57,6 +61,7 @@ class Footer {
     constructor(text) {
         if (!text) throw new Error("Footer must have a text object");
         if (text.length > 60) throw new Error("Footer text must be 60 characters or less");
+
         this.text = text;
     }
 }
@@ -66,8 +71,7 @@ class Footer {
  */
 class Header {
     /**
-     * Builds a header component for an Interactive message.
-     * For some reason this is broken on the API side. Read issue #1 for more info.
+     * Builds a header component for an Interactive message
      * 
      * @param {(Document|Image|Text|Video)} object The message object for the header
      * @throws {Error} If object is not provided
@@ -76,9 +80,11 @@ class Header {
     constructor(object) {
         if (!object) throw new Error("Header must have an object");
         if (!["text", "video", "image", "document"].includes(object._)) throw new Error(`Header object must be either Text, Video, Image or Document.`);
+
         this.type = object._;
         delete object._;
-        this[this.type] = JSON.stringify(object);
+        // Text type can go to hell
+        this[this.type] = this.type === "text" ? object.body : object;
     }
 }
 
@@ -124,6 +130,7 @@ class Section {
         if (!title) throw new Error("Section must have a title");
         if (title.length > 24) throw new Error("Section title must be 24 characters or less");
         if (!rows?.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
+
         this.title = title;
         this.rows = rows;
     }
@@ -151,6 +158,7 @@ class Row {
         if (!title) throw new Error("Row must have a title");
         if (title.length > 24) throw new Error("Row title must be 24 characters or less");
         if (description.length > 72) throw new Error("Row description must be 72 characters or less");
+
         this.id = id;
         this.title = title;
         if (description) this.description = description;
@@ -166,12 +174,17 @@ class ActionButtons {
      * 
      * @param {...Button} button Buttons to be used in the reply buttons. Each button title must be unique within the message. Emojis are supported, markdown is not. Must be between 1 and 3 buttons.
      * @throws {Error} If no buttons are provided or are over 3
+     * @throws {Error} If two or more buttons have the same id
      * @throws {Error} If two or more buttons have the same title
      */
     constructor(...button) {
         if (!button?.length || button.length > 3) throw new Error("Reply buttons must have between 1 and 3 buttons");
 
-        // Find if there are duplicates in button.titles
+        // Find if there are duplicates in button.id
+        const ids = button.map(b => b[b.type].id);
+        if (ids.length !== new Set(ids).size) throw new Error("Reply buttons must have unique ids");
+
+        // Find if there are duplicates in button.title
         const titles = button.map(b => b[b.type].title);
         if (titles.length !== new Set(titles).size) throw new Error("Reply buttons must have unique titles");
 
