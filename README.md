@@ -83,7 +83,10 @@ Once you are done, click administrate, and set the webhook to subscribe to messa
 There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
-The code still doesn't support 100% of the functionalities, like template messages,
-but I am working on adding them ASAP.
+
+## Comments
+
+Even though the code already supports all the message types, there's still a long way to go.
+I will keep updating it until I like how it works. The next step will be adding a documentation website.
 
 Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.

@@ -1,3 +1,10 @@
+const { Contacts } = require('./types/contacts');
+const { Interactive } = require("./types/interactive");
+const { Audio, Document, Image, Sticker, Video } = require('./types/media');
+const Location = require('./types/location');
+const { Template } = require('./types/template');
+const Text = require('./types/text');
+
 const fetch = require('node-fetch');
 
 /**
@@ -9,7 +16,7 @@ const fetch = require('node-fetch');
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} to The user's phone number
- * @param {Object} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template*, text) *TBD
+ * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
  * @returns {Promise} The fetch promise
  */
 function messages(token, v, phoneID, to, object) {

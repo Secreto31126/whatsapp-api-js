@@ -16,8 +16,10 @@ class WhatsAppAPI {
      * 
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
      * @param {String} v The version of the API, defaults to v13.0
+     * @throws {Error} If token is not specified
      */
     constructor(token, v = "v13.0") {
+        if (!token) throw new Error("Token must be specified");
         this.token = token;
         this.v = v;
     }
@@ -29,6 +31,10 @@ class WhatsAppAPI {
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @returns {Promise} The fetch promise
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If to is not specified
+     * @throws {Error} If object is not specified
+     * @throws {Error} If object is not a valid whatsapp-api-js@0.0.4 component
      */ 
     sendMessage(phoneID, to, object) {
         if (!phoneID) throw new Error("Phone ID must be specified");
@@ -44,6 +50,8 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} messageId The message ID
      * @returns {Promise} The fetch promise
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If messageId is not specified
      */
     markAsRead(phoneID, messageId) {
         if (!phoneID) throw new Error("Phone ID must be specified");
