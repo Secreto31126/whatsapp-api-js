@@ -5,7 +5,7 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const fetch = require('./fetch').fetch;
+const fetch = require('./fetch');
 
 /**
  * The main class

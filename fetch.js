@@ -69,4 +69,4 @@ function read(token, v, phoneID, message_id) {
     });
 }
 
-exports.fetch = { messages, read };
+module.exports = { messages, read };
