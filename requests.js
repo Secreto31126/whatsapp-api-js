@@ -1,6 +1,6 @@
 /**
- * GET helper, must be called inside the doGet function.
- * Used once at the first webhook setup
+ * GET helper, must be called inside the get function of your code.
+ * Used once at the first webhook setup.
  * 
  * @param {Object} params The GET request parameters in object format
  * @param {String} verify_token The verification token
