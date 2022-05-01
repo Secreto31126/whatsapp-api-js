@@ -88,7 +88,6 @@ class Sticker extends Media {
 }
 
 /**
- * Hi
  * @extends Media
  */
 class Video extends Media {
