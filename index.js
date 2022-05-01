@@ -1,3 +1,10 @@
+const { Contacts } = require('./types/contacts');
+const { Interactive } = require("./types/interactive");
+const { Audio, Document, Image, Sticker, Video } = require('./types/media');
+const Location = require('./types/location');
+const { Template } = require('./types/template');
+const Text = require('./types/text');
+
 const fetch = require('./fetch').fetch;
 
 /**
@@ -20,7 +27,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} to The user's phone number
-     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive)} object A Whatsapp component, built using the corresponding module for each type of message.
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @returns {Promise} The fetch promise
      */ 
     sendMessage(phoneID, to, object) {

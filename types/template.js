@@ -77,13 +77,13 @@ class UrlButton {
     /**
      * Builds a url button object for a ButtonComponent
      * 
-     * @param {String} url Developer-provided suffix that is appended to the predefined prefix URL in the template.
+     * @param {String} text Developer-provided suffix that is appended to the predefined prefix URL in the template.
      * @throws {Error} If url is not provided
      */
-    constructor(url) {
-        if (!url) throw new Error("UrlButton must have an url");
-        this.type = "url";
-        this.url = url;
+    constructor(text) {
+        if (!text) throw new Error("UrlButton must have a text");
+        this.type = "text";
+        this.text = text;
     }
 }
 
