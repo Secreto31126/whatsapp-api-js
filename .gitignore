@@ -108,3 +108,6 @@ dist
 
 # Test code
 test.js
+
+# JSDoc
+out/

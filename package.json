@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A Whatsapp Official API helper for Node.js",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,9 @@
     "debug": "node --inspect index.js"
   },
   "keywords": [
-    "whatsapp"
+    "whatsapp",
+    "api",
+    "helper"
   ],
   "author": "Secreto31126",
   "license": "MIT",
@@ -18,5 +20,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.10"
   }
 }

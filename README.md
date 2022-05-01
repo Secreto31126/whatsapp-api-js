@@ -23,8 +23,8 @@ npm install whatsapp-api-js
 Now you can write code like this:
 
 ```js
-const { WhatsAppAPI, Handlers } = require("whatsapp-api-js");
-const { Text, Media, Contacts } = require("whatsapp-api-js").Types;
+const { WhatsAppAPI, Handlers, Types } = require("whatsapp-api-js");
+const { Text, Media, Contacts } = Types;
 
 const Token = "YOUR_TOKEN";
 
@@ -37,13 +37,15 @@ function post(e) {
 }
 
 function onMessage(phoneID, phone, message, name, raw_data) {
-    if (message.type === "text") Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`));
+    let promise;
 
-    if (message.type === "image") Whatsapp.sendMessage(phoneID, phone, new Media.Image(message.image.id, true, `Nice photo, ${name}`));
+    if (message.type === "text") promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`));
 
-    if (message.type === "document") Whatsapp.sendMessage(phoneID, phone, new Media.Document(message.document.id, true, undefined, "Our document"));
+    if (message.type === "image") promise = Whatsapp.sendMessage(phoneID, phone, new Media.Image(message.image.id, true, `Nice photo, ${name}`));
 
-    if (message.type === "contacts") Whatsapp.sendMessage(phoneID, phone, new Contacts.Contacts(
+    if (message.type === "document") promise = Whatsapp.sendMessage(phoneID, phone, new Media.Document(message.document.id, true, undefined, "Our document"));
+
+    if (message.type === "contacts") promise = Whatsapp.sendMessage(phoneID, phone, new Contacts.Contacts(
         [
             new Contacts.Name(name, "First name", "Last name"),
             new Contacts.Phone(phone),
@@ -56,6 +58,8 @@ function onMessage(phoneID, phone, message, name, raw_data) {
         ]
     ));
 
+    if (promise) promise.then(res => res.json()).then(console.log);
+    
     Whatsapp.markAsRead(phoneID, message.id);
 }
 ```
@@ -79,7 +83,7 @@ Once you are done, click administrate, and set the webhook to subscribe to messa
 There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
-The code still doesn't support 100% of the functionalities, like interactive and template messages,
+The code still doesn't support 100% of the functionalities, like template messages,
 but I am working on adding them ASAP.
 
 Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.
