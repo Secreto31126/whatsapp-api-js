@@ -109,5 +109,5 @@ dist
 # Test code
 test.js
 
-# JSDoc
-out/
+# Documentation
+documentation/

@@ -1,11 +1,12 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A Whatsapp Official API helper for Node.js",
   "main": "index.js",
   "scripts": {
     "test": "node --inspect test.js",
-    "debug": "node --inspect index.js"
+    "debug": "node --inspect index.js",
+    "document": ".\\node_modules\\.bin\\jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
     "whatsapp",
@@ -22,6 +23,7 @@
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
   "devDependencies": {
+    "docdash": "^1.2.0",
     "jsdoc": "^3.6.10"
   }
 }

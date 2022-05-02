@@ -8,7 +8,9 @@ const Text = require('./types/text');
 const fetch = require('./fetch');
 
 /**
- * The main class
+ * @typedef {Object} WhatsAppAPI The main API object
+ * @property {String} token The API token
+ * @property {String} v The API version to use
  */
 class WhatsAppAPI {
     /**
@@ -61,7 +63,51 @@ class WhatsAppAPI {
 }
 
 /**
- * Document this please
+ * @namespace Exports
+ * @property {WhatsAppAPI}      WhatsAppAPI                     The main API object
+ * @property {Object}           Handlers                        The handlers object
+ * @property {Function}         Handlers.post                   The post handler
+ * @property {Function}         Handlers.get                    The get handler
+ * @property {Object}           Types                           The API types objects
+ * @property {Object}           Types.Contacts                  The Contacts module
+ * @property {Contacts}         Types.Contacts.Contacts         The API Contacts type object
+ * @property {Address}          Types.Contacts.Address          The API Address type object
+ * @property {Birthday}         Types.Contacts.Birthday         The API Birthday type object
+ * @property {Email}            Types.Contacts.Email            The API Email type object
+ * @property {Name}             Types.Contacts.Name             The API Name type object
+ * @property {Organization}     Types.Contacts.Organization     The API Organization type object
+ * @property {Phone}            Types.Contacts.Phone            The API Phone type object
+ * @property {Url}              Types.Contacts.Url              The API Url type object
+ * @property {Object}           Types.Interactive               The Interactive module
+ * @property {Interactive}      Types.Interactive.Interactive   The API Interactive type object
+ * @property {Body}             Types.Interactive.Body          The API Body type object
+ * @property {Footer}           Types.Interactive.Footer        The API Footer type object
+ * @property {Header}           Types.Interactive.Header        The API Header type object
+ * @property {ActionList}       Types.Interactive.ActionList    The API Action type object
+ * @property {Section}          Types.Interactive.Section       The API Section type object
+ * @property {Row}              Types.Interactive.Row           The API Row type object
+ * @property {ActionButtons}    Types.Interactive.ActionButtons The API Action type object
+ * @property {Button}           Types.Interactive.Button        The API Button type object
+ * @property {Location}         Types.Location                  The API Location type object
+ * @property {Object}           Types.Media                     The Media module
+ * @property {Media}            Types.Media.Media               Placeholder, don't use
+ * @property {Audio}            Types.Media.Audio               The API Audio type object
+ * @property {Document}         Types.Media.Document            The API Document type object
+ * @property {Image}            Types.Media.Image               The API Image type object
+ * @property {Sticker}          Types.Media.Sticker             The API Sticker type object
+ * @property {Video}            Types.Media.Video               The API Video type object
+ * @property {Object}           Types.Template                  The Template module
+ * @property {Template}         Types.Template.Template         The API Template type object
+ * @property {Language}         Types.Template.Language         The API Language type object
+ * @property {ButtonComponent}  Types.Template.ButtonComponent  The API ButtonComponent type object
+ * @property {UrlButton}        Types.Template.UrlButton        The API UrlButton type object
+ * @property {PayloadButton}    Types.Template.PayloadButton    The API PayloadButton type object
+ * @property {HeaderComponent}  Types.Template.HeaderComponent  The API HeaderComponent type object
+ * @property {BodyComponent}    Types.Template.BodyComponent    The API BodyComponent type object
+ * @property {Parameter}        Types.Template.Parameter        The API Parameter type object
+ * @property {Currency}         Types.Template.Currency         The API Currency type object
+ * @property {DateTime}         Types.Template.DateTime         The API DateTime type object
+ * @property {Text}             Types.Text                      The API Text type object
  */
 module.exports = {
     WhatsAppAPI,

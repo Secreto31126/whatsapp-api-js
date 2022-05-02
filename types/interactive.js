@@ -1,14 +1,23 @@
 const Text = require("./text");
 const { Image, Document, Video } = require("./media");
 
+/**
+ * Interactive API object
+ * 
+ * @property {(ActionList|ActionButtons)} action The action component of the interactive message
+ * @property {Body} body The body component of the interactive message
+ * @property {Header} [header] The header component of the interactive message
+ * @property {Footer} [footer] The footer component of the interactive message
+ * @property {String} _ The type of the interactive message, for internal use only
+ */
 class Interactive {
     /**
      * Create an Interactive object for the API
      * 
      * @param {(ActionList|ActionButtons)} action The action component of the interactive message
      * @param {Body} body The body component of the interactive message
-     * @param {(Header|Void)} header The header component of the interactive message
-     * @param {(Footer|Void)} footer The footer component of the interactive message
+     * @param {Header} [header] The header component of the interactive message
+     * @param {Footer} [footer] The footer component of the interactive message
      * @throws {Error} If action is not provided
      * @throws {Error} If body is not provided
      */
@@ -145,7 +154,7 @@ class Row {
      * 
      * @param {String} id The id of the row. Maximum length: 200 characters.
      * @param {String} title The title of the row. Maximum length: 24 characters.
-     * @param {(String|Void)} description The description of the row. Maximum length: 72 characters.
+     * @param {String} [description] The description of the row. Maximum length: 72 characters.
      * @throws {Error} If id is not provided
      * @throws {Error} If id is over 200 characters
      * @throws {Error} If title is not provided

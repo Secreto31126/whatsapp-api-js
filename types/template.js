@@ -1,31 +1,45 @@
 const Text = require("./text");
 const { Image, Document, Video } = require("./media");
 
+/**
+ * Template API object
+ * 
+ * @property {String} name The name of the template
+ * @property {Language} language The language of the template
+ * @property {Array<(HeaderComponent|BodyComponent|ButtonComponent)>} [components] The components of the template
+ * @property {String} _ The type of the object, for internal use only
+ */
 class Template {
     /**
      * Create a Template object for the API
      * 
      * @param {String} name Name of the template
      * @param {(String|Language)} language The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} component Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} components Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
      * @throws {Error} If name is not provided
      * @throws {Error} If language is not provided
      */
-    constructor(name, language, ...component) {
+    constructor(name, language, ...components) {
         if (!name) throw new Error("Template must have a name");
         if (!language) throw new Error("Template must have a language");
 
-        const indexes = component.filter(e => e instanceof ButtonComponent).map(e => e.index);
+        const indexes = components.filter(e => e instanceof ButtonComponent).map(e => e.index);
         if (indexes.length !== new Set(indexes).size) throw new Error("ButtonComponents must have unique ids");
 
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
-        if (component) this.components = component;
+        if (components) this.components = components;
 
         this._ = "template";
     }
 }
 
+/**
+ * Language API object
+ * 
+ * @property {String} code The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
+ * @property {String} policy The language policy
+ */
 class Language {
     /**
      * Create a Language component for a Template message
@@ -42,7 +56,63 @@ class Language {
 }
 
 /**
- * Template Component
+ * Currency API object
+ * 
+ * @property {Number} amount_1000 The amount of the currency by 1000
+ * @property {String} code The currency code
+ * @property {String} fallback_value The fallback value
+ * @property {String} _ The type of the object, for internal use only
+ */
+class Currency {
+    /**
+     * Builds a currency object for a Parameter
+     * 
+     * @param {Number} amount_1000 Amount multiplied by 1000
+     * @param {String} code Currency code as defined in ISO 4217
+     * @param {String} fallback_value Default text if localization fails
+     * @throws {Error} If amount_1000 is not provided
+     * @throws {Error} If code is not provided
+     * @throws {Error} If fallback_value is not provided
+     */
+    constructor(amount_1000, code, fallback_value) {
+        if (!amount_1000 && amount_1000 !== 0) throw new Error("Currency must have an amount_1000");
+        if (!code) throw new Error("Currency must have a code");
+        if (!fallback_value) throw new Error("Currency must have a fallback_value");
+
+        this.amount_1000 = amount_1000;
+        this.code = code;
+        this.fallback_value = fallback_value;
+        this._ = "currency";
+    }
+}
+
+/**
+ * DateTime API object
+ * 
+ * @property {String} fallback_value The fallback value
+ * @property {String} _ The type of the object, for internal use only
+ */
+class DateTime {
+    /**
+     * Builds a date_time object for a Parameter
+     * 
+     * @param {String} fallback_value Default text. For Cloud API, we always use the fallback value, and we do not attempt to localize using other optional fields.
+     * @throws {Error} If fallback_value is not provided
+     */
+    constructor(fallback_value) {
+        if (!fallback_value) throw new Error("Currency must have a fallback_value");
+        this.fallback_value = fallback_value;
+        this._ = "date_time";
+    }
+}
+
+/**
+ * Components API object
+ * 
+ * @property {String} type The type of the component
+ * @property {String} sub_type The subtype of the component
+ * @property {String} index The index of the component
+ * @property {Array<(UrlButton|PayloadButton)>} parameters The parameters of the component
  */
 class ButtonComponent {
     /**
@@ -71,7 +141,10 @@ class ButtonComponent {
 }
 
 /**
- * ButtonComponent Parameter
+ * Button Parameter API object
+ * 
+ * @property {String} type The type of the button
+ * @property {String} text The text of the button
  */
 class UrlButton {
     /**
@@ -88,7 +161,10 @@ class UrlButton {
 }
 
 /**
- * ButtonComponent Parameter
+ * Button Parameter API object
+ * 
+ * @property {String} type The type of the button
+ * @property {String} payload The payload of the button
  */
 class PayloadButton {
     /**
@@ -105,13 +181,16 @@ class PayloadButton {
 }
 
 /**
- * Template Component
+ * Components API object
+ * 
+ * @property {String} type The type of the component
+ * @property {Array<Parameter>} [parameters] The parameters of the component
  */
- class HeaderComponent {
+class HeaderComponent {
     /**
      * Builds a header component for a Template message
      * 
-     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
+     * @param {...(Text|Currency|DateTime|Image|Document|Video)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "header";
@@ -120,13 +199,16 @@ class PayloadButton {
 }
 
 /**
- * Template Component
+ * Components API object
+ * 
+ * @property {String} type The type of the component
+ * @property {Array<Parameter>} [parameters] The parameters of the component
  */
 class BodyComponent {
     /**
      * Builds a body component for a Template message
      * 
-     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
+     * @param  {...(Text|Currency|DateTime|Image|Document|Video)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "body";
@@ -135,7 +217,15 @@ class BodyComponent {
 }
 
 /**
- * HeaderComponent|BodyComponent parameter
+ * Parameter API object
+ * 
+ * @property {String} type The type of the parameter
+ * @property {String} [text] The text of the parameter
+ * @property {Currency} [currency] The currency of the parameter
+ * @property {DateTime} [datetime] The datetime of the parameter
+ * @property {Image} [image] The image of the parameter
+ * @property {Document} [document] The document of the parameter
+ * @property {Video} [video] The video of the parameter
  */
 class Parameter {
     /**
@@ -152,49 +242,6 @@ class Parameter {
         delete parameter._;
         // Text type can go to hell
         if (this.type === "text") this.text = parameter.body; else this[this.type] = parameter;
-    }
-}
-
-/**
- * Parameter parameter
- */
-class Currency {
-    /**
-     * Builds a currency object for a Parameter
-     * 
-     * @param {Number} amount_1000 Amount multiplied by 1000
-     * @param {String} code Currency code as defined in ISO 4217
-     * @param {String} fallback_value Default text if localization fails
-     * @throws {Error} If amount_1000 is not provided
-     * @throws {Error} If code is not provided
-     * @throws {Error} If fallback_value is not provided
-     */
-    constructor(amount_1000, code, fallback_value) {
-        if (!amount_1000 && amount_1000 !== 0) throw new Error("Currency must have an amount_1000");
-        if (!code) throw new Error("Currency must have a code");
-        if (!fallback_value) throw new Error("Currency must have a fallback_value");
-
-        this.amount_1000 = amount_1000;
-        this.code = code;
-        this.fallback_value = fallback_value;
-        this._ = "currency";
-    }
-}
-
-/**
- * Parameter parameter
- */
-class DateTime {
-    /**
-     * Builds a date_time object for a Parameter
-     * 
-     * @param {String} fallback_value Default text. For Cloud API, we always use the fallback value, and we do not attempt to localize using other optional fields.
-     * @throws {Error} If fallback_value is not provided
-     */
-    constructor(fallback_value) {
-        if (!fallback_value) throw new Error("Currency must have a fallback_value");
-        this.fallback_value = fallback_value;
-        this._ = "date_time";
     }
 }
 

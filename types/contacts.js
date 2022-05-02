@@ -1,3 +1,9 @@
+/**
+ * Contacts API object
+ * 
+ * @property {Array<Object>} contacts The contacts of the message
+ * @property {String} _ The type of the object, for internal use only
+ */
 class Contacts {
     /**
      * Create a Contacts object for the API
@@ -114,11 +120,11 @@ class Name {
      * The object requires a formatted_name and at least another property.
      * 
      * @param {String} formatted_name Full name, as it normally appears
-     * @param {(String|void)} first_name First name
-     * @param {(String|void)} last_name Last name
-     * @param {(String|void)} middle_name Middle name
-     * @param {(String|void)} suffix Name suffix
-     * @param {(String|void)} prefix Name prefix
+     * @param {String} [first_name] First name
+     * @param {String} [last_name] Last name
+     * @param {String} [middle_name] Middle name
+     * @param {String} [suffix] Name suffix
+     * @param {String} [prefix] Name prefix
      * @throws {Error} If formatted_name is not defined
      * @throws {Error} If no other component apart from formatted_name is defined
      */

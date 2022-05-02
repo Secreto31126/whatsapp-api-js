@@ -1,3 +1,11 @@
+/**
+ * Placeholder class for all the media types
+ * 
+ * @property {String} type The type of the media
+ * @property {String} [id] The id of the media
+ * @property {String} [link] The link of the media
+ * @property {String} _ The type of the object, for internal use only
+ */
 class Media {
     /**
      * This method works as a placeholder so the documentation looks nice.
@@ -19,6 +27,8 @@ class Media {
 }
 
 /**
+ * Audio API component
+ * 
  * @extends Media
  */
 class Audio extends Media {
@@ -35,7 +45,11 @@ class Audio extends Media {
 }
 
 /**
+ * Document API component
+ * 
  * @extends Media
+ * @property {String} [caption] The file's caption
+ * @property {String} [filename] The file's filename
  */
 class Document extends Media {
     /**
@@ -43,8 +57,8 @@ class Document extends Media {
      * 
      * @param {String} document The document file's link or id
      * @param {Boolean} isItAnID Whether document is an id (true) or a link (false)
-     * @param {(String|Void)} caption Describes the specified document media
-     * @param {(String|Void)} filename Describes the filename for the specific document
+     * @param {String} [caption] Describes the specified document media
+     * @param {String} [filename] Describes the filename for the specific document
      */
     constructor(document, isItAnID = false, caption, filename) {
         if (!document) throw new Error("Document must have a document link or id");
@@ -55,7 +69,10 @@ class Document extends Media {
 }
 
 /**
+ * Image API component
+ * 
  * @extends Media
+ * @property {String} [caption] The file's caption
  */
 class Image extends Media {
     /**
@@ -63,7 +80,7 @@ class Image extends Media {
      * 
      * @param {String} image The image file's link or id
      * @param {Boolean} isItAnID Whether document is an id (true) or a link (false)
-     * @param {(String|Void)} caption Describes the specified image media
+     * @param {String} [caption] Describes the specified image media
      */
     constructor(image, isItAnID = false, caption) {
         if (!image) throw new Error("Image must have an image link or id");
@@ -73,6 +90,8 @@ class Image extends Media {
 }
 
 /**
+ * Sticker API component
+ * 
  * @extends Media
  */
 class Sticker extends Media {
@@ -88,6 +107,8 @@ class Sticker extends Media {
 }
 
 /**
+ * Video API component
+ * 
  * @extends Media
  */
 class Video extends Media {
