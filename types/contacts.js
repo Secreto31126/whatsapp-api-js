@@ -52,13 +52,13 @@ class Address {
      * Builds an address object for a contact.
      * A contact can contain multiple addresses.
      * 
-     * @param {String} country Full country name
-     * @param {String} country_code Two-letter country abbreviation
-     * @param {String} state State abbreviation
-     * @param {String} city City name
-     * @param {String} street Street number and name
-     * @param {String} zip ZIP code
-     * @param {String} type Address type. Standard Values: HOME, WORK
+     * @param {String} [country] Full country name
+     * @param {String} [country_code] Two-letter country abbreviation
+     * @param {String} [state] State abbreviation
+     * @param {String} [city] City name
+     * @param {String} [street] Street number and name
+     * @param {String} [zip] ZIP code
+     * @param {String} [type] Address type. Standard Values: HOME, WORK
      */
     constructor(country, country_code, state, city, street, zip, type) {
         if (country) this.country = country;
@@ -85,9 +85,9 @@ class Birthday {
      * @throws {Error} If the year, month, or day don't have a valid length
      */
     constructor(year, month, day) {
-        if (year.length !== 4) throw new Error("Year must be 4 digits");
-        if (month.length !== 2) throw new Error("Month must be 2 digits");
-        if (day.length !== 2) throw new Error("Day must be 2 digits");
+        if (year?.length !== 4) throw new Error("Year must be 4 digits");
+        if (month?.length !== 2) throw new Error("Month must be 2 digits");
+        if (day?.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
         this._ = "birthday";
     }
@@ -101,8 +101,8 @@ class Email {
      * Builds an email object for a contact.
      * A contact can contain multiple emails.
      * 
-     * @param {String} email Email address
-     * @param {String} type Email type. Standard Values: HOME, WORK
+     * @param {String} [email] Email address
+     * @param {String} [type] Email type. Standard Values: HOME, WORK
      */
     constructor(email, type) {
         if (email) this.email = email;
@@ -150,9 +150,9 @@ class Organization {
     /**
      * Builds an organization object for a contact
      * 
-     * @param {String} company Name of the contact's company
-     * @param {String} department Name of the contact's department
-     * @param {String} title Contact's business title
+     * @param {String} [company] Name of the contact's company
+     * @param {String} [department] Name of the contact's department
+     * @param {String} [title] Contact's business title
      */
     constructor(company, department, title) {
         if (company) this.company = company;
@@ -170,9 +170,9 @@ class Phone {
      * Builds a phone object for a contact.
      * A contact can contain multiple phones.
      * 
-     * @param {String} phone Phone number, automatically populated with the wa_id value as a formatted phone number
-     * @param {String} type Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
-     * @param {String} wa_id WhatsApp ID. If present, number will be ignored. Usually it's the numeric part of the phone number
+     * @param {String} [phone] Phone number, automatically populated with the wa_id value as a formatted phone number
+     * @param {String} [type] Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
+     * @param {String} [wa_id] WhatsApp ID. If present, number will be ignored. Usually it's the numeric part of the phone number
      */
     constructor(phone, type, wa_id) {
         if (phone && !wa_id) this.phone = phone;
@@ -190,8 +190,8 @@ class Url {
      * Builds an url object for a contact.
      * A contact can contain multiple urls.
      * 
-     * @param {String} url URL
-     * @param {String} type URL type. Standard Values: HOME, WORK
+     * @param {String} [url] URL
+     * @param {String} [type] URL type. Standard Values: HOME, WORK
      */
     constructor(url, type) {
         if (url) this.url = url;
