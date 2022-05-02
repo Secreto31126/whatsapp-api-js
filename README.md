@@ -87,6 +87,7 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 ## Documentation
 
 The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/).
+Contacts and Interactive are still missing some documentation, will be added soon.
 
 ## Comments
 

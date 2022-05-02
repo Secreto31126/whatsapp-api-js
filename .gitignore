@@ -110,4 +110,5 @@ dist
 test.js
 
 # Documentation
-documentation/
+documentation/*
+!documentation/404.html
