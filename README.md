@@ -84,6 +84,10 @@ There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
+## Documentation
+
+The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/).
+
 ## Comments
 
 Even though the code already supports all the message types, there's still a long way to go.
