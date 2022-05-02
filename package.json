@@ -6,7 +6,7 @@
   "scripts": {
     "test": "node --inspect test.js",
     "debug": "node --inspect index.js",
-    "document": ".\\node_modules\\.bin\\jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
+    "document": ".\\\\node_modules\\\\.bin\\\\jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
     "whatsapp",
