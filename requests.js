@@ -28,12 +28,23 @@ function get(params, verify_token) {
 }
 
 /**
+ * POST helper callback
+ *
+ * @callback postCallback
+ * @param {String} phoneID The bot's phoneID
+ * @param {String} phone The user's phone number
+ * @param {Object} message The messages object
+ * @param {String} name The username
+ * @param {Object} raw The raw data from the API
+ */
+
+/**
  * POST helper, must be called inside the post function of your code.
  * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
  * 
  * @ignore
  * @param {Object} data The post data sent by Whatsapp, already parsed to object
- * @param {Function} callback The function to be called if the post request is valid. The callback is called with the bot's phoneID {String}, the user's phone number {String}, the messages object {Object}, the username {String}, and last the raw data from the API {Object}
+ * @param {postCallback} callback The function to be called if the post request is valid
  * @returns {Number} 200, it's the expected http/s response code
  * @throws {Number} 400 if the POST request isn't valid
  */
