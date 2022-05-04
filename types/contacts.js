@@ -172,10 +172,10 @@ class Phone {
      * 
      * @param {String} [phone] Phone number, automatically populated with the wa_id value as a formatted phone number
      * @param {String} [type] Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
-     * @param {String} [wa_id] WhatsApp ID. If present, number will be ignored. Usually it's the numeric part of the phone number
+     * @param {String} [wa_id] WhatsApp ID
      */
     constructor(phone, type, wa_id) {
-        if (phone && !wa_id) this.phone = phone;
+        if (phone) this.phone = phone;
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
         this._ = "phones";
