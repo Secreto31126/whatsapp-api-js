@@ -2,7 +2,6 @@
  * GET helper, must be called inside the get function of your code.
  * Used once at the first webhook setup.
  * 
- * @ignore
  * @param {Object} params The GET request parameters in object format
  * @param {String} verify_token The verification token
  * @returns {String} The challenge string, it must be the http response body
@@ -28,9 +27,9 @@ function get(params, verify_token) {
 }
 
 /**
- * POST helper callback
+ * POST helper callback for messages
  *
- * @callback postCallback
+ * @callback onMessage
  * @param {String} phoneID The bot's phoneID
  * @param {String} phone The user's phone number
  * @param {Object} message The messages object
@@ -39,30 +38,56 @@ function get(params, verify_token) {
  */
 
 /**
+ * POST helper callback for statuses
+ *
+ * @callback onStatus
+ * @param {String} phoneID The bot's phoneID
+ * @param {String} phone The user's phone number
+ * @param {String} status The message status
+ * @param {String} messageID The message ID
+ * @param {Object} conversation The conversation object
+ * @param {Object} pricing The pricing object
+ * @param {Object} raw The raw data from the API
+ */
+
+/**
  * POST helper, must be called inside the post function of your code.
  * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
  * 
- * @ignore
  * @param {Object} data The post data sent by Whatsapp, already parsed to object
- * @param {postCallback} callback The function to be called if the post request is valid
+ * @param {onMessage} onMessage The function to be called if the post request is a valid message
+ * @param {onStatus} [onStatus] The function to be called if the post request is a valid status update
  * @returns {Number} 200, it's the expected http/s response code
  * @throws {Number} 400 if the POST request isn't valid
  */
-function post(data, callback) {
+function post(data, onMessage, onStatus) {
     // Validate the webhook
     if (data.object) {
         const value = data.entry[0].changes[0].value;
-
         const phoneID = value.metadata.phone_number_id;
 
-        const contact = value.contacts[0];
+        // Check if the message is a message
+        if (value.message) {
+            const contact = value.contacts[0];
 
-        const phone = contact.wa_id;
-        const name = contact.profile.name;
+            const phone = contact.wa_id;
+            const name = contact.profile.name;
 
-        const message = value.messages[0];
+            const message = value.messages[0];
 
-        callback(phoneID, phone, message, name, data);
+            onMessage(phoneID, phone, message, name, data);
+        } else if (value.statuses && onStatus) {
+            const statuses = value.statuses[0];
+            
+            const phone = statuses.recipient_id;
+            const status = statuses.status;
+            const messageID = statuses.id;
+            
+            const conversation = value.conversation;
+            const pricing = value.pricing;
+            
+            onStatus(phoneID, phone, status, messageID, conversation, pricing, data);
+        }
 
         return 200;
     } else {
