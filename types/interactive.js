@@ -38,7 +38,9 @@ class Interactive {
 }
 
 /**
- * Interactive Component
+ * Body API object
+ * 
+ * @property {String} text The text of the body
  */
 class Body {
     /**
@@ -57,7 +59,9 @@ class Body {
 }
 
 /**
- * Interactive Component
+ * Footer API object
+ * 
+ * @property {String} text The text of the body
  */
 class Footer {
     /**
@@ -76,7 +80,13 @@ class Footer {
 }
 
 /**
- * Interactive Component
+ * Header API object
+ * 
+ * @property {String} type The type of the header
+ * @property {String} [text] The text of the parameter
+ * @property {Image} [image] The image of the parameter
+ * @property {Document} [document] The document of the parameter
+ * @property {Video} [video] The video of the parameter
  */
 class Header {
     /**
@@ -98,7 +108,11 @@ class Header {
 }
 
 /**
- * Interactive Component
+ * Action API object
+ * 
+ * @property {String} button The button text
+ * @property {Array<Section>} sections The sections of the action
+ * @property {String} _ The type of the action, for internal use only
  */
 class ActionList {
     /**
@@ -123,7 +137,10 @@ class ActionList {
 }
 
 /**
- * ActionList Component
+ * Section API object
+ * 
+ * @property {String} title The title of the section
+ * @property {Array<Row>} rows The rows of the section
  */
 class Section {
     /**
@@ -146,7 +163,11 @@ class Section {
 }
 
 /**
- * Section Component
+ * Row API object
+ * 
+ * @property {String} id The id of the row
+ * @property {String} title The title of the row
+ * @property {String} [description] The description of the row
  */
 class Row {
     /**
@@ -175,7 +196,10 @@ class Row {
 }
 
 /**
- * Interactive Component
+ * Action API object
+ * 
+ * @property {Array<Button>} buttons The buttons of the action
+ * @property {String} _ The type of the action, for internal use only
  */
 class ActionButtons {
     /**
@@ -203,7 +227,11 @@ class ActionButtons {
 }
 
 /**
- * ActionReplyButtons Component
+ * Button API object
+ * 
+ * @property {String} type The type of the button
+ * @property {String} reply.id The id of the row
+ * @property {String} reply.title The title of the row
  */
 class Button {
     /**
