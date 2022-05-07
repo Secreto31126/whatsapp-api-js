@@ -67,7 +67,7 @@ function post(data, onMessage, onStatus) {
         const phoneID = value.metadata.phone_number_id;
 
         // Check if the message is a message
-        if (value.message) {
+        if (value.messages) {
             const contact = value.contacts[0];
 
             const phone = contact.wa_id;
