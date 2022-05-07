@@ -45,12 +45,21 @@ class Contacts {
 }
 
 /**
- * Contacts Component
+ * Address API object
+ * 
+ * @property {String} [country] The country of the address
+ * @property {String} [country_code] The country code of the address
+ * @property {String} [state] The state of the address
+ * @property {String} [city] The city of the address
+ * @property {String} [street] The street of the address
+ * @property {String} [zip] The zip code of the address
+ * @property {String} [type] The type of the address
+ * @property {String} _ The type of the object, for internal use only
  */
 class Address {
     /**
      * Builds an address object for a contact.
-     * A contact can contain multiple addresses.
+     * A contact can contain multiple addresses objects.
      * 
      * @param {String} [country] Full country name
      * @param {String} [country_code] Two-letter country abbreviation
@@ -73,7 +82,10 @@ class Address {
 }
 
 /**
- * Contacts Component
+ * Birthday API object
+ * 
+ * @property {String} birthday The birthday of the contact
+ * @property {String} _ The type of the object, for internal use only
  */
 class Birthday {
     /**
@@ -94,12 +106,16 @@ class Birthday {
 }
 
 /**
- * Contacts Component
+ * Email API object
+ * 
+ * @property {String} [email] The email of the contact
+ * @property {String} [type] The type of the email
+ * @property {String} _ The type of the object, for internal use only
  */
 class Email {
     /**
      * Builds an email object for a contact.
-     * A contact can contain multiple emails.
+     * A contact can contain multiple emails objects.
      * 
      * @param {String} [email] Email address
      * @param {String} [type] Email type. Standard Values: HOME, WORK
@@ -112,7 +128,15 @@ class Email {
 }
 
 /**
- * Contacts Component
+ * Name API object
+ * 
+ * @property {String} formatted_name The formatted name of the contact
+ * @property {String} [first_name] The first name of the contact
+ * @property {String} [last_name] The last name of the contact
+ * @property {String} [middle_name] The middle name of the contact
+ * @property {String} [suffix] The suffix of the contact
+ * @property {String} [prefix] The prefix of the contact
+ * @property {String} _ The type of the object, for internal use only
  */
 class Name {
     /**
@@ -144,7 +168,12 @@ class Name {
 }
 
 /**
- * Contacts Component
+ * Organization API object
+ * 
+ * @property {String} [company] The company of the contact
+ * @property {String} [department] The department of the contact
+ * @property {String} [title] The title of the contact
+ * @property {String} _ The type of the object, for internal use only
  */
 class Organization {
     /**
@@ -163,12 +192,17 @@ class Organization {
 }
 
 /**
- * Contacts Component
+ * Phone API object
+ * 
+ * @property {String} [phone] The phone number of the contact
+ * @property {String} [type] The type of the phone number
+ * @property {String} [wa_id] The WhatsApp ID of the contact
+ * @property {String} _ The type of the object, for internal use only
  */
 class Phone {
     /**
      * Builds a phone object for a contact.
-     * A contact can contain multiple phones.
+     * A contact can contain multiple phones objects.
      * 
      * @param {String} [phone] Phone number, automatically populated with the wa_id value as a formatted phone number
      * @param {String} [type] Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
@@ -183,12 +217,16 @@ class Phone {
 }
 
 /**
- * Contacts Component
+ * Url API object
+ * 
+ * @property {String} [url] The URL of the contact
+ * @property {String} [type] The type of the URL
+ * @property {String} _ The type of the object, for internal use only
  */
 class Url {
     /**
      * Builds an url object for a contact.
-     * A contact can contain multiple urls.
+     * A contact can contain multiple urls objects.
      * 
      * @param {String} [url] URL
      * @param {String} [type] URL type. Standard Values: HOME, WORK
