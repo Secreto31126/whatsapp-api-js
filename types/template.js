@@ -143,7 +143,7 @@ class ButtonComponent {
     }
 
     /**
-     * Generates the buttons components for a Template message
+     * Generates the buttons components for a Template message. For internal use only.
      * 
      * @returns {Array<{ type: String, sub_type: String, index: String, parameters: Array<ButtonParameter> }>} An array of API compatible buttons components
      */
