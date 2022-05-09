@@ -145,7 +145,7 @@ class ButtonComponent {
     /**
      * Generates the buttons components for a Template message
      * 
-     * @returns {Array<{ type: String, sub_type: String, index: String, parameters: ButtonParameter }>} An array of API compatible buttons components
+     * @returns {Array<{ type: String, sub_type: String, index: String, parameters: Array<ButtonParameter> }>} An array of API compatible buttons components
      */
     build() {
         return this.parameters.map((p, i) => {
