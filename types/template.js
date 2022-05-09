@@ -135,7 +135,7 @@ class ButtonComponent {
         if (parameters.length > 3) throw new Error("ButtonComponent can only have up to 3 parameters");
 
         const buttonType = sub_type === "url" ? "text" : "payload";
-        parameters = parameters.map(e => ButtonParameter(e, buttonType));
+        parameters = parameters.map(e => new ButtonParameter(e, buttonType));
 
         this.type = "button";
         this.sub_type = sub_type;
@@ -148,8 +148,8 @@ class ButtonComponent {
      * @returns {Array<{ type: String, sub_type: String, index: String, parameters: ButtonParameter }>} An array of API compatible buttons components
      */
     build() {
-        return this.parameters.map((parameters, i) => {
-            return { type: this.type, sub_type: this.sub_type, index: i.toString(), parameters };
+        return this.parameters.map((p, i) => {
+            return { type: this.type, sub_type: this.sub_type, index: i.toString(), parameters: [p] };
         });
     }
 }
