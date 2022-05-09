@@ -23,8 +23,12 @@ class Template {
         if (!name) throw new Error("Template must have a name");
         if (!language) throw new Error("Template must have a language");
 
-        const indexes = components.filter(e => e instanceof ButtonComponent).map(e => e.index);
-        if (indexes.length !== new Set(indexes).size) throw new Error("ButtonComponents must have unique ids");
+        const temp = [];
+        for (let component of components) {
+            if (component instanceof ButtonComponent) temp.push(...component.build());
+            else temp.push(component);
+        }
+        components = temp;
 
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
@@ -111,52 +115,42 @@ class DateTime {
  * 
  * @property {String} type The type of the component
  * @property {String} sub_type The subtype of the component
- * @property {String} index The index of the component
- * @property {Array<(UrlButton|PayloadButton)>} parameters The parameters of the component
+ * @property {Array<ButtonParameter>} parameters The ButtonParameters to be used in the build function
+ * @property {Function} build The function to build the component as a compatible API object
  */
 class ButtonComponent {
     /**
-     * Builds a button component for a Template message
+     * Builds a button component for a Template message.
+     * The index of the buttons is defined by the order in which you add them to the Template parameters.
      * 
-     * @param {Number} index Position index of the button. You can have up to 3 buttons using index values of 0 to 2.
      * @param {String} sub_type Type of button to create. Can be either 'url' or 'quick_reply'.
-     * @param  {...(UrlButton|PayloadButton)} parameters Parameters of the button.
+     * @param {...String} parameters Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
+     * @throws {Error} If sub_type is not either 'url' or 'quick_reply'
+     * @throws {Error} If parameters is not provided
+     * @throws {Error} If parameters has over 3 elements
      */
-    constructor(index, sub_type, ...parameters) {
-        if (!index?.toString()) throw new Error("ButtonComponent must have an index");
-        if (!index < 0 || index > 2) throw new Error("ButtonComponent index must be between 0 and 2");
-        if (!['quick_reply', 'url'].includes(sub_type)) throw new Error("ButtonComponent sub_type must be either 'quick_reply' or 'url'");
-        if (!parameters?.length) throw new Error("ButtonComponent must have at least one parameter");
+    constructor(sub_type, ...parameters) {
+        if (!["url", "quick_reply"].includes(sub_type)) throw new Error("ButtonComponent sub_type must be either 'url' or 'quick_reply'");
+        if (!parameters?.length) throw new Error("ButtonComponent must have a parameter at least 1 parameter");
+        if (parameters.length > 3) throw new Error("ButtonComponent can only have up to 3 parameters");
 
-        for (const param of parameters) {
-            if (sub_type === "quick_reply" && param instanceof UrlButton) throw new Error("ButtonComponent of type 'quick_replies' cannot have a UrlButton");
-            if (sub_type === "url" && param instanceof PayloadButton) throw new Error("ButtonComponent of type 'url' cannot have a PayloadButton");
-        }
-        
+        const buttonType = sub_type === "url" ? "text" : "payload";
+        parameters = parameters.map(e => new ButtonParameter(e, buttonType));
+
         this.type = "button";
         this.sub_type = sub_type;
-        this.index = index.toString();
         this.parameters = parameters;
     }
-}
 
-/**
- * Button Parameter API object
- * 
- * @property {String} type The type of the button
- * @property {String} text The text of the button
- */
-class UrlButton {
     /**
-     * Builds a url button object for a ButtonComponent
+     * Generates the buttons components for a Template message. For internal use only.
      * 
-     * @param {String} text Developer-provided suffix that is appended to the predefined prefix URL in the template.
-     * @throws {Error} If url is not provided
+     * @returns {Array<{ type: String, sub_type: String, index: String, parameters: Array<ButtonParameter> }>} An array of API compatible buttons components
      */
-    constructor(text) {
-        if (!text) throw new Error("UrlButton must have a text");
-        this.type = "text";
-        this.text = text;
+    build() {
+        return this.parameters.map((p, i) => {
+            return { type: this.type, sub_type: this.sub_type, index: i.toString(), parameters: [p] };
+        });
     }
 }
 
@@ -164,19 +158,24 @@ class UrlButton {
  * Button Parameter API object
  * 
  * @property {String} type The type of the button
- * @property {String} payload The payload of the button
+ * @property {String} [text] The text of the button
+ * @property {String} [payload] The payload of the button
  */
-class PayloadButton {
+class ButtonParameter {
     /**
-     * Builds a payload button object for a ButtonComponent
+     * Builds a button parameter for a ButtonComponent
      * 
-     * @param {String} payload Developer-defined payload that is returned when the button is clicked in addition to the display text on the button
-     * @throws {Error} If payload is not provided
+     * @param {String} param Developer-provided data that is used to fill in the template.
+     * @param {String} type The type of the button. Can be either 'text' or 'payload'.
+     * @throws {Error} If param is not provided
+     * @throws {Error} If type is not either 'text' or 'payload'
      */
-    constructor(payload) {
-        if (!payload) throw new Error("PayloadButton must have a payload");
-        this.type = "payload";
-        this.payload = payload;
+    constructor(param, type) {
+        if (!param) throw new Error("UrlButton must have a param");
+        if (!["text", "payload"].includes(type)) throw new Error("UrlButton must be either 'text' or 'payload'");
+
+        this.type = type;
+        this[type] = param;
     }
 }
 
@@ -190,7 +189,7 @@ class HeaderComponent {
     /**
      * Builds a header component for a Template message
      * 
-     * @param {...(Text|Currency|DateTime|Image|Document|Video)} parameters Parameters of the body component
+     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "header";
@@ -208,11 +207,11 @@ class BodyComponent {
     /**
      * Builds a body component for a Template message
      * 
-     * @param  {...(Text|Currency|DateTime|Image|Document|Video)} parameters Parameters of the body component
+     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "body";
-        if (parameters) this.parameters = parameters.map(e => new Parameter(e));
+        if (parameters) this.parameters = parameters.map(e => e instanceof Parameter ? e : new Parameter(e));
     }
 }
 
@@ -249,8 +248,7 @@ module.exports = {
     Template,
     Language,
     ButtonComponent,
-    UrlButton,
-    PayloadButton,
+    ButtonParameter,
     HeaderComponent,
     BodyComponent,
     Parameter,

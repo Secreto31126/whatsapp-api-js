@@ -100,8 +100,7 @@ class WhatsAppAPI {
  * @property {Template}         Types.Template.Template         The API Template type object
  * @property {Language}         Types.Template.Language         The API Language type object
  * @property {ButtonComponent}  Types.Template.ButtonComponent  The API ButtonComponent type object
- * @property {UrlButton}        Types.Template.UrlButton        The API UrlButton type object
- * @property {PayloadButton}    Types.Template.PayloadButton    The API PayloadButton type object
+ * @property {ButtonParameter}  Types.Template.ButtonParameter  The API ButtonParameter type object
  * @property {HeaderComponent}  Types.Template.HeaderComponent  The API HeaderComponent type object
  * @property {BodyComponent}    Types.Template.BodyComponent    The API BodyComponent type object
  * @property {Parameter}        Types.Template.Parameter        The API Parameter type object
