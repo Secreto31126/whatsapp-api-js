@@ -6,7 +6,9 @@ A Whatsapp's Official API helper for Node.js (WIP)
  1. Whatsapp's Official API is currently on beta acccess.
 To participate, you can fill [this form](https://www.facebook.com/business/m/whatsapp/business-api).
 
- 2. This project is a work in progress. Breaking changes are expected from version to version until we hit version 1.0.0.
+ 2. This project is a work in progress. Breaking changes are expected from mid-version to mid-version until it hits version 1.0.0.
+
+ 3. To know what changes between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
 
 ## Set up
 
