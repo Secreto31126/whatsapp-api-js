@@ -119,7 +119,7 @@ class Video extends Media {
      * 
      * @param {String} video The video file's link
      * @param {Boolean} isItAnID Whether video is an id (true) or a link (false)
-     * @param {String} [caption] Describes the specified image media
+     * @param {String} [caption] Describes the specified video media
      */
     constructor(video, isItAnID = false, caption) {
         if (!video) throw new Error("Video must have a video link or id");
