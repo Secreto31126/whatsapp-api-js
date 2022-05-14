@@ -79,7 +79,7 @@ class Image extends Media {
      * Create a Image object for the API
      * 
      * @param {String} image The image file's link or id
-     * @param {Boolean} isItAnID Whether document is an id (true) or a link (false)
+     * @param {Boolean} isItAnID Whether image is an id (true) or a link (false)
      * @param {String} [caption] Describes the specified image media
      */
     constructor(image, isItAnID = false, caption) {
@@ -99,10 +99,11 @@ class Sticker extends Media {
      * Create a Sticker object for the API
      * 
      * @param {String} sticker The sticker file's link
+     * @param {Boolean} isItAnID Whether sticker is an id (true) or a link (false)
      */
-    constructor(sticker) {
-        if (!sticker) throw new Error("Sticker must have a sticker link");
-        super("sticker", sticker);
+    constructor(sticker, isItAnID = false) {
+        if (!sticker) throw new Error("Sticker must have a sticker link or id");
+        super("sticker", sticker, isItAnID);
     }
 }
 
@@ -110,16 +111,20 @@ class Sticker extends Media {
  * Video API component
  * 
  * @extends Media
+ * @property {String} [caption] The file's caption
  */
 class Video extends Media {
     /**
      * Create a Video object for the API
      * 
      * @param {String} video The video file's link
+     * @param {Boolean} isItAnID Whether video is an id (true) or a link (false)
+     * @param {String} [caption] Describes the specified image media
      */
-    constructor(video) {
-        if (!video) throw new Error("Video must have a video link");
-        super("video", video);
+    constructor(video, isItAnID = false, caption) {
+        if (!video) throw new Error("Video must have a video link or id");
+        super("video", video, isItAnID);
+        if (caption) this.caption = caption;
     }
 }
 
