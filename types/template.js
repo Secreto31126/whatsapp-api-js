@@ -23,16 +23,9 @@ class Template {
         if (!name) throw new Error("Template must have a name");
         if (!language) throw new Error("Template must have a language");
 
-        const temp = [];
-        for (let component of components) {
-            if (component instanceof ButtonComponent) temp.push(...component.build());
-            else temp.push(component);
-        }
-        components = temp;
-
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
-        if (components) this.components = components;
+        if (components) this.components = components.map(c => c.build ? c.build() : c).flat();;
 
         this._ = "template";
     }
@@ -233,7 +226,7 @@ class Parameter {
      * For Document parameter, only PDF documents are supported for document-based message templates.
      * 
      * @param {(Text|Currency|DateTime|Image|Document|Video)} parameter The parameter to be used in the template
-     * @param {String} [whoami] The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
+     * @param {String} whoami The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
      * @throws {Error} If parameter is not provided
      * @throws {Error} If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
      * @throws {Error} If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
