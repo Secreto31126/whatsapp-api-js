@@ -25,7 +25,7 @@ class Template {
 
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
-        if (components) this.components = components.map(c => c.build ? c.build() : c).flat();
+        if (components) this.components = components.map(c => typeof c.build === "function" ? c.build() : c).flat();
 
         this._ = "template";
     }
