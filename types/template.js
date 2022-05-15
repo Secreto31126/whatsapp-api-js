@@ -23,16 +23,9 @@ class Template {
         if (!name) throw new Error("Template must have a name");
         if (!language) throw new Error("Template must have a language");
 
-        const temp = [];
-        for (let component of components) {
-            if (component instanceof ButtonComponent) temp.push(...component.build());
-            else temp.push(component);
-        }
-        components = temp;
-
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
-        if (components) this.components = components;
+        if (components) this.components = components.map(c => c.build ? c.build() : c).flat();;
 
         this._ = "template";
     }
@@ -131,7 +124,7 @@ class ButtonComponent {
      */
     constructor(sub_type, ...parameters) {
         if (!["url", "quick_reply"].includes(sub_type)) throw new Error("ButtonComponent sub_type must be either 'url' or 'quick_reply'");
-        if (!parameters?.length) throw new Error("ButtonComponent must have a parameter at least 1 parameter");
+        if (!parameters?.length) throw new Error("ButtonComponent must have at least 1 parameter");
         if (parameters.length > 3) throw new Error("ButtonComponent can only have up to 3 parameters");
 
         const buttonType = sub_type === "url" ? "text" : "payload";
@@ -193,7 +186,7 @@ class HeaderComponent {
      */
     constructor(...parameters) {
         this.type = "header";
-        if (parameters) this.parameters = parameters.map(e => e instanceof Parameter ? e : new Parameter(e));
+        if (parameters) this.parameters = parameters.map(e => e instanceof Parameter ? e : new Parameter(e, "header"));
     }
 }
 
@@ -211,7 +204,7 @@ class BodyComponent {
      */
     constructor(...parameters) {
         this.type = "body";
-        if (parameters) this.parameters = parameters.map(e => e instanceof Parameter ? e : new Parameter(e));
+        if (parameters) this.parameters = parameters.map(e => e instanceof Parameter ? e : new Parameter(e, "body"));
     }
 }
 
@@ -233,14 +226,22 @@ class Parameter {
      * For Document parameter, only PDF documents are supported for document-based message templates.
      * 
      * @param {(Text|Currency|DateTime|Image|Document|Video)} parameter The parameter to be used in the template
+     * @param {String} whoami The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
      * @throws {Error} If parameter is not provided
+     * @throws {Error} If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
+     * @throws {Error} If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
      */
-    constructor(parameter) {
-        if (!parameter) throw new Error("Parameter must have a parameter");
+    constructor(parameter, whoami) {
+        if (!parameter) throw new Error("Parameter object must have a parameter parameter");
         this.type = parameter._;
         delete parameter._;
+
         // Text type can go to hell
-        if (this.type === "text") this.text = parameter.body; else this[this.type] = parameter;
+        if (this.type === "text") {
+            if (whoami === "header" && object.body > 60) throw new Error("Header text must be 60 characters or less");
+            if (whoami === "body" && object.body > 1024) throw new Error("Body text must be 1024 characters or less");
+            this[this.type] = object.body;
+        } else this[this.type] = object;
     }
 }
 

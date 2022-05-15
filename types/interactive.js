@@ -95,6 +95,7 @@ class Header {
      * @param {(Document|Image|Text|Video)} object The message object for the header
      * @throws {Error} If object is not provided
      * @throws {Error} If object is not a Document, Image, Text, or Video
+     * @throws {Error} If object is a Text and is over 60 characters
      */
     constructor(object) {
         if (!object) throw new Error("Header must have an object");
@@ -102,8 +103,12 @@ class Header {
 
         this.type = object._;
         delete object._;
+
         // Text type can go to hell
-        this[this.type] = this.type === "text" ? object.body : object;
+        if (this.type === "text") {
+            if (object.body > 60) throw new Error("Header text must be 60 characters or less");
+            this[this.type] = object.body;
+        } else this[this.type] = object;
     }
 }
 
@@ -124,11 +129,13 @@ class ActionList {
      * @throws {Error} If button is not provided
      * @throws {Error} If button is over 20 characters
      * @throws {Error} If no sections are provided or are over 10
+     * @throws {Error} If more than 1 section is provided and at least one doesn't have a title
      */
     constructor(button, ...sections) {
         if (!button) throw new Error("Action must have a button content");
         if (button.length > 20) throw new Error("Button content must be 20 characters or less");
         if (!sections?.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
+        if (sections.length > 1) sections.forEach(s => { if (!s.title) throw new Error("Sections must have a title if more than 1 section is provided") });
 
         this._ = "list";
         this.button = button;
@@ -146,18 +153,16 @@ class Section {
     /**
      * Builds a section component for ActionList
      * 
-     * @param {String} title Title of the section
+     * @param {String} title Title of the section, only required if there are more than one section
      * @param {...Row} rows Rows of the section
-     * @throws {Error} If title is not provided
-     * @throws {Error} If title is over 24 characters
+     * @throws {Error} If title is over 24 characters if provided
      * @throws {Error} If no rows are provided or are over 10
      */
     constructor(title, ...rows) {
-        if (!title) throw new Error("Section must have a title");
-        if (title.length > 24) throw new Error("Section title must be 24 characters or less");
+        if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
         if (!rows?.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
 
-        this.title = title;
+        if (title) this.title = title;
         this.rows = rows;
     }
 }
