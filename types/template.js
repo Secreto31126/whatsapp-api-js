@@ -15,7 +15,7 @@ class Template {
      * 
      * @param {String} name Name of the template
      * @param {(String|Language)} language The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} components Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} [components] Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
      * @throws {Error} If name is not provided
      * @throws {Error} If language is not provided
      */
@@ -25,7 +25,7 @@ class Template {
 
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
-        if (components) this.components = components.map(c => c.build ? c.build() : c).flat();;
+        if (components) this.components = components.map(c => c.build ? c.build() : c).flat();
 
         this._ = "template";
     }
@@ -42,7 +42,7 @@ class Language {
      * Create a Language component for a Template message
      * 
      * @param {String} code The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param {String} policy The language policy the message should follow. The only supported option is 'deterministic'. The variable isn't even read by my code :)
+     * @param {String} [policy] The language policy the message should follow. The only supported option is 'deterministic'. The variable isn't even read by my code :)
      * @throws {Error} If code is not provided
      */
     constructor(code, policy) {
@@ -165,7 +165,7 @@ class ButtonParameter {
      */
     constructor(param, type) {
         if (!param) throw new Error("UrlButton must have a param");
-        if (!["text", "payload"].includes(type)) throw new Error("UrlButton must be either 'text' or 'payload'");
+        if (!["text", "payload"].includes(type)) throw new Error("UrlButton type must be either 'text' or 'payload'");
 
         this.type = type;
         this[type] = param;
@@ -182,7 +182,7 @@ class HeaderComponent {
     /**
      * Builds a header component for a Template message
      * 
-     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
+     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} [parameters] Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "header";
@@ -200,7 +200,7 @@ class BodyComponent {
     /**
      * Builds a body component for a Template message
      * 
-     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
+     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} [parameters] Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "body";
@@ -226,13 +226,13 @@ class Parameter {
      * For Document parameter, only PDF documents are supported for document-based message templates.
      * 
      * @param {(Text|Currency|DateTime|Image|Document|Video)} parameter The parameter to be used in the template
-     * @param {String} whoami The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
+     * @param {String} [whoami] The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
      * @throws {Error} If parameter is not provided
      * @throws {Error} If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
      * @throws {Error} If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
      */
     constructor(parameter, whoami) {
-        if (!parameter) throw new Error("Parameter object must have a parameter parameter");
+        if (!parameter) throw new Error("Parameter object must have a parameter parameter :)");
         this.type = parameter._;
         delete parameter._;
 
