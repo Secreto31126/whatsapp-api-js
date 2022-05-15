@@ -66,7 +66,7 @@ function post(data, onMessage, onStatus) {
         const value = data.entry[0].changes[0].value;
         const phoneID = value.metadata.phone_number_id;
 
-        // Check if the message is a message
+        // Check if the message is a message or a status update
         if (value.messages) {
             const contact = value.contacts[0];
 
@@ -91,7 +91,7 @@ function post(data, onMessage, onStatus) {
 
         return 200;
     } else {
-        // Return a "404 Not Found" if event is not from a whatsApp API
+        // Throw "400 Bad Request" if data is not a valid WhatsApp API request
         throw 400;
     }
 }

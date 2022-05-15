@@ -8,7 +8,8 @@ const Text = require('./types/text');
 const fetch = require('./fetch');
 
 /**
- * @typedef {Object} WhatsAppAPI The main API object
+ * The main API object
+ * 
  * @property {String} token The API token
  * @property {String} v The API version to use
  */
