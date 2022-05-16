@@ -61,6 +61,45 @@ class WhatsAppAPI {
         if (!messageId) throw new Error("To must be specified");
         return fetch.read(this.token, this.v, phoneID, messageId);
     }
+
+    /**
+     * QR related methods
+     * 
+     * @property {Function} generate Generate an QR code for the bot
+     * @property {Function} get Get the QR codes information
+     */
+    qr = {
+        /**
+         * Generate a QR code for sharing the bot
+         * 
+         * @param {String} phoneID The bot's phone ID
+         * @param {String} message The quick message on the QR code
+         * @param {String} format The format of the QR code (png or svn)
+         * @returns {Promise} The fetch promise
+         * @throws {Error} If phoneID is not specified
+         * @throws {Error} If message is not specified
+         * @throws {Error} If format is not either 'png' or 'svn'
+         */
+        generate(phoneID, message, format = "png") {
+            if (!phoneID) throw new Error("Phone ID must be specified");
+            if (!message) throw new Error("Message must be specified");
+            if (!["png", "svn"].includes(format)) throw new Error("Format must be either 'png' or 'svg'");
+            return fetch.makeQR(this.token, this.v, phoneID, format, message);
+        },
+
+        /**
+         * Get one or many QR codes of the bot
+         * 
+         * @param {String} phoneID The bot's phone ID
+         * @param {String} id The QR's id to find. If not specified, all QRs will be returned
+         * @returns {Promise} The fetch promise
+         * @throws {Error} If phoneID is not specified
+         */
+        get(phoneID, id = "") {
+            if (!phoneID) throw new Error("Phone ID must be specified");
+            return fetch.getQR(this.token, this.v, phoneID, id);
+        }
+    }
 }
 
 /**

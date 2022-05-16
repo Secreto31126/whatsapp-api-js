@@ -69,4 +69,51 @@ function read(token, v, phoneID, message_id) {
     });
 }
 
-module.exports = { messages, read };
+/**
+ * Generate a QR code for the bot
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {String} message The default message in the QR code
+ * @param {String} format The image format of the QR code (png or svn)
+ * @returns {Promise} The fetch promise
+ */
+function makeQR(token, v, phoneID, message, format) {
+    const params = {
+        generate_qr_image: format,
+        prefilled_message: message,
+    };
+
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls?${new URLSearchParams(params)}`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+}
+
+/**
+ * Get one or all the QR codes for the bot
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {String} id The QR's id to get. If not specified, all the QR codes will be returned
+ * @returns {Promise} The fetch promise
+ */
+function getQR(token, v, phoneID, id) {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+}
+
+module.exports = { messages, read, makeQR, getQR };
