@@ -44,7 +44,7 @@ class WhatsAppAPI {
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
         if (!object._) throw new Error("There has been a breaking update in whatsapp-api-js@0.0.4 and @0.1.0, please check the documentation for more information on how to use the new version, or downgrade using 'npm i whatsapp-api-js@0.0.3'. Sorry for any inconvenience :/");
-        return fetch.messages(this.token, this.v, phoneID, to, object);
+        return fetch.sendMessage(this.token, this.v, phoneID, to, object);
     }
 
     /**
@@ -59,7 +59,71 @@ class WhatsAppAPI {
     markAsRead(phoneID, messageId) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
-        return fetch.read(this.token, this.v, phoneID, messageId);
+        return fetch.readMessage(this.token, this.v, phoneID, messageId);
+    }
+    
+    /**
+     * Generate a QR code for sharing the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} message The quick message on the QR code
+     * @param {String} format The format of the QR code (png or svn)
+     * @returns {Promise} The fetch promise
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If message is not specified
+     * @throws {Error} If format is not either 'png' or 'svn'
+     */
+    createQR(phoneID, message, format = "png") {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!message) throw new Error("Message must be specified");
+        if (!["png", "svg"].includes(format)) throw new Error("Format must be either 'png' or 'svg'");
+        return fetch.makeQR(this.token, this.v, phoneID, message, format);
+    }
+
+    /**
+     * Get one or many QR codes of the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
+     * @returns {Promise} The fetch promise
+     * @throws {Error} If phoneID is not specified
+     */
+    retrieveQR(phoneID, id) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        return fetch.getQR(this.token, this.v, phoneID, id);
+    }
+
+    /**
+     * Update a QR code of the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} id The QR's id to edit
+     * @param {String} message The new quick message for the QR code
+     * @returns {Promise} The fetch promise
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If id is not specified
+     * @throws {Error} If message is not specified
+     */
+    updateQR(phoneID, id, message) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!id) throw new Error("ID must be specified");
+        if (!message) throw new Error("Message must be specified");
+        return fetch.updateQR(this.token, this.v, phoneID, id, message);
+    }
+
+    /**
+     * Delete a QR code of the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} id The QR's id to delete
+     * @returns {Promise} The fetch promise
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If id is not specified
+     */
+    deleteQR(phoneID, id) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!id) throw new Error("ID must be specified");
+        return fetch.deleteQR(this.token, this.v, phoneID, id);
     }
 }
 
