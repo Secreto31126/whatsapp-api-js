@@ -5,6 +5,7 @@
  * @param {Object} params The GET request parameters in object format
  * @param {String} verify_token The verification token
  * @returns {String} The challenge string, it must be the http response body
+ * @throws {Number} 400 if the request is missing data
  * @throws {Number} 403 if the verification tokens don't match
  */
 function get(params, verify_token) {
@@ -24,6 +25,9 @@ function get(params, verify_token) {
             throw 403;
         }
     }
+
+    // Responds with "400 Bad Request" if it's missing data
+    throw 400;
 }
 
 /**
