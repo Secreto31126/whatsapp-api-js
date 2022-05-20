@@ -84,11 +84,11 @@ class WhatsAppAPI {
      * Get one or many QR codes of the bot
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {String} id The QR's id to find. If not specified, all QRs will be returned
+     * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
      * @returns {Promise} The fetch promise
      * @throws {Error} If phoneID is not specified
      */
-    retrieveQR(phoneID, id = "") {
+    retrieveQR(phoneID, id) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         return fetch.getQR(this.token, this.v, phoneID, id);
     }
