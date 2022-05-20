@@ -238,10 +238,10 @@ class Parameter {
 
         // Text type can go to hell
         if (this.type === "text") {
-            if (whoami === "header" && object.body > 60) throw new Error("Header text must be 60 characters or less");
-            if (whoami === "body" && object.body > 1024) throw new Error("Body text must be 1024 characters or less");
-            this[this.type] = object.body;
-        } else this[this.type] = object;
+            if (whoami === "header" && parameter.body > 60) throw new Error("Header text must be 60 characters or less");
+            if (whoami === "body" && parameter.body > 1024) throw new Error("Body text must be 1024 characters or less");
+            this[this.type] = parameter.body;
+        } else this[this.type] = parameter;
     }
 }
 
