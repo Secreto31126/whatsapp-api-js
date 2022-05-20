@@ -19,7 +19,7 @@ const fetch = require('node-fetch');
  * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
  * @returns {Promise} The fetch promise
  */
-function messages(token, v, phoneID, to, object) {
+function sendMessage(token, v, phoneID, to, object) {
     const type = object._;
     delete object._;
 
@@ -54,7 +54,7 @@ function messages(token, v, phoneID, to, object) {
  * @param {String} message_id The message id
  * @returns {Promise} The fetch promise
  */
-function read(token, v, phoneID, message_id) {
+function readMessage(token, v, phoneID, message_id) {
     return fetch(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
@@ -91,7 +91,6 @@ function makeQR(token, v, phoneID, message, format) {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
         },
     });
 }
@@ -104,16 +103,56 @@ function makeQR(token, v, phoneID, message, format) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
- * @param {String} id The QR's id to get. If not specified, all the QR codes will be returned
+ * @param {String} [id] The QR's id to get. If not specified, all the QR codes will be returned
  * @returns {Promise} The fetch promise
  */
 function getQR(token, v, phoneID, id) {
-    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
         },
     });
 }
 
-module.exports = { messages, read, makeQR, getQR };
+/**
+ * Update a QR code for the bot
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {String} id The QR's id to edit
+ * @param {String} message The new message for the QR code
+ * @returns {Promise} The fetch promise
+ */
+function updateQR(token, v, phoneID, id, message) {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?prefilled_message=${encodeURI(message)}`, {
+        method: "POST",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+}
+
+/**
+ * Delete a QR code
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {String} id The QR's id to delete
+ * @returns {Promise} The fetch promise
+ */
+function deleteQR(token, v, phoneID, id) {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+    });
+}
+
+module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR };
