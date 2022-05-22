@@ -78,7 +78,7 @@ function readMessage(token, v, phoneID, message_id) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} message The default message in the QR code
- * @param {String} format The image format of the QR code (png or svn)
+ * @param {String} format The image format of the QR code (png or svg)
  * @returns {Promise} The fetch promise
  */
 function makeQR(token, v, phoneID, message, format) {
