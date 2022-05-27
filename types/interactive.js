@@ -14,22 +14,24 @@ class Interactive {
     /**
      * Create an Interactive object for the API
      * 
-     * @param {(ActionList|ActionButtons)} action The action component of the interactive message
+     * @param {(ActionList|ActionButtons|ActionCatalog)} action The action component of the interactive message
      * @param {Body} body The body component of the interactive message
      * @param {Header} [header] The header component of the interactive message
      * @param {Footer} [footer] The footer component of the interactive message
      * @throws {Error} If action is not provided
-     * @throws {Error} If body is not provided
+     * @throws {Error} If body is not provided, unless action is an ActionCatalog with a single product
+     * @throws {Error} If header is not provided for an ActionCatalog with a product list
      */
     constructor(action, body, header, footer) {
         if (!action) throw new Error("Interactive must have an action component");
-        if (!body) throw new Error("Interactive must have a body component");
+        if (action._ !== "product" && !body) throw new Error("Interactive must have a body component");
+        if (action._ === "product_list" && !header) throw new Error("Interactive must have a header component if action is a product list");
 
         this.type = action._;
         delete action._;
         
         this.action = action;
-        this.body = body;
+        if (body) this.body = body;
         if (header) this.header = header;
         if (footer) this.footer = footer;
 
@@ -115,94 +117,6 @@ class Header {
 /**
  * Action API object
  * 
- * @property {String} button The button text
- * @property {Array<Section>} sections The sections of the action
- * @property {String} _ The type of the action, for internal use only
- */
-class ActionList {
-    /**
-     * Builds an action component for an Interactive message
-     * Required if interactive type is "list"
-     * 
-     * @param {String} button Button content. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
-     * @param  {...Section} sections Sections of the list
-     * @throws {Error} If button is not provided
-     * @throws {Error} If button is over 20 characters
-     * @throws {Error} If no sections are provided or are over 10
-     * @throws {Error} If more than 1 section is provided and at least one doesn't have a title
-     */
-    constructor(button, ...sections) {
-        if (!button) throw new Error("Action must have a button content");
-        if (button.length > 20) throw new Error("Button content must be 20 characters or less");
-        if (!sections?.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
-        if (sections.length > 1) sections.forEach(s => { if (!s.title) throw new Error("Sections must have a title if more than 1 section is provided") });
-
-        this._ = "list";
-        this.button = button;
-        this.sections = sections;
-    }
-}
-
-/**
- * Section API object
- * 
- * @property {String} title The title of the section
- * @property {Array<Row>} rows The rows of the section
- */
-class Section {
-    /**
-     * Builds a section component for ActionList
-     * 
-     * @param {String} title Title of the section, only required if there are more than one section
-     * @param {...Row} rows Rows of the section
-     * @throws {Error} If title is over 24 characters if provided
-     * @throws {Error} If no rows are provided or are over 10
-     */
-    constructor(title, ...rows) {
-        if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
-        if (!rows?.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
-
-        if (title) this.title = title;
-        this.rows = rows;
-    }
-}
-
-/**
- * Row API object
- * 
- * @property {String} id The id of the row
- * @property {String} title The title of the row
- * @property {String} [description] The description of the row
- */
-class Row {
-    /**
-     * Builds a row component for a Section
-     * 
-     * @param {String} id The id of the row. Maximum length: 200 characters.
-     * @param {String} title The title of the row. Maximum length: 24 characters.
-     * @param {String} [description] The description of the row. Maximum length: 72 characters.
-     * @throws {Error} If id is not provided
-     * @throws {Error} If id is over 200 characters
-     * @throws {Error} If title is not provided
-     * @throws {Error} If title is over 24 characters
-     * @throws {Error} If description is over 72 characters
-     */
-    constructor(id, title, description) {
-        if (!id) throw new Error("Row must have an id");
-        if (id.length > 200) throw new Error("Row id must be 200 characters or less");
-        if (!title) throw new Error("Row must have a title");
-        if (title.length > 24) throw new Error("Row title must be 24 characters or less");
-        if (description.length > 72) throw new Error("Row description must be 72 characters or less");
-
-        this.id = id;
-        this.title = title;
-        if (description) this.description = description;
-    }
-}
-
-/**
- * Action API object
- * 
  * @property {Array<Button>} buttons The buttons of the action
  * @property {String} _ The type of the action, for internal use only
  */
@@ -264,14 +178,187 @@ class Button {
     }
 }
 
+/**
+ * Action API object
+ * 
+ * @property {String} button The button text
+ * @property {Array<Section>} sections The sections of the action
+ * @property {String} _ The type of the action, for internal use only
+ */
+class ActionList {
+    /**
+     * Builds an action component for an Interactive message
+     * Required if interactive type is "list"
+     * 
+     * @param {String} button Button content. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
+     * @param  {...ListSection} sections Sections of the list
+     * @throws {Error} If button is not provided
+     * @throws {Error} If button is over 20 characters
+     * @throws {Error} If no sections are provided or are over 10
+     * @throws {Error} If more than 1 section is provided and at least one doesn't have a title
+     */
+    constructor(button, ...sections) {
+        if (!button) throw new Error("Action must have a button content");
+        if (button.length > 20) throw new Error("Button content must be 20 characters or less");
+        if (!sections?.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
+        if (sections.length > 1 && !sections.every(obj => obj.hasOwnProperty("title"))) throw new Error("All sections must have a title if more than 1 section is provided");
+
+        this._ = "list";
+        this.button = button;
+        this.sections = sections;
+    }
+}
+
+/**
+ * Section API object
+ * 
+ * @property {String} [title] The title of the section
+ * @property {Array<Row>} rows The rows of the section
+ */
+class ListSection {
+    /**
+     * Builds a section component for ActionList
+     * 
+     * @param {String} [title] Title of the section, only required if there are more than one section
+     * @param {...Row} rows Rows of the section
+     * @throws {Error} If title is over 24 characters if provided
+     * @throws {Error} If no rows are provided or are over 10
+     */
+    constructor(title, ...rows) {
+        if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
+        if (!rows?.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
+
+        if (title) this.title = title;
+        this.rows = rows;
+    }
+}
+
+/**
+ * Row API object
+ * 
+ * @property {String} id The id of the row
+ * @property {String} title The title of the row
+ * @property {String} [description] The description of the row
+ */
+class Row {
+    /**
+     * Builds a row component for a Section
+     * 
+     * @param {String} id The id of the row. Maximum length: 200 characters.
+     * @param {String} title The title of the row. Maximum length: 24 characters.
+     * @param {String} [description] The description of the row. Maximum length: 72 characters.
+     * @throws {Error} If id is not provided
+     * @throws {Error} If id is over 200 characters
+     * @throws {Error} If title is not provided
+     * @throws {Error} If title is over 24 characters
+     * @throws {Error} If description is over 72 characters
+     */
+    constructor(id, title, description) {
+        if (!id) throw new Error("Row must have an id");
+        if (id.length > 200) throw new Error("Row id must be 200 characters or less");
+        if (!title) throw new Error("Row must have a title");
+        if (title.length > 24) throw new Error("Row title must be 24 characters or less");
+        if (description.length > 72) throw new Error("Row description must be 72 characters or less");
+
+        this.id = id;
+        this.title = title;
+        if (description) this.description = description;
+    }
+}
+
+/**
+ * Action API object
+ * 
+ * @property {String} catalog_id The id of the catalog from where to get the products
+ * @property {String} [product_retailer_id] The product to be added to the catalog
+ * @property {Array<ProductSection>} [sections] The section to be added to the catalog
+ * @property {String} _ The type of the action, for internal use only
+ */
+class ActionCatalog {
+    /**
+     * Builds a catalog component for an Interactive message
+     * 
+     * @param {String} catalog_id The catalog id
+     * @param {...(Product|ProductSection)} products The products to add to the catalog
+     * @throws {Error} If catalog_id is not provided
+     * @throws {Error} If products is not provided
+     * @throws {Error} If products is a single product and more than 1 product is provided
+     * @throws {Error} If products is a product list and more than 10 sections are provided
+     * @throws {Error} If products is a product list with more than 1 section and at least one section is missing a title
+     */
+    constructor(catalog_id, ...products) {
+        if (!catalog_id) throw new Error("Catalog must have a catalog id");
+        if (!products?.length) throw new Error("Catalog must have at least one product or product section");
+        
+        const single_product = products[0].product_retailer_id;
+        
+        if (single_product) {
+            if (products.length > 1) throw new Error("Catalog must have only 1 product, use a ProductSection instead");
+        } else {
+            if (products.length > 10) throw new Error("Catalog must have between 1 and 10 product sections");
+            if (products.length > 1 && !products.every(obj => obj.hasOwnProperty("title"))) throw new Error("All sections must have a title if more than 1 section is provided");
+        }
+
+        this.catalog_id = catalog_id;
+        if (single_product) this.product_retailer_id = single_product;
+        else this.sections = products;
+        this._ = single_product ? "product" : "product_list";
+    }
+}
+
+/**
+ * Section API object
+ * 
+ * @property {String} [title] The title of the section
+ * @property {Array<Product>} product_items The products of the section
+ */
+class ProductSection {
+    /**
+     * Builds a product section component for an ActionCatalog
+     * 
+     * @param {String} [title] The title of the product section
+     * @param {...Product} products The products to add to the product section
+     * @throws {Error} If title is over 24 characters if provided
+     * @throws {Error} If no products are provided or are over 30
+     */
+    constructor(title, ...products) {
+        if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
+        if (!products?.length || products.length > 30) throw new Error("Section must have between 1 and 30 products");
+
+        if (title) this.title = title;
+        this.product_items = products;
+    }
+}
+
+/**
+ * Product API object
+ * 
+ * @property {String} product_retailer_id The id of the product
+ */
+class Product {
+    /**
+     * Builds a product component for ActionCart and ProductSection
+     * 
+     * @param {String} product_retailer_id The id of the product
+     * @throws {Error} If product_retailer_id is not provided
+     */
+    constructor(product_retailer_id) {
+        if (!product_retailer_id) throw new Error("Product must have a product_retailer_id");
+        this.product_retailer_id = product_retailer_id;
+    }
+}
+
 module.exports = {
     Interactive,
     Body,
     Footer,
     Header,
-    ActionList,
-    Section,
-    Row,
     ActionButtons,
-    Button
+    Button,
+    ActionList,
+    ListSection,
+    Row,
+    ActionCatalog,
+    ProductSection,
+    Product,
 };

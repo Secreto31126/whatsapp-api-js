@@ -21,7 +21,7 @@ class WhatsAppAPI {
      * @param {String} v The version of the API, defaults to v13.0
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v13.0") {
+    constructor(token, v = "v14.0") {
         if (!token) throw new Error("Token must be specified");
         this.token = token;
         this.v = v;
