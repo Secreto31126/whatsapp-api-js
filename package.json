@@ -1,7 +1,9 @@
 {
   "name": "whatsapp-api-js",
   "version": "0.4.0",
+  "author": "Secreto31126",
   "description": "A Whatsapp Official API helper for Node.js",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
     "test": "node --inspect test.js",
@@ -15,17 +17,18 @@
     "helper",
     "bot"
   ],
-  "author": "Secreto31126",
-  "license": "MIT",
   "dependencies": {
     "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "docdash": "^1.2.0",
+    "jsdoc": "^3.6.10"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
-  "devDependencies": {
-    "docdash": "^1.2.0",
-    "jsdoc": "^3.6.10"
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
   }
 }
