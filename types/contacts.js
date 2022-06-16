@@ -15,7 +15,7 @@ class Contacts {
      * @throws {Error} If contact contains more than one organization component
      */
     constructor(...contact) {
-        if (!contact?.length) throw new Error("Contacts must have at least one contact");
+        if (!contact.length) throw new Error("Contacts must have at least one contact");
 
         this.contacts = [];
 
