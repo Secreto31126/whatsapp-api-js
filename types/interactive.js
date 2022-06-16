@@ -134,7 +134,7 @@ class ActionList {
     constructor(button, ...sections) {
         if (!button) throw new Error("Action must have a button content");
         if (button.length > 20) throw new Error("Button content must be 20 characters or less");
-        if (!sections?.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
+        if (!sections.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
         if (sections.length > 1) sections.forEach(s => { if (!s.title) throw new Error("Sections must have a title if more than 1 section is provided") });
 
         this._ = "list";
@@ -160,7 +160,7 @@ class Section {
      */
     constructor(title, ...rows) {
         if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
-        if (!rows?.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
+        if (!rows.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
 
         if (title) this.title = title;
         this.rows = rows;
@@ -216,7 +216,7 @@ class ActionButtons {
      * @throws {Error} If two or more buttons have the same title
      */
     constructor(...button) {
-        if (!button?.length || button.length > 3) throw new Error("Reply buttons must have between 1 and 3 buttons");
+        if (!button.length || button.length > 3) throw new Error("Reply buttons must have between 1 and 3 buttons");
 
         // Find if there are duplicates in button.id
         const ids = button.map(b => b[b.type].id);

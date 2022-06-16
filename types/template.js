@@ -124,7 +124,7 @@ class ButtonComponent {
      */
     constructor(sub_type, ...parameters) {
         if (!["url", "quick_reply"].includes(sub_type)) throw new Error("ButtonComponent sub_type must be either 'url' or 'quick_reply'");
-        if (!parameters?.length) throw new Error("ButtonComponent must have at least 1 parameter");
+        if (!parameters.length) throw new Error("ButtonComponent must have at least 1 parameter");
         if (parameters.length > 3) throw new Error("ButtonComponent can only have up to 3 parameters");
 
         const buttonType = sub_type === "url" ? "text" : "payload";
