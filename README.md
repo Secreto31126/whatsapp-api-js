@@ -1,5 +1,5 @@
 # whatsapp-api-js
-A Whatsapp's Official API helper for Node.js (WIP)
+A Whatsapp's Official API helper for Node.js [(and others)](Running-outside-of-Node.js)
 
 ## Disclaimers
 
@@ -85,6 +85,28 @@ Once you are done, click administrate, and set the webhook to subscribe to messa
 There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
+
+## Running outside of Node.js
+
+The module has a single dependecy, node-fetch, which brings fetch() into Node.js (although it is natively available from v17 and on).
+Starting from @0.4.0, the code will check if fetch is available in your enviroment and use it by default, with fallback to node-fetch.
+This will allow the same script to be run in differents enviroments, such as a web browsers, Deno, and maybe TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
+Personal suggestion, use [esm.sh](https://esm.sh/) to import the code directly from npm, works flawlessly with Deno.
+
+Some examples:
+
+```js
+import { WhatsAppAPI } from "https://esm.sh/whatsapp-api-js";
+const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
+```
+
+```html
+<script type="module">
+ import { WhatsAppAPI } from "https://esm.sh/whatsapp-api-js";
+ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
+ <!-- Please, never use your API tokens in a website, use this method wisely -->
+</script>
+```
 
 ## Documentation
 
