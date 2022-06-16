@@ -2,10 +2,16 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to Firebase Hosting on merge
-'on':
+
+on:
   push:
     branches:
       - main
+    paths:
+      - '*.js'
+      - 'README.md'
+      - 'package.json'
+      - 'documentation/*.html'
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
