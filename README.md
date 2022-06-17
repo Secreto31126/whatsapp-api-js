@@ -88,9 +88,9 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
 ## Running outside of Node.js
 
-The module has a single dependecy, node-fetch, which brings fetch() into Node.js (although it is natively available from v17 and on).
-Starting from @0.4.0, the code will check if fetch is available in your enviroment and use it by default, with fallback to node-fetch.
-This will allow the same script to be run in differents enviroments, such as a web browsers, Deno, and maybe TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
+Since @0.4.0, the module uses cross-fetch, a cross compatible fetch function. IDK where it works, we will find out now.
+This will allow the same script to be run in differents enviroments, such as a web browsers, Deno,
+and maybe TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
 Personal suggestion, use [esm.sh](https://esm.sh/) to import the code directly from npm, works flawlessly with Deno.
 
 Some examples:
