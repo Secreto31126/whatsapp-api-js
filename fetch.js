@@ -5,7 +5,7 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const fetch = require('node-fetch');
+const fetch = require('cross-fetch');
 
 /**
  * Make a message post request to the API
