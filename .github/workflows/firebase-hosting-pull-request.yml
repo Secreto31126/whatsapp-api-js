@@ -8,7 +8,6 @@ on:
     paths:
       - '*.js'
       - 'README.md'
-      - 'package.json'
       - 'documentation/*.html'
 
 jobs:
