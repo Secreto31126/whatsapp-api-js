@@ -27,8 +27,5 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/Secreto31126/whatsapp-api-js.git"
-  },
-  "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
   }
 }
