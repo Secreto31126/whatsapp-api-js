@@ -88,7 +88,7 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
 ## Running outside of Node.js
 
-Since @0.4.0, the module will check if fetch is available, and fallback to "cross-fetch" if not.
+Since @0.4.2, the module will check if fetch is available, and fallback to "cross-fetch" if not.
 This will allow the same script to be run in many different enviroments, such as a web browser, Deno,
 and maybe even TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
 
@@ -112,6 +112,12 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
 ## Documentation
 
 The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/).
+
+# Beta releases
+
+Install the latest beta realease with `npm install whatsapp-api-js@beta`.
+As any beta, it is 110% likely to break. I also use this tag to test npm releases.
+Use it at your own risk.
 
 ## Comments
 

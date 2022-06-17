@@ -24,8 +24,10 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
-      - run: echo ${GITHUB_REF/refs\/tags\//}
-      - run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
+      - name: Set package version to prerelease tag
+        if: "github.event.release.prerelease"
+        run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
+      
       - name: Beta Release
         if: "github.event.release.prerelease"
         run: npm publish --tag beta
