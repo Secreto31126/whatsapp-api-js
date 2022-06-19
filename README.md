@@ -113,7 +113,7 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
 
 The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/).
 
-# Beta releases
+## Beta releases
 
 Install the latest beta realease with `npm install whatsapp-api-js@beta`.
 As any beta, it is 110% likely to break. I also use this tag to test npm releases.
