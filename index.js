@@ -18,7 +18,7 @@ class WhatsAppAPI {
      * Initiate the Whatsapp API app
      * 
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
-     * @param {String} v The version of the API, defaults to v13.0
+     * @param {String} v The version of the API, defaults to v14.0
      * @throws {Error} If token is not specified
      */
     constructor(token, v = "v14.0") {
