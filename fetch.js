@@ -17,16 +17,24 @@ const req = typeof fetch === "undefined" ? require('cross-fetch') : fetch;
  * @param {String} phoneID The bot's phone id
  * @param {String} to The user's phone number
  * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
+ * @param {String} context The message id to reply to
  * @returns {Promise} The fetch promise
  */
-function sendMessage(token, v, phoneID, to, object) {
+function sendMessage(token, v, phoneID, to, object, message_id) {
     const type = object._;
     delete object._;
+
+    const reply = message_id ? {
+        context: {
+            message_id,
+        }
+    } : {};
 
     const body = JSON.stringify({
         messaging_product: "whatsapp",
         type,
         to,
+        ...reply,
         // If the object contains its name as a property, it means it's an array, use it, else use the class
         // This horrible thing comes from Contacts, the only API element which must be an array instead of an object...
         [type]: JSON.stringify(object[type] ?? object),
