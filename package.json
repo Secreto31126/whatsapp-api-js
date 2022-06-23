@@ -6,10 +6,9 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "node --inspect test.js",
+    "test": "node ./node_modules/mocha/bin/mocha.js ./tests/",
     "debug": "node --inspect index.js",
-    "document": "./node_modules/.bin/jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types",
-    "win-document": ".\\node_modules\\.bin\\jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
+    "document": "node ./node_modules/jsdoc/jsdoc.js -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
     "whatsapp",
@@ -23,7 +22,8 @@
   },
   "devDependencies": {
     "docdash": "^1.2.0",
-    "jsdoc": "^3.6.10"
+    "jsdoc": "^3.6.10",
+    "mocha": "^10.0.0"
   },
   "dependencies": {
     "cross-fetch": "^3.1.5"
