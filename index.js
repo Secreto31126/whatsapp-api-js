@@ -18,14 +18,27 @@ class WhatsAppAPI {
      * Initiate the Whatsapp API app
      * 
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
+     * @param {log} log The function to use as a callback for logging purposes
      * @param {String} v The version of the API, defaults to v14.0
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v14.0") {
+    constructor(token, log = () => {}, v = "v14.0") {
         if (!token) throw new Error("Token must be specified");
         this.token = token;
         this.v = v;
+        this.logger = (request, promise) => {
+            promise.then(e => e.json()).then(response => log(request, response)).catch(error => log(request, error));
+            return promise;
+        };
     }
+
+    /**
+     * Callback function after a message is sent
+     *
+     * @callback log
+     * @param {Object} request The sent object to the server
+     * @param {Object} response The response from the server, already parsed from JSON
+     */
 
     /**
      * Send a Whatsapp message
