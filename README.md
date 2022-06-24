@@ -32,6 +32,8 @@ const Token = "YOUR_TOKEN";
 
 const Whatsapp = new WhatsAppAPI(Token);
 
+Whatsapp.logSentMessages((message, bot) => console.log(`Bot ${bot} just sent: ${JSON.stringify(message)}`));
+
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The Handlers work with any middleware, as long as you pass the correct data
