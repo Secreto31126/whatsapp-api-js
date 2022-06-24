@@ -18,7 +18,7 @@ class WhatsAppAPI {
      * Initiate the Whatsapp API app
      * 
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
-     * @param {log} log The function to use as a callback for logging purposes
+     * @param {log} log The function to use as a callback after sendMessage is run, for logging purposes
      * @param {String} v The version of the API, defaults to v14.0
      * @throws {Error} If token is not specified
      */
@@ -26,18 +26,33 @@ class WhatsAppAPI {
         if (!token) throw new Error("Token must be specified");
         this.token = token;
         this.v = v;
-        this.logger = (request, promise) => {
-            promise.then(e => e.json()).then(response => log(request, response)).catch(error => log(request, error));
-            return promise;
+        this.logger = (fetch) => {
+            log(fetch.request, fetch.phoneID);
+            return fetch.promise;
         };
     }
-
+    
     /**
-     * Callback function after an API request is sent
+     * Callback function after a sendMessage request is sent
      *
      * @callback log
      * @param {Object} request The sent object to the server
-     * @param {Object} response The response from the server, already parsed from JSON
+     * @param {String} request.messaging_product The messaging product (whatsapp)
+     * @param {String} request.type The type of message
+     * @param {String} request.to The user's phone number
+     * @param {Object} [request.context] The message to reply to
+     * @param {String} request.context.message_id The message id to reply to
+     * @param {Text} [request.text] The text to send
+     * @param {Audio} [request.audio] The audio to send
+     * @param {Document} [request.document] The document to send
+     * @param {Image} [request.image] The image to send
+     * @param {Sticker} [request.sticker] The sticker to send
+     * @param {Video} [request.video] The video to send
+     * @param {Location} [request.location] The location to send
+     * @param {Contacts} [request.contacts] The contacts to send
+     * @param {Interactive} [request.interactive] The interactive to send
+     * @param {Template} [request.template] The template to send
+     * @param {String} phoneID The bot's phoneID from where the message was sent
      */
 
     /**
@@ -51,12 +66,12 @@ class WhatsAppAPI {
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If to is not specified
      * @throws {Error} If object is not specified
-     */ 
+     */
     sendMessage(phoneID, to, object, context = "") {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
-        return fetch.sendMessage(this.token, this.v, phoneID, to, object, context);
+        return this.logger(fetch.sendMessage(this.token, this.v, phoneID, to, object, context));
     }
 
     /**

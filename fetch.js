@@ -8,6 +8,40 @@ const Text = require('./types/text');
 const req = typeof fetch === "undefined" ? require('cross-fetch') : fetch;
 
 /**
+ * The sendMessage request object
+ * 
+ * @package
+ * @ignore
+ * @typedef {Object} Request
+ * @property {String} messaging_product The messaging product (whatsapp)
+ * @property {String} type The type of message
+ * @property {String} to The user's phone number
+ * @property {Object} [context] The message to reply to
+ * @property {String} context.message_id The message id to reply to
+ * @property {Text} [text] The text to send
+ * @property {Audio} [audio] The audio to send
+ * @property {Document} [document] The document to send
+ * @property {Image} [image] The image to send
+ * @property {Sticker} [sticker] The sticker to send
+ * @property {Video} [video] The video to send
+ * @property {Location} [location] The location to send
+ * @property {Contacts} [contacts] The contacts to send
+ * @property {Interactive} [interactive] The interactive to send
+ * @property {Template} [template] The template to send
+ */
+
+/**
+ * The sendMessage response object
+ * 
+ * @package
+ * @ignore
+ * @typedef {Object} SendMessageResponse
+ * @property {Promise} promise The fetch promise
+ * @property {Request} request The request sent to the server
+ * @property {String} phoneID The bot's phone id
+ */
+
+/**
  * Make a message post request to the API
  * 
  * @package
@@ -18,7 +52,7 @@ const req = typeof fetch === "undefined" ? require('cross-fetch') : fetch;
  * @param {String} to The user's phone number
  * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
  * @param {String} context The message id to reply to
- * @returns {Promise} The fetch promise
+ * @returns {SendMessageResponse} An object with the promise, request and phoneID
  */
 function sendMessage(token, v, phoneID, to, object, message_id) {
     const type = object._;
@@ -30,7 +64,8 @@ function sendMessage(token, v, phoneID, to, object, message_id) {
         }
     } : {};
 
-    const body = JSON.stringify({
+    /** @type {Request} */
+    const request = {
         messaging_product: "whatsapp",
         type,
         to,
@@ -38,17 +73,19 @@ function sendMessage(token, v, phoneID, to, object, message_id) {
         // If the object contains its name as a property, it means it's an array, use it, else use the class
         // This horrible thing comes from Contacts, the only API element which must be an array instead of an object...
         [type]: JSON.stringify(object[type] ?? object),
-    });
+    };
 
     // Make the post request
-    return req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
+    const promise = req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
-        body,
+        body: JSON.stringify(request),
     });
+
+    return { promise, request, phoneID };
 }
 
 /**
