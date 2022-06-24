@@ -33,7 +33,7 @@ class WhatsAppAPI {
     }
 
     /**
-     * Callback function after a message is sent
+     * Callback function after an API request is sent
      *
      * @callback log
      * @param {Object} request The sent object to the server
