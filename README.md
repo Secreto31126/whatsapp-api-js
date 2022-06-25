@@ -32,8 +32,6 @@ const Token = "YOUR_TOKEN";
 
 const Whatsapp = new WhatsAppAPI(Token);
 
-Whatsapp.logSentMessages((message, bot) => console.log(`Bot ${bot} just sent: ${JSON.stringify(message)}`));
-
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The Handlers work with any middleware, as long as you pass the correct data
@@ -41,6 +39,8 @@ function post(e) {
 }
 
 function onMessage(phoneID, phone, message, name, raw_data) {
+    console.log(`User ${phone} (${name}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
+
     let promise;
 
     if (message.type === "text") promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`));
@@ -66,6 +66,10 @@ function onMessage(phoneID, phone, message, name, raw_data) {
     
     Whatsapp.markAsRead(phoneID, message.id);
 }
+
+Whatsapp.logSentMessages((phoneID, phone, message, raw_data) => {
+    console.log(`Bot ${phoneID} sent to user ${phone} ${JSON.stringify(message)}\n\n${JSON.stringify(raw_data)}`);
+});
 ```
 
 To recieve the post requests on message, you must setup the webhook at your Facebook app.
