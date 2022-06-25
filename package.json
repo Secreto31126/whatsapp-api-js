@@ -8,6 +8,7 @@
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha.js ./tests/",
     "debug": "node --inspect index.js",
+    "debug-with-tests": "nodemon -x npm run test",
     "document": "node ./node_modules/jsdoc/jsdoc.js -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
@@ -23,7 +24,8 @@
   "devDependencies": {
     "docdash": "^1.2.0",
     "jsdoc": "^3.6.10",
-    "mocha": "^10.0.0"
+    "mocha": "^10.0.0",
+    "sinon": "^14.0.0"
   },
   "dependencies": {
     "cross-fetch": "^3.1.5"
