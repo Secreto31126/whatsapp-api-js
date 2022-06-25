@@ -1,9 +1,10 @@
 // Unit tests with mocha
 const assert = require('assert');
 
-// Mock the fetch module
-const sinon = require('sinon');
-const fetch = require('../fetch');
+// Mock the https requests
+const nock = require('nock');
+nock.disableNetConnect();
+const api = nock("https://graph.facebook.com");
 
 // Import the module
 const { WhatsAppAPI, Types } = require('../index');
@@ -37,22 +38,11 @@ describe("WhatsAppAPI", () => {
     
     describe("Message", () => {
         describe("Send", () => {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
-
-            let sendMessageStub;
-
-            beforeEach(() => {
-                sendMessageStub = sinon.stub(fetch, "sendMessage");
-            });
-
-            afterEach(() => {
-                sendMessageStub.restore();
-            });
-
-            it("should be able to send a basic message", async () => {
+            it("should be able to send a basic message", async () => {                
+                const bot = "1";
                 const user = "2";
-
-                const response = {
+                
+                const expectedResponse = {
                     messaging_product: "whatsapp",
                     contacts: [
                         {
@@ -66,14 +56,17 @@ describe("WhatsAppAPI", () => {
                         },
                     ],
                 };
-    
-                sendMessageStub.returns(Promise.resolve(response));
+                
+                const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
-                const e = await Whatsapp.sendMessage("1", user, new Text("3"));
-                assert.equal(e, response);
+                api.post(`/${Whatsapp.v}/${bot}/messages`).reply(200, expectedResponse);
+
+                const response = await (await Whatsapp.sendMessage(bot, user, new Text("3"))).json();
+
+                assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", async () => {
+            it("should fail if the phoneID param is falsy", () => {
                 assert.throws(() => {
                     Whatsapp.sendMessage(undefined, "2", new Text("3"));
                 });
@@ -87,7 +80,7 @@ describe("WhatsAppAPI", () => {
                 });
             });
 
-            it("should fail if the phone param is falsy", async () => {
+            it("should fail if the phone param is falsy", () => {
                 assert.throws(() => {
                     Whatsapp.sendMessage("1", undefined, new Text("3"));
                 });
@@ -101,7 +94,7 @@ describe("WhatsAppAPI", () => {
                 });
             });
 
-            it("should fail if the object param is falsy", async () => {
+            it("should fail if the object param is falsy", () => {
                 assert.throws(() => {
                     Whatsapp.sendMessage("1", "2", undefined);
                 });
@@ -114,16 +107,48 @@ describe("WhatsAppAPI", () => {
 
         describe("Mark as read", () => {
             it("should be able to mark a message as read", async () => {
-                const response = {
+                const bot = "1";
+                const id = "2";
+
+                const expectedResponse = {
                     done: true,
                 };
-
-                const sendMessageStub = sinon.stub(fetch, "readMessage");
-                sendMessageStub.returns(Promise.resolve(response));
-
+                
                 const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
-                const e = await Whatsapp.markAsRead("1", "2");
-                assert.equal(e, response);
+
+                api.post(`/${Whatsapp.v}/${bot}/messages`).reply(200, expectedResponse);
+                
+                const response = await (await Whatsapp.markAsRead(bot, id)).json();
+
+                assert.deepEqual(response, expectedResponse);
+            });
+
+            it("should fail if the phoneID param is falsy", () => {
+                assert.throws(() => {
+                    Whatsapp.markAsRead(undefined, "2");
+                });
+
+                assert.throws(() => {
+                    Whatsapp.markAsRead(false, "2");
+                });
+
+                assert.throws(() => {
+                    Whatsapp.markAsRead();
+                });
+            });
+
+            it("should fail if the id param is falsy", () => {
+                assert.throws(() => {
+                    Whatsapp.markAsRead("1", undefined);
+                });
+
+                assert.throws(() => {
+                    Whatsapp.markAsRead("1", false);
+                });
+
+                assert.throws(() => {
+                    Whatsapp.markAsRead("1");
+                });
             });
         });
     });
