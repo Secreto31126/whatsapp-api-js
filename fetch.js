@@ -5,7 +5,7 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const req = typeof fetch === "undefined" ? require('cross-fetch') : fetch;
+const { req } = require('./fetch-picker');
 
 /**
  * Make a message post request to the API
