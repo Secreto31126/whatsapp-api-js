@@ -34,8 +34,10 @@ class WhatsAppAPI {
      * Callback function after a sendMessage request is sent
      *
      * @callback Logger
-     * @param {Request} request The sent object to the server
      * @param {String} phoneID The bot's phoneID from where the message was sent
+     * @param {String} to The user's phone number
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The message object
+     * @param {Request} raw The raw body sent to the server
      */
 
     /**
@@ -68,9 +70,9 @@ class WhatsAppAPI {
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
 
-        const data = api.sendMessage(this.token, this.v, phoneID, to, object, context);
-        if (this._debug) this._debug(data.request, phoneID);
-        return data.promise;
+        const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
+        if (this._debug) this._debug(phoneID, request.to, JSON.parse(request[request.type]), request);
+        return promise;
     }
 
     /**
