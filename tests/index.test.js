@@ -37,6 +37,8 @@ describe("WhatsAppAPI", () => {
     });
     
     describe("Message", () => {
+        const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+
         describe("Send", () => {
             it("should be able to send a basic message", async () => {                
                 const bot = "1";
@@ -57,8 +59,6 @@ describe("WhatsAppAPI", () => {
                     ],
                 };
                 
-                const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
-
                 api.post(`/${Whatsapp.v}/${bot}/messages`).reply(200, expectedResponse);
 
                 const response = await (await Whatsapp.sendMessage(bot, user, new Text("3"))).json();
@@ -111,10 +111,8 @@ describe("WhatsAppAPI", () => {
                 const id = "2";
 
                 const expectedResponse = {
-                    done: true,
+                    success: true
                 };
-                
-                const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
                 api.post(`/${Whatsapp.v}/${bot}/messages`).reply(200, expectedResponse);
                 
@@ -149,6 +147,24 @@ describe("WhatsAppAPI", () => {
                 assert.throws(() => {
                     Whatsapp.markAsRead("1");
                 });
+            });
+        });
+    });
+
+    describe("QR", () => {
+        const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+
+        describe("Get", () => {
+            it("should be able to create a QR code", async () => {
+                const expectedResponse = {
+                    qr: "https://api.whatsapp.com/qr/code",
+                };
+    
+                api.get(`/${Whatsapp.v}/qr`).reply(200, expectedResponse);
+    
+                const response = await (await Whatsapp.getQR()).json();
+    
+                assert.deepEqual(response, expectedResponse);
             });
         });
     });
