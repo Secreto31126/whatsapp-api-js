@@ -5,10 +5,14 @@
  * @param {Object} params The GET request parameters in object format
  * @param {String} verify_token The verification token
  * @returns {String} The challenge string, it must be the http response body
+ * @throws {Number} 500 if verify_token is not specified
  * @throws {Number} 400 if the request is missing data
  * @throws {Number} 403 if the verification tokens don't match
  */
 function get(params, verify_token) {
+    // verify_token is required
+    if (!verify_token) throw 500;
+
     // Parse params from the webhook verification request
     let mode = params["hub.mode"];
     let token = params["hub.verify_token"];

@@ -10,42 +10,42 @@ const api = nock("https://graph.facebook.com");
 const { WhatsAppAPI, Types } = require('../index');
 const { Text } = Types;
 
-describe("WhatsAppAPI", () => {
-    describe("Token", () => {
-        it("should create a WhatsAppAPI object with the token", () => {
+describe("WhatsAppAPI", function() {
+    describe("Token", function() {
+        it("should create a WhatsAppAPI object with the token", function() {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
             assert.equal(Whatsapp.token, "YOUR_ACCESS_TOKEN");
         });
 
-        it("should fail if no access token is provided", () => {
-            assert.throws(() => {
+        it("should fail if no access token is provided", function() {
+            assert.throws(function() {
                 const Whatsapp = new WhatsAppAPI();
             });
         });
     });
 
-    describe("Version", () => {
-        it("should work with v14.0 as default", () => {
+    describe("Version", function() {
+        it("should work with v14.0 as default", function() {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
             assert.equal(Whatsapp.v, "v14.0");
         });
 
-        it("should work with any specified version", () => {
+        it("should work with any specified version", function() {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0");
             assert.equal(Whatsapp.v, "v13.0");
         });
     });
     
-    describe("Message", () => {
+    describe("Message", function() {
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
-        describe("Send", () => {
+        describe("Send", function() {
             const bot = "1";
             const user = "2";
             const id = "something_random";
             const message = new Text("Hello world");
 
-            it("should be able to send a basic message", async () => {
+            it("should be able to send a basic message", async function() {
                 const expectedResponse = {
                     messaging_product: "whatsapp",
                     contacts: [
@@ -68,7 +68,7 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should be able to send a reply message (context)", async () => {
+            it("should be able to send a reply message (context)", async function() {
                 const context = "another_random_id";
 
                 const expectedResponse = {
@@ -93,51 +93,51 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phoneID param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.sendMessage(undefined, user, message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.sendMessage(false, user, message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.sendMessage();
                 });
             });
 
-            it("should fail if the phone param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phone param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.sendMessage(bot, undefined, message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.sendMessage(bot, false, message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.sendMessage(bot);
                 });
             });
 
-            it("should fail if the object param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the object param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.sendMessage(bot, user, undefined);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.sendMessage(bot, user, false);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.sendMessage(bot, user);
                 });
             });
         });
 
-        describe("Mark as read", () => {
-            it("should be able to mark a message as read", async () => {
+        describe("Mark as read", function() {
+            it("should be able to mark a message as read", async function() {
                 const bot = "1";
                 const id = "2";
 
@@ -152,45 +152,45 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phoneID param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.markAsRead(undefined, "2");
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.markAsRead(false, "2");
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.markAsRead();
                 });
             });
 
-            it("should fail if the id param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the id param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.markAsRead("1", undefined);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.markAsRead("1", false);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.markAsRead("1");
                 });
             });
         });
     });
 
-    describe("QR", () => {
+    describe("QR", function() {
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         const bot = "1";
         const message = "Hello World";
         const code = "something_random";
 
-        describe("Create", () => {
-            it("should be able to create a QR code as a png (default)", async () => {
+        describe("Create", function() {
+            it("should be able to create a QR code as a png (default)", async function() {
                 const format = "png";
 
                 const expectedResponse = {
@@ -210,7 +210,7 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should be able to create a QR as a png", async () => {
+            it("should be able to create a QR as a png", async function() {
                 const format = "png";
 
                 const expectedResponse = {
@@ -230,7 +230,7 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should be able to create a QR as a svg", async () => {
+            it("should be able to create a QR as a svg", async function() {
                 const format = "svg";
 
                 const expectedResponse = {
@@ -250,45 +250,45 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phoneID param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.createQR(undefined, message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.createQR(false, message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.createQR();
                 });
             });
 
-            it("should fail if the message param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the message param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.createQR(bot, undefined);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.createQR(bot, false);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.createQR(bot);
                 });
             });
             
-            it("should fail with an invalid format type", () => {
+            it("should fail with an invalid format type", function() {
                 const format = "jpg";
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.createQR(bot, message, format);
                 });
             });
         });
 
-        describe("Retrieve", () => {
-            it("should be able to retrieve all QR codes", async () => {
+        describe("Retrieve", function() {
+            it("should be able to retrieve all QR codes", async function() {
                 const expectedResponse = {
                     data: [
                         {
@@ -306,7 +306,7 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should be able to retrieve a single QR code", async () => {
+            it("should be able to retrieve a single QR code", async function() {
                 const expectedResponse = {
                     data: [
                         {
@@ -324,25 +324,25 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phoneID param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.retrieveQR(undefined, code);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.retrieveQR(false, code);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.retrieveQR();
                 });
             });
         });
 
-        describe("Update", () => {
+        describe("Update", function() {
             const new_message = "Hello World 2";
 
-            it("should be able to update a QR code", async () => {
+            it("should be able to update a QR code", async function() {
                 const expectedResponse = {
                     code,
                     prefilled_message: new_message,
@@ -358,51 +358,51 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phoneID param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.updateQR(undefined, code, new_message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.updateQR(false, code, new_message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.updateQR();
                 });
             });
 
-            it("should fail if the code param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the code param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.updateQR(bot, undefined, new_message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.updateQR(bot, false, new_message);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.updateQR(bot);
                 });
             });
 
-            it("should fail if the message param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the message param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.updateQR(bot, code, undefined);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.updateQR(bot, code, false);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.updateQR(bot, code);
                 });
             });
         });
 
-        describe("Delete", () => {
-            it("should be able to delete a QR code", async () => {
+        describe("Delete", function() {
+            it("should be able to delete a QR code", async function() {
                 const expectedResponse = {
                     success: true,
                 };
@@ -414,30 +414,30 @@ describe("WhatsAppAPI", () => {
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the phoneID param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.deleteQR(undefined, code);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.deleteQR(false, code);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.deleteQR();
                 });
             });
 
-            it("should fail if the code param is falsy", () => {
-                assert.throws(() => {
+            it("should fail if the code param is falsy", function() {
+                assert.throws(function() {
                     Whatsapp.deleteQR(bot, undefined);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.deleteQR(bot, false);
                 });
 
-                assert.throws(() => {
+                assert.throws(function() {
                     Whatsapp.deleteQR(bot);
                 });
             });
