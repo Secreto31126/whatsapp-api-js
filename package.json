@@ -6,10 +6,10 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha.js ./tests/",
-    "coverage": "nyc --reporter=text ./node_modules/mocha/bin/mocha.js ./tests/ --reporter min",
+    "test": "mocha ./tests/",
+    "coverage": "nyc --reporter=text mocha ./tests/ --reporter min",
     "debug-with-tests": "nodemon -x npm run test",
-    "document": "node ./node_modules/jsdoc/jsdoc.js -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
+    "document": "node jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
     "whatsapp",
@@ -26,6 +26,7 @@
     "jsdoc": "^3.6.10",
     "mocha": "^10.0.0",
     "nock": "^13.2.7",
+    "nodemon": "^2.0.18",
     "nyc": "^15.1.0"
   },
   "dependencies": {
