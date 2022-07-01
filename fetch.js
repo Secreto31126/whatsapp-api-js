@@ -135,7 +135,11 @@ function getQR(token, v, phoneID, id) {
  * @returns {Promise} The fetch promise
  */
 function updateQR(token, v, phoneID, id, message) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?prefilled_message=${encodeURI(message)}`, {
+    const params = {
+        prefilled_message: message,
+    };
+
+    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(params)}`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,

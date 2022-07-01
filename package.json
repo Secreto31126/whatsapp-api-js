@@ -7,7 +7,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha.js ./tests/",
-    "debug": "node --inspect index.js",
+    "coverage": "nyc --reporter=text ./node_modules/mocha/bin/mocha.js ./tests/ --reporter min",
     "debug-with-tests": "nodemon -x npm run test",
     "document": "node ./node_modules/jsdoc/jsdoc.js -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
@@ -25,7 +25,8 @@
     "docdash": "^1.2.0",
     "jsdoc": "^3.6.10",
     "mocha": "^10.0.0",
-    "nock": "^13.2.7"
+    "nock": "^13.2.7",
+    "nyc": "^15.1.0"
   },
   "dependencies": {
     "cross-fetch": "^3.1.5"
