@@ -1,3 +1,5 @@
+// Most of these imports are here only for types checks
+
 const { Contacts } = require('./types/contacts');
 const { Interactive } = require("./types/interactive");
 const { Audio, Document, Image, Sticker, Video } = require('./types/media');
@@ -5,7 +7,8 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const fetch = require('./fetch');
+const api = require('./fetch');
+const { Request } = api;
 
 /**
  * The main API object
@@ -26,6 +29,29 @@ class WhatsAppAPI {
         this.token = token;
         this.v = v;
     }
+    
+    /**
+     * Callback function after a sendMessage request is sent
+     *
+     * @callback Logger
+     * @param {String} phoneID The bot's phoneID from where the message was sent
+     * @param {String} to The user's phone number
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The message object
+     * @param {Request} raw The raw body sent to the server
+     */
+
+    /**
+     * Set a callback function for sendMessage
+     * 
+     * @param {Logger} callback The callback function to set
+     * @returns {WhatsAppAPI} The API object, for chaining
+     * @throws {Error} If callback is truthy and is not a function
+     */
+    logSentMessages(callback) {
+        if (callback && typeof callback !== "function") throw new Error("Callback must be a function");
+        this._debug = callback;
+        return this;
+    }
 
     /**
      * Send a Whatsapp message
@@ -38,12 +64,15 @@ class WhatsAppAPI {
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If to is not specified
      * @throws {Error} If object is not specified
-     */ 
+     */
     sendMessage(phoneID, to, object, context = "") {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
-        return fetch.sendMessage(this.token, this.v, phoneID, to, object, context);
+
+        const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
+        if (this._debug) this._debug(phoneID, request.to, JSON.parse(request[request.type]), request);
+        return promise;
     }
 
     /**
@@ -58,7 +87,7 @@ class WhatsAppAPI {
     markAsRead(phoneID, messageId) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
-        return fetch.readMessage(this.token, this.v, phoneID, messageId);
+        return api.readMessage(this.token, this.v, phoneID, messageId);
     }
     
     /**
@@ -76,7 +105,7 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!message) throw new Error("Message must be specified");
         if (!["png", "svg"].includes(format)) throw new Error("Format must be either 'png' or 'svg'");
-        return fetch.makeQR(this.token, this.v, phoneID, message, format);
+        return api.makeQR(this.token, this.v, phoneID, message, format);
     }
 
     /**
@@ -89,7 +118,7 @@ class WhatsAppAPI {
      */
     retrieveQR(phoneID, id) {
         if (!phoneID) throw new Error("Phone ID must be specified");
-        return fetch.getQR(this.token, this.v, phoneID, id);
+        return api.getQR(this.token, this.v, phoneID, id);
     }
 
     /**
@@ -107,7 +136,7 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
-        return fetch.updateQR(this.token, this.v, phoneID, id, message);
+        return api.updateQR(this.token, this.v, phoneID, id, message);
     }
 
     /**
@@ -122,7 +151,7 @@ class WhatsAppAPI {
     deleteQR(phoneID, id) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
-        return fetch.deleteQR(this.token, this.v, phoneID, id);
+        return api.deleteQR(this.token, this.v, phoneID, id);
     }
 }
 

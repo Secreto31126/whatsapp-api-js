@@ -8,6 +8,57 @@ const Text = require('./types/text');
 const { req } = require('./fetch-picker');
 
 /**
+ * Request API object
+ * 
+ * @property {String} messaging_product The messaging product (always "whatsapp")
+ * @property {String} type The type of message
+ * @property {String} to The user's phone number
+ * @property {Object} [context] The message to reply to
+ * @property {String} context.message_id The message id to reply to
+ * @property {String} [text] The text object stringified to send
+ * @property {String} [audio] The audio object stringified to send
+ * @property {String} [document] The document object stringified to send
+ * @property {String} [image] The image object stringified to send
+ * @property {String} [sticker] The sticker object stringified to send
+ * @property {String} [video] The video object stringified to send
+ * @property {String} [location] The location object stringified to send
+ * @property {String} [contacts] The contacts object stringified to send
+ * @property {String} [interactive] The interactive object stringified to send
+ * @property {String} [template] The template object stringified to send
+ */
+class Request {
+    /**
+     * Create a Request object for the API
+     * 
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The object to send
+     * @param {String} to The user's phone number
+     * @param {String} context The message_id to reply to
+     */
+    constructor(object, to, context) {
+        this.messaging_product = "whatsapp";
+        this.type = object._;
+        delete object._;
+        this.to = to;
+
+        if (context) this.context = { message_id: context };
+
+        // If the object contains its name as a property, it means it's an array, use it, else use the class
+        // This horrible thing comes from Contacts, the only API element which must be an array instead of an object...
+        this[this.type] = JSON.stringify(object[this.type] ?? object);
+    }
+}
+
+/**
+ * The sendMessage response object
+ * 
+ * @package
+ * @ignore
+ * @typedef {Object} SendMessageResponse
+ * @property {Promise} promise The fetch promise
+ * @property {Request} request The request sent to the server
+ */
+
+/**
  * Make a message post request to the API
  * 
  * @package
@@ -18,37 +69,22 @@ const { req } = require('./fetch-picker');
  * @param {String} to The user's phone number
  * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
  * @param {String} context The message id to reply to
- * @returns {Promise} The fetch promise
+ * @returns {SendMessageResponse} An object with the sent request and the fetch promise
  */
-function sendMessage(token, v, phoneID, to, object, message_id) {
-    const type = object._;
-    delete object._;
-
-    const reply = message_id ? {
-        context: {
-            message_id,
-        }
-    } : {};
-
-    const body = JSON.stringify({
-        messaging_product: "whatsapp",
-        type,
-        to,
-        ...reply,
-        // If the object contains its name as a property, it means it's an array, use it, else use the class
-        // This horrible thing comes from Contacts, the only API element which must be an array instead of an object...
-        [type]: JSON.stringify(object[type] ?? object),
-    });
+function sendMessage(token, v, phoneID, to, object, context) {
+    const request = new Request(object, to, context);
 
     // Make the post request
-    return req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
+    const promise = req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
-        body,
+        body: JSON.stringify(request),
     });
+
+    return { promise, request };
 }
 
 /**
@@ -167,4 +203,4 @@ function deleteQR(token, v, phoneID, id) {
     });
 }
 
-module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR };
+module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR, Request };
