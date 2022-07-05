@@ -1,7 +1,10 @@
-// Unit tests with mocha
+// Unit tests with mocha and sinon
 const assert = require('assert');
+const sinon = require('sinon');
 
 const { get, post } = require('../requests');
+
+const MessageMock = require('./message.mock');
 
 describe("Requests", function() {
     describe("Get", function() {
@@ -56,47 +59,6 @@ describe("Requests", function() {
 
     describe("Post", function() {
         describe("Messages", function() {
-            class Message {
-                /**
-                 * Helper class to test the messages post request, conditionally creating the object based on the available data
-                 */
-                constructor(phoneID, phone, message, name) {
-                    this.object = "whatsapp_business_account";
-                    this.entry = [{
-                        id: "WHATSAPP_BUSINESS_ACCOUNT_ID",
-                        changes: [{
-                            field: "messages",
-                            value: {
-                                messaging_product: "whatsapp",
-                                messages: [{}],
-                            }
-                        }],
-                    }];
-
-                    if (phoneID) {
-                        this.entry[0].changes[0].value.metadata = {
-                            display_phone_number: phoneID,
-                            phone_number_id: phoneID,
-                        };
-                    }
-
-                    if (phone) {
-                        this.entry[0].changes[0].value.contacts = [{
-                            wa_id: phone,
-                        }];
-                    }
-
-                    if (message) {
-                        this.entry[0].changes[0].value.messages = [ message ];
-                    }
-
-                    if (name) {
-                        if (!this.entry[0].changes[0].value.contacts) this.entry[0].changes[0].value.contacts = [{}];
-                        this.entry[0].changes[0].value.contacts[0].profile = { name };
-                    }
-                }
-            }
-
             // Valid data
             const phoneID = 1;
             const phone = 2;
@@ -112,16 +74,12 @@ describe("Requests", function() {
             const name = "name";
     
             it("should validate the post request and call back with the right parameters", function() {
-                const request = new Message(phoneID, phone, message, name);
+                const request = new MessageMock(phoneID, phone, message, name);
+                const spy = sinon.spy();
     
-                const response = post(request, (bot, user, m, n, r) => {
-                    assert.deepEqual(bot, phoneID);
-                    assert.deepEqual(user, phone);
-                    assert.deepEqual(m, message);
-                    assert.deepEqual(n, name);
-                    assert.deepEqual(r, request);
-                });
+                const response = post(request, spy);
     
+                sinon.assert.calledOnceWithMatch(spy, phoneID, phone, message, name, request);
                 assert.equal(response, 200);
             });
     
@@ -132,31 +90,37 @@ describe("Requests", function() {
             });
 
             it("should throw TypeError if the request is missing any data", function() {
+                let mock;
+
+                mock = new MessageMock();
                 assert.throws(function() {
-                    post(new Message(), () => {});
+                    post(mock, () => {});
                 }, TypeError);
 
+                mock = new MessageMock(phoneID);
                 assert.throws(function() {
                     // This is actually unexpected, it should throw error...
-                    post(new Message(phoneID), () => {});
+                    post(mock, () => {});
                 }, TypeError);
 
+                mock = new MessageMock(phoneID, phone);
                 assert.throws(function() {
-                    post(new Message(phoneID, phone), () => {});
+                    post(mock, () => {});
                 }, TypeError);
 
+                mock = new MessageMock(phoneID, phone, message);
                 assert.throws(function() {
-                    post(new Message(phoneID, phone, message), () => {});
+                    post(mock, () => {});
                 }, TypeError);
             });
 
             it("should fail if the callback is not a function", function() {
                 assert.throws(function() {
-                    post(new Message(phoneID, phone, message, name));
+                    post(new MessageMock(phoneID, phone, message, name));
                 }, TypeError);
 
                 assert.throws(function() {
-                    post(new Message(phoneID, phone, message, name), "callback");
+                    post(new MessageMock(phoneID, phone, message, name), "callback");
                 }, TypeError);
             });
         });

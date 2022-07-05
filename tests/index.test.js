@@ -1,5 +1,6 @@
-// Unit tests with mocha
+// Unit tests with mocha and sinon
 const assert = require('assert');
+const sinon = require('sinon');
 
 // Mock the https requests
 const nock = require('nock');
@@ -9,6 +10,10 @@ const api = nock("https://graph.facebook.com");
 // Import the module
 const { WhatsAppAPI, Types } = require('../index');
 const { Text } = Types;
+
+// Import mocks
+const MessageMock = require('./message.mock');
+const { Request } = require('../fetch');
 
 describe("WhatsAppAPI", function() {
     describe("Token", function() {
@@ -33,6 +38,59 @@ describe("WhatsAppAPI", function() {
         it("should work with any specified version", function() {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0");
             assert.equal(Whatsapp.v, "v13.0");
+        });
+    });
+
+    describe("Logger", function() {
+        const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+        
+        it("should be able to set the logger", function() {
+            const logger = console.log;
+            Whatsapp.logSentMessages(logger);
+            assert.equal(Whatsapp._register, logger);
+        });
+
+        it("should unset if the logger is falsy", function() {
+            Whatsapp.logSentMessages(console.log).logSentMessages();
+            assert.equal(!!Whatsapp._register, false);
+
+            Whatsapp.logSentMessages(console.log).logSentMessages(0);
+            assert.equal(!!Whatsapp._register, false);
+
+            Whatsapp.logSentMessages(console.log).logSentMessages(false);
+            assert.equal(!!Whatsapp._register, false);
+        });
+
+        it("should fail if the logger is truthy and not a function", function() {
+            assert.throws(function() {
+                Whatsapp.logSentMessages(1);
+            }, TypeError);
+
+            assert.throws(function() {
+                Whatsapp.logSentMessages(true);
+            }, TypeError);
+
+            assert.throws(function() {
+                Whatsapp.logSentMessages({});
+            }, TypeError);
+        });
+
+        it("should run the logger after sending a message if the logger is truthy", function() {
+            const bot = "1";
+            const user = "2";
+            const message = new Text("3");
+            const request = new Request(message, user);
+
+            const apiValidObject = { ...message };
+            delete apiValidObject._;
+            
+            const spy = sinon.spy();
+
+            Whatsapp.logSentMessages(spy);
+
+            Whatsapp.sendMessage(bot, user, message);
+            
+            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request);
         });
     });
     

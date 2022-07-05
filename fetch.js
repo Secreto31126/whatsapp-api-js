@@ -35,16 +35,17 @@ class Request {
      * @param {String} context The message_id to reply to
      */
     constructor(object, to, context) {
+        let message = { ...object };
         this.messaging_product = "whatsapp";
-        this.type = object._;
-        delete object._;
+        this.type = message._;
+        delete message._;
         this.to = to;
 
         if (context) this.context = { message_id: context };
 
         // If the object contains its name as a property, it means it's an array, use it, else use the class
         // This horrible thing comes from Contacts, the only API element which must be an array instead of an object...
-        this[this.type] = JSON.stringify(object[this.type] ?? object);
+        this[this.type] = JSON.stringify(message[this.type] ?? message);
     }
 }
 
