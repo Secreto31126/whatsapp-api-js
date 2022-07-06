@@ -15,5 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci --only=dev
-      - run: npm run test
+      - name: Install
+        run: npm ci --only=dev
+      - name: Test
+        run: npm run test

@@ -13,9 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-        npm ci --only=dev
-        npm run test
+      - run: npm ci --only=dev && npm run test
   
   publish-npm:
     name: Public Release
