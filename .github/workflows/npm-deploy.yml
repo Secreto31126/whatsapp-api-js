@@ -8,10 +8,9 @@ on:
     types: [created]
 
 jobs:
-  runs-on: ubuntu-latest
-
   test:
     name: Unit Tests
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: npm ci --only=dev
@@ -19,8 +18,11 @@ jobs:
   
   publish-npm:
     name: Public Release
+    runs-on: ubuntu-latest
     needs: test
     if: "!github.event.release.prerelease"
+    environment:
+      name: npm
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -34,6 +36,7 @@ jobs:
 
   preview-npm:
     name: Beta Release
+    runs-on: ubuntu-latest
     needs: test
     if: "github.event.release.prerelease"
     steps:

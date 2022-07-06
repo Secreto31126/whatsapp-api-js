@@ -10,9 +10,9 @@ on:
       - './tests/*.js'
 
 jobs:
-  runs-on: ubuntu-latest
-
   test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: npm ci --only=dev
