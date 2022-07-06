@@ -8,28 +8,45 @@ on:
     types: [created]
 
 jobs:
+  runs-on: ubuntu-latest
+
+  test:
+    name: Unit Tests
+    steps:
+      - uses: actions/checkout@v3
+      - run: npm ci --only=dev
+      - run: npm run test
+  
   publish-npm:
-    runs-on: ubuntu-latest
+    name: Public Release
+    needs: test
+    if: "!github.event.release.prerelease"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm ci
 
-      - name: Public Release
-        if: "!github.event.release.prerelease"
-        run: npm publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
+  preview-npm:
+    name: Beta Release
+    needs: test
+    if: "github.event.release.prerelease"
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+
       - name: Set package version to prerelease tag
-        if: "github.event.release.prerelease"
         run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
       
       - name: Beta Release
-        if: "github.event.release.prerelease"
         run: npm publish --tag beta
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
