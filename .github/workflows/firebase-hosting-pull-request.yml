@@ -8,7 +8,7 @@ on:
     paths:
       - '*.js'
       - 'README.md'
-      - 'documentation/*.html'
+      - 'docs/*.html'
 
 jobs:
   build_and_preview:
