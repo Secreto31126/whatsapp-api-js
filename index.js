@@ -48,8 +48,8 @@ class WhatsAppAPI {
      * @throws {Error} If callback is truthy and is not a function
      */
     logSentMessages(callback) {
-        if (callback && typeof callback !== "function") throw new Error("Callback must be a function");
-        this._debug = callback;
+        if (callback && typeof callback !== "function") throw new TypeError("Callback must be a function");
+        this._register = callback;
         return this;
     }
 
@@ -71,7 +71,7 @@ class WhatsAppAPI {
         if (!object) throw new Error("Message must have a message object");
 
         const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
-        if (this._debug) this._debug(phoneID, request.to, JSON.parse(request[request.type]), request);
+        if (this._register) this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
         return promise;
     }
 

@@ -8,10 +8,11 @@ on:
     paths:
       - '*.js'
       - 'README.md'
-      - 'documentation/*.html'
+      - 'docs/*.html'
 
 jobs:
   build_and_preview:
+    name: Build documentation and preview
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:

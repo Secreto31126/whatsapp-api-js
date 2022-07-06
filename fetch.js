@@ -5,7 +5,7 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const req = typeof fetch === "undefined" ? require('cross-fetch') : fetch;
+const req = require('./fetch-picker').pick();
 
 /**
  * Request API object
@@ -35,16 +35,17 @@ class Request {
      * @param {String} context The message_id to reply to
      */
     constructor(object, to, context) {
+        let message = { ...object };
         this.messaging_product = "whatsapp";
-        this.type = object._;
-        delete object._;
+        this.type = message._;
+        delete message._;
         this.to = to;
 
         if (context) this.context = { message_id: context };
 
         // If the object contains its name as a property, it means it's an array, use it, else use the class
         // This horrible thing comes from Contacts, the only API element which must be an array instead of an object...
-        this[this.type] = JSON.stringify(object[this.type] ?? object);
+        this[this.type] = JSON.stringify(message[this.type] ?? message);
     }
 }
 
@@ -171,7 +172,11 @@ function getQR(token, v, phoneID, id) {
  * @returns {Promise} The fetch promise
  */
 function updateQR(token, v, phoneID, id, message) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?prefilled_message=${encodeURI(message)}`, {
+    const params = {
+        prefilled_message: message,
+    };
+
+    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(params)}`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
