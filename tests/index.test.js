@@ -12,7 +12,6 @@ const { WhatsAppAPI, Types } = require('../index');
 const { Text } = Types;
 
 // Import mocks
-const MessageMock = require('./message.mock');
 const { Request } = require('../fetch');
 
 describe("WhatsAppAPI", function() {

@@ -2,9 +2,11 @@
 const assert = require('assert');
 const sinon = require('sinon');
 
+const fake = sinon.fake();
+
 const { get, post } = require('../requests');
 
-const MessageMock = require('./message.mock');
+const { MessageMock, StatusMock } = require('./requests.mocks');
 
 describe("Requests", function() {
     describe("Get", function() {
@@ -58,10 +60,20 @@ describe("Requests", function() {
     });
 
     describe("Post", function() {
+        // Valid data
+        const phoneID = "1";
+        const phone = "2";
+
+        describe("Validation", function() {   
+            it("should throw 400 if the request isn't a valid Whatsapp cloud API request (data.object)", function() {
+                assert.throws(function() {
+                    post({}, fake);
+                }, e => e === 400);
+            });
+        });
+
         describe("Messages", function() {
-            // Valid data
-            const phoneID = 1;
-            const phone = 2;
+            const name = "name";
             const message = {
                 from: phone,
                 id: "wamid.ID",
@@ -71,60 +83,135 @@ describe("Requests", function() {
                     body: "message",
                 },
             };
-            const name = "name";
-    
-            it("should validate the post request and call back with the right parameters", function() {
-                const request = new MessageMock(phoneID, phone, message, name);
+            const mock = new MessageMock(phoneID, phone, message, name);
+
+            it("should parse the post request and call back with the right parameters", function() {
                 const spy = sinon.spy();
     
-                const response = post(request, spy);
+                const response = post(mock, spy);
     
-                sinon.assert.calledOnceWithMatch(spy, phoneID, phone, message, name, request);
+                sinon.assert.calledOnceWithMatch(spy, phoneID, phone, message, name, mock);
                 assert.equal(response, 200);
-            });
-    
-            it("should throw 400 if the request isn't a valid Whatsapp cloud API request (data.object)", function() {
-                assert.throws(function() {
-                    post({}, (bot, user, m, n, r) => {});
-                }, e => e === 400);
             });
 
             it("should throw TypeError if the request is missing any data", function() {
-                let mock;
+                let moddedMock;
 
-                mock = new MessageMock();
+                moddedMock = new MessageMock();
                 assert.throws(function() {
-                    post(mock, () => {});
+                    post(moddedMock, fake);
                 }, TypeError);
 
-                mock = new MessageMock(phoneID);
+                moddedMock = new MessageMock(phoneID);
                 assert.throws(function() {
                     // This is actually unexpected, it should throw error...
-                    post(mock, () => {});
+                    post(moddedMock, fake);
                 }, TypeError);
 
-                mock = new MessageMock(phoneID, phone);
+                moddedMock = new MessageMock(phoneID, phone);
                 assert.throws(function() {
-                    post(mock, () => {});
+                    post(moddedMock, fake);
                 }, TypeError);
 
-                mock = new MessageMock(phoneID, phone, message);
+                moddedMock = new MessageMock(phoneID, phone, message);
                 assert.throws(function() {
-                    post(mock, () => {});
+                    post(moddedMock, fake);
                 }, TypeError);
             });
 
-            it("should fail if the callback is not a function", function() {
+            it("should fail if the onMessage callback is not a function", function() {
                 assert.throws(function() {
-                    post(new MessageMock(phoneID, phone, message, name));
+                    post(mock);
                 }, TypeError);
 
                 assert.throws(function() {
-                    post(new MessageMock(phoneID, phone, message, name), "callback");
+                    post(mock, "callback");
                 }, TypeError);
             });
         });
 
-        describe("Status", function() {});
+        describe("Status", function() {
+            const status = "3";
+            const id = "4";
+            const conversation = {
+                id: "CONVERSATION_ID",
+                expiration_timestamp: "TIMESTAMP",
+                origin: {
+                    type: "user_initiated"
+                }
+            }
+            const pricing = {
+                pricing_model: "CBP",
+                billable: true,
+                category: "business-initiated"
+            }
+            const mock = new StatusMock(phoneID, phone, status, id, conversation, pricing);
+
+            it("should parse the post request and call back with the right parameters", function() {
+                const spy = sinon.spy();
+
+                const response = post(mock, fake, spy);
+
+                sinon.assert.calledOnceWithMatch(spy, phoneID, phone, status, id, conversation, pricing, { ...mock });
+                assert.equal(response, 200);
+            });
+
+            it("should throw TypeError if the request is missing any data", function() {
+                let moddedMock;
+
+                moddedMock = new StatusMock();
+                assert.throws(function() {
+                    post(moddedMock, fake, fake);
+                }, TypeError);
+
+                moddedMock = new StatusMock(phoneID);
+                assert.throws(function() {
+                    post(moddedMock, fake, fake);
+                }, TypeError);
+
+                // In conclution, it's pointless. As soon as any of the other parameters are defined,
+                // the code will return undefined for the missing ones, without any error.
+
+                // moddedMock = new StatusMock(phoneID, phone);
+                // assert.throws(function() {
+                //     post(moddedMock, fake, fake);
+                // }, TypeError);
+
+                // moddedMock = new StatusMock(phoneID, phone, status);
+                // assert.throws(function() {
+                //     post(moddedMock, fake, fake);
+                // }, TypeError);
+
+                // moddedMock = new StatusMock(phoneID, phone, status, id);
+                // assert.throws(function() {
+                //     post(moddedMock, fake, fake);
+                // }, TypeError);
+
+                // moddedMock = new StatusMock(phoneID, phone, status, id, conversation);
+                // assert.throws(function() {
+                //     post(moddedMock, fake, fake);
+                // }, TypeError);
+            });
+
+            it("shouldn't throw if onStatus callback is not truthy", function() {
+                assert.doesNotThrow(function() {
+                    post(mock, fake);
+                });
+
+                assert.doesNotThrow(function() {
+                    post(mock, fake, false);
+                });
+            });
+
+            it("should fail if the onStatus callback is truthy but it's not a function", function() {
+                assert.throws(function() {
+                    post(mock, fake, true);
+                }, TypeError);
+
+                assert.throws(function() {
+                    post(mock, fake, "callback");
+                }, TypeError);
+            });
+        });
     });
 });

@@ -90,9 +90,8 @@ function post(data, onMessage, onStatus) {
             const phone = statuses.recipient_id;
             const status = statuses.status;
             const messageID = statuses.id;
-            
-            const conversation = value.conversation;
-            const pricing = value.pricing;
+            const conversation = statuses.conversation;
+            const pricing = statuses.pricing;
             
             onStatus(phoneID, phone, status, messageID, conversation, pricing, data);
         }

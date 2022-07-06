@@ -9,7 +9,7 @@
     "test": "mocha ./tests/",
     "coverage": "nyc --reporter=text mocha ./tests/ --reporter min",
     "debug-with-tests": "nodemon -x npm run test",
-    "document": "node jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
+    "document": "jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
     "whatsapp",
