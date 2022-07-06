@@ -10,7 +10,7 @@ on:
     paths:
       - '*.js'
       - 'README.md'
-      - 'documentation/*.html'
+      - 'docs/*.html'
 
 permissions:
   contents: write
@@ -20,10 +20,13 @@ jobs:
     name: Build documentation and deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
 
-      - name: Build
-        run: npm ci --only=dev && npm run document
+      - name: Install and Build 🔧
+        run: |
+          npm ci --only=dev
+          npm run document
       
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
