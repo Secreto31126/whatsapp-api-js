@@ -5,7 +5,7 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const { req } = require('./fetch-picker');
+const req = require('./fetch-picker').pick();
 
 /**
  * Request API object
