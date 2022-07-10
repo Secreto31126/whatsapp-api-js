@@ -117,7 +117,7 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
 
 ## Documentation
 
-The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/).
+The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/) and [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Beta releases
 
