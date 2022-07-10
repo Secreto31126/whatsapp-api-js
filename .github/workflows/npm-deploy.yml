@@ -26,8 +26,12 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-
-      - run: npm publish
+      
+      - name: Give me 1 minute to reconsider my life actions
+        run: sleep 60s
+      
+      - name: Ok, now publish it
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
