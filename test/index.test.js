@@ -63,6 +63,30 @@ describe("WhatsAppAPI", function() {
         this.beforeEach(function() {
             Whatsapp.parsed = true;
         });
+
+        const bot = "1";
+        const user = "2";
+        const message = new Text("3");
+        const request = new Request(message, user);
+
+        const id = "4";
+        const expectedResponse = {
+            messaging_product: "whatsapp",
+            contacts: [
+                {
+                    input: user,
+                    wa_id: user
+                }
+            ],
+            messages: [
+                {
+                    id
+                }
+            ]
+        }
+        
+        const apiValidObject = { ...message };
+        delete apiValidObject._;
         
         it("should set the logger if truthy and is a function", function() {
             const logger = console.log;
@@ -95,14 +119,20 @@ describe("WhatsAppAPI", function() {
             }, TypeError);
         });
 
-        it("should run the logger after sending a message if the logger is truthy", function() {
-            const bot = "1";
-            const user = "2";
-            const message = new Text("3");
-            const request = new Request(message, user);
+        it("should run the logger after sending a message if the logger is truthy", async function() {
+            const spy = sinon.spy();
 
-            const apiValidObject = { ...message };
-            delete apiValidObject._;
+            Whatsapp.logSentMessages(spy);
+
+            api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+
+            await Whatsapp.sendMessage(bot, user, message);
+            
+            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, id, expectedResponse);
+        });
+
+        it("should run the logger with id and response as undefined if parsed is set to false", function() {
+            Whatsapp.parsed = false;
             
             const spy = sinon.spy();
 
@@ -110,7 +140,7 @@ describe("WhatsAppAPI", function() {
 
             Whatsapp.sendMessage(bot, user, message);
             
-            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, response);
+            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request);
         });
     });
     

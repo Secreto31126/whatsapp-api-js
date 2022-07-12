@@ -40,7 +40,9 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phoneID from where the message was sent
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The message object
-     * @param {Request} raw The raw body sent to the server
+     * @param {Request} request The object sent to the server
+     * @param {(String|Void)} id The message id, undefined if parsed is set to false
+     * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
      */
 
     /**
@@ -76,7 +78,16 @@ class WhatsAppAPI {
         const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
         const response = this.parsed ? promise.then(e => e.json()) : undefined;
 
-        if (this._register) this._register(phoneID, request.to, JSON.parse(request[request.type]), request, response);
+
+        if (this._register) {
+            if (response) {
+                response.then(data => {
+                    this._register(phoneID, request.to, JSON.parse(request[request.type]), request, data?.messages?.at()?.id, data);
+                });
+            } else {
+                this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
+            }
+        }
 
         return response ?? promise;
     }

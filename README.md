@@ -125,6 +125,7 @@ To get the raw request as before, you can use the `parsed` property of the main 
 const parsed = false;
 const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
 // All the API operations, like sendMessage, will now return the raw request.
+// Keep in mind, now when using logSentMessage the id and response parameters will be undefined.
 ```
 
 ## Documentation
