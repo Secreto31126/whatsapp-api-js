@@ -62,7 +62,7 @@ function onMessage(phoneID, phone, message, name, raw_data) {
         ]
     ));
 
-    if (promise) promise.then(res => res.json()).then(console.log);
+    if (promise) promise.then(console.log);
     
     Whatsapp.markAsRead(phoneID, message.id);
 }
@@ -96,7 +96,7 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
 Since @0.4.2, the module will check if fetch is available, and fallback to "cross-fetch" if not.
 This will allow the same script to be run in many different enviroments, such as a web browser, Deno,
-and maybe even TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
+Bun, and maybe even TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
 
 Personal suggestion, use [esm.sh](https://esm.sh/) to import the code directly from npm, works flawlessly with Deno.
 
@@ -113,6 +113,19 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
  const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
  <!-- Please, never use your API tokens in a website, use this method wisely -->
 </script>
+```
+
+## Breaking changes in 0.6.0
+
+Since 0.6.0, the module will no longer return the raw fetch request, now it's internally parsed and returned.
+This change was made in order to improve the logSentMessages function, as it can now log the server response too.
+To get the raw request as before, you can use the `parsed` property of the main object as follows.
+
+```js
+const parsed = false;
+const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
+// All the API operations, like sendMessage, will now return the raw request.
+// Keep in mind, now when using logSentMessage the id and response parameters will be undefined.
 ```
 
 ## Documentation
