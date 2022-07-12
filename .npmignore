@@ -1,6 +1,6 @@
 .github/
 
-documentation/
+docs/
 
 .firebaserc
 firebase.json

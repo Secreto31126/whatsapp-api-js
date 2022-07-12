@@ -6,9 +6,9 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./tests/",
-    "coverage": "nyc --reporter=text mocha ./tests/ --reporter min",
-    "debug-with-tests": "mocha ./tests/ --reporter min --watch",
+    "test": "mocha",
+    "coverage": "nyc --reporter=text mocha --reporter min",
+    "debug-with-tests": "mocha --reporter min --watch",
     "document": "jsdoc -d ./docs -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [

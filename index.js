@@ -74,8 +74,11 @@ class WhatsAppAPI {
         if (!object) throw new Error("Message must have a message object");
 
         const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
-        if (this._register) this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        const response = this.parsed ? promise.then(e => e.json()) : undefined;
+
+        if (this._register) this._register(phoneID, request.to, JSON.parse(request[request.type]), request, response);
+
+        return response ?? promise;
     }
 
     /**

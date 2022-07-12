@@ -59,8 +59,12 @@ describe("WhatsAppAPI", function() {
 
     describe("Logger", function() {
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+
+        this.beforeEach(function() {
+            Whatsapp.parsed = true;
+        });
         
-        it("should be able to set the logger", function() {
+        it("should set the logger if truthy and is a function", function() {
             const logger = console.log;
             Whatsapp.logSentMessages(logger);
             assert.equal(Whatsapp._register, logger);
@@ -106,7 +110,7 @@ describe("WhatsAppAPI", function() {
 
             Whatsapp.sendMessage(bot, user, message);
             
-            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request);
+            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, response);
         });
     });
     
