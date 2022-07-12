@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "Secreto31126",
   "description": "A Whatsapp Official API helper for Node.js",
   "license": "MIT",
@@ -8,7 +8,7 @@
   "scripts": {
     "test": "mocha ./tests/",
     "coverage": "nyc --reporter=text mocha ./tests/ --reporter min",
-    "debug-with-tests": "nodemon -x npm run test",
+    "debug-with-tests": "mocha ./tests/ --reporter min --watch",
     "document": "jsdoc -d ./docs -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [

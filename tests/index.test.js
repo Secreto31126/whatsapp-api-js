@@ -39,6 +39,23 @@ describe("WhatsAppAPI", function() {
             assert.equal(Whatsapp.v, "v13.0");
         });
     });
+    
+    describe("Parsed", function() {
+        it("should set parsed to true by default", function() {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+            assert.equal(Whatsapp.parsed, true);
+        });
+    
+        it("should be able to set parsed to true", function() {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0", true);
+            assert.equal(Whatsapp.parsed, true);
+        });
+
+        it("should be able to set parsed to false", function() {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0", false);
+            assert.equal(Whatsapp.parsed, false);
+        });
+    });
 
     describe("Logger", function() {
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
@@ -96,6 +113,10 @@ describe("WhatsAppAPI", function() {
     describe("Message", function() {
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
+        this.beforeEach(function() {
+            Whatsapp.parsed = true;
+        });
+
         describe("Send", function() {
             const bot = "1";
             const user = "2";
@@ -120,7 +141,7 @@ describe("WhatsAppAPI", function() {
                 
                 api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.sendMessage(bot, user, message)).json();
+                const response = await Whatsapp.sendMessage(bot, user, message);
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -145,7 +166,7 @@ describe("WhatsAppAPI", function() {
                 
                 api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.sendMessage(bot, user, message, context)).json();
+                const response = await Whatsapp.sendMessage(bot, user, message, context);
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -191,6 +212,31 @@ describe("WhatsAppAPI", function() {
                     Whatsapp.sendMessage(bot, user);
                 });
             });
+
+            it("should receive the raw fetch response if parsed is false", async function() {
+                Whatsapp.parsed = false;
+
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    contacts: [
+                        {
+                            input: user,
+                            wa_id: user,
+                        }
+                    ],
+                    messages: [
+                        {
+                            id,
+                        },
+                    ],
+                };
+                
+                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+
+                const response = await (await Whatsapp.sendMessage(bot, user, message)).json();
+
+                assert.deepEqual(response, expectedResponse);
+            });
         });
 
         describe("Mark as read", function() {
@@ -204,7 +250,7 @@ describe("WhatsAppAPI", function() {
 
                 api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
                 
-                const response = await (await Whatsapp.markAsRead(bot, id)).json();
+                const response = await Whatsapp.markAsRead(bot, id);
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -236,11 +282,32 @@ describe("WhatsAppAPI", function() {
                     Whatsapp.markAsRead("1");
                 });
             });
+
+            it("should receive the raw fetch response if parsed is false", async function() {
+                Whatsapp.parsed = false;
+
+                const bot = "1";
+                const id = "2";
+
+                const expectedResponse = {
+                    success: true
+                };
+
+                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+                
+                const response = await (await Whatsapp.markAsRead(bot, id)).json();
+
+                assert.deepEqual(response, expectedResponse);
+            });
         });
     });
 
     describe("QR", function() {
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+
+        this.beforeEach(function() {
+            Whatsapp.parsed = true;
+        });
 
         const bot = "1";
         const message = "Hello World";
@@ -262,7 +329,7 @@ describe("WhatsAppAPI", function() {
                     prefilled_message: message,
                 }).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.createQR(bot, message)).json();
+                const response = await Whatsapp.createQR(bot, message);
     
                 assert.deepEqual(response, expectedResponse);
             });
@@ -282,7 +349,7 @@ describe("WhatsAppAPI", function() {
                     prefilled_message: message,
                 }).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.createQR(bot, message, format)).json();
+                const response = await Whatsapp.createQR(bot, message, format);
     
                 assert.deepEqual(response, expectedResponse);
             });
@@ -302,7 +369,7 @@ describe("WhatsAppAPI", function() {
                     prefilled_message: message,
                 }).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.createQR(bot, message, format)).json();
+                const response = await Whatsapp.createQR(bot, message, format);
     
                 assert.deepEqual(response, expectedResponse);
             });
@@ -342,10 +409,32 @@ describe("WhatsAppAPI", function() {
                     Whatsapp.createQR(bot, message, format);
                 });
             });
+
+            it("should receive the raw fetch response if parsed is false", async function() {
+                Whatsapp.parsed = false;
+
+                const format = "png";
+
+                const expectedResponse = {
+                    code,
+                    prefilled_message: message,
+                    deep_link_url: `https://wa.me/message/${code}`,
+                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
+                };
+
+                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
+                    generate_qr_image: format,
+                    prefilled_message: message,
+                }).once().reply(200, expectedResponse);
+    
+                const response = await (await Whatsapp.createQR(bot, message)).json();
+
+                assert.deepEqual(response, expectedResponse);
+            });
         });
 
         describe("Retrieve", function() {
-            it("should be able to retrieve all QR codes", async function() {
+            it("should retrieve all QR codes if code is undefined", async function() {
                 const expectedResponse = {
                     data: [
                         {
@@ -358,7 +447,7 @@ describe("WhatsAppAPI", function() {
 
                 api.get(`/${Whatsapp.v}/${bot}/message_qrdls/`).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.retrieveQR(bot)).json();
+                const response = await Whatsapp.retrieveQR(bot);
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -376,7 +465,7 @@ describe("WhatsAppAPI", function() {
 
                 api.get(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.retrieveQR(bot, code)).json();
+                const response = await Whatsapp.retrieveQR(bot, code);
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -394,6 +483,26 @@ describe("WhatsAppAPI", function() {
                     Whatsapp.retrieveQR();
                 });
             });
+
+            it("should receive the raw fetch response if parsed is false", async function() {
+                Whatsapp.parsed = false;
+
+                const expectedResponse = {
+                    data: [
+                        {
+                            code,
+                            prefilled_message: message,
+                            deep_link_url: `https://wa.me/message/${code}`,
+                        }
+                    ]
+                };
+
+                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/`).once().reply(200, expectedResponse);
+    
+                const response = await (await Whatsapp.retrieveQR(bot)).json();
+
+                assert.deepEqual(response, expectedResponse);
+            });
         });
 
         describe("Update", function() {
@@ -410,7 +519,7 @@ describe("WhatsAppAPI", function() {
                     prefilled_message: new_message,
                 }).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.updateQR(bot, code, new_message)).json();
+                const response = await Whatsapp.updateQR(bot, code, new_message);
     
                 assert.deepEqual(response, expectedResponse);
             });
@@ -456,6 +565,24 @@ describe("WhatsAppAPI", function() {
                     Whatsapp.updateQR(bot, code);
                 });
             });
+
+            it("should receive the raw fetch response if parsed is false", async function() {
+                Whatsapp.parsed = false;
+
+                const expectedResponse = {
+                    code,
+                    prefilled_message: new_message,
+                    deep_link_url: `https://wa.me/message/${code}`,
+                };
+
+                api.post(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).query({
+                    prefilled_message: new_message,
+                }).once().reply(200, expectedResponse);
+    
+                const response = await (await Whatsapp.updateQR(bot, code, new_message)).json();
+
+                assert.deepEqual(response, expectedResponse);
+            });
         });
 
         describe("Delete", function() {
@@ -466,7 +593,7 @@ describe("WhatsAppAPI", function() {
 
                 api.delete(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
 
-                const response = await (await Whatsapp.deleteQR(bot, code)).json();
+                const response = await Whatsapp.deleteQR(bot, code);
     
                 assert.deepEqual(response, expectedResponse);
             });
@@ -497,6 +624,20 @@ describe("WhatsAppAPI", function() {
                 assert.throws(function() {
                     Whatsapp.deleteQR(bot);
                 });
+            });
+
+            it("should receive the raw fetch response if parsed is false", async function() {
+                Whatsapp.parsed = false;
+
+                const expectedResponse = {
+                    success: true,
+                };
+
+                api.delete(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
+    
+                const response = await (await Whatsapp.deleteQR(bot, code)).json();
+
+                assert.deepEqual(response, expectedResponse);
             });
         });
     });
