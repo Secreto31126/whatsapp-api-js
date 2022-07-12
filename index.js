@@ -15,7 +15,7 @@ const { Request } = api;
  * 
  * @property {String} token The API token
  * @property {String} v The API version to use
- * @property {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for deep level debugging.
+ * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
  */
 class WhatsAppAPI {
     /**
@@ -23,7 +23,7 @@ class WhatsAppAPI {
      * 
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
      * @param {String} v The version of the API, defaults to v14.0
-     * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for deep level debugging.
+     * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
     constructor(token, v = "v14.0", parsed = true) {
@@ -65,7 +65,7 @@ class WhatsAppAPI {
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @param {String} [context] The message ID of the message to reply to
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If to is not specified
      * @throws {Error} If object is not specified
@@ -97,7 +97,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} messageId The message ID
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If messageId is not specified
      */
@@ -114,7 +114,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} message The quick message on the QR code
      * @param {String} format The format of the QR code (png or svn)
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If message is not specified
      * @throws {Error} If format is not either 'png' or 'svn'
@@ -132,7 +132,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      */
     retrieveQR(phoneID, id) {
@@ -147,7 +147,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to edit
      * @param {String} message The new quick message for the QR code
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      * @throws {Error} If message is not specified
@@ -165,7 +165,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to delete
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      */
