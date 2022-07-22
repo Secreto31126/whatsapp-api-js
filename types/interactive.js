@@ -192,7 +192,7 @@ class Row {
         if (id.length > 200) throw new Error("Row id must be 200 characters or less");
         if (!title) throw new Error("Row must have a title");
         if (title.length > 24) throw new Error("Row title must be 24 characters or less");
-        if (description.length > 72) throw new Error("Row description must be 72 characters or less");
+        if (description?.length > 72) throw new Error("Row description must be 72 characters or less");
 
         this.id = id;
         this.title = title;
