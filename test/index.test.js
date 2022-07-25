@@ -131,6 +131,27 @@ describe("WhatsAppAPI", function() {
             sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, id, expectedResponse);
         });
 
+        it("should handle failed deliveries responses", async function() {
+            const spy = sinon.spy();
+
+            Whatsapp.logSentMessages(spy);
+
+            const unexpectedResponse = {
+                error: {
+                    message: 'Invalid OAuth access token - Cannot parse access token',
+                    type: 'OAuthException',
+                    code: 190,
+                    fbtrace_id: 'Azr7Sq738VC5zzOnPvZzPwj'
+                }
+            }
+
+            api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, unexpectedResponse);
+
+            await Whatsapp.sendMessage(bot, user, message);
+            
+            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, undefined, unexpectedResponse);
+        });
+
         it("should run the logger with id and response as undefined if parsed is set to false", function() {
             Whatsapp.parsed = false;
             
