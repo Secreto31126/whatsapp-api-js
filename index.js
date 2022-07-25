@@ -82,7 +82,8 @@ class WhatsAppAPI {
         if (this._register) {
             if (response) {
                 response.then(data => {
-                    this._register(phoneID, request.to, JSON.parse(request[request.type]), request, data?.messages?.at()?.id, data);
+                    const id = data?.messages ? data.messages[0]?.id : undefined;
+                    this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
                 });
             } else {
                 this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
