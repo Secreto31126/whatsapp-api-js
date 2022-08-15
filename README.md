@@ -1,5 +1,5 @@
 # whatsapp-api-js
-A Whatsapp's Official API helper for Node.js [(and others)](#running-outside-of-nodejs)
+A Whatsapp's Official API framework for Node.js [(and others)](#running-outside-of-nodejs)
 
 ## Disclaimers
 
@@ -95,10 +95,10 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 ## Running outside of Node.js
 
 Since @0.4.2, the module will check if fetch is available, and fallback to "cross-fetch" if not.
-This will allow the same script to be run in many different enviroments, such as a web browser, Deno,
-Bun, and maybe even TypeScript, idk about this last one ¯\\\_(ツ)\_/¯.
+This will allow the same script to be run in many different enviroments, such as a web browser, Deno and Bun.
 
 Personal suggestion, use [esm.sh](https://esm.sh/) to import the code directly from npm, works flawlessly with Deno.
+Bun seems to be more picky with the urls, but using ```bun install whatsapp-api-js``` works great for me.
 
 Some examples:
 
@@ -130,7 +130,8 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
 
 ## Documentation
 
-The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/) and [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
+The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/) and
+[secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Beta releases
 

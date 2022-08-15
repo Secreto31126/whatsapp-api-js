@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "author": "Secreto31126",
   "description": "A Whatsapp Official API helper for Node.js",
   "license": "MIT",
@@ -13,9 +13,24 @@
   },
   "keywords": [
     "whatsapp",
+    "cloud",
     "api",
-    "helper",
-    "bot"
+    "framework",
+    "whatsapp-cloud",
+    "cloud-api",
+    "whatsapp-cloud-api",
+    "whatsapp-business",
+    "whatsapp-business-api",
+    "bot",
+    "whatsapp-bot",
+    "chatbot",
+    "bot-framework",
+    "nodejs",
+    "deno",
+    "bun",
+    "bot-api",
+    "whatsapp-api",
+    "business-api"
   ],
   "repository": {
     "type": "git",
