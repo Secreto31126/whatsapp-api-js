@@ -1,5 +1,5 @@
 # whatsapp-api-js
-A Whatsapp's Official API helper for Node.js [(and others)](#running-outside-of-nodejs)
+A Whatsapp's Official API framework for Node.js [(and others)](#running-outside-of-nodejs)
 
 ## Disclaimers
 
