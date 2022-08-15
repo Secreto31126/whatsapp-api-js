@@ -13,9 +13,24 @@
   },
   "keywords": [
     "whatsapp",
+    "cloud",
     "api",
-    "helper",
-    "bot"
+    "framework",
+    "whatsapp-cloud",
+    "cloud-api",
+    "whatsapp-cloud-api",
+    "whatsapp-business",
+    "whatsapp-business-api",
+    "bot",
+    "whatsapp-bot",
+    "chatbot",
+    "bot-framework",
+    "nodejs",
+    "deno",
+    "bun",
+    "bot-api",
+    "whatsapp-api",
+    "business-api"
   ],
   "repository": {
     "type": "git",
