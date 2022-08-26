@@ -25,6 +25,7 @@ npm install whatsapp-api-js
 Now you can write code like this:
 
 ```js
+// Read Running outside of Nodejs to see support for other engines
 const { WhatsAppAPI, Handlers, Types } = require("whatsapp-api-js");
 const { Text, Media, Contacts } = Types;
 
@@ -38,7 +39,7 @@ function post(e) {
     return Handlers.post(JSON.parse(e.data), onMessage);
 }
 
-function onMessage(phoneID, phone, message, name, raw_data) {
+async function onMessage(phoneID, phone, message, name, raw_data) {
     console.log(`User ${phone} (${name}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
     let promise;
@@ -62,7 +63,7 @@ function onMessage(phoneID, phone, message, name, raw_data) {
         ]
     ));
 
-    if (promise) promise.then(console.log);
+    console.log(await promise ?? "There are more types of messages, such as locations, templates/interactives replies and all the other medias types.");
     
     Whatsapp.markAsRead(phoneID, message.id);
 }
@@ -97,15 +98,19 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 Since @0.4.2, the module will check if fetch is available, and fallback to "cross-fetch" if not.
 This will allow the same script to be run in many different enviroments, such as a web browser, Deno and Bun.
 
-Personal suggestion, use [esm.sh](https://esm.sh/) to import the code directly from npm, works flawlessly with Deno.
-Bun seems to be more picky with the urls, but using ```bun install whatsapp-api-js``` works great for me.
-
-Some examples:
+With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It's really simple to use:
 
 ```js
-import { WhatsAppAPI } from "https://esm.sh/whatsapp-api-js";
+import { WhatsAppAPI } from "npm:whatsapp-api-js";
 const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
 ```
+
+However, the npm support is still experimental and behind the --unstable flag.
+If you want to use prior versions of Deno, use [https://esm.sh/whatsapp-api-js](https://esm.sh/) to import the code.
+
+Bun also works by running ```bun install whatsapp-api-js```.
+
+HTML module example:
 
 ```html
 <script type="module">
