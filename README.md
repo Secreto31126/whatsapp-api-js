@@ -1,5 +1,5 @@
 # whatsapp-api-js
-A Whatsapp's Official API helper for Node.js (WIP)
+A Whatsapp's Official API framework for Node.js [(and others)](#running-outside-of-nodejs)
 
 ## Disclaimers
 
@@ -25,6 +25,7 @@ npm install whatsapp-api-js
 Now you can write code like this:
 
 ```js
+// Read Running outside of Nodejs to see support for other engines
 const { WhatsAppAPI, Handlers, Types } = require("whatsapp-api-js");
 const { Text, Media, Contacts } = Types;
 
@@ -38,7 +39,9 @@ function post(e) {
     return Handlers.post(JSON.parse(e.data), onMessage);
 }
 
-function onMessage(phoneID, phone, message, name, raw_data) {
+async function onMessage(phoneID, phone, message, name, raw_data) {
+    console.log(`User ${phone} (${name}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
+
     let promise;
 
     if (message.type === "text") promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`));
@@ -60,10 +63,14 @@ function onMessage(phoneID, phone, message, name, raw_data) {
         ]
     ));
 
-    if (promise) promise.then(res => res.json()).then(console.log);
+    console.log(await promise ?? "There are more types of messages, such as locations, templates/interactives replies and all the other medias types.");
     
     Whatsapp.markAsRead(phoneID, message.id);
 }
+
+Whatsapp.logSentMessages((phoneID, phone, message, raw_data) => {
+    console.log(`Bot ${phoneID} sent to user ${phone} ${JSON.stringify(message)}\n\n${JSON.stringify(raw_data)}`);
+});
 ```
 
 To recieve the post requests on message, you must setup the webhook at your Facebook app.
@@ -86,9 +93,56 @@ There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
+## Running outside of Node.js
+
+Since @0.4.2, the module will check if fetch is available, and fallback to "cross-fetch" if not.
+This will allow the same script to be run in many different enviroments, such as a web browser, Deno and Bun.
+
+With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It's really simple to use:
+
+```js
+import { WhatsAppAPI } from "npm:whatsapp-api-js";
+const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
+```
+
+However, the npm support is still experimental and behind the --unstable flag.
+If you want to use prior versions of Deno, use [https://esm.sh/whatsapp-api-js](https://esm.sh/) to import the code.
+
+Bun also works by running ```bun install whatsapp-api-js```.
+
+HTML module example:
+
+```html
+<script type="module">
+ import { WhatsAppAPI } from "https://esm.sh/whatsapp-api-js";
+ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
+ <!-- Please, never use your API tokens in a website, use this method wisely -->
+</script>
+```
+
+## Breaking changes in 0.6.0
+
+Since 0.6.0, the module will no longer return the raw fetch request, now it's internally parsed and returned.
+This change was made in order to improve the logSentMessages function, as it can now log the server response too.
+To get the raw request as before, you can use the `parsed` property of the main object as follows.
+
+```js
+const parsed = false;
+const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
+// All the API operations, like sendMessage, will now return the raw request.
+// Keep in mind, now when using logSentMessage the id and response parameters will be undefined.
+```
+
 ## Documentation
 
-The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/).
+The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/) and
+[secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
+
+## Beta releases
+
+Install the latest beta realease with `npm install whatsapp-api-js@beta`.
+As any beta, it is 110% likely to break. I also use this tag to test npm releases.
+Use it at your own risk.
 
 ## Comments
 

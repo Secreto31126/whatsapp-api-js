@@ -1,31 +1,51 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.4.0",
+  "version": "0.6.2",
+  "author": "Secreto31126",
   "description": "A Whatsapp Official API helper for Node.js",
+  "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "node --inspect test.js",
-    "debug": "node --inspect index.js",
-    "document": "./node_modules/.bin/jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types",
-    "win-document": ".\\node_modules\\.bin\\jsdoc -d ./documentation -t ./node_modules/docdash -R ./README.md . ./types"
+    "test": "mocha",
+    "coverage": "nyc --reporter=text mocha --reporter min",
+    "debug-with-tests": "mocha --reporter min --watch",
+    "document": "jsdoc -d ./docs -t ./node_modules/docdash -R ./README.md . ./types"
   },
   "keywords": [
     "whatsapp",
+    "cloud",
     "api",
-    "helper",
-    "bot"
+    "framework",
+    "whatsapp-cloud",
+    "cloud-api",
+    "whatsapp-cloud-api",
+    "whatsapp-business",
+    "whatsapp-business-api",
+    "bot",
+    "whatsapp-bot",
+    "chatbot",
+    "bot-framework",
+    "nodejs",
+    "deno",
+    "bun",
+    "bot-api",
+    "whatsapp-api",
+    "business-api"
   ],
-  "author": "Secreto31126",
-  "license": "MIT",
-  "dependencies": {
-    "node-fetch": "^2.6.7"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
   "devDependencies": {
     "docdash": "^1.2.0",
-    "jsdoc": "^3.6.10"
+    "jsdoc": "^3.6.10",
+    "mocha": "^10.0.0",
+    "nock": "^13.2.7",
+    "nyc": "^15.1.0",
+    "rewire": "^6.0.0",
+    "sinon": "^14.0.0"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.1.5"
   }
 }

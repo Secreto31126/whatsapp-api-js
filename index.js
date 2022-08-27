@@ -1,3 +1,5 @@
+// Most of these imports are here only for types checks
+
 const { Contacts } = require('./types/contacts');
 const { Interactive } = require("./types/interactive");
 const { Audio, Document, Image, Sticker, Video } = require('./types/media');
@@ -5,26 +7,55 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const fetch = require('./fetch');
+const api = require('./fetch');
+const { Request } = api;
 
 /**
  * The main API object
  * 
  * @property {String} token The API token
  * @property {String} v The API version to use
+ * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
  */
 class WhatsAppAPI {
     /**
      * Initiate the Whatsapp API app
      * 
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
-     * @param {String} v The version of the API, defaults to v13.0
+     * @param {String} v The version of the API, defaults to v14.0
+     * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v14.0") {
+    constructor(token, v = "v14.0", parsed = true) {
         if (!token) throw new Error("Token must be specified");
         this.token = token;
         this.v = v;
+        this.parsed = !!parsed;
+    }
+    
+    /**
+     * Callback function after a sendMessage request is sent
+     *
+     * @callback Logger
+     * @param {String} phoneID The bot's phoneID from where the message was sent
+     * @param {String} to The user's phone number
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The message object
+     * @param {Request} request The object sent to the server
+     * @param {(String|Void)} id The message id, undefined if parsed is set to false
+     * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
+     */
+
+    /**
+     * Set a callback function for sendMessage
+     * 
+     * @param {Logger} callback The callback function to set
+     * @returns {WhatsAppAPI} The API object, for chaining
+     * @throws {Error} If callback is truthy and is not a function
+     */
+    logSentMessages(callback) {
+        if (callback && typeof callback !== "function") throw new TypeError("Callback must be a function");
+        this._register = callback;
+        return this;
     }
 
     /**
@@ -33,18 +64,33 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object A Whatsapp component, built using the corresponding module for each type of message.
-     * @returns {Promise} The fetch promise
+     * @param {String} [context] The message ID of the message to reply to
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If to is not specified
      * @throws {Error} If object is not specified
-     * @throws {Error} If object is not a valid whatsapp-api-js@0.0.4 component
-     */ 
-    sendMessage(phoneID, to, object) {
+     */
+    sendMessage(phoneID, to, object, context = "") {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
-        if (!object._) throw new Error("There has been a breaking update in whatsapp-api-js@0.0.4 and @0.1.0, please check the documentation for more information on how to use the new version, or downgrade using 'npm i whatsapp-api-js@0.0.3'. Sorry for any inconvenience :/");
-        return fetch.sendMessage(this.token, this.v, phoneID, to, object);
+
+        const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
+        const response = this.parsed ? promise.then(e => e.json()) : undefined;
+
+
+        if (this._register) {
+            if (response) {
+                response.then(data => {
+                    const id = data?.messages ? data.messages[0]?.id : undefined;
+                    this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
+                });
+            } else {
+                this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
+            }
+        }
+
+        return response ?? promise;
     }
 
     /**
@@ -52,14 +98,15 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} messageId The message ID
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If messageId is not specified
      */
     markAsRead(phoneID, messageId) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
-        return fetch.readMessage(this.token, this.v, phoneID, messageId);
+        const promise = api.readMessage(this.token, this.v, phoneID, messageId);
+        return this.parsed ? promise.then(e => e.json()) : promise;
     }
     
     /**
@@ -68,7 +115,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} message The quick message on the QR code
      * @param {String} format The format of the QR code (png or svn)
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If message is not specified
      * @throws {Error} If format is not either 'png' or 'svn'
@@ -77,7 +124,8 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!message) throw new Error("Message must be specified");
         if (!["png", "svg"].includes(format)) throw new Error("Format must be either 'png' or 'svg'");
-        return fetch.makeQR(this.token, this.v, phoneID, message, format);
+        const promise = api.makeQR(this.token, this.v, phoneID, message, format);
+        return this.parsed ? promise.then(e => e.json()) : promise;
     }
 
     /**
@@ -85,12 +133,13 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      */
     retrieveQR(phoneID, id) {
         if (!phoneID) throw new Error("Phone ID must be specified");
-        return fetch.getQR(this.token, this.v, phoneID, id);
+        const promise = api.getQR(this.token, this.v, phoneID, id);
+        return this.parsed ? promise.then(e => e.json()) : promise;
     }
 
     /**
@@ -99,7 +148,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to edit
      * @param {String} message The new quick message for the QR code
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      * @throws {Error} If message is not specified
@@ -108,7 +157,8 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
-        return fetch.updateQR(this.token, this.v, phoneID, id, message);
+        const promise = api.updateQR(this.token, this.v, phoneID, id, message);
+        return this.parsed ? promise.then(e => e.json()) : promise;
     }
 
     /**
@@ -116,14 +166,15 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to delete
-     * @returns {Promise} The fetch promise
+     * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      */
     deleteQR(phoneID, id) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
-        return fetch.deleteQR(this.token, this.v, phoneID, id);
+        const promise = api.deleteQR(this.token, this.v, phoneID, id);
+        return this.parsed ? promise.then(e => e.json()) : promise;
     }
 }
 

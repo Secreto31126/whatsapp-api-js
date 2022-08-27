@@ -130,7 +130,7 @@ class ActionButtons {
      * @throws {Error} If two or more buttons have the same title
      */
     constructor(...button) {
-        if (!button?.length || button.length > 3) throw new Error("Reply buttons must have between 1 and 3 buttons");
+        if (!button.length || button.length > 3) throw new Error("Reply buttons must have between 1 and 3 buttons");
 
         // Find if there are duplicates in button.id
         const ids = button.map(b => b[b.type].id);
@@ -200,7 +200,7 @@ class ActionList {
     constructor(button, ...sections) {
         if (!button) throw new Error("Action must have a button content");
         if (button.length > 20) throw new Error("Button content must be 20 characters or less");
-        if (!sections?.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
+        if (!sections.length || sections.length > 10) throw new Error("Action must have between 1 and 10 sections");
         if (sections.length > 1 && !sections.every(obj => obj.hasOwnProperty("title"))) throw new Error("All sections must have a title if more than 1 section is provided");
 
         this._ = "list";
@@ -226,7 +226,7 @@ class ListSection {
      */
     constructor(title, ...rows) {
         if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
-        if (!rows?.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
+        if (!rows.length || rows.length > 10) throw new Error("Section must have between 1 and 10 rows");
 
         if (title) this.title = title;
         this.rows = rows;
@@ -258,7 +258,7 @@ class Row {
         if (id.length > 200) throw new Error("Row id must be 200 characters or less");
         if (!title) throw new Error("Row must have a title");
         if (title.length > 24) throw new Error("Row title must be 24 characters or less");
-        if (description.length > 72) throw new Error("Row description must be 72 characters or less");
+        if (description?.length > 72) throw new Error("Row description must be 72 characters or less");
 
         this.id = id;
         this.title = title;
@@ -288,13 +288,12 @@ class ActionCatalog {
      */
     constructor(catalog_id, ...products) {
         if (!catalog_id) throw new Error("Catalog must have a catalog id");
-        if (!products?.length) throw new Error("Catalog must have at least one product or product section");
+        if (!products.length) throw new Error("Catalog must have at least one product or product section");
         
         const single_product = products[0].product_retailer_id;
         
-        if (single_product) {
-            if (products.length > 1) throw new Error("Catalog must have only 1 product, use a ProductSection instead");
-        } else {
+        if (single_product && products.length > 1) throw new Error("Catalog must have only 1 product, use a ProductSection instead");
+        else {
             if (products.length > 10) throw new Error("Catalog must have between 1 and 10 product sections");
             if (products.length > 1 && !products.every(obj => obj.hasOwnProperty("title"))) throw new Error("All sections must have a title if more than 1 section is provided");
         }
@@ -323,7 +322,7 @@ class ProductSection {
      */
     constructor(title, ...products) {
         if (title && title.length > 24) throw new Error("Section title must be 24 characters or less");
-        if (!products?.length || products.length > 30) throw new Error("Section must have between 1 and 30 products");
+        if (!products.length || products.length > 30) throw new Error("Section must have between 1 and 30 products");
 
         if (title) this.title = title;
         this.product_items = products;
