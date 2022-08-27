@@ -219,7 +219,7 @@ class ListSection {
     /**
      * Builds a section component for ActionList
      * 
-     * @param {String} [title] Title of the section, only required if there are more than one section
+     * @param {String} title Title of the section, only required if there are more than one section
      * @param {...Row} rows Rows of the section
      * @throws {Error} If title is over 24 characters if provided
      * @throws {Error} If no rows are provided or are over 10
