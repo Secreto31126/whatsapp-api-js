@@ -1,6 +1,16 @@
 # whatsapp-api-js
 A Whatsapp's Official API framework for Node.js [(and others)](#running-outside-of-nodejs)
 
+## List of contents
+
+- [Disclaimers](#disclaimers)
+- [Set up](#set-up)
+- [Running outside of Node.js](#running-outside-of-nodejs)
+- [Breaking changes](#breaking-changes)
+- [Documentation](#documentation)
+- [Beta Releases](#beta-releases)
+- [Comments](#comments)
+
 ## Disclaimers
 
  1. Whatsapp's Official API is now generally available.
@@ -44,7 +54,7 @@ async function onMessage(phoneID, phone, message, name, raw_data) {
 
     let promise;
 
-    if (message.type === "text") promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`));
+    if (message.type === "text") promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`), message.id);
 
     if (message.type === "image") promise = Whatsapp.sendMessage(phoneID, phone, new Media.Image(message.image.id, true, `Nice photo, ${name}`));
 
@@ -120,7 +130,15 @@ HTML module example:
 </script>
 ```
 
-## Breaking changes in 0.6.0
+## Breaking changes
+
+### 0.7.0
+
+With the release of cart support for Cloud API, some naming changes where made within the interactive's classes.
+The Section class, which was a component of the ActionList, was renamed to ListSection, to avoid confusion with
+the new ProductSection.
+
+### 0.6.0
 
 Since 0.6.0, the module will no longer return the raw fetch request, now it's internally parsed and returned.
 This change was made in order to improve the logSentMessages function, as it can now log the server response too.
