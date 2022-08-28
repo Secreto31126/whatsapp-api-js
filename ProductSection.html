@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Location - Documentation</title>
+    <title>ProductSection - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Location</h1>
+    <h1 class="page-title">ProductSection</h1>
     
 
     
@@ -45,10 +45,10 @@
 <header>
     
         <h2>
-        Location
+        ProductSection
         </h2>
         
-            <div class="class-description usertext">Location API component</div>
+            <div class="class-description usertext">Section API object</div>
         
     
 </header>
@@ -63,7 +63,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Location"><span class="type-signature"></span>new Location<span class="signature">(longitude, latitude, name<span class="signature-attributes">opt</span>, address<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="ProductSection"><span class="type-signature"></span>new ProductSection<span class="signature">(title<span class="signature-attributes">opt</span>, &hellip;products)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,7 +75,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_location.js.html">types/location.js</a>, <a href="types_location.js.html#line10">line 10</a>
+        <a href="types_interactive.js.html">types/interactive.js</a>, <a href="types_interactive.js.html#line316">line 316</a>
     </li></ul></dd>
     
 
@@ -140,65 +140,7 @@
 
         <tr>
             
-                <td class="name"><code>latitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The latitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>longitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The longitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>title</code></td>
             
 
             <td class="type">
@@ -222,51 +164,20 @@
 
             
 
-            <td class="description last">The name of the location</td>
+            <td class="description last">The title of the section</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>product_items</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The address of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>_</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
+<span class="param-type">Array.&lt;<a href="Product.html">Product</a>></span>
 
 
             
@@ -282,7 +193,7 @@
 
             
 
-            <td class="description last">The type of the object, for internal use only</td>
+            <td class="description last">The products of the section</td>
         </tr>
 
     
@@ -295,7 +206,7 @@
 
 
 <div class="description usertext">
-    Create a Location object for the API
+    Builds a product section component for an ActionCatalog
 </div>
 
 
@@ -335,69 +246,7 @@
 
         <tr>
             
-                <td class="name"><code>longitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Longitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>latitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Latitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>title</code></td>
             
 
             <td class="type">
@@ -423,20 +272,20 @@
 
             
 
-            <td class="description last">Name of the location</td>
+            <td class="description last">The title of the product section</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>products</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type"><a href="Product.html">Product</a></span>
 
 
             
@@ -445,18 +294,18 @@
             
                 <td class="attributes">
                 
-                    &lt;optional><br>
-                
 
                 
 
+                
+                    &lt;repeatable><br>
                 
                 </td>
             
 
             
 
-            <td class="description last">Address of the location, only displayed if name is present</td>
+            <td class="description last">The products to add to the product section</td>
         </tr>
 
     
@@ -476,6 +325,62 @@
 
 
 
+<h5>Throws:</h5>
+<ul>
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        If title is over 24 characters if provided
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    
+        <li>
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        If no products are provided or are over 30
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+</li>
+    </ul>
 
 
 

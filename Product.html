@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Location - Documentation</title>
+    <title>Product - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Location</h1>
+    <h1 class="page-title">Product</h1>
     
 
     
@@ -45,10 +45,10 @@
 <header>
     
         <h2>
-        Location
+        Product
         </h2>
         
-            <div class="class-description usertext">Location API component</div>
+            <div class="class-description usertext">Product API object</div>
         
     
 </header>
@@ -63,7 +63,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Location"><span class="type-signature"></span>new Location<span class="signature">(longitude, latitude, name<span class="signature-attributes">opt</span>, address<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Product"><span class="type-signature"></span>new Product<span class="signature">(product_retailer_id)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,7 +75,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_location.js.html">types/location.js</a>, <a href="types_location.js.html#line10">line 10</a>
+        <a href="types_interactive.js.html">types/interactive.js</a>, <a href="types_interactive.js.html#line339">line 339</a>
     </li></ul></dd>
     
 
@@ -126,8 +126,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -140,65 +138,7 @@
 
         <tr>
             
-                <td class="name"><code>latitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The latitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>longitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The longitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>product_retailer_id</code></td>
             
 
             <td class="type">
@@ -211,78 +151,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">The name of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The address of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>_</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The type of the object, for internal use only</td>
+            <td class="description last">The id of the product</td>
         </tr>
 
     
@@ -295,7 +167,7 @@
 
 
 <div class="description usertext">
-    Create a Location object for the API
+    Builds a product component for ActionCart and ProductSection
 </div>
 
 
@@ -321,8 +193,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -335,69 +205,7 @@
 
         <tr>
             
-                <td class="name"><code>longitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Longitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>latitude</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Latitude of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>product_retailer_id</code></td>
             
 
             <td class="type">
@@ -410,53 +218,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">Name of the location</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Address of the location, only displayed if name is present</td>
+            <td class="description last">The id of the product</td>
         </tr>
 
     
@@ -476,6 +241,35 @@
 
 
 
+<h5>Throws:</h5>
+
+        
+
+<dl>
+    <dt>
+        <div class="param-desc usertext">
+        If product_retailer_id is not provided
+        </div>
+    </dt>
+    <dd></dd>
+    <dt>
+        <dl class="param-type">
+            <dt>
+                Type
+            </dt>
+            <dd>
+                
+<span class="param-type">Error</span>
+
+
+            </dd>
+        </dl>
+    </dt>
+    <dd></dd>
+</dl>
+
+
+    
 
 
 
