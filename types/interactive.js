@@ -21,13 +21,13 @@ class Interactive {
      * @throws {Error} If action is not provided
      * @throws {Error} If body is not provided, unless action is an ActionCatalog with a single product
      * @throws {Error} If header is provided for an ActionCatalog with a single product
-     * @throws {Error} If header is not provided for an ActionCatalog with a product list
+     * @throws {Error} If header of type Text is not provided for an ActionCatalog with a product list
      */
     constructor(action, body, header, footer) {
         if (!action) throw new Error("Interactive must have an action component");
         if (action._ !== "product" && !body) throw new Error("Interactive must have a body component");
         if (action._ === "product" && header) throw new Error("Interactive must not have a header component if action is a single product");
-        if (action._ === "product_list" && !header) throw new Error("Interactive must have a header component if action is a product list");
+        if (action._ === "product_list" && header.type !== "text") throw new Error("Interactive must have a Text header component if action is a product list");
 
         this.type = action._;
         delete action._;
