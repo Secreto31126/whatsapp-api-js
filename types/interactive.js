@@ -20,11 +20,13 @@ class Interactive {
      * @param {Footer} [footer] The footer component of the interactive message
      * @throws {Error} If action is not provided
      * @throws {Error} If body is not provided, unless action is an ActionCatalog with a single product
+     * @throws {Error} If header is provided for an ActionCatalog with a single product
      * @throws {Error} If header is not provided for an ActionCatalog with a product list
      */
     constructor(action, body, header, footer) {
         if (!action) throw new Error("Interactive must have an action component");
         if (action._ !== "product" && !body) throw new Error("Interactive must have a body component");
+        if (action._ === "product" && header) throw new Error("Interactive must not have a header component if action is a single product");
         if (action._ === "product_list" && !header) throw new Error("Interactive must have a header component if action is a product list");
 
         this.type = action._;
