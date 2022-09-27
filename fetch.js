@@ -5,7 +5,8 @@ const Location = require('./types/location');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const req = require('./fetch-picker').pick();
+const fetch = require('cross-fetch');
+// const fetch = require('./fetch-picker').pick();
 
 /**
  * Request API object
@@ -76,7 +77,7 @@ function sendMessage(token, v, phoneID, to, object, context) {
     const request = new Request(object, to, context);
 
     // Make the post request
-    const promise = req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
+    const promise = fetch(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -100,7 +101,7 @@ function sendMessage(token, v, phoneID, to, object, context) {
  * @returns {Promise} The fetch promise
  */
 function readMessage(token, v, phoneID, message_id) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -132,7 +133,7 @@ function makeQR(token, v, phoneID, message, format) {
         prefilled_message: message,
     };
 
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls?${new URLSearchParams(params)}`, {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls?${new URLSearchParams(params)}`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -152,7 +153,7 @@ function makeQR(token, v, phoneID, message, format) {
  * @returns {Promise} The fetch promise
  */
 function getQR(token, v, phoneID, id) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
         headers: {
             'Authorization': `Bearer ${token}`,
         },
@@ -176,7 +177,7 @@ function updateQR(token, v, phoneID, id, message) {
         prefilled_message: message,
     };
 
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(params)}`, {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(params)}`, {
         method: "POST",
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -196,7 +197,7 @@ function updateQR(token, v, phoneID, id, message) {
  * @returns {Promise} The fetch promise
  */
 function deleteQR(token, v, phoneID, id) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
+    return fetch(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
         method: "DELETE",
         headers: {
             'Authorization': `Bearer ${token}`,
