@@ -4,6 +4,7 @@ const { Contacts } = require('./types/contacts');
 const { Interactive } = require("./types/interactive");
 const { Audio, Document, Image, Sticker, Video } = require('./types/media');
 const Location = require('./types/location');
+const Reaction = require('./types/reaction');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
@@ -39,7 +40,7 @@ class WhatsAppAPI {
      * @callback Logger
      * @param {String} phoneID The bot's phoneID from where the message was sent
      * @param {String} to The user's phone number
-     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The message object
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object The message object
      * @param {Request} request The object sent to the server
      * @param {(String|Void)} id The message id, undefined if parsed is set to false
      * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
@@ -63,7 +64,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} to The user's phone number
-     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object A Whatsapp component, built using the corresponding module for each type of message.
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @param {String} [context] The message ID of the message to reply to
      * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
@@ -215,6 +216,7 @@ class WhatsAppAPI {
  * @property {Image}            Types.Media.Image                   The API Image type object
  * @property {Sticker}          Types.Media.Sticker                 The API Sticker type object
  * @property {Video}            Types.Media.Video                   The API Video type object
+ * @property {Reaction}         Types.Reaction                      The API Reaction type object
  * @property {Object}           Types.Template                      The Template module
  * @property {Template}         Types.Template.Template             The API Template type object
  * @property {Language}         Types.Template.Language             The API Language type object
@@ -235,6 +237,7 @@ module.exports = {
         Interactive: require('./types/interactive'),
         Location: require('./types/location'),
         Media: require('./types/media'),
+        Reaction: require('./types/reaction'),
         Template: require('./types/template'),
         Text: require('./types/text'),
     }

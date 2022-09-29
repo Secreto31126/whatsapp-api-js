@@ -73,7 +73,7 @@ async function onMessage(phoneID, phone, message, name, raw_data) {
         ]
     ));
 
-    console.log(await promise ?? "There are more types of messages, such as locations, templates/interactives replies and all the other medias types.");
+    console.log(await promise ?? "There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.");
     
     Whatsapp.markAsRead(phoneID, message.id);
 }
