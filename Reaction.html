@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Template - Documentation</title>
+    <title>Reaction - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">Template</h1>
+    <h1 class="page-title">Reaction</h1>
     
 
     
@@ -45,10 +45,10 @@
 <header>
     
         <h2>
-        Template
+        Reaction
         </h2>
         
-            <div class="class-description usertext">Template API object</div>
+            <div class="class-description usertext">Reaction API object</div>
         
     
 </header>
@@ -63,7 +63,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Template"><span class="type-signature"></span>new Template<span class="signature">(name, language, &hellip;components<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Reaction"><span class="type-signature"></span>new Reaction<span class="signature">(message_id, emoji)</span><span class="type-signature"></span></h4>
 
     
 
@@ -75,7 +75,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="types_template.js.html">types/template.js</a>, <a href="types_template.js.html#line12">line 12</a>
+        <a href="types_reaction.js.html">types/reaction.js</a>, <a href="types_reaction.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -126,8 +126,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -140,7 +138,7 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>message_id</code></td>
             
 
             <td class="type">
@@ -153,76 +151,33 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">The name of the template</td>
+            <td class="description last">The message's id to react to</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>language</code></td>
+                <td class="name"><code>emoji</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Language.html">Language</a></span>
+<span class="param-type">String</span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">The language of the template</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>components</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;(<a href="HeaderComponent.html">HeaderComponent</a>|<a href="BodyComponent.html">BodyComponent</a>|<a href="ButtonComponent.html">ButtonComponent</a>)></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The components of the template</td>
+            <td class="description last">The reaction emoji</td>
         </tr>
 
     
@@ -242,12 +197,6 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-                </td>
-            
 
             
 
@@ -264,7 +213,7 @@
 
 
 <div class="description usertext">
-    Create a Template object for the API
+    Create a Reaction object for the API
 </div>
 
 
@@ -290,8 +239,6 @@
         <th>Type</th>
 
         
-        <th>Attributes</th>
-        
 
         
 
@@ -304,7 +251,7 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>message_id</code></td>
             
 
             <td class="type">
@@ -317,93 +264,33 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">Name of the template</td>
+            <td class="description last">The message's id (wamid) to react to</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>language</code></td>
+                <td class="name"><code>emoji</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">String</span>
-|
-
-<span class="param-type"><a href="Language.html">Language</a></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last">The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>components</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="HeaderComponent.html">HeaderComponent</a></span>
-|
-
-<span class="param-type"><a href="BodyComponent.html">BodyComponent</a></span>
-|
-
-<span class="param-type"><a href="ButtonComponent.html">ButtonComponent</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                    &lt;repeatable><br>
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.</td>
+            <td class="description last">The emoji to react with, defaults to empty string to remove a reaction</td>
         </tr>
 
     
@@ -430,7 +317,7 @@
 <dl>
     <dt>
         <div class="param-desc usertext">
-        If name is not provided
+        If message_id is not provided
         </div>
     </dt>
     <dd></dd>
@@ -457,7 +344,7 @@
 <dl>
     <dt>
         <div class="param-desc usertext">
-        If language is not provided
+        If a non-emoji or more than one emoji is provided
         </div>
     </dt>
     <dd></dd>
