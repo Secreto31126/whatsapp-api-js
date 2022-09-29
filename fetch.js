@@ -2,6 +2,7 @@ const { Contacts } = require('./types/contacts');
 const { Interactive } = require("./types/interactive");
 const { Audio, Document, Image, Sticker, Video } = require('./types/media');
 const Location = require('./types/location');
+const Reaction = require('./types/reaction');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
@@ -15,22 +16,23 @@ const req = require('./fetch-picker').pick();
  * @property {String} to The user's phone number
  * @property {Object} [context] The message to reply to
  * @property {String} context.message_id The message id to reply to
- * @property {String} [text] The text object stringified to send
- * @property {String} [audio] The audio object stringified to send
- * @property {String} [document] The document object stringified to send
- * @property {String} [image] The image object stringified to send
- * @property {String} [sticker] The sticker object stringified to send
- * @property {String} [video] The video object stringified to send
- * @property {String} [location] The location object stringified to send
- * @property {String} [contacts] The contacts object stringified to send
- * @property {String} [interactive] The interactive object stringified to send
- * @property {String} [template] The template object stringified to send
+ * @property {String} [text] The text object stringified
+ * @property {String} [audio] The audio object stringified
+ * @property {String} [document] The document object stringified
+ * @property {String} [image] The image object stringified
+ * @property {String} [sticker] The sticker object stringified
+ * @property {String} [video] The video object stringified
+ * @property {String} [location] The location object stringified
+ * @property {String} [contacts] The contacts object stringified
+ * @property {String} [interactive] The interactive object stringified
+ * @property {String} [template] The template object stringified
+ * @property {String} [reaction] The reaction object stringified
  */
 class Request {
     /**
      * Create a Request object for the API
      * 
-     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The object to send
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object The object to send
      * @param {String} to The user's phone number
      * @param {String} context The message_id to reply to
      */
@@ -68,7 +70,7 @@ class Request {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} to The user's phone number
- * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
+ * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object Each type of message requires a specific type of object, for example, the "image" type requires an url and optionally captions. Use the constructors for each specific type of message (contacts, interactive, location, media, template, text)
  * @param {String} context The message id to reply to
  * @returns {SendMessageResponse} An object with the sent request and the fetch promise
  */
