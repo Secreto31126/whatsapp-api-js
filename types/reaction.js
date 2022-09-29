@@ -1,8 +1,8 @@
 /**
  * Reaction API object
  * 
- * @property {String} message_id Body of the message. Maximum length: 4096 characters.
- * @property {String} emoji Whether to enable preview for the text message
+ * @property {String} message_id The message's id to react to
+ * @property {String} emoji The reaction emoji
  * @property {String} _ The type of the object, for internal use only
  */
  class Reaction {
