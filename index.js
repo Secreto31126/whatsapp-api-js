@@ -27,13 +27,13 @@ class WhatsAppAPI {
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v14.0", parsed = true) {
+    constructor(token, v = "v15.0", parsed = true) {
         if (!token) throw new Error("Token must be specified");
         this.token = token;
         this.v = v;
         this.parsed = !!parsed;
     }
-    
+
     /**
      * Callback function after a sendMessage request is sent
      *
@@ -109,7 +109,7 @@ class WhatsAppAPI {
         const promise = api.readMessage(this.token, this.v, phoneID, messageId);
         return this.parsed ? promise.then(e => e.json()) : promise;
     }
-    
+
     /**
      * Generate a QR code for sharing the bot
      * 
