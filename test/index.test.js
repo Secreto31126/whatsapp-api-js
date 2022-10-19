@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // Unit tests with mocha and sinon
 const assert = require('assert');
 const sinon = require('sinon');
@@ -14,6 +16,10 @@ const { Text } = Types;
 // Import mocks
 const { Request } = require('../fetch');
 
+if (process.version.match(/v(\d+)/)[1] >= 17) {
+    console.warn(`Using node version ${process.version}, use node 16 or lower to run the server calls tests`);
+}
+
 describe("WhatsAppAPI", function() {
     describe("Token", function() {
         it("should create a WhatsAppAPI object with the token", function() {
@@ -29,9 +35,9 @@ describe("WhatsAppAPI", function() {
     });
 
     describe("Version", function() {
-        it("should work with v14.0 as default", function() {
+        it("should work with v15.0 as default", function() {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
-            assert.equal(Whatsapp.v, "v14.0");
+            assert.equal(Whatsapp.v, "v15.0");
         });
 
         it("should work with any specified version", function() {
@@ -58,6 +64,13 @@ describe("WhatsAppAPI", function() {
     });
 
     describe("Logger", function() {
+        before(function () {
+            // Prevent running the tests if node version is greater than 17
+            if (process.version.match(/v(\d+)/)[1] >= 17) {
+                this.skip();
+            }
+        });
+
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         this.beforeEach(function() {
@@ -94,20 +107,14 @@ describe("WhatsAppAPI", function() {
             assert.equal(Whatsapp._register, logger);
         });
 
-        it("should unset if the logger is falsy", function() {
+        it("should unset the logger if no parameters is given", function() {
             Whatsapp.logSentMessages(console.log).logSentMessages();
-            assert.equal(!!Whatsapp._register, false);
-
-            Whatsapp.logSentMessages(console.log).logSentMessages(0);
-            assert.equal(!!Whatsapp._register, false);
-
-            Whatsapp.logSentMessages(console.log).logSentMessages(false);
-            assert.equal(!!Whatsapp._register, false);
+            assert.equal(typeof Whatsapp._register, "function");
         });
 
-        it("should fail if the logger is truthy and not a function", function() {
+        it("should fail if the logger is not a function", function() {
             assert.throws(function() {
-                Whatsapp.logSentMessages(1);
+                Whatsapp.logSentMessages(0);
             }, TypeError);
 
             assert.throws(function() {
@@ -166,6 +173,13 @@ describe("WhatsAppAPI", function() {
     });
     
     describe("Message", function() {
+        before(function () {
+            // Prevent running the tests if node version is greater than 17
+            if (process.version.match(/v(\d+)/)[1] >= 17) {
+                this.skip();
+            }
+        });
+
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         this.beforeEach(function() {
@@ -358,6 +372,13 @@ describe("WhatsAppAPI", function() {
     });
 
     describe("QR", function() {
+        before(function () {
+            // Prevent running the tests if node version is greater than 17
+            if (process.version.match(/v(\d+)/)[1] >= 17) {
+                this.skip();
+            }
+        });
+
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         this.beforeEach(function() {

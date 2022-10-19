@@ -29,9 +29,13 @@ class WhatsAppAPI {
      */
     constructor(token, v = "v15.0", parsed = true) {
         if (!token) throw new Error("Token must be specified");
+        
         this.token = token;
         this.v = v;
         this.parsed = !!parsed;
+
+        /** @type {Logger} */
+        this._register = (..._) => {};
     }
 
     /**
@@ -53,8 +57,8 @@ class WhatsAppAPI {
      * @returns {WhatsAppAPI} The API object, for chaining
      * @throws {Error} If callback is truthy and is not a function
      */
-    logSentMessages(callback) {
-        if (callback && typeof callback !== "function") throw new TypeError("Callback must be a function");
+    logSentMessages(callback = (..._) => {}) {
+        if (typeof callback !== "function") throw new TypeError("Callback must be a function. To unset, call the function without parameters.");
         this._register = callback;
         return this;
     }
@@ -80,15 +84,15 @@ class WhatsAppAPI {
         const response = this.parsed ? promise.then(e => e.json()) : undefined;
 
 
-        if (this._register) {
-            if (response) {
-                response.then(data => {
-                    const id = data?.messages ? data.messages[0]?.id : undefined;
-                    this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
-                });
-            } else {
-                this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
-            }
+        if (response) {
+            response.then(data => {
+                const id = data?.messages ? data.messages[0]?.id : undefined;
+                // @ts-ignore
+                this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
+            });
+        } else {
+            // @ts-ignore
+            this._register(phoneID, request.to, JSON.parse(request[request.type]), request, undefined, undefined);
         }
 
         return response ?? promise;
@@ -175,6 +179,100 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteQR(this.token, this.v, phoneID, id);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Get a Media object data with an ID
+     * 
+     * @param {String} id The Media's ID
+     * @returns {Promise} The server response
+     * @throws {Error} If id is not specified
+     */
+    getMedia(id) {
+        if (!id) throw new Error("ID must be specified");
+        const promise = api.getMedia(this.token, this.v, id);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Upload a Media to the server
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {FormData} form The Media's FormData
+     * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If form is not specified
+     * @throws {Error} If check is set to true and form is not a FormData
+     * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
+     * @throws {Error} If check is set to true and the form file is too big for the file type
+     */
+    uploadMedia(phoneID, form, check = true) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!form) throw new Error("Form must be specified");
+        
+        if (check) {
+            if (!(form instanceof FormData)) throw new Error("Form must be a FormData");
+
+            const file = form.get("file");
+            const type = form.get("type");
+
+            if (!file) throw new Error("Form must have a file property");
+            if (!type || typeof type !== "string") throw new Error("Form must have a type property");
+
+            const validMediaTypes = [
+                "audio/aac",
+                "audio/mp4",
+                "audio/mpeg",
+                "audio/amr",
+                "audio/ogg",
+                "text/plain",
+                "application/pdf",
+                "application/vnd.ms-powerpoint",
+                "application/msword",
+                "application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "image/jpeg",
+                "image/png",
+                "video/mp4",
+                "video/3gp",
+                "image/webp"
+            ];
+            
+            // @ts-ignore
+            if (!validMediaTypes.includes(type)) throw new Error(`Invalid media type: ${type}`);
+
+            const validMediaSizes = {
+                "audio": 16_000_000,
+                "text": 100_000_000,
+                "application": 100_000_000,
+                "image": 5_000_000,
+                "video": 16_000_000,
+                "sticker": 500_000
+            };
+            
+            const mediaType = type === "image/webp" ? "sticker" : type.split("/")[0];
+            // @ts-ignore
+            if (file.length > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.length}) for a ${mediaType} (${validMediaSizes[mediaType]})`);
+        }
+
+        const promise = api.uploadMedia(this.token, this.v, phoneID, form);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Delete a Media object with an ID
+     * 
+     * @param {String} id The Media's ID
+     * @returns {Promise} The server response
+     * @throws {Error} If id is not specified
+     */
+    deleteMedia(id) {
+        if (!id) throw new Error("ID must be specified");
+        const promise = api.deleteMedia(this.token, this.v, id);
         return this.parsed ? promise.then(e => e.json()) : promise;
     }
 }

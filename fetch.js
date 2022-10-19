@@ -6,7 +6,7 @@ const Reaction = require('./types/reaction');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const req = require('./fetch-picker').pick();
+const req = require('./polyfill').pickFetch();
 
 /**
  * Request API object
@@ -34,12 +34,13 @@ class Request {
      * 
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object The object to send
      * @param {String} to The user's phone number
-     * @param {String} context The message_id to reply to
+     * @param {String} [context] The message_id to reply to
      */
     constructor(object, to, context) {
         let message = { ...object };
         this.messaging_product = "whatsapp";
         this.type = message._;
+        // @ts-ignore
         delete message._;
         this.to = to;
 
@@ -206,4 +207,79 @@ function deleteQR(token, v, phoneID, id) {
     });
 }
 
-module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR, Request };
+/**
+ * Get a Media object
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} id The media's id
+ * @returns {Promise} The fetch promise
+ */
+function getMedia(token, v, id) {
+    return req(`https://graph.facebook.com/${v}/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+/**
+ * Upload a Media object
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {FormData} form The media to upload in form format (multipart/form-data)
+ * @returns {Promise} The fetch promise
+ */
+function uploadMedia(token, v, phoneID, form) {
+    return req(`https://graph.facebook.com/${v}/${phoneID}/media?messaging_product=whatsapp`, {
+        method: "POST",
+        body: form,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+/**
+ * Delete a Media
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} id The media's id
+ * @returns {Promise} The fetch promise
+ */
+function deleteMedia(token, v, id) {
+    return req(`https://graph.facebook.com/${v}/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+// function download(url, path) {
+//     return new Promise(async (resolve, reject) => {
+//         const image = (
+//             await fetch(url, {
+//                 headers: {
+//                     Authorization: `Bearer ${process.env.TOKEN}`,
+//                     "Content-Type": "application/json",
+//                 },
+//             })
+//         ).body;
+//
+//         image.pipe(fs.createWriteStream(path)).on("close", resolve);
+//     });
+// }
+
+module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR, getMedia, uploadMedia, deleteMedia, Request };
