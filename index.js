@@ -255,7 +255,7 @@ class WhatsAppAPI {
             };
             
             const mediaType = file.type === "image/webp" ? "sticker" : file.type.split("/")[0];
-            if (file.size && file.size > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.size}) for a ${mediaType} (${validMediaSizes[mediaType]})`);
+            if (file.size && file.size > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`);
         }
 
         const promise = api.uploadMedia(this.token, this.v, phoneID, form);
