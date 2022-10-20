@@ -267,18 +267,12 @@ function deleteMedia(token, v, id) {
     });
 }
 
-// function download(url, path) {
-//     return new Promise(async (resolve, reject) => {
-//         const image = (
-//             await fetch(url, {
-//                 headers: {
-//                     Authorization: `Bearer ${process.env.TOKEN}`,
-//                     "Content-Type": "application/json",
-//                 },
-//             })
-//         ).body;
-//
-//         image.pipe(fs.createWriteStream(path)).on("close", resolve);
+// function downloadMedia(url) {
+//     return fetch(url, {
+//         headers: {
+//             Authorization: `Bearer ${process.env.TOKEN}`,
+//             "Content-Type": "application/json",
+//         },
 //     });
 // }
 

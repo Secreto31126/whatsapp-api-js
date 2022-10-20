@@ -199,7 +199,7 @@ class WhatsAppAPI {
      * Upload a Media to the server
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {FormData} form The Media's FormData
+     * @param {FormData} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: form.append("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using formdata-node, since it is compliant with the standard implementation. form-data is also supported, but it doesn't have the get() method, so to use it you must set the check parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns {Promise} The server response
      * @throws {Error} If phoneID is not specified
@@ -213,13 +213,14 @@ class WhatsAppAPI {
         if (!form) throw new Error("Form must be specified");
         
         if (check) {
-            if (!(form instanceof FormData)) throw new Error("Form must be a FormData");
+            if (!(form instanceof FormData)) throw new TypeError("Form must be a FormData");
 
+            /** @type {(Blob|Null)} */
+            // @ts-ignore
             const file = form.get("file");
-            const type = form.get("type");
 
-            if (!file) throw new Error("Form must have a file property");
-            if (!type || typeof type !== "string") throw new Error("Form must have a type property");
+            if (!file) throw new Error("Form must have a 'file' property with a blob of the media to store");
+            if (!file.type) throw new Error("File in form must have a type specified");
 
             const validMediaTypes = [
                 "audio/aac",
@@ -242,21 +243,19 @@ class WhatsAppAPI {
                 "image/webp"
             ];
             
-            // @ts-ignore
-            if (!validMediaTypes.includes(type)) throw new Error(`Invalid media type: ${type}`);
-
+            if (!validMediaTypes.includes(file.type)) throw new Error(`Invalid media type: ${file.type}`);
+            
             const validMediaSizes = {
-                "audio": 16_000_000,
-                "text": 100_000_000,
-                "application": 100_000_000,
-                "image": 5_000_000,
-                "video": 16_000_000,
-                "sticker": 500_000
+                audio: 16_000_000,
+                text: 100_000_000,
+                application: 100_000_000,
+                image: 5_000_000,
+                video: 16_000_000,
+                sticker: 500_000,
             };
             
-            const mediaType = type === "image/webp" ? "sticker" : type.split("/")[0];
-            // @ts-ignore
-            if (file.length > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.length}) for a ${mediaType} (${validMediaSizes[mediaType]})`);
+            const mediaType = file.type === "image/webp" ? "sticker" : file.type.split("/")[0];
+            if (file.size && file.size > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.size}) for a ${mediaType} (${validMediaSizes[mediaType]})`);
         }
 
         const promise = api.uploadMedia(this.token, this.v, phoneID, form);
