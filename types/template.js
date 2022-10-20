@@ -7,7 +7,7 @@ const { Image, Document, Video } = require("./media");
  * @property {String} name The name of the template
  * @property {Language} language The language of the template
  * @property {Array<(HeaderComponent|BodyComponent|ButtonComponent)>} [components] The components of the template
- * @property {String} _ The type of the object, for internal use only
+ * @property {String} [_] The type of the object, for internal use only
  */
 class Template {
     /**
@@ -15,7 +15,7 @@ class Template {
      * 
      * @param {String} name Name of the template
      * @param {(String|Language)} language The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} [components] Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} components Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
      * @throws {Error} If name is not provided
      * @throws {Error} If language is not provided
      */
@@ -25,6 +25,7 @@ class Template {
 
         this.name = name;
         this.language = language instanceof Language ? language : new Language(language);
+        // @ts-ignore
         if (components) this.components = components.map(c => typeof c.build === "function" ? c.build() : c).flat();
 
         this._ = "template";
@@ -58,7 +59,7 @@ class Language {
  * @property {Number} amount_1000 The amount of the currency by 1000
  * @property {String} code The currency code
  * @property {String} fallback_value The fallback value
- * @property {String} _ The type of the object, for internal use only
+ * @property {String} [_] The type of the object, for internal use only
  */
 class Currency {
     /**
@@ -87,7 +88,7 @@ class Currency {
  * DateTime API object
  * 
  * @property {String} fallback_value The fallback value
- * @property {String} _ The type of the object, for internal use only
+ * @property {String} [_] The type of the object, for internal use only
  */
 class DateTime {
     /**
@@ -108,7 +109,7 @@ class DateTime {
  * 
  * @property {String} type The type of the component
  * @property {String} sub_type The subtype of the component
- * @property {Array<ButtonParameter>} parameters The ButtonParameters to be used in the build function
+ * @property {Array<ButtonParameter|String>} parameters The ButtonParameters to be used in the build function
  * @property {Function} build The function to build the component as a compatible API object
  */
 class ButtonComponent {
@@ -128,16 +129,17 @@ class ButtonComponent {
         if (parameters.length > 3) throw new Error("ButtonComponent can only have up to 3 parameters");
 
         const buttonType = sub_type === "url" ? "text" : "payload";
-        parameters = parameters.map(e => new ButtonParameter(e, buttonType));
+        const processed = parameters.map(e => new ButtonParameter(e, buttonType));
 
         this.type = "button";
         this.sub_type = sub_type;
-        this.parameters = parameters;
+        this.parameters = processed;
     }
 
     /**
      * Generates the buttons components for a Template message. For internal use only.
      * 
+     * @package
      * @returns {Array<{ type: String, sub_type: String, index: String, parameters: Array<ButtonParameter> }>} An array of API compatible buttons components
      */
     build() {
@@ -182,7 +184,7 @@ class HeaderComponent {
     /**
      * Builds a header component for a Template message
      * 
-     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} [parameters] Parameters of the body component
+     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "header";
@@ -200,7 +202,7 @@ class BodyComponent {
     /**
      * Builds a body component for a Template message
      * 
-     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} [parameters] Parameters of the body component
+     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
      */
     constructor(...parameters) {
         this.type = "body";
@@ -237,9 +239,9 @@ class Parameter {
         delete parameter._;
 
         // Text type can go to hell
-        if (this.type === "text") {
-            if (whoami === "header" && parameter.body > 60) throw new Error("Header text must be 60 characters or less");
-            if (whoami === "body" && parameter.body > 1024) throw new Error("Body text must be 1024 characters or less");
+        if (parameter instanceof Text) {
+            if (whoami === "header" && parameter.body.length > 60) throw new Error("Header text must be 60 characters or less");
+            if (whoami === "body" && parameter.body.length > 1024) throw new Error("Body text must be 1024 characters or less");
             this[this.type] = parameter.body;
         } else this[this.type] = parameter;
     }

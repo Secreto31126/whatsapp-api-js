@@ -5,6 +5,9 @@
   "description": "A Whatsapp Official API framework for Node.js",
   "license": "MIT",
   "main": "index.js",
+  "engines" : {
+    "node" : ">=14.0.0"
+  },
   "scripts": {
     "test": "mocha",
     "coverage": "nyc --reporter=text mocha --reporter min",
