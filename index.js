@@ -9,6 +9,7 @@ const { Template } = require('./types/template');
 const Text = require('./types/text');
 
 const api = require('./fetch');
+const { Blob, FormData } = require('./ponyfill').pickForm();
 
 /**
  * The main API object
@@ -196,7 +197,7 @@ class WhatsAppAPI {
      * Upload a Media to the server
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {FormData} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: form.append("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using formdata-node, since it is compliant with the standard implementation. form-data is also supported, but it doesn't have the get() method, so to use it you must set the check parameter to false.
+     * @param {Blob} file The Media's file as blob. Must have a valid mime-type setted up. Example using the Extras.Blob ponyfill: `new WhatsApp.Extras.Blob([data], { type: "image/png" })`. Node ^16 can use native `Blob` constructor.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
@@ -205,19 +206,14 @@ class WhatsAppAPI {
      * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws {Error} If check is set to true and the form file is too big for the file type
      */
-    uploadMedia(phoneID, form, check = true) {
+    uploadMedia(phoneID, file, check = true) {
         if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!form) throw new Error("Form must be specified");
+        if (!file) throw new Error("Form must be specified");
         
         if (check) {
-            if (FormData && !(form instanceof FormData)) throw new TypeError("Form must be a FormData");
-
-            /** @type {(Blob|Null)} */
             // @ts-ignore
-            const file = form.get("file");
-
-            if (!file) throw new Error("Form must have a 'file' property with a blob of the media to store");
-            if (!file.type) throw new Error("File in form must have a type specified");
+            if (!(file instanceof Blob)) throw new TypeError(`File's Blob must be an instance of Blob, received ${file.constructor.name}`);
+            if (!file.type) throw new Error("File's Blob must have a type specified");
 
             const validMediaTypes = [
                 "audio/aac",
@@ -239,9 +235,9 @@ class WhatsAppAPI {
                 "video/3gp",
                 "image/webp"
             ];
-            
+
             if (!validMediaTypes.includes(file.type)) throw new Error(`Invalid media type: ${file.type}`);
-            
+
             const validMediaSizes = {
                 audio: 16_000_000,
                 text: 100_000_000,
@@ -250,10 +246,15 @@ class WhatsAppAPI {
                 video: 16_000_000,
                 sticker: 500_000,
             };
-            
+
             const mediaType = file.type === "image/webp" ? "sticker" : file.type.split("/")[0];
             if (file.size && file.size > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`);
         }
+
+        // @ts-ignore
+        const form = new FormData();
+        form.append("file", file);
+        console.log(form);
 
         const promise = api.uploadMedia(this.token, this.v, phoneID, form);
         return this.parsed ? promise.then(e => e.json()) : promise;
@@ -348,6 +349,8 @@ class WhatsAppAPI {
  * @property {Currency}         Types.Template.Currency             The API Currency type object
  * @property {DateTime}         Types.Template.DateTime             The API DateTime type object
  * @property {Text}             Types.Text                          The API Text type object
+ * @property {Object}           Extras                              The extras object
+ * @property {Blob}             Extras.Blob                         A Blob ponyfill
  */
 module.exports = {
     WhatsAppAPI,
@@ -360,5 +363,8 @@ module.exports = {
         Reaction: require('./types/reaction'),
         Template: require('./types/template'),
         Text: require('./types/text'),
+    },
+    Extras: {
+        Blob: require('./ponyfill').pickForm().Blob,
     }
 };

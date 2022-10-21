@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "docdash": "^1.2.0",
+    "formdata-node": "^4.4.1",
     "jsdoc": "^3.6.10",
     "mocha": "^10.0.0",
     "nock": "^13.2.7",

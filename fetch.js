@@ -6,7 +6,7 @@ const Reaction = require('./types/reaction');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const req = require('./polyfill').pickFetch();
+const req = require('./ponyfill').pickFetch();
 
 /**
  * Request API object
