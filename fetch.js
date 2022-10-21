@@ -269,7 +269,7 @@ function deleteMedia(token, v, id) {
 
 /**
  * Make a GET request to any url with the authorization header.
- * Please, be sure where you are sending the request since it contains the API token.
+ * Be sure where you are sending the request since it contains the API token.
  * 
  * @package
  * @ignore
