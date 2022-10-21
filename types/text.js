@@ -9,7 +9,7 @@
     /**
      * Create a Text object for the API
      * 
-     * @param {String} body The text of the text message which can contain formatting and URLs which begin with http:// or https://
+     * @param {String} body The content of the text message which can contain formatting and URLs which begin with http:// or https://
      * @param {Boolean} [preview_url] By default, WhatsApp recognizes URLs and makes them clickable, but you can also include a preview box with more information about the link. Set this field to true if you want to include a URL preview box.
      * @throws {Error} If body is not provided
      * @throws {Error} If body is over 4096 characters

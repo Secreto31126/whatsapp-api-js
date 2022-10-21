@@ -9,7 +9,6 @@ const { Template } = require('./types/template');
 const Text = require('./types/text');
 
 const api = require('./fetch');
-const { Request } = api;
 
 /**
  * The main API object
@@ -45,7 +44,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phoneID from where the message was sent
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object The message object
-     * @param {Request} request The object sent to the server
+     * @param {api.Request} request The object sent to the server
      * @param {(String|Void)} id The message id, undefined if parsed is set to false
      * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
      */
@@ -70,7 +69,7 @@ class WhatsAppAPI {
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @param {String} [context] The message ID of the message to reply to
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If to is not specified
      * @throws {Error} If object is not specified
@@ -87,11 +86,9 @@ class WhatsAppAPI {
         if (response) {
             response.then(data => {
                 const id = data?.messages ? data.messages[0]?.id : undefined;
-                // @ts-ignore
                 this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
             });
         } else {
-            // @ts-ignore
             this._register(phoneID, request.to, JSON.parse(request[request.type]), request, undefined, undefined);
         }
 
@@ -103,7 +100,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} messageId The message ID
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If messageId is not specified
      */
@@ -120,7 +117,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} message The quick message on the QR code
      * @param {String} format The format of the QR code (png or svn)
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If message is not specified
      * @throws {Error} If format is not either 'png' or 'svn'
@@ -138,7 +135,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      */
     retrieveQR(phoneID, id) {
@@ -153,7 +150,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to edit
      * @param {String} message The new quick message for the QR code
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      * @throws {Error} If message is not specified
@@ -171,7 +168,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to delete
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      */
@@ -186,7 +183,7 @@ class WhatsAppAPI {
      * Get a Media object data with an ID
      * 
      * @param {String} id The Media's ID
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If id is not specified
      */
     getMedia(id) {
@@ -201,10 +198,10 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {FormData} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: form.append("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using formdata-node, since it is compliant with the standard implementation. form-data is also supported, but it doesn't have the get() method, so to use it you must set the check parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If form is not specified
-     * @throws {Error} If check is set to true and form is not a FormData
+     * @throws {TypeError} If check is set to true, the FormData class exists in the enviroment and form is not a FormData
      * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws {Error} If check is set to true and the form file is too big for the file type
      */
@@ -213,7 +210,7 @@ class WhatsAppAPI {
         if (!form) throw new Error("Form must be specified");
         
         if (check) {
-            if (!(form instanceof FormData)) throw new TypeError("Form must be a FormData");
+            if (FormData && !(form instanceof FormData)) throw new TypeError("Form must be a FormData");
 
             /** @type {(Blob|Null)} */
             // @ts-ignore
@@ -263,16 +260,42 @@ class WhatsAppAPI {
     }
 
     /**
+     * Get a Media fetch from an url.
+     * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
+     * 
+     * @param {String} url The Media's url
+     * @returns {Promise<Response>} The fetch raw response
+     * @throws {TypeError} If url is not a valid url
+     */
+    fetchMedia(url) {
+        // Hacky way to check if the url is valid and throw if invalid
+        return this._authenicatedRequest(new URL(url));
+    }
+
+    /**
      * Delete a Media object with an ID
      * 
      * @param {String} id The Media's ID
-     * @returns {Promise} The server response
+     * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If id is not specified
      */
     deleteMedia(id) {
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteMedia(this.token, this.v, id);
         return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Make an authenticated request to any url.
+     * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
+     * 
+     * @param {URL} url The url to request to
+     * @returns {Promise<Response>} The fetch response
+     * @throws {Error} If url is not specified
+     */
+    _authenicatedRequest(url) {
+        if (!url) throw new Error("URL must be specified");
+        return api.authenticatedRequest(this.token, url);
     }
 }
 
