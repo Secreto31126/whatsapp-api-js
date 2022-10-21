@@ -736,7 +736,6 @@ describe("WhatsAppAPI", function() {
         let form;
         this.beforeEach(function() {
             Whatsapp.parsed = true;
-            form = new formdata();
         });
 
         const bot = "1";
@@ -747,7 +746,9 @@ describe("WhatsAppAPI", function() {
                 const expectedResponse = { id };
 
                 form.append("file", new Blob(["Hello World"], { type: "text/plain" }));
-                api.post(`/${Whatsapp.v}/${bot}/media`).query(form).once().reply(200, expectedResponse);
+                api.post(`/${Whatsapp.v}/${bot}/media`).query({
+                    body: form,
+                }).once().reply(200, expectedResponse);
 
                 const response = await Whatsapp.uploadMedia(bot, message);
     

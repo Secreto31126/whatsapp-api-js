@@ -9,7 +9,6 @@ const { Template } = require('./types/template');
 const Text = require('./types/text');
 
 const api = require('./fetch');
-const { Blob, FormData } = require('./ponyfill').pickForm();
 
 /**
  * The main API object
@@ -197,7 +196,7 @@ class WhatsAppAPI {
      * Upload a Media to the server
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {Blob} file The Media's file as blob. Must have a valid mime-type setted up. Example using the Extras.Blob ponyfill: `new WhatsApp.Extras.Blob([data], { type: "image/png" })`. Node ^16 can use native `Blob` constructor.
+     * @param {(FormData|import("formdata-node").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: form.append("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using formdata-node, since it is compliant with the standard implementation. form-data is also supported, but it doesn't have the get() method, so to use it you must set the check parameter to false. *
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
@@ -206,13 +205,17 @@ class WhatsAppAPI {
      * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws {Error} If check is set to true and the form file is too big for the file type
      */
-    uploadMedia(phoneID, file, check = true) {
+    uploadMedia(phoneID, form, check = true) {
         if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!file) throw new Error("Form must be specified");
+        if (!form) throw new Error("Form must be specified");
         
         if (check) {
+            if (typeof FormData !== "undefined" && !(form instanceof FormData)) throw new TypeError(`File's Blob must be an instance of Blob, received ${form.constructor.name}`);
+            
+            /** @type {(Blob|import("formdata-node").Blob)} */
             // @ts-ignore
-            if (!(file instanceof Blob)) throw new TypeError(`File's Blob must be an instance of Blob, received ${file.constructor.name}`);
+            const file = form.get("file");
+
             if (!file.type) throw new Error("File's Blob must have a type specified");
 
             const validMediaTypes = [
@@ -250,11 +253,6 @@ class WhatsAppAPI {
             const mediaType = file.type === "image/webp" ? "sticker" : file.type.split("/")[0];
             if (file.size && file.size > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`);
         }
-
-        // @ts-ignore
-        const form = new FormData();
-        form.append("file", file);
-        console.log(form);
 
         const promise = api.uploadMedia(this.token, this.v, phoneID, form);
         return this.parsed ? promise.then(e => e.json()) : promise;

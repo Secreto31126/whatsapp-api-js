@@ -81,15 +81,5 @@ describe('PonyFills', function() {
             const blob = new Blob();
             assert.ok(blob instanceof Blob);
         });
-        
-        it("should contain all the basic methods", function() {
-            const form = new FormData();
-            assert.equal(typeof form.append, "function");
-            assert.equal(typeof form.get, "function");
-
-            const blob = new Blob();
-            assert.equal(typeof blob.arrayBuffer, "function");
-            assert.equal(typeof blob.text, "function");
-        });
     });
 });
