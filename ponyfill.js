@@ -2,18 +2,17 @@
  * @returns {(fetch|import("cross-fetch").fetch)} The fetch function
  */
 function pickFetch() {
-    return globalThis.fetch ?? require('cross-fetch').fetch;
+    return typeof fetch !== "undefined" ? fetch : require('cross-fetch').fetch;
 }
 
 /**
  * @returns {{FormData: FormData | import("formdata-node").FormData, Blob: Blob | import("formdata-node").Blob }} The FormData class
  */
 function pickForm() {
-    const form = globalThis.FormData ?? require('formdata-node').FormData;
-    const blob = globalThis.Blob ?? require('formdata-node').Blob;
+    const form = typeof FormData !== "undefined" ? FormData : require('formdata-node').FormData;
+    const blob = typeof Blob !== "undefined" ? Blob : require('formdata-node').Blob;
 
-    // @ts-ignore
-    return { FormData: form, Blob: blob };
+    return { FormData: new form, Blob: new blob };
 }
 
 module.exports = { pickFetch, pickForm };
