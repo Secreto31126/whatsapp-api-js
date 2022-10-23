@@ -50,36 +50,4 @@ describe('PonyFills', function() {
             assert.ok(scope.isDone());
         });
     });
-
-    describe("FormData and Blob Picker", function() {
-        const { FormData, Blob } = require("formdata-node");
-
-        it("should pick native FormData and Blob if available and ponyfill with formdata-node", function() {
-            const fake = { f: sinon.fake() };
-
-            picker.__with__({ FormData: fake, Blob: fake })(function() {
-                assert.deepEqual(picker.pickForm(), { FormData: fake, Blob: fake });
-            });
-
-            picker.__with__({ FormData: fake, Blob: undefined })(function() {
-                assert.deepEqual(picker.pickForm(), { FormData: fake, Blob });
-            });
-
-            picker.__with__({ FormData: undefined, Blob: fake })(function() {
-                assert.deepEqual(picker.pickForm(), { FormData, Blob: fake });
-            });
-
-            picker.__with__({ FormData: undefined, Blob: undefined })(function() {
-                assert.deepEqual(picker.pickForm(), { FormData, Blob });
-            });
-        });
-        
-        it("should be initializable", function() {
-            const form = new FormData();
-            assert.ok(form instanceof FormData);
-
-            const blob = new Blob();
-            assert.ok(blob instanceof Blob);
-        });
-    });
 });

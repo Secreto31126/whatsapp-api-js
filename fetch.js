@@ -243,6 +243,7 @@ function uploadMedia(token, v, phoneID, form) {
         body: form,
         headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
         },
     });
 }

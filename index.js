@@ -196,7 +196,7 @@ class WhatsAppAPI {
      * Upload a Media to the server
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {(FormData|import("formdata-node").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: form.append("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using formdata-node, since it is compliant with the standard implementation. form-data is also supported, but it doesn't have the get() method, so to use it you must set the check parameter to false. *
+     * @param {FormData|import("undici").FormData} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using undici, since it is compliant with the standard implementation. To use non-standard implementations set the 'check' parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
@@ -210,9 +210,9 @@ class WhatsAppAPI {
         if (!form) throw new Error("Form must be specified");
         
         if (check) {
-            if (typeof FormData !== "undefined" && !(form instanceof FormData)) throw new TypeError(`File's Blob must be an instance of Blob, received ${form.constructor.name}`);
+            if (typeof FormData !== "undefined" && !(form instanceof FormData)) throw new TypeError(`File's Form must be an instance of FormData`);
             
-            /** @type {(Blob|import("formdata-node").Blob)} */
+            /** @type {(Blob|import("node:buffer").Blob)} */
             // @ts-ignore
             const file = form.get("file");
 
@@ -347,8 +347,6 @@ class WhatsAppAPI {
  * @property {Currency}         Types.Template.Currency             The API Currency type object
  * @property {DateTime}         Types.Template.DateTime             The API DateTime type object
  * @property {Text}             Types.Text                          The API Text type object
- * @property {Object}           Extras                              The extras object
- * @property {Blob}             Extras.Blob                         A Blob ponyfill
  */
 module.exports = {
     WhatsAppAPI,
@@ -361,8 +359,5 @@ module.exports = {
         Reaction: require('./types/reaction'),
         Template: require('./types/template'),
         Text: require('./types/text'),
-    },
-    Extras: {
-        Blob: require('./ponyfill').pickForm().Blob,
     }
 };
