@@ -12,13 +12,6 @@ const picker = rewire('../ponyfill');
 
 describe('PonyFills', function() {
     describe("Fetch Picker", function() {
-        before(function () {
-            // Prevent running the tests if node version is greater than 17
-            if (process.version.match(/v(\d+)/)[1] >= 17) {
-                this.skip();
-            }
-        });
-    
         it("should pick cross-fetch when fetch is undefined", function() {
             picker.__with__({ fetch: undefined })(function() {
                 assert.equal(picker.pickFetch(), require("cross-fetch"));

@@ -33,7 +33,10 @@ class WhatsAppAPI {
         this.v = v;
         this.parsed = !!parsed;
 
-        /** @type {Logger} */
+        /**
+         * @type {Logger}
+         * @private
+        */
         this._register = (..._) => {};
     }
 
@@ -186,7 +189,7 @@ class WhatsAppAPI {
      * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If id is not specified
      */
-    getMedia(id) {
+    retrieveMedia(id) {
         if (!id) throw new Error("ID must be specified");
         const promise = api.getMedia(this.token, this.v, id);
         return this.parsed ? promise.then(e => e.json()) : promise;
@@ -196,7 +199,7 @@ class WhatsAppAPI {
      * Upload a Media to the server
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {(FormData|import("undici").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using undici, since it is compliant with the standard implementation. To use non-standard implementations set the 'check' parameter to false.
+     * @param {(FormData|import("undici/types/formdata").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's, which is the ponyfill of this package for the fetch method. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
@@ -204,6 +207,26 @@ class WhatsAppAPI {
      * @throws {TypeError} If check is set to true, the FormData class exists in the enviroment and form is not a FormData
      * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws {Error} If check is set to true and the form file is too big for the file type
+     * @example
+     * const { WhatsAppAPI } = require('./index');
+     * const Whatsapp = new WhatsAppAPI("token");
+     * 
+     * // If required:
+     * // const formdata = require('undici').FormData;
+     * // const blob = require("node:buffer").Blob;
+     * 
+     * const form = new FormData();
+     * 
+     * // If you don't mind reading the whole file into memory:
+     * form.set("file", new Blob([fs.readFileSync("image.png")], "image/png"));
+     * 
+     * // If you do, you will need to use streams. The module 'form-data',
+     * // although not spec compliant (hence needing to set check to false),
+     * // has an easy way to do this:
+     * // form.append("file", fs.createReadStream("image.png"), { contentType: "image/png" });
+     * 
+     * Whatsapp.uploadMedia("phoneID", form).then(console.log);
+     * // Expected output: { id: "mediaID" }
      */
     uploadMedia(phoneID, form, check = true) {
         if (!phoneID) throw new Error("Phone ID must be specified");
@@ -212,7 +235,14 @@ class WhatsAppAPI {
         if (check) {
             if (typeof FormData !== "undefined" && !(form instanceof FormData)) throw new TypeError(`File's Form must be an instance of FormData`);
             
-            /** @type {(Blob|import("node:buffer").Blob)} */
+            /**
+             * I can't add the import("node:buffer").Blob type because it's
+             * not supported by JSDoc nor the plugin designed to support it
+             * 
+             * Btw, @ignore does nothing, it still tries to parse it and fails
+             * 
+             * @type {Blob}
+             */
             // @ts-ignore
             const file = form.get("file");
 
@@ -263,7 +293,7 @@ class WhatsAppAPI {
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
      * 
      * @param {String} url The Media's url
-     * @returns {Promise<Response>} The fetch raw response
+     * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch raw response
      * @throws {TypeError} If url is not a valid url
      */
     fetchMedia(url) {
@@ -289,7 +319,7 @@ class WhatsAppAPI {
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
      * 
      * @param {URL} url The url to request to
-     * @returns {Promise<Response>} The fetch response
+     * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch response
      * @throws {Error} If url is not specified
      */
     _authenicatedRequest(url) {

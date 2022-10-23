@@ -12,7 +12,7 @@
     "test": "mocha",
     "coverage": "nyc --reporter=text mocha --reporter min",
     "debug-with-tests": "mocha --reporter min --watch",
-    "document": "jsdoc -d ./docs -t ./node_modules/docdash -R ./README.md . ./types"
+    "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md"
   },
   "keywords": [
     "whatsapp",
@@ -42,14 +42,14 @@
   "devDependencies": {
     "docdash": "^1.2.0",
     "jsdoc": "^3.6.10",
+    "jsdoc-tsimport-plugin": "^1.0.5",
     "mocha": "^10.0.0",
-    "nock": "^13.2.7",
+    "nock": "^13.2.9",
     "nyc": "^15.1.0",
     "rewire": "^6.0.0",
-    "sinon": "^14.0.0",
-    "undici": "^5.11.0"
+    "sinon": "^14.0.0"
   },
   "dependencies": {
-    "cross-fetch": "^3.1.5"
+    "undici": "^5.11.0"
   }
 }

@@ -1,13 +1,18 @@
-// @ts-nocheck
+// @ts-//nocheck
 
 // Unit tests with mocha and sinon
 const assert = require('assert');
 const sinon = require('sinon');
 
 // Mock the https requests
-const nock = require('nock');
-nock.disableNetConnect();
-const api = nock("https://graph.facebook.com");
+// const nock = require('nock');
+// nock.disableNetConnect();
+// const api = nock("https://graph.facebook.com");
+
+// Mock the https requests
+const { agent, client } = require('./server.mocks');
+const { setGlobalDispatcher } = require('undici');
+setGlobalDispatcher(agent);
 
 // Import the module
 const { WhatsAppAPI, Types } = require('../index');
@@ -19,10 +24,6 @@ const { Request } = require('../fetch');
 // Polyfill FormData and Blob
 const formdata = typeof FormData !== "undefined" ? FormData : require("undici").FormData;
 const blob = typeof Blob !== "undefined" ? Blob : require("node:buffer").Blob;
-
-if (process.version.match(/v(\d+)/)[1] >= 17) {
-    console.warn(`Using node version ${process.version}, use node 16 or lower to run the server calls tests`);
-}
 
 describe("WhatsAppAPI", function() {
     describe("Token", function() {
@@ -68,13 +69,6 @@ describe("WhatsAppAPI", function() {
     });
 
     describe("Logger", function() {
-        before(function () {
-            // Prevent running the tests if node version is greater than 17
-            if (process.version.match(/v(\d+)/)[1] >= 17) {
-                this.skip();
-            }
-        });
-
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         this.beforeEach(function() {
@@ -135,7 +129,10 @@ describe("WhatsAppAPI", function() {
 
             Whatsapp.logSentMessages(spy);
 
-            api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+            client.intercept({
+                path: `/${Whatsapp.v}/${bot}/messages`,
+                method: 'POST',
+            }).reply(200, expectedResponse).times(1);
 
             await Whatsapp.sendMessage(bot, user, message);
             
@@ -156,7 +153,10 @@ describe("WhatsAppAPI", function() {
                 }
             }
 
-            api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, unexpectedResponse);
+            client.intercept({
+                path: `/${Whatsapp.v}/${bot}/messages`,
+                method: 'POST',
+            }).reply(200, unexpectedResponse).times(1);
 
             await Whatsapp.sendMessage(bot, user, message);
             
@@ -177,13 +177,6 @@ describe("WhatsAppAPI", function() {
     });
     
     describe("Message", function() {
-        before(function () {
-            // Prevent running the tests if node version is greater than 17
-            if (process.version.match(/v(\d+)/)[1] >= 17) {
-                this.skip();
-            }
-        });
-
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         this.beforeEach(function() {
@@ -211,8 +204,12 @@ describe("WhatsAppAPI", function() {
                         },
                     ],
                 };
-                
-                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: 'POST',
+                    body: JSON.stringify(new Request(message, user)),
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.sendMessage(bot, user, message);
 
@@ -237,7 +234,11 @@ describe("WhatsAppAPI", function() {
                     ],
                 };
                 
-                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: 'POST',
+                    body: JSON.stringify(new Request(message, user, context)),
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.sendMessage(bot, user, message, context);
 
@@ -286,7 +287,7 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -304,7 +305,11 @@ describe("WhatsAppAPI", function() {
                     ],
                 };
                 
-                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: 'POST',
+                    body: JSON.stringify(new Request(message, user)),
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await (await Whatsapp.sendMessage(bot, user, message)).json();
 
@@ -320,8 +325,16 @@ describe("WhatsAppAPI", function() {
                 const expectedResponse = {
                     success: true
                 };
-
-                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+                
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: 'POST',
+                    body: JSON.stringify({
+                        messaging_product: "whatsapp",
+                        status: "read",
+                        message_id: id,
+                    }),
+                }).reply(200, expectedResponse).times(1);
                 
                 const response = await Whatsapp.markAsRead(bot, id);
 
@@ -356,7 +369,7 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const bot = "1";
@@ -365,8 +378,11 @@ describe("WhatsAppAPI", function() {
                 const expectedResponse = {
                     success: true
                 };
-
-                api.post(`/${Whatsapp.v}/${bot}/messages`).once().reply(200, expectedResponse);
+                
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: 'POST',
+                }).reply(200, expectedResponse).times(1);
                 
                 const response = await (await Whatsapp.markAsRead(bot, id)).json();
 
@@ -376,13 +392,6 @@ describe("WhatsAppAPI", function() {
     });
 
     describe("QR", function() {
-        before(async function () {
-            // Prevent running the tests if node version is greater than 17
-            if (process.version.match(/v(\d+)/)[1] >= 17) {
-                this.skip();
-            }
-        });
-
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         this.beforeEach(function() {
@@ -404,10 +413,14 @@ describe("WhatsAppAPI", function() {
                     qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
                 };
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                    method: 'POST',
+                    query: {
+                        generate_qr_image: format,
+                        prefilled_message: message,
+                    },
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.createQR(bot, message);
     
@@ -424,10 +437,14 @@ describe("WhatsAppAPI", function() {
                     qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
                 };
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                    method: 'POST',
+                    query: {
+                        generate_qr_image: format,
+                        prefilled_message: message,
+                    },
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.createQR(bot, message, format);
     
@@ -444,10 +461,14 @@ describe("WhatsAppAPI", function() {
                     qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
                 };
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                    method: 'POST',
+                    query: {
+                        generate_qr_image: format,
+                        prefilled_message: message,
+                    },
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.createQR(bot, message, format);
     
@@ -490,7 +511,7 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const format = "png";
@@ -502,10 +523,14 @@ describe("WhatsAppAPI", function() {
                     qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
                 };
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                    method: 'POST',
+                    query: {
+                        generate_qr_image: format,
+                        prefilled_message: message,
+                    },
+                }).reply(200, expectedResponse).times(1);
     
                 const response = await (await Whatsapp.createQR(bot, message)).json();
 
@@ -525,7 +550,10 @@ describe("WhatsAppAPI", function() {
                     ],
                 };
 
-                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
+                    method: 'GET',
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.retrieveQR(bot);
 
@@ -543,7 +571,10 @@ describe("WhatsAppAPI", function() {
                     ]
                 };
 
-                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                    method: 'GET',
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.retrieveQR(bot, code);
 
@@ -564,7 +595,7 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -577,7 +608,10 @@ describe("WhatsAppAPI", function() {
                     ]
                 };
 
-                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
+                    method: 'GET',
+                }).reply(200, expectedResponse).times(1);
     
                 const response = await (await Whatsapp.retrieveQR(bot)).json();
 
@@ -595,9 +629,13 @@ describe("WhatsAppAPI", function() {
                     deep_link_url: `https://wa.me/message/${code}`,
                 };
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).query({
-                    prefilled_message: new_message,
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                    method: 'POST',
+                    query: {
+                        prefilled_message: new_message,
+                    },
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.updateQR(bot, code, new_message);
     
@@ -646,7 +684,7 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -655,9 +693,13 @@ describe("WhatsAppAPI", function() {
                     deep_link_url: `https://wa.me/message/${code}`,
                 };
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).query({
-                    prefilled_message: new_message,
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                    method: 'POST',
+                    query: {
+                        prefilled_message: new_message,
+                    },
+                }).reply(200, expectedResponse).times(1);
     
                 const response = await (await Whatsapp.updateQR(bot, code, new_message)).json();
 
@@ -671,7 +713,10 @@ describe("WhatsAppAPI", function() {
                     success: true,
                 };
 
-                api.delete(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                    method: 'DELETE',
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.deleteQR(bot, code);
     
@@ -706,14 +751,17 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
                     success: true,
                 };
 
-                api.delete(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                    method: 'DELETE',
+                }).reply(200, expectedResponse).times(1);
     
                 const response = await (await Whatsapp.deleteQR(bot, code)).json();
 
@@ -723,13 +771,6 @@ describe("WhatsAppAPI", function() {
     });
 
     describe("Media", function() {
-        before(function () {
-            // Prevent running the tests if node version is greater than 17
-            if (process.version.match(/v(\d+)/)[1] >= 17) {
-                this.skip();
-            }
-        });
-
         const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
 
         let form;
@@ -747,187 +788,228 @@ describe("WhatsAppAPI", function() {
 
                 form.append("file", new blob(["Hello World"], { type: "text/plain" }));
 
-                api.post(`/${Whatsapp.v}/${bot}/media`, function(body) {
-                    // So... this happens because cross-fetch doesn't support FormData
-                    // The real fix would be using form-data-encoder, but it forces ESM syntax
-                    // Too much effort for a simple bug which can be handled by the user
-                    // Plus, the issue happens only in the fetch, so the rest of the code is fine
-                    return body === "[object FormData]";
-                }).query({
-                    messaging_product: "whatsapp",
-                }).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/media`,
+                    method: 'POST',
+                    // body: form,
+                    query: {
+                        messaging_product: "whatsapp",
+                    },
+                }).reply(200, expectedResponse).times(1);
 
                 const response = await Whatsapp.uploadMedia(bot, form);
 
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should be able to create a QR as a png", async function() {
-                const format = "png";
-
-                const expectedResponse = {
-                    code,
-                    prefilled_message: message,
-                    deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
-                };
-
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
-
-                const response = await Whatsapp.createQR(bot, message, format);
-    
-                assert.deepEqual(response, expectedResponse);
-            });
-
-            it("should be able to create a QR as a svg", async function() {
-                const format = "svg";
-
-                const expectedResponse = {
-                    code,
-                    prefilled_message: message,
-                    deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
-                };
-
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
-
-                const response = await Whatsapp.createQR(bot, message, format);
-    
-                assert.deepEqual(response, expectedResponse);
-            });
-
             it("should fail if the phoneID param is falsy", function() {
                 assert.throws(function() {
-                    Whatsapp.createQR(undefined, message);
+                    Whatsapp.uploadMedia(undefined, form);
                 });
 
                 assert.throws(function() {
-                    Whatsapp.createQR(false, message);
+                    Whatsapp.uploadMedia(false, form);
                 });
 
                 assert.throws(function() {
-                    Whatsapp.createQR();
+                    Whatsapp.uploadMedia();
                 });
             });
 
-            it("should fail if the message param is falsy", function() {
+            it("should fail if the form param is falsy", function() {
                 assert.throws(function() {
-                    Whatsapp.createQR(bot, undefined);
+                    Whatsapp.uploadMedia(bot, undefined);
                 });
 
                 assert.throws(function() {
-                    Whatsapp.createQR(bot, false);
+                    Whatsapp.uploadMedia(bot, false);
                 });
 
                 assert.throws(function() {
-                    Whatsapp.createQR(bot);
-                });
-            });
-            
-            it("should fail with an invalid format type", function() {
-                const format = "jpg";
-
-                assert.throws(function() {
-                    Whatsapp.createQR(bot, message, format);
+                    Whatsapp.uploadMedia(bot);
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            describe("Check truthy (default)", function() {
+                it("should fail if the form param is not a FormData instance", function() {
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, {});
+                    });
+    
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, []);
+                    });
+    
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, "Hello World");
+                    });
+                });
+
+                it("should fail if the form param does not contain a file", function() {
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, new formdata());
+                    });
+                });
+
+                it("should fail if the form param contains a file with no type", function() {
+                    form.append("file", new blob(["Hello World"]));
+
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, form);
+                    });
+                });
+
+                it("should fail if the file type is invalid", function() {
+                    form.append("file", new blob(["Not a real SVG"], { type: "image/svg" }));
+    
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, form);
+                    });
+                });
+
+                it("should fail if the file size is too big for the format", function() {
+                    const str = "I only need 500.000 chars";
+                    form.append("file", new blob([str.repeat(Math.round(501_000 / str.length))], { type: "image/webp" }));
+    
+                    assert.throws(function() {
+                        Whatsapp.uploadMedia(bot, form);
+                    });
+                });
+            });
+
+            describe("Check falsy", function() {
+                it("should not fail if the form param is not a FormData instance", function() {
+                    client.intercept({
+                        path: `/${Whatsapp.v}/${bot}/media`,
+                        method: 'POST',
+                        body: form,
+                        query: {
+                            messaging_product: "whatsapp",
+                        },
+                    }).reply(200).times(3);
+    
+                    assert.doesNotThrow(function() {
+                        Whatsapp.uploadMedia(bot, {}, false);
+                    });
+    
+                    assert.doesNotThrow(function() {
+                        Whatsapp.uploadMedia(bot, [], false);
+                    });
+    
+                    assert.doesNotThrow(function() {
+                        Whatsapp.uploadMedia(bot, "Hello World", false);
+                    });
+                });
+    
+                it("should not fail if the file type is invalid", function() {
+                    form.append("file", new blob(["Not a real SVG"], { type: "image/svg" }));
+    
+                    client.intercept({
+                        path: `/${Whatsapp.v}/${bot}/media`,
+                        method: 'POST',
+                        body: form,
+                        query: {
+                            messaging_product: "whatsapp",
+                        },
+                    }).reply(200).times(1);
+    
+                    assert.doesNotThrow(function() {
+                        Whatsapp.uploadMedia(bot, form, false);
+                    });
+                });
+    
+                it("should not fail if the file size is too big for the format", function() {
+                    const str = "I only need 500.000 chars";
+                    form.append("file", new blob([str.repeat(Math.round(501_000 / str.length))], { type: "image/webp" }));
+    
+                    client.intercept({
+                        path: `/${Whatsapp.v}/${bot}/media`,
+                        method: 'POST',
+                        body: form,
+                        query: {
+                            messaging_product: "whatsapp",
+                        },
+                    }).reply(200).times(1);
+    
+                    assert.doesNotThrow(function() {
+                        Whatsapp.uploadMedia(bot, form, false);
+                    });
+                });
+            });
+
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
-                const format = "png";
+                const expectedResponse = { id };
 
-                const expectedResponse = {
-                    code,
-                    prefilled_message: message,
-                    deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
-                };
+                form.append("file", new blob(["Hello World"], { type: "text/plain" }));
 
-                api.post(`/${Whatsapp.v}/${bot}/message_qrdls`).query({
-                    generate_qr_image: format,
-                    prefilled_message: message,
-                }).once().reply(200, expectedResponse);
-    
-                const response = await (await Whatsapp.createQR(bot, message)).json();
+                client.intercept({
+                    path: `/${Whatsapp.v}/${bot}/media`,
+                    method: 'POST',
+                    // body: form,
+                    query: {
+                        messaging_product: "whatsapp",
+                    },    
+                }).reply(200, expectedResponse).times(1);    
+
+                const response = await (await Whatsapp.uploadMedia(bot, form)).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
         });
 
         describe("Retrieve", function() {
-            it("should retrieve all QR codes if code is undefined", async function() {
+            it("should retrieve a file data", async function() {
                 const expectedResponse = {
-                    data: [
-                        {
-                            code,
-                            prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`,
-                        },
-                    ],
+                    messaging_product: "whatsapp",
+                    url: "URL",
+                    mime_type: "image/jpeg",
+                    sha256: "HASH",
+                    file_size: "SIZE",
+                    id,
                 };
 
-                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/`).once().reply(200, expectedResponse);
+                client.intercept({
+                    path: `/${Whatsapp.v}/${id}`,
+                }).reply(200, expectedResponse).times(1);
 
-                const response = await Whatsapp.retrieveQR(bot);
+                const response = await Whatsapp.retrieveMedia(id);
 
                 assert.deepEqual(response, expectedResponse);
             });
 
-            it("should be able to retrieve a single QR code", async function() {
-                const expectedResponse = {
-                    data: [
-                        {
-                            code,
-                            prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`,
-                        }
-                    ]
-                };
-
-                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/${code}`).once().reply(200, expectedResponse);
-
-                const response = await Whatsapp.retrieveQR(bot, code);
-
-                assert.deepEqual(response, expectedResponse);
-            });
-
-            it("should fail if the phoneID param is falsy", function() {
+            it("should fail if the id param is falsy", function() {
                 assert.throws(function() {
-                    Whatsapp.retrieveQR(undefined, code);
+                    Whatsapp.retrieveMedia(undefined);
                 });
 
                 assert.throws(function() {
-                    Whatsapp.retrieveQR(false, code);
+                    Whatsapp.retrieveMedia(false);
                 });
 
                 assert.throws(function() {
-                    Whatsapp.retrieveQR();
+                    Whatsapp.retrieveMedia();
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
-                    data: [
-                        {
-                            code,
-                            prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`,
-                        }
-                    ]
+                    messaging_product: "whatsapp",
+                    url: "URL",
+                    mime_type: "image/jpeg",
+                    sha256: "HASH",
+                    file_size: "SIZE",
+                    id,
                 };
 
-                api.get(`/${Whatsapp.v}/${bot}/message_qrdls/`).once().reply(200, expectedResponse);
-    
-                const response = await (await Whatsapp.retrieveQR(bot)).json();
+                client.intercept({
+                    path: `/${Whatsapp.v}/${id}`,
+                }).reply(200, expectedResponse).times(1);
+
+                const response = await (await Whatsapp.retrieveMedia(id)).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -974,7 +1056,7 @@ describe("WhatsAppAPI", function() {
                 });
             });
 
-            it("should receive the raw fetch response if parsed is false", async function() {
+            it("should return the raw fetch response if parsed is false", async function() {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {

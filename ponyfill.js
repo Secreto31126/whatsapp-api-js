@@ -1,8 +1,8 @@
 /**
- * @returns {(fetch|import("cross-fetch").fetch)} The fetch function
+ * @returns {(fetch|import("undici/types/fetch").fetch)} The fetch function
  */
 function pickFetch() {
-    return typeof fetch !== "undefined" ? fetch : require('cross-fetch').fetch;
+    return typeof fetch !== "undefined" ? fetch : require("undici").fetch;
 }
 
 module.exports = { pickFetch };

@@ -11,13 +11,6 @@ const { get, post } = require('../requests');
 const { MessageMock, StatusMock } = require('./requests.mocks');
 
 describe("Requests", function() {
-    before(function () {
-        // Prevent running the tests if node version is greater than 17
-        if (process.version.match(/v(\d+)/)[1] > 17) {
-            this.skip();
-        }
-    });
-
     describe("Get", function() {
         const mode = "subscribe";
         const token = "token";

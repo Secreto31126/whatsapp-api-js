@@ -40,7 +40,6 @@ class Request {
         let message = { ...object };
         this.messaging_product = "whatsapp";
         this.type = message._;
-        // @ts-ignore
         delete message._;
         this.to = to;
 
@@ -100,7 +99,7 @@ function sendMessage(token, v, phoneID, to, object, context) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} message_id The message id
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function readMessage(token, v, phoneID, message_id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
@@ -127,7 +126,7 @@ function readMessage(token, v, phoneID, message_id) {
  * @param {String} phoneID The bot's phone id
  * @param {String} message The default message in the QR code
  * @param {String} format The image format of the QR code (png or svg)
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function makeQR(token, v, phoneID, message, format) {
     const params = {
@@ -152,7 +151,7 @@ function makeQR(token, v, phoneID, message, format) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} [id] The QR's id to get. If not specified, all the QR codes will be returned
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function getQR(token, v, phoneID, id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
@@ -172,7 +171,7 @@ function getQR(token, v, phoneID, id) {
  * @param {String} phoneID The bot's phone id
  * @param {String} id The QR's id to edit
  * @param {String} message The new message for the QR code
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function updateQR(token, v, phoneID, id, message) {
     const params = {
@@ -196,7 +195,7 @@ function updateQR(token, v, phoneID, id, message) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} id The QR's id to delete
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function deleteQR(token, v, phoneID, id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
@@ -215,7 +214,7 @@ function deleteQR(token, v, phoneID, id) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} id The media's id
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function getMedia(token, v, id) {
     return req(`https://graph.facebook.com/${v}/${id}`, {
@@ -234,12 +233,13 @@ function getMedia(token, v, id) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
- * @param {(FormData|import("undici").FormData)} form The media to upload in form format (multipart/form-data)
- * @returns {Promise<Response>} The fetch promise
+ * @param {(FormData|import("undici/types/formdata").FormData)} form The media to upload in form format (multipart/form-data)
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function uploadMedia(token, v, phoneID, form) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/media?messaging_product=whatsapp`, {
         method: "POST",
+        // @ts-ignore
         body: form,
         headers: {
             Authorization: `Bearer ${token}`,
@@ -256,7 +256,7 @@ function uploadMedia(token, v, phoneID, form) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} id The media's id
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function deleteMedia(token, v, id) {
     return req(`https://graph.facebook.com/${v}/${id}`, {
@@ -276,7 +276,7 @@ function deleteMedia(token, v, id) {
  * @ignore
  * @param {String} token The API token
  * @param {(String|URL)} url The URL to fetch
- * @returns {Promise<Response>} The fetch promise
+ * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function authenticatedRequest(token, url) {
     return req(url, {
