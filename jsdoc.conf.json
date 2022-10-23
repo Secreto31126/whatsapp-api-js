@@ -1,0 +1,12 @@
+{
+    "source": {
+        "include": [ ".", "./types" ]
+    },
+    "plugins": [
+        "node_modules/jsdoc-tsimport-plugin/index.js"
+    ],
+    "opts": {
+        "template": "./node_modules/docdash",
+        "destination": "./docs/"
+    }
+}
