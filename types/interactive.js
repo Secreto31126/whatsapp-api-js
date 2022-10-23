@@ -8,7 +8,7 @@ const { Image, Document, Video } = require("./media");
  * @property {Body} body The body component of the interactive message
  * @property {Header} [header] The header component of the interactive message
  * @property {Footer} [footer] The footer component of the interactive message
- * @property {String} _ The type of the interactive message, for internal use only
+ * @property {String} [_] The type of the interactive message, for internal use only
  */
 class Interactive {
     /**
@@ -27,7 +27,7 @@ class Interactive {
         if (!action) throw new Error("Interactive must have an action component");
         if (action._ !== "product" && !body) throw new Error("Interactive must have a body component");
         if (action._ === "product" && header) throw new Error("Interactive must not have a header component if action is a single product");
-        if (action._ === "product_list" && header.type !== "text") throw new Error("Interactive must have a Text header component if action is a product list");
+        if (action._ === "product_list" && header?.type !== "text") throw new Error("Interactive must have a Text header component if action is a product list");
 
         this.type = action._;
         delete action._;
@@ -109,8 +109,8 @@ class Header {
         delete object._;
 
         // Text type can go to hell
-        if (this.type === "text") {
-            if (object.body > 60) throw new Error("Header text must be 60 characters or less");
+        if (object instanceof Text) {
+            if (object.body.length > 60) throw new Error("Header text must be 60 characters or less");
             this[this.type] = object.body;
         } else this[this.type] = object;
     }
@@ -120,7 +120,7 @@ class Header {
  * Action API object
  * 
  * @property {Array<Button>} buttons The buttons of the action
- * @property {String} _ The type of the action, for internal use only
+ * @property {String} [_] The type of the action, for internal use only
  */
 class ActionButtons {
     /**
@@ -185,7 +185,7 @@ class Button {
  * 
  * @property {String} button The button text
  * @property {Array<Section>} sections The sections of the action
- * @property {String} _ The type of the action, for internal use only
+ * @property {String} [_] The type of the action, for internal use only
  */
 class ActionList {
     /**
@@ -260,7 +260,8 @@ class Row {
         if (id.length > 200) throw new Error("Row id must be 200 characters or less");
         if (!title) throw new Error("Row must have a title");
         if (title.length > 24) throw new Error("Row title must be 24 characters or less");
-        if (description?.length > 72) throw new Error("Row description must be 72 characters or less");
+        // Yours truly, JScheck.
+        if ((description?.length ?? 0) > 72) throw new Error("Row description must be 72 characters or less");
 
         this.id = id;
         this.title = title;
@@ -274,7 +275,7 @@ class Row {
  * @property {String} catalog_id The id of the catalog from where to get the products
  * @property {String} [product_retailer_id] The product to be added to the catalog
  * @property {Array<ProductSection>} [sections] The section to be added to the catalog
- * @property {String} _ The type of the action, for internal use only
+ * @property {String} [_] The type of the action, for internal use only
  */
 class ActionCatalog {
     /**
@@ -292,18 +293,19 @@ class ActionCatalog {
         if (!catalog_id) throw new Error("Catalog must have a catalog id");
         if (!products.length) throw new Error("Catalog must have at least one product or product section");
         
-        const single_product = products[0].product_retailer_id;
+        const is_single_product = products[0] instanceof Product;
         
-        if (single_product && products.length > 1) throw new Error("Catalog must have only 1 product, use a ProductSection instead");
+        if (is_single_product && products.length > 1) throw new Error("Catalog must have only 1 product, use a ProductSection instead");
         else {
             if (products.length > 10) throw new Error("Catalog must have between 1 and 10 product sections");
             if (products.length > 1 && !products.every(obj => obj.hasOwnProperty("title"))) throw new Error("All sections must have a title if more than 1 section is provided");
         }
 
         this.catalog_id = catalog_id;
-        if (single_product) this.product_retailer_id = single_product;
+        // Yours truly, JScheck.
+        if (products[0] instanceof Product) this.product_retailer_id = products[0].product_retailer_id;
         else this.sections = products;
-        this._ = single_product ? "product" : "product_list";
+        this._ = is_single_product ? "product" : "product_list";
     }
 }
 

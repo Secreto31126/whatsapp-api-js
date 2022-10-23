@@ -4,7 +4,7 @@
  * @property {String} type The type of the media
  * @property {String} [id] The id of the media
  * @property {String} [link] The link of the media
- * @property {String} _ The type of the object, for internal use only
+ * @property {String} [_] The type of the object, for internal use only
  */
 class Media {
     /**

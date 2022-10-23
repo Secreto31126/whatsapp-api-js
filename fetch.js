@@ -6,7 +6,7 @@ const Reaction = require('./types/reaction');
 const { Template } = require('./types/template');
 const Text = require('./types/text');
 
-const req = require('./fetch-picker').pick();
+const req = require('./ponyfill').pickFetch();
 
 /**
  * Request API object
@@ -34,12 +34,13 @@ class Request {
      * 
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object The object to send
      * @param {String} to The user's phone number
-     * @param {String} context The message_id to reply to
+     * @param {String} [context] The message_id to reply to
      */
     constructor(object, to, context) {
         let message = { ...object };
         this.messaging_product = "whatsapp";
         this.type = message._;
+        // @ts-ignore
         delete message._;
         this.to = to;
 
@@ -99,7 +100,7 @@ function sendMessage(token, v, phoneID, to, object, context) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} message_id The message id
- * @returns {Promise} The fetch promise
+ * @returns {Promise<Response>} The fetch promise
  */
 function readMessage(token, v, phoneID, message_id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
@@ -126,7 +127,7 @@ function readMessage(token, v, phoneID, message_id) {
  * @param {String} phoneID The bot's phone id
  * @param {String} message The default message in the QR code
  * @param {String} format The image format of the QR code (png or svg)
- * @returns {Promise} The fetch promise
+ * @returns {Promise<Response>} The fetch promise
  */
 function makeQR(token, v, phoneID, message, format) {
     const params = {
@@ -151,7 +152,7 @@ function makeQR(token, v, phoneID, message, format) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} [id] The QR's id to get. If not specified, all the QR codes will be returned
- * @returns {Promise} The fetch promise
+ * @returns {Promise<Response>} The fetch promise
  */
 function getQR(token, v, phoneID, id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
@@ -171,7 +172,7 @@ function getQR(token, v, phoneID, id) {
  * @param {String} phoneID The bot's phone id
  * @param {String} id The QR's id to edit
  * @param {String} message The new message for the QR code
- * @returns {Promise} The fetch promise
+ * @returns {Promise<Response>} The fetch promise
  */
 function updateQR(token, v, phoneID, id, message) {
     const params = {
@@ -195,7 +196,7 @@ function updateQR(token, v, phoneID, id, message) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} id The QR's id to delete
- * @returns {Promise} The fetch promise
+ * @returns {Promise<Response>} The fetch promise
  */
 function deleteQR(token, v, phoneID, id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
@@ -206,4 +207,84 @@ function deleteQR(token, v, phoneID, id) {
     });
 }
 
-module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR, Request };
+/**
+ * Get a Media object
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} id The media's id
+ * @returns {Promise<Response>} The fetch promise
+ */
+function getMedia(token, v, id) {
+    return req(`https://graph.facebook.com/${v}/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+/**
+ * Upload a Media object
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} phoneID The bot's phone id
+ * @param {(FormData|import("undici").FormData)} form The media to upload in form format (multipart/form-data)
+ * @returns {Promise<Response>} The fetch promise
+ */
+function uploadMedia(token, v, phoneID, form) {
+    return req(`https://graph.facebook.com/${v}/${phoneID}/media?messaging_product=whatsapp`, {
+        method: "POST",
+        body: form,
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+        },
+    });
+}
+
+/**
+ * Delete a Media
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {String} v The API version
+ * @param {String} id The media's id
+ * @returns {Promise<Response>} The fetch promise
+ */
+function deleteMedia(token, v, id) {
+    return req(`https://graph.facebook.com/${v}/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+/**
+ * Make a GET request to any url with the authorization header.
+ * Be sure where you are sending the request since it contains the API token.
+ * 
+ * @package
+ * @ignore
+ * @param {String} token The API token
+ * @param {(String|URL)} url The URL to fetch
+ * @returns {Promise<Response>} The fetch promise
+ */
+function authenticatedRequest(token, url) {
+    return req(url, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+}
+
+module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR, getMedia, uploadMedia, deleteMedia, authenticatedRequest, Request };
