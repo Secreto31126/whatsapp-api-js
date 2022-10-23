@@ -234,7 +234,7 @@ function getMedia(token, v, id) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
- * @param {FormData} form The media to upload in form format (multipart/form-data)
+ * @param {(FormData|import("undici").FormData)} form The media to upload in form format (multipart/form-data)
  * @returns {Promise<Response>} The fetch promise
  */
 function uploadMedia(token, v, phoneID, form) {

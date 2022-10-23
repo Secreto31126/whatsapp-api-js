@@ -196,7 +196,7 @@ class WhatsAppAPI {
      * Upload a Media to the server
      * 
      * @param {String} phoneID The bot's phone ID
-     * @param {FormData|import("undici").FormData} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using undici, since it is compliant with the standard implementation. To use non-standard implementations set the 'check' parameter to false.
+     * @param {(FormData|import("undici").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need a polyfill for FormData. Consider using undici, since it is compliant with the standard implementation. To use non-standard implementations set the 'check' parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns {Promise<Object|Response>} The server response
      * @throws {Error} If phoneID is not specified
