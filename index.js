@@ -72,7 +72,7 @@ class WhatsAppAPI {
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object A Whatsapp component, built using the corresponding module for each type of message.
      * @param {String} [context] The message ID of the message to reply to
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If to is not specified
      * @throws {Error} If object is not specified
@@ -103,7 +103,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} messageId The message ID
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If messageId is not specified
      */
@@ -119,8 +119,8 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} message The quick message on the QR code
-     * @param {String} format The format of the QR code (png or svn)
-     * @returns {Promise<Object|Response>} The server response
+     * @param {("png"|"svg")} format The format of the QR code
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If message is not specified
      * @throws {Error} If format is not either 'png' or 'svn'
@@ -138,7 +138,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      */
     retrieveQR(phoneID, id) {
@@ -153,7 +153,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to edit
      * @param {String} message The new quick message for the QR code
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      * @throws {Error} If message is not specified
@@ -171,7 +171,7 @@ class WhatsAppAPI {
      * 
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to delete
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If id is not specified
      */
@@ -186,7 +186,7 @@ class WhatsAppAPI {
      * Get a Media object data with an ID
      * 
      * @param {String} id The Media's ID
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
      */
     retrieveMedia(id) {
@@ -201,7 +201,7 @@ class WhatsAppAPI {
      * @param {String} phoneID The bot's phone ID
      * @param {(FormData|import("undici/types/formdata").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's, which is the ponyfill of this package for the fetch method. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If phoneID is not specified
      * @throws {Error} If form is not specified
      * @throws {TypeError} If check is set to true, the FormData class exists in the enviroment and form is not a FormData
@@ -295,6 +295,14 @@ class WhatsAppAPI {
      * @param {String} url The Media's url
      * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch raw response
      * @throws {TypeError} If url is not a valid url
+     * @example
+     * const { WhatsAppAPI } = require('whatsapp-api-js');
+     * const Whatsapp = new WhatsAppAPI("token");
+     * 
+     * const id = "mediaID";
+     * const url = Whatsapp.retrieveMedia(id).then(data => {
+     *     const response = Whatsapp.fetchMedia(data.url);
+     * });
      */
     fetchMedia(url) {
         // Hacky way to check if the url is valid and throw if invalid
@@ -305,7 +313,7 @@ class WhatsAppAPI {
      * Delete a Media object with an ID
      * 
      * @param {String} id The Media's ID
-     * @returns {Promise<Object|Response>} The server response
+     * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
      */
     deleteMedia(id) {
@@ -318,7 +326,7 @@ class WhatsAppAPI {
      * Make an authenticated request to any url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
      * 
-     * @param {URL} url The url to request to
+     * @param {(URL|String)} url The url to request to
      * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch response
      * @throws {Error} If url is not specified
      */

@@ -81,7 +81,7 @@ function sendMessage(token, v, phoneID, to, object, context) {
     const promise = req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
@@ -105,7 +105,7 @@ function readMessage(token, v, phoneID, message_id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/messages`, {
         method: "POST",
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -125,7 +125,7 @@ function readMessage(token, v, phoneID, message_id) {
  * @param {String} v The API version
  * @param {String} phoneID The bot's phone id
  * @param {String} message The default message in the QR code
- * @param {String} format The image format of the QR code (png or svg)
+ * @param {"png"|"svg"} format The image format of the QR code
  * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function makeQR(token, v, phoneID, message, format) {
@@ -137,7 +137,7 @@ function makeQR(token, v, phoneID, message, format) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls?${new URLSearchParams(params)}`, {
         method: "POST",
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 }
@@ -156,7 +156,7 @@ function makeQR(token, v, phoneID, message, format) {
 function getQR(token, v, phoneID, id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 }
@@ -181,7 +181,7 @@ function updateQR(token, v, phoneID, id, message) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(params)}`, {
         method: "POST",
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 }
@@ -201,7 +201,7 @@ function deleteQR(token, v, phoneID, id) {
     return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
         method: "DELETE",
         headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
         },
     });
 }
@@ -220,7 +220,6 @@ function getMedia(token, v, id) {
     return req(`https://graph.facebook.com/${v}/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
         },
     });
 }
@@ -263,7 +262,6 @@ function deleteMedia(token, v, id) {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
         },
     });
 }
@@ -282,7 +280,6 @@ function authenticatedRequest(token, url) {
     return req(url, {
         headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
         },
     });
 }

@@ -3,6 +3,7 @@ const { MockAgent } = require("undici");
 const agent = new MockAgent();
 agent.disableNetConnect();
 
-const client = agent.get("https://graph.facebook.com");
+const clientFacebook = agent.get("https://graph.facebook.com");
+const clientExample = agent.get("https://example.com");
 
-module.exports = { agent, client };
+module.exports = { agent, clientFacebook, clientExample };

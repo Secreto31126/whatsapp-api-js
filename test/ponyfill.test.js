@@ -4,17 +4,19 @@
 const assert = require('assert');
 const sinon = require('sinon');
 
-const nock = require('nock');
-nock.disableNetConnect();
+// Mock the https requests
+const { agent, clientExample } = require('./server.mocks');
+const { setGlobalDispatcher } = require('undici');
+setGlobalDispatcher(agent);
 
 const rewire = require('rewire');
 const picker = rewire('../ponyfill');
 
 describe('PonyFills', function() {
     describe("Fetch Picker", function() {
-        it("should pick cross-fetch when fetch is undefined", function() {
+        it("should pick undici.fetch when fetch is undefined", function() {
             picker.__with__({ fetch: undefined })(function() {
-                assert.equal(picker.pickFetch(), require("cross-fetch"));
+                assert.equal(picker.pickFetch(), require("undici").fetch);
             });
         });
         
@@ -30,17 +32,20 @@ describe('PonyFills', function() {
         });
     
         it("should make a http GET request to the specified URL", async function() {
-            // Will check if nock received ONE request to the specified URL
-            const scope = nock('http://example.com').get('/').reply(200);
-            await picker.pickFetch()('http://example.com/');
-            assert.ok(scope.isDone());
+            clientExample.intercept({
+                path: "/",
+            }).reply(200).times(1);
+
+            await picker.pickFetch()("https://example.com/");
         });
-    
+        
         it("should make a http POST request to the specified URL", async function() {
-            // Will check if nock received ONE request to the specified URL
-            const scope = nock('http://example.com').post('/').reply(200);
-            await picker.pickFetch()('http://example.com/', { method: "POST" });
-            assert.ok(scope.isDone());
+            clientExample.intercept({
+                path: "/",
+                method: "POST",
+            }).reply(200).times(1);
+
+            await picker.pickFetch()("https://example.com/", { method: "POST" });
         });
     });
 });
