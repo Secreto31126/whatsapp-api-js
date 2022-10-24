@@ -5,11 +5,11 @@ const assert = require('assert');
 const sinon = require('sinon');
 
 // Import the module
-const { WhatsAppAPI, Types } = require('../index');
+const { WhatsAppAPI, Types } = require('../src/index');
 const { Text } = Types;
 
 // Import mocks
-const { Request } = require('../fetch');
+const { Request } = require('../src/fetch');
 
 // Mock the https requests
 const { agent, clientFacebook, clientExample } = require('./server.mocks');
@@ -105,6 +105,9 @@ describe("WhatsAppAPI", function () {
         it("should unset the logger if no parameters is given", function () {
             Whatsapp.logSentMessages(console.log).logSentMessages();
             assert.equal(typeof Whatsapp._register, "function");
+            assert.doesNotThrow(function () {
+                Whatsapp._register("this", "is", "a", "noop", "function", "and", "can", "take", Infinity, "arguments");
+            });
         });
 
         it("should fail if the logger is not a function", function () {

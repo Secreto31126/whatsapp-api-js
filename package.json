@@ -4,7 +4,7 @@
   "author": "Secreto31126",
   "description": "A Whatsapp Official API framework for Node.js",
   "license": "MIT",
-  "main": "index.js",
+  "main": "./src/index.js",
   "engines": {
     "node": ">=16.0.0"
   },

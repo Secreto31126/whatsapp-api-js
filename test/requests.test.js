@@ -6,7 +6,7 @@ const sinon = require('sinon');
 
 const fake = sinon.fake();
 
-const { get, post } = require('../requests');
+const { get, post } = require('../src/requests');
 
 const { MessageMock, StatusMock } = require('./requests.mocks');
 

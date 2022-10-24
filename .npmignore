@@ -5,4 +5,4 @@ docs/
 .firebaserc
 firebase.json
 
-test.js
+playground.js

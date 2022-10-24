@@ -10,7 +10,7 @@ const { setGlobalDispatcher } = require('undici');
 setGlobalDispatcher(agent);
 
 const rewire = require('rewire');
-const picker = rewire('../ponyfill');
+const picker = rewire('../src/ponyfill');
 
 describe('PonyFills', function() {
     describe("Fetch Picker", function() {

@@ -7,7 +7,7 @@
  * @property {String} [address] The address of the location
  * @property {String} [_] The type of the object, for internal use only
  */
- class Location {
+class Location {
     /**
      * Create a Location object for the API
      * 

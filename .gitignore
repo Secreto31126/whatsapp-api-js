@@ -107,7 +107,7 @@ dist
 .vscode/
 
 # Test code
-test.js
+playground.js
 
 # Documentation
 docs/*
