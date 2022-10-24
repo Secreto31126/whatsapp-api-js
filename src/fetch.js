@@ -1,10 +1,10 @@
-const { Contacts } = require('./types/contacts');
-const { Interactive } = require("./types/interactive");
-const { Audio, Document, Image, Sticker, Video } = require('./types/media');
-const Location = require('./types/location');
-const Reaction = require('./types/reaction');
-const { Template } = require('./types/template');
-const Text = require('./types/text');
+const { Contacts } = require('./messages/contacts');
+const { Interactive } = require("./messages/interactive");
+const { Audio, Document, Image, Sticker, Video } = require('./messages/media');
+const Location = require('./messages/location');
+const Reaction = require('./messages/reaction');
+const { Template } = require('./messages/template');
+const Text = require('./messages/text');
 
 const req = require('./ponyfill').pickFetch();
 

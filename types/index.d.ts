@@ -185,26 +185,26 @@ export class WhatsAppAPI {
      */
     _authenicatedRequest(url: (URL | string)): Promise<Response | import("undici/types/fetch").Response>;
 }
-import Text_2 = require("./types/text");
-import { Audio } from "./types/media";
-import { Document } from "./types/media";
-import { Image } from "./types/media";
-import { Sticker } from "./types/media";
-import { Video } from "./types/media";
-import Location_2 = require("./types/location");
-import { Contacts_1 } from "./types/contacts";
-import { Interactive_1 } from "./types/interactive";
-import { Template_1 } from "./types/template";
-import Reaction_2 = require("./types/reaction");
+import Text_2 = require("./messages/text");
+import { Audio } from "./messages/media";
+import { Document } from "./messages/media";
+import { Image } from "./messages/media";
+import { Sticker } from "./messages/media";
+import { Video } from "./messages/media";
+import Location_2 = require("./messages/location");
+import { Contacts_1 } from "./messages/contacts";
+import { Interactive_1 } from "./messages/interactive";
+import { Template_1 } from "./messages/template";
+import Reaction_2 = require("./messages/reaction");
 import api = require("./fetch");
 export declare const Handlers: typeof import("./requests");
 export declare namespace Types {
-    const Contacts: typeof import("./types/contacts");
-    const Interactive: typeof import("./types/interactive");
-    const Location: typeof import("./types/location");
-    const Media: typeof import("./types/media");
-    const Reaction: typeof import("./types/reaction");
-    const Template: typeof import("./types/template");
-    const Text: typeof import("./types/text");
+    const Contacts: typeof import("./messages/contacts");
+    const Interactive: typeof import("./messages/interactive");
+    const Location: typeof import("./messages/location");
+    const Media: typeof import("./messages/media");
+    const Reaction: typeof import("./messages/reaction");
+    const Template: typeof import("./messages/template");
+    const Text: typeof import("./messages/text");
 }
 //# sourceMappingURL=index.d.ts.map

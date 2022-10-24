@@ -1,12 +1,12 @@
 // Most of these imports are here only for types checks
 
-const { Contacts } = require('./types/contacts');
-const { Interactive } = require("./types/interactive");
-const { Audio, Document, Image, Sticker, Video } = require('./types/media');
-const Location = require('./types/location');
-const Reaction = require('./types/reaction');
-const { Template } = require('./types/template');
-const Text = require('./types/text');
+const { Contacts } = require('./messages/contacts');
+const { Interactive } = require("./messages/interactive");
+const { Audio, Document, Image, Sticker, Video } = require('./messages/media');
+const Location = require('./messages/location');
+const Reaction = require('./messages/reaction');
+const { Template } = require('./messages/template');
+const Text = require('./messages/text');
 
 const api = require('./fetch');
 
@@ -390,12 +390,12 @@ module.exports = {
     WhatsAppAPI,
     Handlers: require('./requests'),
     Types: {
-        Contacts: require('./types/contacts'),
-        Interactive: require('./types/interactive'),
-        Location: require('./types/location'),
-        Media: require('./types/media'),
-        Reaction: require('./types/reaction'),
-        Template: require('./types/template'),
-        Text: require('./types/text'),
+        Contacts: require('./messages/contacts'),
+        Interactive: require('./messages/interactive'),
+        Location: require('./messages/location'),
+        Media: require('./messages/media'),
+        Reaction: require('./messages/reaction'),
+        Template: require('./messages/template'),
+        Text: require('./messages/text'),
     }
 };

@@ -177,15 +177,15 @@ export class Request {
         message_id: string;
     };
 }
-import Text = require("./types/text");
-import { Audio } from "./types/media";
-import { Document } from "./types/media";
-import { Image } from "./types/media";
-import { Sticker } from "./types/media";
-import { Video } from "./types/media";
-import Location = require("./types/location");
-import { Contacts } from "./types/contacts";
-import { Interactive } from "./types/interactive";
-import { Template } from "./types/template";
-import Reaction = require("./types/reaction");
+import Text = require("./messages/text");
+import { Audio } from "./messages/media";
+import { Document } from "./messages/media";
+import { Image } from "./messages/media";
+import { Sticker } from "./messages/media";
+import { Video } from "./messages/media";
+import Location = require("./messages/location");
+import { Contacts } from "./messages/contacts";
+import { Interactive } from "./messages/interactive";
+import { Template } from "./messages/template";
+import Reaction = require("./messages/reaction");
 //# sourceMappingURL=fetch.d.ts.map
