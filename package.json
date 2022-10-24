@@ -12,8 +12,8 @@
     "test": "mocha",
     "test:watch": "mocha --reporter min --watch",
     "coverage": "nyc --reporter=text mocha --reporter min",
-    "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md",
-    "document:clear": "cd ./docs/ && rm -rv !('404.html')"
+    "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md && cp ./docs_statics/* ./docs/",
+    "document:delete": "rm -rf ./docs/*"
   },
   "keywords": [
     "whatsapp",
