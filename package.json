@@ -5,6 +5,7 @@
   "description": "A Whatsapp Official API framework for Node.js",
   "license": "MIT",
   "main": "./src/index.js",
+  "types": "types/index.d.ts",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -13,7 +14,8 @@
     "test:watch": "mocha --reporter min --watch",
     "coverage": "nyc --reporter=text mocha --reporter min",
     "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md && cp ./docs_statics/* ./docs/",
-    "document:delete": "rm -rf ./docs/*"
+    "document:delete": "rm -rf ./docs/*",
+    "types": "tsc"
   },
   "keywords": [
     "whatsapp",
@@ -47,7 +49,8 @@
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
     "rewire": "^6.0.0",
-    "sinon": "^14.0.0"
+    "sinon": "^14.0.0",
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "undici": "^5.11.0"

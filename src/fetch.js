@@ -57,7 +57,7 @@ class Request {
  * @package
  * @ignore
  * @typedef {Object} SendMessageResponse
- * @property {Promise} promise The fetch promise
+ * @property {Promise<Response|import("undici/types/fetch").Response>} promise The fetch promise
  * @property {Request} request The request sent to the server
  */
 
