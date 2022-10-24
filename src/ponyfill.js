@@ -1,5 +1,6 @@
 /**
  * @package
+ * @ignore
  * @returns {(fetch|import("undici/types/fetch").fetch)} The fetch function
  */
 function pickFetch() {

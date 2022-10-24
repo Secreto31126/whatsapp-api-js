@@ -10,9 +10,10 @@
   },
   "scripts": {
     "test": "mocha",
+    "test:watch": "mocha --reporter min --watch",
     "coverage": "nyc --reporter=text mocha --reporter min",
-    "debug-with-tests": "mocha --reporter min --watch",
-    "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md"
+    "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md",
+    "document:clear": "cd ./docs/ && rm -rv !('404.html')"
   },
   "keywords": [
     "whatsapp",
