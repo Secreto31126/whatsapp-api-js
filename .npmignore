@@ -1,6 +1,9 @@
 .github/
 
 docs/
+docs_statics/
+
+test/
 
 .eslintrc.json
 
@@ -10,7 +13,7 @@ firebase.json
 .prettierrc
 .prettierignore
 
-.jsdoc.config.json
+jsdoc.conf.json
 
 playground.js
 
