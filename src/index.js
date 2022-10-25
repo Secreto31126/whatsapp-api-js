@@ -1,18 +1,18 @@
 // Most of these imports are here only for types checks
 
-const { Contacts } = require('./types/contacts');
-const { Interactive } = require("./types/interactive");
-const { Audio, Document, Image, Sticker, Video } = require('./types/media');
-const Location = require('./types/location');
-const Reaction = require('./types/reaction');
-const { Template } = require('./types/template');
-const Text = require('./types/text');
+const { Contacts } = require("./messages/contacts");
+const { Interactive } = require("./messages/interactive");
+const { Audio, Document, Image, Sticker, Video } = require("./messages/media");
+const Location = require("./messages/location");
+const Reaction = require("./messages/reaction");
+const { Template } = require("./messages/template");
+const Text = require("./messages/text");
 
-const api = require('./fetch');
+const api = require("./fetch");
 
 /**
  * The main API object
- * 
+ *
  * @property {String} token The API token
  * @property {String} v The API version to use
  * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
@@ -20,7 +20,7 @@ const api = require('./fetch');
 class WhatsAppAPI {
     /**
      * Initiate the Whatsapp API app
-     * 
+     *
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
      * @param {String} v The version of the API, defaults to v14.0
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
@@ -28,7 +28,7 @@ class WhatsAppAPI {
      */
     constructor(token, v = "v15.0", parsed = true) {
         if (!token) throw new Error("Token must be specified");
-        
+
         this.token = token;
         this.v = v;
         this.parsed = !!parsed;
@@ -36,7 +36,7 @@ class WhatsAppAPI {
         /**
          * @type {Logger}
          * @private
-        */
+         */
         this._register = (..._) => {};
     }
 
@@ -54,20 +54,23 @@ class WhatsAppAPI {
 
     /**
      * Set a callback function for sendMessage
-     * 
+     *
      * @param {Logger} callback The callback function to set
      * @returns {WhatsAppAPI} The API object, for chaining
      * @throws {Error} If callback is truthy and is not a function
      */
     logSentMessages(callback = (..._) => {}) {
-        if (typeof callback !== "function") throw new TypeError("Callback must be a function. To unset, call the function without parameters.");
+        if (typeof callback !== "function")
+            throw new TypeError(
+                "Callback must be a function. To unset, call the function without parameters."
+            );
         this._register = callback;
         return this;
     }
 
     /**
      * Send a Whatsapp message
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {String} to The user's phone number
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object A Whatsapp component, built using the corresponding module for each type of message.
@@ -82,17 +85,39 @@ class WhatsAppAPI {
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
 
-        const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
-        const response = this.parsed ? promise.then(e => e.json()) : undefined;
-
+        const { request, promise } = api.sendMessage(
+            this.token,
+            this.v,
+            phoneID,
+            to,
+            object,
+            context
+        );
+        const response = this.parsed
+            ? promise.then((e) => e.json())
+            : undefined;
 
         if (response) {
-            response.then(data => {
+            response.then((data) => {
                 const id = data?.messages ? data.messages[0]?.id : undefined;
-                this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
+                this._register(
+                    phoneID,
+                    request.to,
+                    JSON.parse(request[request.type]),
+                    request,
+                    id,
+                    data
+                );
             });
         } else {
-            this._register(phoneID, request.to, JSON.parse(request[request.type]), request, undefined, undefined);
+            this._register(
+                phoneID,
+                request.to,
+                JSON.parse(request[request.type]),
+                request,
+                undefined,
+                undefined
+            );
         }
 
         return response ?? promise;
@@ -100,7 +125,7 @@ class WhatsAppAPI {
 
     /**
      * Mark a message as read
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {String} messageId The message ID
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
@@ -111,12 +136,12 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
         const promise = api.readMessage(this.token, this.v, phoneID, messageId);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Generate a QR code for sharing the bot
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {String} message The quick message on the QR code
      * @param {("png"|"svg")} format The format of the QR code
@@ -128,14 +153,21 @@ class WhatsAppAPI {
     createQR(phoneID, message, format = "png") {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!message) throw new Error("Message must be specified");
-        if (!["png", "svg"].includes(format)) throw new Error("Format must be either 'png' or 'svg'");
-        const promise = api.makeQR(this.token, this.v, phoneID, message, format);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        if (!["png", "svg"].includes(format))
+            throw new Error("Format must be either 'png' or 'svg'");
+        const promise = api.makeQR(
+            this.token,
+            this.v,
+            phoneID,
+            message,
+            format
+        );
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Get one or many QR codes of the bot
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
@@ -144,12 +176,12 @@ class WhatsAppAPI {
     retrieveQR(phoneID, id) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         const promise = api.getQR(this.token, this.v, phoneID, id);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Update a QR code of the bot
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to edit
      * @param {String} message The new quick message for the QR code
@@ -163,12 +195,12 @@ class WhatsAppAPI {
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
         const promise = api.updateQR(this.token, this.v, phoneID, id, message);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Delete a QR code of the bot
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {String} id The QR's id to delete
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
@@ -179,12 +211,12 @@ class WhatsAppAPI {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteQR(this.token, this.v, phoneID, id);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Get a Media object data with an ID
-     * 
+     *
      * @param {String} id The Media's ID
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
@@ -192,12 +224,12 @@ class WhatsAppAPI {
     retrieveMedia(id) {
         if (!id) throw new Error("ID must be specified");
         const promise = api.getMedia(this.token, this.v, id);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Upload a Media to the server
-     * 
+     *
      * @param {String} phoneID The bot's phone ID
      * @param {(FormData|import("undici/types/formdata").FormData)} form The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's, which is the ponyfill of this package for the fetch method. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
      * @param {Boolean} check If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
@@ -210,43 +242,47 @@ class WhatsAppAPI {
      * @example
      * const { WhatsAppAPI } = require('./index');
      * const Whatsapp = new WhatsAppAPI("token");
-     * 
+     *
      * // If required:
      * // const formdata = require('undici').FormData;
      * // const blob = require("node:buffer").Blob;
-     * 
+     *
      * const form = new FormData();
-     * 
+     *
      * // If you don't mind reading the whole file into memory:
      * form.set("file", new Blob([fs.readFileSync("image.png")], "image/png"));
-     * 
+     *
      * // If you do, you will need to use streams. The module 'form-data',
      * // although not spec compliant (hence needing to set check to false),
      * // has an easy way to do this:
      * // form.append("file", fs.createReadStream("image.png"), { contentType: "image/png" });
-     * 
+     *
      * Whatsapp.uploadMedia("phoneID", form).then(console.log);
      * // Expected output: { id: "mediaID" }
      */
     uploadMedia(phoneID, form, check = true) {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!form) throw new Error("Form must be specified");
-        
+
         if (check) {
-            if (typeof FormData !== "undefined" && !(form instanceof FormData)) throw new TypeError(`File's Form must be an instance of FormData`);
-            
+            if (typeof FormData !== "undefined" && !(form instanceof FormData))
+                throw new TypeError(
+                    "File's Form must be an instance of FormData"
+                );
+
             /**
              * I can't add the import("node:buffer").Blob type because it's
              * not supported by JSDoc nor the plugin designed to support it
-             * 
+             *
              * Btw, @ignore does nothing, it still tries to parse it and fails
-             * 
+             *
              * @type {Blob}
              */
             // @ts-ignore
             const file = form.get("file");
 
-            if (!file.type) throw new Error("File's Blob must have a type specified");
+            if (!file.type)
+                throw new Error("File's Blob must have a type specified");
 
             const validMediaTypes = [
                 "audio/aac",
@@ -269,7 +305,8 @@ class WhatsAppAPI {
                 "image/webp"
             ];
 
-            if (!validMediaTypes.includes(file.type)) throw new Error(`Invalid media type: ${file.type}`);
+            if (!validMediaTypes.includes(file.type))
+                throw new Error(`Invalid media type: ${file.type}`);
 
             const validMediaSizes = {
                 audio: 16_000_000,
@@ -277,28 +314,34 @@ class WhatsAppAPI {
                 application: 100_000_000,
                 image: 5_000_000,
                 video: 16_000_000,
-                sticker: 500_000,
+                sticker: 500_000
             };
 
-            const mediaType = file.type === "image/webp" ? "sticker" : file.type.split("/")[0];
-            if (file.size && file.size > validMediaSizes[mediaType]) throw new Error(`File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`);
+            const mediaType =
+                file.type === "image/webp"
+                    ? "sticker"
+                    : file.type.split("/")[0];
+            if (file.size && file.size > validMediaSizes[mediaType])
+                throw new Error(
+                    `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
+                );
         }
 
         const promise = api.uploadMedia(this.token, this.v, phoneID, form);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Get a Media fetch from an url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
-     * 
+     *
      * @param {String} url The Media's url
      * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch raw response
      * @throws {TypeError} If url is not a valid url
      * @example
      * const { WhatsAppAPI } = require('whatsapp-api-js');
      * const Whatsapp = new WhatsAppAPI("token");
-     * 
+     *
      * const id = "mediaID";
      * const url = Whatsapp.retrieveMedia(id).then(data => {
      *     const response = Whatsapp.fetchMedia(data.url);
@@ -311,7 +354,7 @@ class WhatsAppAPI {
 
     /**
      * Delete a Media object with an ID
-     * 
+     *
      * @param {String} id The Media's ID
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
@@ -319,13 +362,13 @@ class WhatsAppAPI {
     deleteMedia(id) {
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteMedia(this.token, this.v, id);
-        return this.parsed ? promise.then(e => e.json()) : promise;
+        return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
     /**
      * Make an authenticated request to any url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
-     * 
+     *
      * @param {(URL|String)} url The url to request to
      * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch response
      * @throws {Error} If url is not specified
@@ -388,14 +431,14 @@ class WhatsAppAPI {
  */
 module.exports = {
     WhatsAppAPI,
-    Handlers: require('./requests'),
+    Handlers: require("./requests"),
     Types: {
-        Contacts: require('./types/contacts'),
-        Interactive: require('./types/interactive'),
-        Location: require('./types/location'),
-        Media: require('./types/media'),
-        Reaction: require('./types/reaction'),
-        Template: require('./types/template'),
-        Text: require('./types/text'),
+        Contacts: require("./messages/contacts"),
+        Interactive: require("./messages/interactive"),
+        Location: require("./messages/location"),
+        Media: require("./messages/media"),
+        Reaction: require("./messages/reaction"),
+        Template: require("./messages/template"),
+        Text: require("./messages/text")
     }
 };

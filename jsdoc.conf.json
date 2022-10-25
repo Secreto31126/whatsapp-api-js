@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": [ ".", "./types" ]
+        "include": [ "./src/", "./src/messages" ]
     },
     "plugins": [
         "node_modules/jsdoc-tsimport-plugin/index.js"

@@ -107,8 +107,10 @@ dist
 .vscode/
 
 # Test code
-test.js
+playground.js
 
 # Documentation
-docs/*
-!docs/404.html
+docs/
+
+# Types
+types/
