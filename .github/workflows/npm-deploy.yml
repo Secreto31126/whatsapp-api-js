@@ -9,11 +9,14 @@ on:
 
 jobs:
   test:
-    name: Unit Tests
+    name: Pre-Checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: npm ci --only=dev && npm run test
+      - run: npm ci --only=dev
+      - run: npm run prettier
+      - run: npm run lint
+      - run: npm run test
   
   publish-npm:
     name: Public Release
@@ -31,7 +34,8 @@ jobs:
         run: sleep 60s
       
       - name: Ok, now publish it
-        run: npm run types && npm publish
+        run: npm run types
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -51,6 +55,7 @@ jobs:
         run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
       
       - name: Beta Release
-        run: npm run types && npm publish --tag beta
+        run: npm run types
+        run: npm publish --tag beta
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

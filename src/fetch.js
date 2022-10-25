@@ -1,16 +1,16 @@
-const { Contacts } = require('./messages/contacts');
+const { Contacts } = require("./messages/contacts");
 const { Interactive } = require("./messages/interactive");
-const { Audio, Document, Image, Sticker, Video } = require('./messages/media');
-const Location = require('./messages/location');
-const Reaction = require('./messages/reaction');
-const { Template } = require('./messages/template');
-const Text = require('./messages/text');
+const { Audio, Document, Image, Sticker, Video } = require("./messages/media");
+const Location = require("./messages/location");
+const Reaction = require("./messages/reaction");
+const { Template } = require("./messages/template");
+const Text = require("./messages/text");
 
-const req = require('./ponyfill').pickFetch();
+const req = require("./ponyfill").pickFetch();
 
 /**
  * Request API object
- * 
+ *
  * @property {String} messaging_product The messaging product (always "whatsapp")
  * @property {String} type The type of message
  * @property {String} to The user's phone number
@@ -31,7 +31,7 @@ const req = require('./ponyfill').pickFetch();
 class Request {
     /**
      * Create a Request object for the API
-     * 
+     *
      * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template|Reaction)} object The object to send
      * @param {String} to The user's phone number
      * @param {String} [context] The message_id to reply to
@@ -53,7 +53,7 @@ class Request {
 
 /**
  * The sendMessage response object
- * 
+ *
  * @package
  * @ignore
  * @typedef {Object} SendMessageResponse
@@ -63,7 +63,7 @@ class Request {
 
 /**
  * Make a message post request to the API
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -82,9 +82,9 @@ function sendMessage(token, v, phoneID, to, object, context) {
         method: "POST",
         headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(request),
+        body: JSON.stringify(request)
     });
 
     return { promise, request };
@@ -92,7 +92,7 @@ function sendMessage(token, v, phoneID, to, object, context) {
 
 /**
  * Mark a message as read
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -106,19 +106,19 @@ function readMessage(token, v, phoneID, message_id) {
         method: "POST",
         headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             messaging_product: "whatsapp",
             status: "read",
-            message_id,
-        }),
+            message_id
+        })
     });
 }
 
 /**
  * Generate a QR code for the bot
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -131,20 +131,25 @@ function readMessage(token, v, phoneID, message_id) {
 function makeQR(token, v, phoneID, message, format) {
     const params = {
         generate_qr_image: format,
-        prefilled_message: message,
+        prefilled_message: message
     };
 
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls?${new URLSearchParams(params)}`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    return req(
+        `https://graph.facebook.com/${v}/${phoneID}/message_qrdls?${new URLSearchParams(
+            params
+        )}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
 }
 
 /**
  * Get one or all the QR codes for the bot
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -154,16 +159,19 @@ function makeQR(token, v, phoneID, message, format) {
  * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function getQR(token, v, phoneID, id) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`, {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    return req(
+        `https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id ?? ""}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
 }
 
 /**
  * Update a QR code for the bot
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -175,20 +183,25 @@ function getQR(token, v, phoneID, id) {
  */
 function updateQR(token, v, phoneID, id, message) {
     const params = {
-        prefilled_message: message,
+        prefilled_message: message
     };
 
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(params)}`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    return req(
+        `https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}?${new URLSearchParams(
+            params
+        )}`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
 }
 
 /**
  * Delete a QR code
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -198,17 +211,20 @@ function updateQR(token, v, phoneID, id, message) {
  * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function deleteQR(token, v, phoneID, id) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`, {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    });
+    return req(
+        `https://graph.facebook.com/${v}/${phoneID}/message_qrdls/${id}`,
+        {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
 }
 
 /**
  * Get a Media object
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -219,14 +235,14 @@ function deleteQR(token, v, phoneID, id) {
 function getMedia(token, v, id) {
     return req(`https://graph.facebook.com/${v}/${id}`, {
         headers: {
-            Authorization: `Bearer ${token}`,
-        },
+            Authorization: `Bearer ${token}`
+        }
     });
 }
 
 /**
  * Upload a Media object
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -236,20 +252,23 @@ function getMedia(token, v, id) {
  * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
 function uploadMedia(token, v, phoneID, form) {
-    return req(`https://graph.facebook.com/${v}/${phoneID}/media?messaging_product=whatsapp`, {
-        method: "POST",
-        // @ts-ignore
-        body: form,
-        headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-        },
-    });
+    return req(
+        `https://graph.facebook.com/${v}/${phoneID}/media?messaging_product=whatsapp`,
+        {
+            method: "POST",
+            // @ts-ignore
+            body: form,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data"
+            }
+        }
+    );
 }
 
 /**
  * Delete a Media
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -261,15 +280,15 @@ function deleteMedia(token, v, id) {
     return req(`https://graph.facebook.com/${v}/${id}`, {
         method: "DELETE",
         headers: {
-            Authorization: `Bearer ${token}`,
-        },
+            Authorization: `Bearer ${token}`
+        }
     });
 }
 
 /**
  * Make a GET request to any url with the authorization header.
  * Be sure where you are sending the request since it contains the API token.
- * 
+ *
  * @package
  * @ignore
  * @param {String} token The API token
@@ -279,9 +298,21 @@ function deleteMedia(token, v, id) {
 function authenticatedRequest(token, url) {
     return req(url, {
         headers: {
-            Authorization: `Bearer ${token}`,
-        },
+            Authorization: `Bearer ${token}`
+        }
     });
 }
 
-module.exports = { sendMessage, readMessage, makeQR, getQR, updateQR, deleteQR, getMedia, uploadMedia, deleteMedia, authenticatedRequest, Request };
+module.exports = {
+    sendMessage,
+    readMessage,
+    makeQR,
+    getQR,
+    updateQR,
+    deleteQR,
+    getMedia,
+    uploadMedia,
+    deleteMedia,
+    authenticatedRequest,
+    Request
+};

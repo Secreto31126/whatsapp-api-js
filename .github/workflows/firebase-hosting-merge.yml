@@ -8,9 +8,9 @@ on:
     branches:
       - main
     paths:
-      - '*.js'
+      - './src/**/*.js'
       - 'README.md'
-      - 'docs/*.html'
+      - 'docs_statics/*.html'
 
 jobs:
   build_and_deploy:
@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: npm ci --only=dev
-      - run: npm run document
+        run: npm run document
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

@@ -1,7 +1,7 @@
 /**
  * GET helper, must be called inside the get function of your code.
  * Used once at the first webhook setup.
- * 
+ *
  * @param {Object} params The GET request parameters in object format
  * @param {String} verify_token The verification token
  * @returns {String} The challenge string, it must be the http response body
@@ -61,7 +61,7 @@ function get(params, verify_token) {
 /**
  * POST helper, must be called inside the post function of your code.
  * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
- * 
+ *
  * @param {Object} data The post data sent by Whatsapp, already parsed to object
  * @param {onMessage} onMessage The function to be called if the post request is a valid message
  * @param {onStatus} [onStatus] The function to be called if the post request is a valid status update
@@ -86,14 +86,22 @@ function post(data, onMessage, onStatus) {
             onMessage(phoneID, phone, message, name, data);
         } else if (value.statuses && onStatus) {
             const statuses = value.statuses[0];
-            
+
             const phone = statuses.recipient_id;
             const status = statuses.status;
             const messageID = statuses.id;
             const conversation = statuses.conversation;
             const pricing = statuses.pricing;
-            
-            onStatus(phoneID, phone, status, messageID, conversation, pricing, data);
+
+            onStatus(
+                phoneID,
+                phone,
+                status,
+                messageID,
+                conversation,
+                pricing,
+                data
+            );
         }
 
         return 200;

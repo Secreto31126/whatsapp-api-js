@@ -1,6 +1,6 @@
 /**
  * Placeholder class for all the media types
- * 
+ *
  * @property {String} type The type of the media
  * @property {String} [id] The id of the media
  * @property {String} [link] The link of the media
@@ -10,7 +10,7 @@ class Media {
     /**
      * This method works as a placeholder so the documentation looks nice.
      * You shouldn't be using it directly ¯\_(ツ)_/¯.
-     * 
+     *
      * @param {String} type Type of the parameter
      * @param {String} file File to be sent
      * @param {Boolean} isItAnID If the file is an ID (true) or an URL (false)
@@ -28,13 +28,13 @@ class Media {
 
 /**
  * Audio API component
- * 
+ *
  * @extends Media
  */
 class Audio extends Media {
     /**
      * Create an Audio object for the API
-     * 
+     *
      * @param {String} audio The audio file's link or id
      * @param {Boolean} isItAnID Whether audio is an id (true) or a link (false)
      */
@@ -46,7 +46,7 @@ class Audio extends Media {
 
 /**
  * Document API component
- * 
+ *
  * @extends Media
  * @property {String} [caption] The file's caption
  * @property {String} [filename] The file's filename
@@ -54,14 +54,15 @@ class Audio extends Media {
 class Document extends Media {
     /**
      * Create a Document object for the API
-     * 
+     *
      * @param {String} document The document file's link or id
      * @param {Boolean} isItAnID Whether document is an id (true) or a link (false)
      * @param {String} [caption] Describes the specified document media
      * @param {String} [filename] Describes the filename for the specific document
      */
     constructor(document, isItAnID = false, caption, filename) {
-        if (!document) throw new Error("Document must have a document link or id");
+        if (!document)
+            throw new Error("Document must have a document link or id");
         super("document", document, isItAnID);
         if (caption) this.caption = caption;
         if (filename) this.filename = filename;
@@ -70,14 +71,14 @@ class Document extends Media {
 
 /**
  * Image API component
- * 
+ *
  * @extends Media
  * @property {String} [caption] The file's caption
  */
 class Image extends Media {
     /**
      * Create a Image object for the API
-     * 
+     *
      * @param {String} image The image file's link or id
      * @param {Boolean} isItAnID Whether image is an id (true) or a link (false)
      * @param {String} [caption] Describes the specified image media
@@ -91,13 +92,13 @@ class Image extends Media {
 
 /**
  * Sticker API component
- * 
+ *
  * @extends Media
  */
 class Sticker extends Media {
     /**
      * Create a Sticker object for the API
-     * 
+     *
      * @param {String} sticker The sticker file's link
      * @param {Boolean} isItAnID Whether sticker is an id (true) or a link (false)
      */
@@ -109,14 +110,14 @@ class Sticker extends Media {
 
 /**
  * Video API component
- * 
+ *
  * @extends Media
  * @property {String} [caption] The file's caption
  */
 class Video extends Media {
     /**
      * Create a Video object for the API
-     * 
+     *
      * @param {String} video The video file's link
      * @param {Boolean} isItAnID Whether video is an id (true) or a link (false)
      * @param {String} [caption] Describes the specified video media

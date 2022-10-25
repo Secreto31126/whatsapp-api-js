@@ -1,13 +1,13 @@
 /**
  * Contacts API object
- * 
+ *
  * @property {Array<Object>} contacts The contacts of the message
  * @property {String} [_] The type of the object, for internal use only
  */
 class Contacts {
     /**
      * Create a Contacts object for the API
-     * 
+     *
      * @param {...Array<(Address|Birthday|Email|Name|Organization|Phone|Url)>} contact Array of contact's components
      * @throws {Error} If contact is not provided
      * @throws {Error} If contact contains more than one name component
@@ -15,7 +15,8 @@ class Contacts {
      * @throws {Error} If contact contains more than one organization component
      */
     constructor(...contact) {
-        if (!contact.length) throw new Error("Contacts must have at least one contact");
+        if (!contact.length)
+            throw new Error("Contacts must have at least one contact");
 
         this.contacts = [];
 
@@ -26,17 +27,33 @@ class Contacts {
                 const name = component._;
                 delete component._;
 
-                if (component instanceof Birthday) if (!contact.birthday) contact.birthday = component.birthday; else throw new Error("Contacts can only have one birthday component");
-                else if (component instanceof Name) if (!contact.name) contact.name = component; else throw new Error("Contacts can only have one name component");
-                else if (component instanceof Organization) if (!contact.org) contact.org = component; else throw new Error("Contacts can only have one organization component");
-
+                if (component instanceof Birthday)
+                    if (!contact.birthday)
+                        contact.birthday = component.birthday;
+                    else
+                        throw new Error(
+                            "Contacts can only have one birthday component"
+                        );
+                else if (component instanceof Name)
+                    if (!contact.name) contact.name = component;
+                    else
+                        throw new Error(
+                            "Contacts can only have one name component"
+                        );
+                else if (component instanceof Organization)
+                    if (!contact.org) contact.org = component;
+                    else
+                        throw new Error(
+                            "Contacts can only have one organization component"
+                        );
                 else {
                     if (!contact[name]) contact[name] = [];
                     contact[name].push(component);
                 }
             }
 
-            if (!contact.name) throw new Error("Contact must have a name component");
+            if (!contact.name)
+                throw new Error("Contact must have a name component");
             this.contacts.push(contact);
         }
 
@@ -46,7 +63,7 @@ class Contacts {
 
 /**
  * Address API object
- * 
+ *
  * @property {String} [country] The country of the address
  * @property {String} [country_code] The country code of the address
  * @property {String} [state] The state of the address
@@ -60,7 +77,7 @@ class Address {
     /**
      * Builds an address object for a contact.
      * A contact can contain multiple addresses objects.
-     * 
+     *
      * @param {String} [country] Full country name
      * @param {String} [country_code] Two-letter country abbreviation
      * @param {String} [state] State abbreviation
@@ -83,14 +100,14 @@ class Address {
 
 /**
  * Birthday API object
- * 
+ *
  * @property {String} birthday The birthday of the contact
  * @property {String} [_] The type of the object, for internal use only
  */
 class Birthday {
     /**
      * Builds a birthday object for a contact
-     * 
+     *
      * @param {String} year Year of birth (YYYY)
      * @param {String} month Month of birth (MM)
      * @param {String} day Day of birth (DD)
@@ -107,7 +124,7 @@ class Birthday {
 
 /**
  * Email API object
- * 
+ *
  * @property {String} [email] The email of the contact
  * @property {String} [type] The type of the email
  * @property {String} [_] The type of the object, for internal use only
@@ -116,7 +133,7 @@ class Email {
     /**
      * Builds an email object for a contact.
      * A contact can contain multiple emails objects.
-     * 
+     *
      * @param {String} [email] Email address
      * @param {String} [type] Email type. Standard Values: HOME, WORK
      */
@@ -129,7 +146,7 @@ class Email {
 
 /**
  * Name API object
- * 
+ *
  * @property {String} formatted_name The formatted name of the contact
  * @property {String} [first_name] The first name of the contact
  * @property {String} [last_name] The last name of the contact
@@ -142,7 +159,7 @@ class Name {
     /**
      * Builds a name object for a contact, required for contacts.
      * The object requires a formatted_name and at least another property.
-     * 
+     *
      * @param {String} formatted_name Full name, as it normally appears
      * @param {String} [first_name] First name
      * @param {String} [last_name] Last name
@@ -152,7 +169,14 @@ class Name {
      * @throws {Error} If formatted_name is not defined
      * @throws {Error} If no other component apart from formatted_name is defined
      */
-    constructor(formatted_name, first_name, last_name, middle_name, suffix, prefix) {
+    constructor(
+        formatted_name,
+        first_name,
+        last_name,
+        middle_name,
+        suffix,
+        prefix
+    ) {
         if (!formatted_name) throw new Error("Name must have a formatted_name");
 
         this.formatted_name = formatted_name;
@@ -162,14 +186,17 @@ class Name {
         if (suffix) this.suffix = suffix;
         if (prefix) this.prefix = prefix;
 
-        if (Object.keys(this).length < 2) throw new Error("Name must have at least one of the following: first_name, last_name, middle_name, prefix, suffix");
+        if (Object.keys(this).length < 2)
+            throw new Error(
+                "Name must have at least one of the following: first_name, last_name, middle_name, prefix, suffix"
+            );
         this._ = "name";
     }
 }
 
 /**
  * Organization API object
- * 
+ *
  * @property {String} [company] The company of the contact
  * @property {String} [department] The department of the contact
  * @property {String} [title] The title of the contact
@@ -178,7 +205,7 @@ class Name {
 class Organization {
     /**
      * Builds an organization object for a contact
-     * 
+     *
      * @param {String} [company] Name of the contact's company
      * @param {String} [department] Name of the contact's department
      * @param {String} [title] Contact's business title
@@ -193,7 +220,7 @@ class Organization {
 
 /**
  * Phone API object
- * 
+ *
  * @property {String} [phone] The phone number of the contact
  * @property {String} [type] The type of the phone number
  * @property {String} [wa_id] The WhatsApp ID of the contact
@@ -203,7 +230,7 @@ class Phone {
     /**
      * Builds a phone object for a contact.
      * A contact can contain multiple phones objects.
-     * 
+     *
      * @param {String} [phone] Phone number, automatically populated with the wa_id value as a formatted phone number
      * @param {String} [type] Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
      * @param {String} [wa_id] WhatsApp ID
@@ -218,7 +245,7 @@ class Phone {
 
 /**
  * Url API object
- * 
+ *
  * @property {String} [url] The URL of the contact
  * @property {String} [type] The type of the URL
  * @property {String} [_] The type of the object, for internal use only
@@ -227,7 +254,7 @@ class Url {
     /**
      * Builds an url object for a contact.
      * A contact can contain multiple urls objects.
-     * 
+     *
      * @param {String} [url] URL
      * @param {String} [type] URL type. Standard Values: HOME, WORK
      */
@@ -238,4 +265,13 @@ class Url {
     }
 }
 
-module.exports = { Contacts, Address, Birthday, Email, Name, Organization, Phone, Url };
+module.exports = {
+    Contacts,
+    Address,
+    Birthday,
+    Email,
+    Name,
+    Organization,
+    Phone,
+    Url
+};

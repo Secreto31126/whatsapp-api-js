@@ -6,9 +6,9 @@ name: Preview with Firebase Hosting
 on:
   pull_request:
     paths:
-      - '*.js'
+      - './src/**/*.js'
       - 'README.md'
-      - 'docs/*.html'
+      - 'docs_statics/*.html'
 
 jobs:
   build_and_preview:
