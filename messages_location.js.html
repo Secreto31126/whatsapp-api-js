@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>HeaderComponent - Documentation</title>
+    <title>messages/location.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,315 +32,49 @@
 
 <div id="main">
     
-    <h1 class="page-title">HeaderComponent</h1>
+    <h1 class="page-title">messages/location.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        HeaderComponent
-        </h2>
-        
-            <div class="class-description usertext">Components API object</div>
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-    
-    <h2>Constructor</h2>
-    
-
-    <h4 class="name" id="HeaderComponent"><span class="type-signature"></span>new HeaderComponent<span class="signature">(&hellip;parameters)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="messages_template.js.html">messages/template.js</a>, <a href="messages_template.js.html#line205">line 205</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-
-<table class="props">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>type</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The type of the component</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>parameters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;<a href="Parameter.html">Parameter</a>></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">The parameters of the component</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<div class="description usertext">
-    Builds a header component for a Template message
-</div>
-
-
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>parameters</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Text.html">Text</a></span>
-|
-
-<span class="param-type"><a href="Currency.html">Currency</a></span>
-|
-
-<span class="param-type"><a href="DateTime.html">DateTime</a></span>
-|
-
-<span class="param-type"><a href="Image.html">Image</a></span>
-|
-
-<span class="param-type"><a href="Document.html">Document</a></span>
-|
-
-<span class="param-type"><a href="Video.html">Video</a></span>
-|
-
-<span class="param-type"><a href="Parameter.html">Parameter</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                    &lt;repeatable><br>
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Parameters of the body component</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Location API component
+ *
+ * @property {Number} latitude The latitude of the location
+ * @property {Number} longitude The longitude of the location
+ * @property {String} [name] The name of the location
+ * @property {String} [address] The address of the location
+ * @property {String} [_] The type of the object, for internal use only
+ */
+class Location {
+    /**
+     * Create a Location object for the API
+     *
+     * @param {Number} longitude Longitude of the location
+     * @param {Number} latitude Latitude of the location
+     * @param {String} [name] Name of the location
+     * @param {String} [address] Address of the location, only displayed if name is present
+     */
+    constructor(longitude, latitude, name, address) {
+        if (!longitude) throw new Error("Longitude must be specified");
+        if (!latitude) throw new Error("Latitude must be specified");
+        this.longitude = longitude;
+        this.latitude = latitude;
+        if (name) this.name = name;
+        if (address) this.address = address;
+        this._ = "location";
+    }
+}
+
+module.exports = Location;
+</code></pre>
+        </article>
+    </section>
 
 
 
@@ -352,7 +86,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 25 2022 02:17:12 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Oct 25 2022 02:17:11 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
