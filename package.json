@@ -19,7 +19,7 @@
     "coverage": "nyc --reporter=text mocha --reporter min",
     "types": "tsc",
     "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md && cp ./docs_statics/* ./docs/",
-    "clear": "rm -rf ./docs/ ./types/ ./coverage/"
+    "clear": "rm -rf ./docs/ ./types/ ./coverage/ ./.nyc_output"
   },
   "keywords": [
     "whatsapp",
