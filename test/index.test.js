@@ -1,23 +1,25 @@
 // @ts-nocheck
+/* eslint-disable no-undef */
 
 // Unit tests with mocha and sinon
-const assert = require('assert');
-const sinon = require('sinon');
+const assert = require("assert");
+const sinon = require("sinon");
 
 // Import the module
-const { WhatsAppAPI, Types } = require('../src/index');
+const { WhatsAppAPI, Types } = require("../src/index");
 const { Text } = Types;
 
 // Import mocks
-const { Request } = require('../src/fetch');
+const { Request } = require("../src/fetch");
 
 // Mock the https requests
-const { agent, clientFacebook, clientExample } = require('./server.mocks');
-const { setGlobalDispatcher } = require('undici');
+const { agent, clientFacebook, clientExample } = require("./server.mocks");
+const { setGlobalDispatcher } = require("undici");
 setGlobalDispatcher(agent);
 
 // Ponyfill FormData and Blob
-const formdata = typeof FormData !== "undefined" ? FormData : require("undici").FormData;
+const formdata =
+    typeof FormData !== "undefined" ? FormData : require("undici").FormData;
 const blob = typeof Blob !== "undefined" ? Blob : require("node:buffer").Blob;
 
 describe("WhatsAppAPI", function () {
@@ -53,12 +55,20 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should be able to set parsed to true", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0", true);
+            const Whatsapp = new WhatsAppAPI(
+                "YOUR_ACCESS_TOKEN",
+                "v13.0",
+                true
+            );
             assert.equal(Whatsapp.parsed, true);
         });
 
         it("should be able to set parsed to false", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0", false);
+            const Whatsapp = new WhatsAppAPI(
+                "YOUR_ACCESS_TOKEN",
+                "v13.0",
+                false
+            );
             assert.equal(Whatsapp.parsed, false);
         });
     });
@@ -83,7 +93,7 @@ describe("WhatsAppAPI", function () {
                     id
                 }
             ]
-        }
+        };
 
         const apiValidObject = { ...message };
         delete apiValidObject._;
@@ -106,7 +116,18 @@ describe("WhatsAppAPI", function () {
             Whatsapp.logSentMessages(console.log).logSentMessages();
             assert.equal(typeof Whatsapp._register, "function");
             assert.doesNotThrow(function () {
-                Whatsapp._register("this", "is", "a", "noop", "function", "and", "can", "take", Infinity, "arguments");
+                Whatsapp._register(
+                    "this",
+                    "is",
+                    "a",
+                    "noop",
+                    "function",
+                    "and",
+                    "can",
+                    "take",
+                    Infinity,
+                    "arguments"
+                );
             });
         });
 
@@ -129,17 +150,28 @@ describe("WhatsAppAPI", function () {
 
             Whatsapp.logSentMessages(spy);
 
-            clientFacebook.intercept({
-                path: `/${Whatsapp.v}/${bot}/messages`,
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }).reply(200, expectedResponse).times(1);
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, expectedResponse)
+                .times(1);
 
             await Whatsapp.sendMessage(bot, user, message);
 
-            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, id, expectedResponse);
+            sinon.assert.calledOnceWithMatch(
+                spy,
+                bot,
+                user,
+                apiValidObject,
+                request,
+                id,
+                expectedResponse
+            );
         });
 
         it("should handle failed deliveries responses", async function () {
@@ -149,24 +181,36 @@ describe("WhatsAppAPI", function () {
 
             const unexpectedResponse = {
                 error: {
-                    message: 'Invalid OAuth access token - Cannot parse access token',
-                    type: 'OAuthException',
+                    message:
+                        "Invalid OAuth access token - Cannot parse access token",
+                    type: "OAuthException",
                     code: 190,
-                    fbtrace_id: 'Azr7Sq738VC5zzOnPvZzPwj'
+                    fbtrace_id: "Azr7Sq738VC5zzOnPvZzPwj"
                 }
-            }
+            };
 
-            clientFacebook.intercept({
-                path: `/${Whatsapp.v}/${bot}/messages`,
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }).reply(200, unexpectedResponse).times(1);
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, unexpectedResponse)
+                .times(1);
 
             await Whatsapp.sendMessage(bot, user, message);
 
-            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request, undefined, unexpectedResponse);
+            sinon.assert.calledOnceWithMatch(
+                spy,
+                bot,
+                user,
+                apiValidObject,
+                request,
+                undefined,
+                unexpectedResponse
+            );
         });
 
         it("should run the logger with id and response as undefined if parsed is set to false", function () {
@@ -178,7 +222,13 @@ describe("WhatsAppAPI", function () {
 
             Whatsapp.sendMessage(bot, user, message);
 
-            sinon.assert.calledOnceWithMatch(spy, bot, user, apiValidObject, request);
+            sinon.assert.calledOnceWithMatch(
+                spy,
+                bot,
+                user,
+                apiValidObject,
+                request
+            );
         });
     });
 
@@ -202,26 +252,29 @@ describe("WhatsAppAPI", function () {
                 contacts: [
                     {
                         input: user,
-                        wa_id: user,
+                        wa_id: user
                     }
                 ],
                 messages: [
                     {
-                        id,
-                    },
-                ],
+                        id
+                    }
+                ]
             };
 
             it("should be able to send a basic message", async function () {
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/messages`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(new Request(message, user)),
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(new Request(message, user))
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.sendMessage(bot, user, message);
 
@@ -231,17 +284,27 @@ describe("WhatsAppAPI", function () {
             it("should be able to send a reply message (context)", async function () {
                 const context = "another_random_id";
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/messages`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(new Request(message, user, context)),
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(
+                            new Request(message, user, context)
+                        )
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await Whatsapp.sendMessage(bot, user, message, context);
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    user,
+                    message,
+                    context
+                );
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -291,17 +354,22 @@ describe("WhatsAppAPI", function () {
             it("should return the raw fetch response if parsed is false", async function () {
                 Whatsapp.parsed = false;
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/messages`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(new Request(message, user)),
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(new Request(message, user))
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.sendMessage(bot, user, message)).json();
+                const response = await (
+                    await Whatsapp.sendMessage(bot, user, message)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -315,19 +383,22 @@ describe("WhatsAppAPI", function () {
                     success: true
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/messages`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        messaging_product: "whatsapp",
-                        status: "read",
-                        message_id: id,
-                    }),
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            status: "read",
+                            message_id: id
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.markAsRead(bot, id);
 
@@ -369,15 +440,20 @@ describe("WhatsAppAPI", function () {
                     success: true
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/messages`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.markAsRead(bot, id)).json();
+                const response = await (
+                    await Whatsapp.markAsRead(bot, id)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -404,20 +480,24 @@ describe("WhatsAppAPI", function () {
                     code,
                     prefilled_message: message,
                     deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
+                    qr_image_url:
+                        "https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url"
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    query: {
-                        generate_qr_image: format,
-                        prefilled_message: message,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            generate_qr_image: format,
+                            prefilled_message: message
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.createQR(bot, message);
 
@@ -431,20 +511,24 @@ describe("WhatsAppAPI", function () {
                     code,
                     prefilled_message: message,
                     deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
+                    qr_image_url:
+                        "https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url"
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    query: {
-                        generate_qr_image: format,
-                        prefilled_message: message,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            generate_qr_image: format,
+                            prefilled_message: message
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.createQR(bot, message, format);
 
@@ -458,20 +542,24 @@ describe("WhatsAppAPI", function () {
                     code,
                     prefilled_message: message,
                     deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
+                    qr_image_url:
+                        "https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url"
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    query: {
-                        generate_qr_image: format,
-                        prefilled_message: message,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            generate_qr_image: format,
+                            prefilled_message: message
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.createQR(bot, message, format);
 
@@ -523,22 +611,28 @@ describe("WhatsAppAPI", function () {
                     code,
                     prefilled_message: message,
                     deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url: 'https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url',
+                    qr_image_url:
+                        "https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url"
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    query: {
-                        generate_qr_image: format,
-                        prefilled_message: message,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            generate_qr_image: format,
+                            prefilled_message: message
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.createQR(bot, message)).json();
+                const response = await (
+                    await Whatsapp.createQR(bot, message)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -551,17 +645,20 @@ describe("WhatsAppAPI", function () {
                         {
                             code,
                             prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`,
-                        },
-                    ],
+                            deep_link_url: `https://wa.me/message/${code}`
+                        }
+                    ]
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.retrieveQR(bot);
 
@@ -574,17 +671,20 @@ describe("WhatsAppAPI", function () {
                         {
                             code,
                             prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`,
+                            deep_link_url: `https://wa.me/message/${code}`
                         }
                     ]
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.retrieveQR(bot, code);
 
@@ -613,17 +713,20 @@ describe("WhatsAppAPI", function () {
                         {
                             code,
                             prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`,
+                            deep_link_url: `https://wa.me/message/${code}`
                         }
                     ]
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await (await Whatsapp.retrieveQR(bot)).json();
 
@@ -638,21 +741,28 @@ describe("WhatsAppAPI", function () {
                 const expectedResponse = {
                     code,
                     prefilled_message: new_message,
-                    deep_link_url: `https://wa.me/message/${code}`,
+                    deep_link_url: `https://wa.me/message/${code}`
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    query: {
-                        prefilled_message: new_message,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            prefilled_message: new_message
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await Whatsapp.updateQR(bot, code, new_message);
+                const response = await Whatsapp.updateQR(
+                    bot,
+                    code,
+                    new_message
+                );
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -705,21 +815,26 @@ describe("WhatsAppAPI", function () {
                 const expectedResponse = {
                     code,
                     prefilled_message: new_message,
-                    deep_link_url: `https://wa.me/message/${code}`,
+                    deep_link_url: `https://wa.me/message/${code}`
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    query: {
-                        prefilled_message: new_message,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            prefilled_message: new_message
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.updateQR(bot, code, new_message)).json();
+                const response = await (
+                    await Whatsapp.updateQR(bot, code, new_message)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -728,16 +843,19 @@ describe("WhatsAppAPI", function () {
         describe("Delete", function () {
             it("should be able to delete a QR code", async function () {
                 const expectedResponse = {
-                    success: true,
+                    success: true
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.deleteQR(bot, code);
 
@@ -776,18 +894,23 @@ describe("WhatsAppAPI", function () {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
-                    success: true,
+                    success: true
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.deleteQR(bot, code)).json();
+                const response = await (
+                    await Whatsapp.deleteQR(bot, code)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -811,20 +934,26 @@ describe("WhatsAppAPI", function () {
             it("should upload a file", async function () {
                 const expectedResponse = { id };
 
-                form.append("file", new blob(["Hello World"], { type: "text/plain" }));
+                form.append(
+                    "file",
+                    new blob(["Hello World"], { type: "text/plain" })
+                );
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/media`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                    },
-                    query: {
-                        messaging_product: "whatsapp",
-                    },
-                    // body: form,
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/media`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "multipart/form-data"
+                        },
+                        query: {
+                            messaging_product: "whatsapp"
+                        }
+                        // body: form,
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.uploadMedia(bot, form);
 
@@ -889,7 +1018,10 @@ describe("WhatsAppAPI", function () {
                 });
 
                 it("should fail if the file type is invalid", function () {
-                    form.append("file", new blob(["Not a real SVG"], { type: "image/svg" }));
+                    form.append(
+                        "file",
+                        new blob(["Not a real SVG"], { type: "image/svg" })
+                    );
 
                     assert.throws(function () {
                         Whatsapp.uploadMedia(bot, form);
@@ -898,7 +1030,13 @@ describe("WhatsAppAPI", function () {
 
                 it("should fail if the file size is too big for the format", function () {
                     const str = "I only need 500.000 chars";
-                    form.append("file", new blob([str.repeat(Math.round(501_000 / str.length))], { type: "image/webp" }));
+                    form.append(
+                        "file",
+                        new blob(
+                            [str.repeat(Math.round(501_000 / str.length))],
+                            { type: "image/webp" }
+                        )
+                    );
 
                     assert.throws(function () {
                         Whatsapp.uploadMedia(bot, form);
@@ -908,18 +1046,21 @@ describe("WhatsAppAPI", function () {
 
             describe("Check falsy", function () {
                 it("should not fail if the form param is not a FormData instance", function () {
-                    clientFacebook.intercept({
-                        path: `/${Whatsapp.v}/${bot}/media`,
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                        query: {
-                            messaging_product: "whatsapp",
-                        },
-                        body: form,
-                    }).reply(200).times(3);
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${bot}/media`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data"
+                            },
+                            query: {
+                                messaging_product: "whatsapp"
+                            },
+                            body: form
+                        })
+                        .reply(200)
+                        .times(3);
 
                     assert.doesNotThrow(function () {
                         Whatsapp.uploadMedia(bot, {}, false);
@@ -935,18 +1076,21 @@ describe("WhatsAppAPI", function () {
                 });
 
                 it("should not fail if the form param does not contain a file", function () {
-                    clientFacebook.intercept({
-                        path: `/${Whatsapp.v}/${bot}/media`,
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                        query: {
-                            messaging_product: "whatsapp",
-                        },
-                        body: form,
-                    }).reply(200).times(1);
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${bot}/media`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data"
+                            },
+                            query: {
+                                messaging_product: "whatsapp"
+                            },
+                            body: form
+                        })
+                        .reply(200)
+                        .times(1);
 
                     assert.doesNotThrow(function () {
                         Whatsapp.uploadMedia(bot, form, false);
@@ -956,18 +1100,21 @@ describe("WhatsAppAPI", function () {
                 it("should not fail if the form param contains a file with no type", function () {
                     form.append("file", new blob(["Hello World"]));
 
-                    clientFacebook.intercept({
-                        path: `/${Whatsapp.v}/${bot}/media`,
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                        query: {
-                            messaging_product: "whatsapp",
-                        },
-                        body: form,
-                    }).reply(200).times(1);
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${bot}/media`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data"
+                            },
+                            query: {
+                                messaging_product: "whatsapp"
+                            },
+                            body: form
+                        })
+                        .reply(200)
+                        .times(1);
 
                     assert.doesNotThrow(function () {
                         Whatsapp.uploadMedia(bot, form, false);
@@ -975,20 +1122,26 @@ describe("WhatsAppAPI", function () {
                 });
 
                 it("should not fail if the file type is invalid", function () {
-                    form.append("file", new blob(["Not a real SVG"], { type: "image/svg" }));
+                    form.append(
+                        "file",
+                        new blob(["Not a real SVG"], { type: "image/svg" })
+                    );
 
-                    clientFacebook.intercept({
-                        path: `/${Whatsapp.v}/${bot}/media`,
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                        query: {
-                            messaging_product: "whatsapp",
-                        },
-                        body: form,
-                    }).reply(200).times(1);
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${bot}/media`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data"
+                            },
+                            query: {
+                                messaging_product: "whatsapp"
+                            },
+                            body: form
+                        })
+                        .reply(200)
+                        .times(1);
 
                     assert.doesNotThrow(function () {
                         Whatsapp.uploadMedia(bot, form, false);
@@ -997,20 +1150,29 @@ describe("WhatsAppAPI", function () {
 
                 it("should not fail if the file size is too big for the format", function () {
                     const str = "I only need 500.000 chars";
-                    form.append("file", new blob([str.repeat(Math.round(501_000 / str.length))], { type: "image/webp" }));
+                    form.append(
+                        "file",
+                        new blob(
+                            [str.repeat(Math.round(501_000 / str.length))],
+                            { type: "image/webp" }
+                        )
+                    );
 
-                    clientFacebook.intercept({
-                        path: `/${Whatsapp.v}/${bot}/media`,
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data",
-                        },
-                        query: {
-                            messaging_product: "whatsapp",
-                        },
-                        body: form,
-                    }).reply(200).times(1);
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${bot}/media`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "multipart/form-data"
+                            },
+                            query: {
+                                messaging_product: "whatsapp"
+                            },
+                            body: form
+                        })
+                        .reply(200)
+                        .times(1);
 
                     assert.doesNotThrow(function () {
                         Whatsapp.uploadMedia(bot, form, false);
@@ -1023,22 +1185,30 @@ describe("WhatsAppAPI", function () {
 
                 const expectedResponse = { id };
 
-                form.append("file", new blob(["Hello World"], { type: "text/plain" }));
+                form.append(
+                    "file",
+                    new blob(["Hello World"], { type: "text/plain" })
+                );
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${bot}/media`,
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
-                    },
-                    query: {
-                        messaging_product: "whatsapp",
-                    },
-                    // body: form,
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/media`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "multipart/form-data"
+                        },
+                        query: {
+                            messaging_product: "whatsapp"
+                        }
+                        // body: form,
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.uploadMedia(bot, form)).json();
+                const response = await (
+                    await Whatsapp.uploadMedia(bot, form)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -1052,15 +1222,18 @@ describe("WhatsAppAPI", function () {
                     mime_type: "image/jpeg",
                     sha256: "HASH",
                     file_size: "SIZE",
-                    id,
+                    id
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${id}`,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${id}`,
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.retrieveMedia(id);
 
@@ -1090,17 +1263,22 @@ describe("WhatsAppAPI", function () {
                     mime_type: "image/jpeg",
                     sha256: "HASH",
                     file_size: "SIZE",
-                    id,
+                    id
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${id}`,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${id}`,
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.retrieveMedia(id)).json();
+                const response = await (
+                    await Whatsapp.retrieveMedia(id)
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -1112,13 +1290,16 @@ describe("WhatsAppAPI", function () {
                     success: true
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${id}`,
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${id}`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await Whatsapp.deleteMedia(id);
 
@@ -1146,13 +1327,16 @@ describe("WhatsAppAPI", function () {
                     success: true
                 };
 
-                clientFacebook.intercept({
-                    path: `/${Whatsapp.v}/${id}`,
-                    method: "DELETE",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${id}`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
                 const response = await (await Whatsapp.deleteMedia(id)).json();
 
@@ -1164,14 +1348,19 @@ describe("WhatsAppAPI", function () {
             it("should GET fetch an url with the Token", async function () {
                 const expectedResponse = {};
 
-                clientExample.intercept({
-                    path: `/`,
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }).reply(200, expectedResponse).times(1);
+                clientExample
+                    .intercept({
+                        path: `/`,
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-                const response = await (await Whatsapp.fetchMedia("https://example.com/")).json();
+                const response = await (
+                    await Whatsapp.fetchMedia("https://example.com/")
+                ).json();
 
                 assert.deepEqual(response, expectedResponse);
             });
@@ -1206,12 +1395,15 @@ describe("WhatsAppAPI", function () {
         const Whatsapp = new WhatsAppAPI(token);
 
         it("should make an authenticated request to any url", async function () {
-            clientExample.intercept({
-                path: "/",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }).reply(200).times(1);
+            clientExample
+                .intercept({
+                    path: "/",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200)
+                .times(1);
 
             assert.doesNotThrow(function () {
                 Whatsapp._authenicatedRequest("https://example.com/");
