@@ -105,8 +105,9 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
 ## Running outside of Node.js
 
-Since @0.4.2, the module will check if fetch is available, and fallback to "cross-fetch" if not.
-This will allow the same script to be run in many different enviroments, such as a web browser, Deno and Bun.
+Since @0.4.2, the module will check if fetch is available, and fallback to "undici"
+(or "cross-fetch" if using prior @0.8.0) if not. This will allow the same script to
+be run in many different enviroments, such as a web browser, Deno and Bun.
 
 With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It's really simple to use:
 
@@ -131,6 +132,14 @@ HTML module example:
 ```
 
 ## Breaking changes
+
+### 0.8.0
+
+The module changed from using "cross-fetch" to "undici" as the fallback fetch implementation in order
+to use FormData for the Media upload support, which is not (easily) available in "cross-fetch".
+
+Although this change doesn't affect existing code, it forces the Node.js version to be at least 16.
+If the module is downloaded using a lower version, npm will throw an error.
 
 ### 0.7.0
 
