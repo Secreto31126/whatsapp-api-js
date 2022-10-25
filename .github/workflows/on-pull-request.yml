@@ -10,7 +10,7 @@ on:
       - './tests/*.js'
 
 jobs:
-  test:
+  checks:
     name: Run Checks
     runs-on: ubuntu-latest
     steps:
