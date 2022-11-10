@@ -3,7 +3,7 @@
  *
  * @property {String} body Body of the message. Maximum length: 4096 characters.
  * @property {Boolean} preview_url Whether to enable preview for the text message
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"text"} [_] The type of the object, for internal use only
  */
 class Text {
     /**
