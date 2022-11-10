@@ -4,18 +4,18 @@ const { Image, Document, Video } = require("./media");
 /**
  * Interactive API object
  *
- * @property {(ActionList|ActionButtons)} action The action component of the interactive message
- * @property {Body} body The body component of the interactive message
+ * @property {(ActionList|ActionButtons|ActionCatalog)} action The action component of the interactive message
+ * @property {Body} [body] The body component of the interactive message
  * @property {Header} [header] The header component of the interactive message
  * @property {Footer} [footer] The footer component of the interactive message
- * @property {String} [_] The type of the interactive message, for internal use only
+ * @property {"interactive"} [_] The type of the interactive message, for internal use only
  */
 class Interactive {
     /**
      * Create an Interactive object for the API
      *
      * @param {(ActionList|ActionButtons|ActionCatalog)} action The action component of the interactive message
-     * @param {Body} body The body component of the interactive message
+     * @param {Body} [body] The body component of the interactive message
      * @param {Header} [header] The header component of the interactive message
      * @param {Footer} [footer] The footer component of the interactive message
      * @throws {Error} If action is not provided
@@ -74,7 +74,7 @@ class Body {
 /**
  * Footer API object
  *
- * @property {String} text The text of the body
+ * @property {String} text The text of the footer
  */
 class Footer {
     /**
@@ -96,7 +96,7 @@ class Footer {
 /**
  * Header API object
  *
- * @property {String} type The type of the header
+ * @property {"text"|"video"|"image"|"document"} type The type of the header
  * @property {String} [text] The text of the parameter
  * @property {Image} [image] The image of the parameter
  * @property {Document} [document] The document of the parameter
@@ -134,7 +134,7 @@ class Header {
  * Action API object
  *
  * @property {Array<Button>} buttons The buttons of the action
- * @property {String} [_] The type of the action, for internal use only
+ * @property {"button"} [_] The type of the action, for internal use only
  */
 class ActionButtons {
     /**
@@ -167,7 +167,7 @@ class ActionButtons {
 /**
  * Button API object
  *
- * @property {String} type The type of the button
+ * @property {"reply"} type The type of the button
  * @property {String} reply.id The id of the row
  * @property {String} reply.title The title of the row
  */
@@ -205,7 +205,7 @@ class Button {
  *
  * @property {String} button The button text
  * @property {Array<Section>} sections The sections of the action
- * @property {String} [_] The type of the action, for internal use only
+ * @property {"list"} [_] The type of the action, for internal use only
  */
 class ActionList {
     /**
@@ -244,8 +244,8 @@ class ActionList {
 /**
  * Section API object
  *
- * @property {String} [title] The title of the section
  * @property {Array<Row>} rows The rows of the section
+ * @property {String} [title] The title of the section
  */
 class ListSection {
     /**
@@ -310,7 +310,7 @@ class Row {
  * @property {String} catalog_id The id of the catalog from where to get the products
  * @property {String} [product_retailer_id] The product to be added to the catalog
  * @property {Array<ProductSection>} [sections] The section to be added to the catalog
- * @property {String} [_] The type of the action, for internal use only
+ * @property {("product"|"product_list")} [_] The type of the action, for internal use only
  */
 class ActionCatalog {
     /**

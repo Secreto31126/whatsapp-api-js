@@ -5,7 +5,7 @@
  * @property {Number} longitude The longitude of the location
  * @property {String} [name] The name of the location
  * @property {String} [address] The address of the location
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"location"} [_] The type of the object, for internal use only
  */
 class Location {
     /**

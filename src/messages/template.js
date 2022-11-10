@@ -7,7 +7,7 @@ const { Image, Document, Video } = require("./media");
  * @property {String} name The name of the template
  * @property {Language} language The language of the template
  * @property {Array<(HeaderComponent|BodyComponent|ButtonComponent)>} [components] The components of the template
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"template"} [_] The type of the object, for internal use only
  */
 class Template {
     /**
@@ -40,7 +40,7 @@ class Template {
  * Language API object
  *
  * @property {String} code The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
- * @property {String} policy The language policy
+ * @property {"deterministic"} policy The language policy
  */
 class Language {
     /**
@@ -63,7 +63,7 @@ class Language {
  * @property {Number} amount_1000 The amount of the currency by 1000
  * @property {String} code The currency code
  * @property {String} fallback_value The fallback value
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"currency"} [_] The type of the object, for internal use only
  */
 class Currency {
     /**
@@ -94,7 +94,7 @@ class Currency {
  * DateTime API object
  *
  * @property {String} fallback_value The fallback value
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"date_time"} [_] The type of the object, for internal use only
  */
 class DateTime {
     /**
@@ -105,7 +105,7 @@ class DateTime {
      */
     constructor(fallback_value) {
         if (!fallback_value)
-            throw new Error("Currency must have a fallback_value");
+            throw new Error("DateTime must have a fallback_value");
         this.fallback_value = fallback_value;
         this._ = "date_time";
     }
@@ -114,8 +114,8 @@ class DateTime {
 /**
  * Components API object
  *
- * @property {String} type The type of the component
- * @property {String} sub_type The subtype of the component
+ * @property {"button"} type The type of the component
+ * @property {("url"|"quick_reply")} sub_type The subtype of the component
  * @property {Array<ButtonParameter|String>} parameters The ButtonParameters to be used in the build function
  * @property {Function} build The function to build the component as a compatible API object
  */
@@ -124,7 +124,7 @@ class ButtonComponent {
      * Builds a button component for a Template message.
      * The index of the buttons is defined by the order in which you add them to the Template parameters.
      *
-     * @param {String} sub_type Type of button to create. Can be either 'url' or 'quick_reply'.
+     * @param {("url"|"quick_reply")} sub_type The type of button to create.
      * @param {...String} parameters Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
      * @throws {Error} If sub_type is not either 'url' or 'quick_reply'
      * @throws {Error} If parameters is not provided
@@ -154,7 +154,7 @@ class ButtonComponent {
      * Generates the buttons components for a Template message. For internal use only.
      *
      * @package
-     * @returns {Array<{ type: String, sub_type: String, index: String, parameters: Array<ButtonParameter> }>} An array of API compatible buttons components
+     * @returns {Array<{ type: "button", sub_type: ("url"|"quick_reply"), index: String, parameters: Array<ButtonParameter> }>} An array of API compatible buttons components
      */
     build() {
         return this.parameters.map((p, i) => {
@@ -171,7 +171,7 @@ class ButtonComponent {
 /**
  * Button Parameter API object
  *
- * @property {String} type The type of the button
+ * @property {("text"|"payload")} type The type of the button
  * @property {String} [text] The text of the button
  * @property {String} [payload] The payload of the button
  */
@@ -180,7 +180,7 @@ class ButtonParameter {
      * Builds a button parameter for a ButtonComponent
      *
      * @param {String} param Developer-provided data that is used to fill in the template.
-     * @param {String} type The type of the button. Can be either 'text' or 'payload'.
+     * @param {("text"|"payload")} type The type of the button. Can be either 'text' or 'payload'.
      * @throws {Error} If param is not provided
      * @throws {Error} If type is not either 'text' or 'payload'
      */
@@ -199,7 +199,7 @@ class ButtonParameter {
 /**
  * Components API object
  *
- * @property {String} type The type of the component
+ * @property {"header"} type The type of the component
  * @property {Array<Parameter>} [parameters] The parameters of the component
  */
 class HeaderComponent {
@@ -220,7 +220,7 @@ class HeaderComponent {
 /**
  * Components API object
  *
- * @property {String} type The type of the component
+ * @property {"body"} type The type of the component
  * @property {Array<Parameter>} [parameters] The parameters of the component
  */
 class BodyComponent {
@@ -241,7 +241,7 @@ class BodyComponent {
 /**
  * Parameter API object
  *
- * @property {String} type The type of the parameter
+ * @property {("text"|"currency"|"date_time"|"image"|"document"|"video")} type The type of the parameter
  * @property {String} [text] The text of the parameter
  * @property {Currency} [currency] The currency of the parameter
  * @property {DateTime} [datetime] The datetime of the parameter
@@ -256,7 +256,7 @@ class Parameter {
      * For Document parameter, only PDF documents are supported for document-based message templates.
      *
      * @param {(Text|Currency|DateTime|Image|Document|Video)} parameter The parameter to be used in the template
-     * @param {String} [whoami] The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
+     * @param {("header"|"body")} [whoami] The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
      * @throws {Error} If parameter is not provided
      * @throws {Error} If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
      * @throws {Error} If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters

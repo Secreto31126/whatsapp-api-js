@@ -2,7 +2,7 @@
  * Contacts API object
  *
  * @property {Array<Object>} contacts The contacts of the message
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"contacts"} [_] The type of the object, for internal use only
  */
 class Contacts {
     /**
@@ -71,7 +71,7 @@ class Contacts {
  * @property {String} [street] The street of the address
  * @property {String} [zip] The zip code of the address
  * @property {String} [type] The type of the address
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"addresses"} [_] The type of the object, for internal use only
  */
 class Address {
     /**
@@ -102,7 +102,7 @@ class Address {
  * Birthday API object
  *
  * @property {String} birthday The birthday of the contact
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"birthday"} [_] The type of the object, for internal use only
  */
 class Birthday {
     /**
@@ -127,7 +127,7 @@ class Birthday {
  *
  * @property {String} [email] The email of the contact
  * @property {String} [type] The type of the email
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"emails"} [_] The type of the object, for internal use only
  */
 class Email {
     /**
@@ -153,7 +153,7 @@ class Email {
  * @property {String} [middle_name] The middle name of the contact
  * @property {String} [suffix] The suffix of the contact
  * @property {String} [prefix] The prefix of the contact
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"name"} [_] The type of the object, for internal use only
  */
 class Name {
     /**
@@ -200,7 +200,7 @@ class Name {
  * @property {String} [company] The company of the contact
  * @property {String} [department] The department of the contact
  * @property {String} [title] The title of the contact
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"org"} [_] The type of the object, for internal use only
  */
 class Organization {
     /**
@@ -224,7 +224,7 @@ class Organization {
  * @property {String} [phone] The phone number of the contact
  * @property {String} [type] The type of the phone number
  * @property {String} [wa_id] The WhatsApp ID of the contact
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"phones"} [_] The type of the object, for internal use only
  */
 class Phone {
     /**
@@ -248,7 +248,7 @@ class Phone {
  *
  * @property {String} [url] The URL of the contact
  * @property {String} [type] The type of the URL
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"urls"} [_] The type of the object, for internal use only
  */
 class Url {
     /**

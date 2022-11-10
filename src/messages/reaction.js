@@ -3,7 +3,7 @@
  *
  * @property {String} message_id The message's id to react to
  * @property {String} emoji The reaction emoji
- * @property {String} [_] The type of the object, for internal use only
+ * @property {"reaction"} [_] The type of the object, for internal use only
  */
 class Reaction {
     /**
