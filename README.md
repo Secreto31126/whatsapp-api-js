@@ -1,4 +1,7 @@
 # whatsapp-api-js
+
+[![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
+
 A Whatsapp's Official API framework for Node.js @^16 [(and others)](#running-outside-of-nodejs)
 
 ## List of contents
