@@ -6,7 +6,8 @@ name: Run Pull Request Checks
 on:
   pull_request:
     paths:
-      - './src/**/*.js'
+      - './src/*.js'
+      - './src/messages/*.js'
       - './tests/*.js'
 
 jobs:

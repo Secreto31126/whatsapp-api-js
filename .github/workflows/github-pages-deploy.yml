@@ -8,7 +8,8 @@ on:
     branches:
       - main
     paths:
-      - './src/**/*.js'
+      - './src/*.js'
+      - './src/messages/*.js'
       - 'README.md'
       - 'docs_statics/*.html'
 
