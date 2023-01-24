@@ -218,12 +218,13 @@ class WhatsAppAPI {
      * Get a Media object data with an ID
      *
      * @param {String} id The Media's ID
+     * @param {String} [phoneID] Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
      */
-    retrieveMedia(id) {
+    retrieveMedia(id, phoneID) {
         if (!id) throw new Error("ID must be specified");
-        const promise = api.getMedia(this.token, this.v, id);
+        const promise = api.getMedia(this.token, this.v, id, phoneID);
         return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
@@ -356,12 +357,13 @@ class WhatsAppAPI {
      * Delete a Media object with an ID
      *
      * @param {String} id The Media's ID
+     * @param {String} [phoneID] Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns {Promise<Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
      */
-    deleteMedia(id) {
+    deleteMedia(id, phoneID) {
         if (!id) throw new Error("ID must be specified");
-        const promise = api.deleteMedia(this.token, this.v, id);
+        const promise = api.deleteMedia(this.token, this.v, id, phoneID);
         return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
