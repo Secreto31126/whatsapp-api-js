@@ -1,15 +1,12 @@
 {
   "name": "whatsapp-api-js",
-  "version": "0.8.2",
+  "version": "1.0.0",
   "author": "Secreto31126",
   "description": "A Whatsapp Official API framework for Node.js",
   "license": "MIT",
   "main": "./src/index.js",
-  "types": "./types/index.d.ts",
-  "engines": {
-    "node": ">=16.0.0"
-  },
   "scripts": {
+    "build": "tsc",
     "test": "mocha",
     "test:watch": "mocha --reporter min --watch",
     "lint": "eslint src",
@@ -17,7 +14,6 @@
     "prettier": "prettier --check src",
     "prettier:write": "prettier --write src",
     "coverage": "nyc --reporter=text mocha --reporter min",
-    "types": "tsc",
     "document": "jsdoc -c ./jsdoc.conf.json -R ./README.md && cp ./docs_statics/* ./docs/",
     "clear": "rm -rf ./docs/ ./types/ ./coverage/ ./.nyc_output"
   },
@@ -47,6 +43,7 @@
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
   "devDependencies": {
+    "@google/clasp": "^2.4.2",
     "docdash": "^2.0.1",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
@@ -57,9 +54,7 @@
     "prettier": "2.7.1",
     "rewire": "^6.0.0",
     "sinon": "^14.0.0",
-    "typescript": "^4.8.4"
-  },
-  "dependencies": {
-    "undici": "^5.11.0"
+    "typescript": "^4.8.4",
+    "undici": "^5.18.0"
   }
 }
