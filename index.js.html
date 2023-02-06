@@ -14,6 +14,7 @@
     <link type="text/css" rel="stylesheet" href="styles/prettify.css">
     <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
     <script src="scripts/nav.js" defer></script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
@@ -27,7 +28,9 @@
 
 <nav >
     
+    
     <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ActionButtons.html">ActionButtons</a></li><li><a href="ActionCatalog.html">ActionCatalog</a></li><li><a href="ActionList.html">ActionList</a></li><li><a href="Address.html">Address</a></li><li><a href="Audio.html">Audio</a></li><li><a href="Birthday.html">Birthday</a></li><li><a href="Body.html">Body</a></li><li><a href="BodyComponent.html">BodyComponent</a></li><li><a href="Button.html">Button</a></li><li><a href="ButtonComponent.html">ButtonComponent</a><ul class='methods'><li data-type='method'><a href="ButtonComponent.html#build">build</a></li></ul></li><li><a href="ButtonParameter.html">ButtonParameter</a></li><li><a href="Contacts.html">Contacts</a></li><li><a href="Currency.html">Currency</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Document.html">Document</a></li><li><a href="Email.html">Email</a></li><li><a href="Footer.html">Footer</a></li><li><a href="Header.html">Header</a></li><li><a href="HeaderComponent.html">HeaderComponent</a></li><li><a href="Image.html">Image</a></li><li><a href="Interactive.html">Interactive</a></li><li><a href="Language.html">Language</a></li><li><a href="ListSection.html">ListSection</a></li><li><a href="Location.html">Location</a></li><li><a href="Media.html">Media</a></li><li><a href="Name.html">Name</a></li><li><a href="Organization.html">Organization</a></li><li><a href="Parameter.html">Parameter</a></li><li><a href="Phone.html">Phone</a></li><li><a href="Product.html">Product</a></li><li><a href="ProductSection.html">ProductSection</a></li><li><a href="Reaction.html">Reaction</a></li><li><a href="Request.html">Request</a></li><li><a href="Row.html">Row</a></li><li><a href="Sticker.html">Sticker</a></li><li><a href="Template.html">Template</a></li><li><a href="Text.html">Text</a></li><li><a href="Url.html">Url</a></li><li><a href="Video.html">Video</a></li><li><a href="WhatsAppAPI.html">WhatsAppAPI</a><ul class='methods'><li data-type='method'><a href="WhatsAppAPI.html#_authenicatedRequest">_authenicatedRequest</a></li><li data-type='method'><a href="WhatsAppAPI.html#createQR">createQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#deleteMedia">deleteMedia</a></li><li data-type='method'><a href="WhatsAppAPI.html#deleteQR">deleteQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#fetchMedia">fetchMedia</a></li><li data-type='method'><a href="WhatsAppAPI.html#logSentMessages">logSentMessages</a></li><li data-type='method'><a href="WhatsAppAPI.html#markAsRead">markAsRead</a></li><li data-type='method'><a href="WhatsAppAPI.html#retrieveMedia">retrieveMedia</a></li><li data-type='method'><a href="WhatsAppAPI.html#retrieveQR">retrieveQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="WhatsAppAPI.html#updateQR">updateQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#uploadMedia">uploadMedia</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="Exports.html">Exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#get">get</a></li><li><a href="global.html#post">post</a></li></ul>
+    
 </nav>
 
 <div id="main">
@@ -262,12 +265,13 @@ class WhatsAppAPI {
      * Get a Media object data with an ID
      *
      * @param {String} id The Media's ID
+     * @param {String} [phoneID] Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns {Promise&lt;Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
      */
-    retrieveMedia(id) {
+    retrieveMedia(id, phoneID) {
         if (!id) throw new Error("ID must be specified");
-        const promise = api.getMedia(this.token, this.v, id);
+        const promise = api.getMedia(this.token, this.v, id, phoneID);
         return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
@@ -284,11 +288,11 @@ class WhatsAppAPI {
      * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws {Error} If check is set to true and the form file is too big for the file type
      * @example
-     * const { WhatsAppAPI } = require('./index');
+     * const { WhatsAppAPI } = require("whatsapp-api-js");
      * const Whatsapp = new WhatsAppAPI("token");
      *
      * // If required:
-     * // const formdata = require('undici').FormData;
+     * // const formdata = require("undici").FormData;
      * // const blob = require("node:buffer").Blob;
      *
      * const form = new FormData();
@@ -296,7 +300,7 @@ class WhatsAppAPI {
      * // If you don't mind reading the whole file into memory:
      * form.set("file", new Blob([fs.readFileSync("image.png")], "image/png"));
      *
-     * // If you do, you will need to use streams. The module 'form-data',
+     * // If you do, you will need to use streams. The module "form-data",
      * // although not spec compliant (hence needing to set check to false),
      * // has an easy way to do this:
      * // form.append("file", fs.createReadStream("image.png"), { contentType: "image/png" });
@@ -383,7 +387,7 @@ class WhatsAppAPI {
      * @returns {Promise&lt;Response|import("undici/types/fetch").Response>} The fetch raw response
      * @throws {TypeError} If url is not a valid url
      * @example
-     * const { WhatsAppAPI } = require('whatsapp-api-js');
+     * const { WhatsAppAPI } = require("whatsapp-api-js");
      * const Whatsapp = new WhatsAppAPI("token");
      *
      * const id = "mediaID";
@@ -400,12 +404,13 @@ class WhatsAppAPI {
      * Delete a Media object with an ID
      *
      * @param {String} id The Media's ID
+     * @param {String} [phoneID] Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns {Promise&lt;Object|Response|import("undici/types/fetch").Response>} The server response
      * @throws {Error} If id is not specified
      */
-    deleteMedia(id) {
+    deleteMedia(id, phoneID) {
         if (!id) throw new Error("ID must be specified");
-        const promise = api.deleteMedia(this.token, this.v, id);
+        const promise = api.deleteMedia(this.token, this.v, id, phoneID);
         return this.parsed ? promise.then((e) => e.json()) : promise;
     }
 
@@ -500,7 +505,7 @@ module.exports = {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Dec 19 2022 23:40:35 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Mon Feb 06 2023 20:48:05 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
