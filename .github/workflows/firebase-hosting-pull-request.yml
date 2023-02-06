@@ -6,8 +6,8 @@ name: Preview with Firebase Hosting
 on:
   pull_request:
     paths:
-      - './src/*.js'
-      - './src/messages/*.js'
+      - 'src/*.js'
+      - 'src/messages/*.js'
       - 'README.md'
       - 'docs_statics/*.html'
 
