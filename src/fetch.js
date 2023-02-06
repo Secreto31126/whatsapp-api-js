@@ -230,10 +230,15 @@ function deleteQR(token, v, phoneID, id) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} id The media's id
+ * @param {String} [phone_number_id] The business phone number ID
  * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
-function getMedia(token, v, id) {
-    return req(`https://graph.facebook.com/${v}/${id}`, {
+function getMedia(token, v, id, phone_number_id) {
+    const params = phone_number_id
+        ? new URLSearchParams({ phone_number_id })
+        : "";
+
+    return req(`https://graph.facebook.com/${v}/${id}?${params}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -274,10 +279,15 @@ function uploadMedia(token, v, phoneID, form) {
  * @param {String} token The API token
  * @param {String} v The API version
  * @param {String} id The media's id
+ * @param {String} [phone_number_id] The business phone number ID
  * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch promise
  */
-function deleteMedia(token, v, id) {
-    return req(`https://graph.facebook.com/${v}/${id}`, {
+function deleteMedia(token, v, id, phone_number_id) {
+    const params = phone_number_id
+        ? new URLSearchParams({ phone_number_id })
+        : "";
+
+    return req(`https://graph.facebook.com/${v}/${id}?${params}`, {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${token}`
