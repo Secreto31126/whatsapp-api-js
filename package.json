@@ -54,7 +54,7 @@
     "jsdoc-tsimport-plugin": "^1.0.5",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "prettier": "2.7.1",
+    "prettier": "2.8.3",
     "rewire": "^6.0.0",
     "sinon": "^14.0.0",
     "typescript": "^4.8.4"
