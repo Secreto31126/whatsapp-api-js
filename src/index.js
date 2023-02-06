@@ -241,11 +241,11 @@ class WhatsAppAPI {
      * @throws {Error} If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws {Error} If check is set to true and the form file is too big for the file type
      * @example
-     * const { WhatsAppAPI } = require('./index');
+     * const { WhatsAppAPI } = require("whatsapp-api-js");
      * const Whatsapp = new WhatsAppAPI("token");
      *
      * // If required:
-     * // const formdata = require('undici').FormData;
+     * // const formdata = require("undici").FormData;
      * // const blob = require("node:buffer").Blob;
      *
      * const form = new FormData();
@@ -253,7 +253,7 @@ class WhatsAppAPI {
      * // If you don't mind reading the whole file into memory:
      * form.set("file", new Blob([fs.readFileSync("image.png")], "image/png"));
      *
-     * // If you do, you will need to use streams. The module 'form-data',
+     * // If you do, you will need to use streams. The module "form-data",
      * // although not spec compliant (hence needing to set check to false),
      * // has an easy way to do this:
      * // form.append("file", fs.createReadStream("image.png"), { contentType: "image/png" });
@@ -340,7 +340,7 @@ class WhatsAppAPI {
      * @returns {Promise<Response|import("undici/types/fetch").Response>} The fetch raw response
      * @throws {TypeError} If url is not a valid url
      * @example
-     * const { WhatsAppAPI } = require('whatsapp-api-js');
+     * const { WhatsAppAPI } = require("whatsapp-api-js");
      * const Whatsapp = new WhatsAppAPI("token");
      *
      * const id = "mediaID";
