@@ -1240,6 +1240,34 @@ describe("WhatsAppAPI", function () {
                 assert.deepEqual(response, expectedResponse);
             });
 
+            it("should include the phone_number_id param if provided", async function () {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    url: "URL",
+                    mime_type: "image/jpeg",
+                    sha256: "HASH",
+                    file_size: "SIZE",
+                    id
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${id}`,
+                        query: {
+                            phone_number_id: bot
+                        },
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.retrieveMedia(id, bot);
+
+                assert.deepEqual(response, expectedResponse);
+            });
+
             it("should fail if the id param is falsy", function () {
                 assert.throws(function () {
                     Whatsapp.retrieveMedia(undefined);
@@ -1302,6 +1330,30 @@ describe("WhatsAppAPI", function () {
                     .times(1);
 
                 const response = await Whatsapp.deleteMedia(id);
+
+                assert.deepEqual(response, expectedResponse);
+            });
+
+            it("should include the phone_number_id param if provided", async function () {
+                const expectedResponse = {
+                    success: true
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${id}`,
+                        method: "DELETE",
+                        query: {
+                            phone_number_id: bot
+                        },
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.deleteMedia(id, bot);
 
                 assert.deepEqual(response, expectedResponse);
             });
