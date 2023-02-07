@@ -1,15 +1,10 @@
 {
     "env": {
-        "browser": true,
-        "commonjs": true,
-        "es2021": true,
-        "node": true
+        "es6": true
     },
     "extends": [
         "eslint:recommended",
         "prettier"
-    ],
-    "overrides": [
     ],
     "parserOptions": {
         "ecmaVersion": "latest"
@@ -18,5 +13,8 @@
         "no-unused-vars": [
             "off"
         ]
+    },
+    "globals": {
+        "fetch": "readonly"
     }
 }
