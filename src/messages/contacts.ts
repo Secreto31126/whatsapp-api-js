@@ -1,29 +1,52 @@
+type Contact = {
+    name: Name;
+    birthday?: string;
+    org?: Organization;
+    addresses?: Address[];
+    phones?: Phone[];
+    emails?: Email[];
+    urls?: Url[];
+};
+
 /**
  * Contacts API object
  *
- * @property {Array<Object>} contacts The contacts of the message
+ * @property {Array<Contact>} contacts The contacts of the message
  * @property {"contacts"} [_] The type of the object, for internal use only
  */
-class Contacts {
+export class Contacts {
+    contacts: Contact[];
+    _?: "contacts";
+
     /**
      * Create a Contacts object for the API
      *
      * @param {...Array<(Address|Birthday|Email|Name|Organization|Phone|Url)>} contact Array of contact's components
      * @throws {Error} If contact is not provided
+     * @throws {Error} If contact does not contain a name component
      * @throws {Error} If contact contains more than one name component
      * @throws {Error} If contact contains more than one birthday component
      * @throws {Error} If contact contains more than one organization component
      */
-    constructor(...contact) {
+    constructor(
+        ...contact: Array<
+            Address | Birthday | Email | Name | Organization | Phone | Url
+        >[]
+    ) {
         if (!contact.length)
             throw new Error("Contacts must have at least one contact");
 
         this.contacts = [];
 
         for (const components of contact) {
-            const contact = {};
+            const contact = {} as Contact;
 
             for (const component of components) {
+                if (!component._)
+                    throw new Error(
+                        "Unexpected internal error (component._ is not defined)"
+                    );
+
                 const name = component._;
                 delete component._;
 
@@ -47,13 +70,21 @@ class Contacts {
                             "Contacts can only have one organization component"
                         );
                 else {
-                    if (!contact[name]) contact[name] = [];
-                    contact[name].push(component);
+                    if (!(name in contact)) {
+                        Object.defineProperty(contact, name, {
+                            value: [] as Address[] | Email[] | Phone[] | Url[]
+                        });
+                    }
+
+                    // TypeScript doesn't know that contact[name] is an array
+                    const pointer = contact[name] as typeof component[];
+                    pointer.push(component);
                 }
             }
 
             if (!contact.name)
                 throw new Error("Contact must have a name component");
+
             this.contacts.push(contact);
         }
 
@@ -64,29 +95,46 @@ class Contacts {
 /**
  * Address API object
  *
- * @property {String} [country] The country of the address
- * @property {String} [country_code] The country code of the address
- * @property {String} [state] The state of the address
- * @property {String} [city] The city of the address
- * @property {String} [street] The street of the address
- * @property {String} [zip] The zip code of the address
- * @property {String} [type] The type of the address
+ * @property {string} [country] The country of the address
+ * @property {string} [country_code] The country code of the address
+ * @property {string} [state] The state of the address
+ * @property {string} [city] The city of the address
+ * @property {string} [street] The street of the address
+ * @property {string} [zip] The zip code of the address
+ * @property {string} [type] The type of the address
  * @property {"addresses"} [_] The type of the object, for internal use only
  */
-class Address {
+export class Address {
+    country?: string;
+    country_code?: string;
+    state?: string;
+    city?: string;
+    street?: string;
+    zip?: string;
+    type?: string;
+    _?: "addresses";
+
     /**
      * Builds an address object for a contact.
      * A contact can contain multiple addresses objects.
      *
-     * @param {String} [country] Full country name
-     * @param {String} [country_code] Two-letter country abbreviation
-     * @param {String} [state] State abbreviation
-     * @param {String} [city] City name
-     * @param {String} [street] Street number and name
-     * @param {String} [zip] ZIP code
-     * @param {String} [type] Address type. Standard Values: HOME, WORK
+     * @param {string} [country] Full country name
+     * @param {string} [country_code] Two-letter country abbreviation
+     * @param {string} [state] State abbreviation
+     * @param {string} [city] City name
+     * @param {string} [street] Street number and name
+     * @param {string} [zip] ZIP code
+     * @param {string} [type] Address type. Standard Values: HOME, WORK
      */
-    constructor(country, country_code, state, city, street, zip, type) {
+    constructor(
+        country: string,
+        country_code: string,
+        state: string,
+        city: string,
+        street: string,
+        zip: string,
+        type: string
+    ) {
         if (country) this.country = country;
         if (country_code) this.country_code = country_code;
         if (state) this.state = state;
@@ -101,19 +149,22 @@ class Address {
 /**
  * Birthday API object
  *
- * @property {String} birthday The birthday of the contact
+ * @property {string} birthday The birthday of the contact
  * @property {"birthday"} [_] The type of the object, for internal use only
  */
-class Birthday {
+export class Birthday {
+    birthday: string;
+    _?: "birthday";
+
     /**
      * Builds a birthday object for a contact
      *
-     * @param {String} year Year of birth (YYYY)
-     * @param {String} month Month of birth (MM)
-     * @param {String} day Day of birth (DD)
+     * @param {string} year Year of birth (YYYY)
+     * @param {string} month Month of birth (MM)
+     * @param {string} day Day of birth (DD)
      * @throws {Error} If the year, month, or day don't have a valid length
      */
-    constructor(year, month, day) {
+    constructor(year: string, month: string, day: string) {
         if (year?.length !== 4) throw new Error("Year must be 4 digits");
         if (month?.length !== 2) throw new Error("Month must be 2 digits");
         if (day?.length !== 2) throw new Error("Day must be 2 digits");
@@ -125,19 +176,23 @@ class Birthday {
 /**
  * Email API object
  *
- * @property {String} [email] The email of the contact
- * @property {String} [type] The type of the email
+ * @property {string} [email] The email of the contact
+ * @property {string} [type] The type of the email
  * @property {"emails"} [_] The type of the object, for internal use only
  */
-class Email {
+export class Email {
+    email?: string;
+    type?: string;
+    _?: "emails";
+
     /**
      * Builds an email object for a contact.
      * A contact can contain multiple emails objects.
      *
-     * @param {String} [email] Email address
-     * @param {String} [type] Email type. Standard Values: HOME, WORK
+     * @param {string} [email] Email address
+     * @param {string} [type] Email type. Standard Values: HOME, WORK
      */
-    constructor(email, type) {
+    constructor(email: string, type: string) {
         if (email) this.email = email;
         if (type) this.type = type;
         this._ = "emails";
@@ -147,35 +202,43 @@ class Email {
 /**
  * Name API object
  *
- * @property {String} formatted_name The formatted name of the contact
- * @property {String} [first_name] The first name of the contact
- * @property {String} [last_name] The last name of the contact
- * @property {String} [middle_name] The middle name of the contact
- * @property {String} [suffix] The suffix of the contact
- * @property {String} [prefix] The prefix of the contact
+ * @property {string} formatted_name The formatted name of the contact
+ * @property {string} [first_name] The first name of the contact
+ * @property {string} [last_name] The last name of the contact
+ * @property {string} [middle_name] The middle name of the contact
+ * @property {string} [suffix] The suffix of the contact
+ * @property {string} [prefix] The prefix of the contact
  * @property {"name"} [_] The type of the object, for internal use only
  */
-class Name {
+export class Name {
+    formatted_name: string;
+    first_name?: string;
+    last_name?: string;
+    middle_name?: string;
+    suffix?: string;
+    prefix?: string;
+    _?: "name";
+
     /**
      * Builds a name object for a contact, required for contacts.
      * The object requires a formatted_name and at least another property.
      *
-     * @param {String} formatted_name Full name, as it normally appears
-     * @param {String} [first_name] First name
-     * @param {String} [last_name] Last name
-     * @param {String} [middle_name] Middle name
-     * @param {String} [suffix] Name suffix
-     * @param {String} [prefix] Name prefix
+     * @param {string} formatted_name Full name, as it normally appears
+     * @param {string} [first_name] First name
+     * @param {string} [last_name] Last name
+     * @param {string} [middle_name] Middle name
+     * @param {string} [suffix] Name suffix
+     * @param {string} [prefix] Name prefix
      * @throws {Error} If formatted_name is not defined
      * @throws {Error} If no other component apart from formatted_name is defined
      */
     constructor(
-        formatted_name,
-        first_name,
-        last_name,
-        middle_name,
-        suffix,
-        prefix
+        formatted_name: string,
+        first_name: string,
+        last_name: string,
+        middle_name: string,
+        suffix: string,
+        prefix: string
     ) {
         if (!formatted_name) throw new Error("Name must have a formatted_name");
 
@@ -197,20 +260,25 @@ class Name {
 /**
  * Organization API object
  *
- * @property {String} [company] The company of the contact
- * @property {String} [department] The department of the contact
- * @property {String} [title] The title of the contact
+ * @property {string} [company] The company of the contact
+ * @property {string} [department] The department of the contact
+ * @property {string} [title] The title of the contact
  * @property {"org"} [_] The type of the object, for internal use only
  */
-class Organization {
+export class Organization {
+    company?: string;
+    department?: string;
+    title?: string;
+    _?: "org";
+
     /**
      * Builds an organization object for a contact
      *
-     * @param {String} [company] Name of the contact's company
-     * @param {String} [department] Name of the contact's department
-     * @param {String} [title] Contact's business title
+     * @param {string} [company] Name of the contact's company
+     * @param {string} [department] Name of the contact's department
+     * @param {string} [title] Contact's business title
      */
-    constructor(company, department, title) {
+    constructor(company: string, department: string, title: string) {
         if (company) this.company = company;
         if (department) this.department = department;
         if (title) this.title = title;
@@ -221,21 +289,26 @@ class Organization {
 /**
  * Phone API object
  *
- * @property {String} [phone] The phone number of the contact
- * @property {String} [type] The type of the phone number
- * @property {String} [wa_id] The WhatsApp ID of the contact
+ * @property {string} [phone] The phone number of the contact
+ * @property {string} [type] The type of the phone number
+ * @property {string} [wa_id] The WhatsApp ID of the contact
  * @property {"phones"} [_] The type of the object, for internal use only
  */
-class Phone {
+export class Phone {
+    phone?: string;
+    type?: string;
+    wa_id?: string;
+    _?: "phones";
+
     /**
      * Builds a phone object for a contact.
      * A contact can contain multiple phones objects.
      *
-     * @param {String} [phone] Phone number, automatically populated with the wa_id value as a formatted phone number
-     * @param {String} [type] Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
-     * @param {String} [wa_id] WhatsApp ID
+     * @param {string} [phone] Phone number, automatically populated with the wa_id value as a formatted phone number
+     * @param {string} [type] Phone type. Standard Values: CELL, MAIN, IPHONE, HOME, WORK
+     * @param {string} [wa_id] WhatsApp ID
      */
-    constructor(phone, type, wa_id) {
+    constructor(phone: string, type: string, wa_id: string) {
         if (phone) this.phone = phone;
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
@@ -246,32 +319,25 @@ class Phone {
 /**
  * Url API object
  *
- * @property {String} [url] The URL of the contact
- * @property {String} [type] The type of the URL
+ * @property {string} [url] The URL of the contact
+ * @property {string} [type] The type of the URL
  * @property {"urls"} [_] The type of the object, for internal use only
  */
-class Url {
+export class Url {
+    url?: string;
+    type?: string;
+    _?: "urls";
+
     /**
      * Builds an url object for a contact.
      * A contact can contain multiple urls objects.
      *
-     * @param {String} [url] URL
-     * @param {String} [type] URL type. Standard Values: HOME, WORK
+     * @param {string} [url] URL
+     * @param {string} [type] URL type. Standard Values: HOME, WORK
      */
-    constructor(url, type) {
+    constructor(url: string, type: string) {
         if (url) this.url = url;
         if (type) this.type = type;
         this._ = "urls";
     }
 }
-
-module.exports = {
-    Contacts,
-    Address,
-    Birthday,
-    Email,
-    Name,
-    Organization,
-    Phone,
-    Url
-};

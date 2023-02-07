@@ -1,11 +1,15 @@
 /**
  * Reaction API object
  *
- * @property {String} message_id The message's id to react to
- * @property {String} emoji The reaction emoji
+ * @property {string} message_id The message's id to react to
+ * @property {string} emoji The reaction emoji
  * @property {"reaction"} [_] The type of the object, for internal use only
  */
-class Reaction {
+export default class Reaction {
+    message_id: string;
+    emoji: string;
+    _?: "reaction";
+
     /**
      * Create a Reaction object for the API
      *
@@ -14,7 +18,7 @@ class Reaction {
      * @throws {Error} If message_id is not provided
      * @throws {Error} If a non-emoji or more than one emoji is provided
      */
-    constructor(message_id, emoji = "") {
+    constructor(message_id: string, emoji: string = "") {
         if (!message_id) throw new Error("Reaction must have a message id");
         if (emoji && !/^\p{Extended_Pictographic}$/u.test(emoji))
             throw new Error("Reaction emoji must be a single emoji");
@@ -24,5 +28,3 @@ class Reaction {
         this._ = "reaction";
     }
 }
-
-module.exports = Reaction;
