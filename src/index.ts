@@ -15,6 +15,7 @@ const api = require("./fetch");
  *
  * @property {String} token The API token
  * @property {String} v The API version to use
+ * @property {fetch} fetch The fetch function to ponyfill
  * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
  */
 class WhatsAppAPI {
@@ -22,15 +23,20 @@ class WhatsAppAPI {
      * Initiate the Whatsapp API app
      *
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
-     * @param {String} v The version of the API, defaults to v14.0
+     * @param {String} v The version of the API, defaults to v16.0
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v15.0", parsed = true) {
+    constructor(token, v = "v16.0", req = fetch, parsed = true) {
         if (!token) throw new Error("Token must be specified");
+        if (!req)
+            throw new Error(
+                "fetch is not defined in the enviroment, please provide a ponyfill function as the third parameter."
+            );
 
         this.token = token;
         this.v = v;
+        this.fetch = req;
         this.parsed = !!parsed;
 
         /**
