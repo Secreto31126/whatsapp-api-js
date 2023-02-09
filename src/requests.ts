@@ -1,5 +1,3 @@
-import type Text from "./messages/text";
-import type Reaction from "./messages/reaction";
 import type {
     ServerContacts,
     ServerConversation,
@@ -194,5 +192,3 @@ export function post(
         throw 400;
     }
 }
-
-module.exports = { get, post };
