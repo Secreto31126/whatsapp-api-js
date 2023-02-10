@@ -29,7 +29,7 @@ class WhatsAppAPI extends EventEmitter {
      *
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
      * @param {String} appSecret The app secret, given at setup.
-     * @param {String} webhookVerifyToken The webhook verify token, given at setup.
+     * @param {String} webhookVerifyToken The webhook verify token, configured at setup.
      * @param {String} v The version of the API, defaults to v14.0
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified

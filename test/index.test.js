@@ -55,7 +55,7 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should work with any specified webhook verify token", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "", "YOUR_WEBHOOK_VERIFY_TOKEN");
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "YOUR_APP_SECRET", "YOUR_WEBHOOK_VERIFY_TOKEN");
             assert.equal(Whatsapp.webhookVerifyToken, "YOUR_WEBHOOK_VERIFY_TOKEN");
         });
     });
@@ -67,7 +67,7 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should work with any specified version", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "", "", "v13.0");
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "YOUR_APP_SECRET", "", "v13.0");
             assert.equal(Whatsapp.v, "v13.0");
         });
     });
@@ -81,8 +81,8 @@ describe("WhatsAppAPI", function () {
         it("should be able to set parsed to true", function () {
             const Whatsapp = new WhatsAppAPI(
                 "YOUR_ACCESS_TOKEN",
-                "",
-                "",
+                "YOUR_APP_SECRET",
+                "YOUR_WEBHOOK_VERIFY_TOKEN",
                 "v13.0",
                 true
             );
@@ -92,8 +92,8 @@ describe("WhatsAppAPI", function () {
         it("should be able to set parsed to false", function () {
             const Whatsapp = new WhatsAppAPI(
                 "YOUR_ACCESS_TOKEN",
-                "",
-                "",
+                "YOUR_APP_SECRET",
+                "YOUR_WEBHOOK_VERIFY_TOKEN",
                 "v13.0",
                 false
             );
