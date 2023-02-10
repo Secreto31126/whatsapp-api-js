@@ -17,7 +17,7 @@ type Params = {
  * GET helper, must be called inside the get function of your code.
  * Used once at the first webhook setup.
  *
- * @param {Object} params The GET request parameters in object format
+ * @param {Params} params The GET request parameters in object format
  * @param {string} verify_token The verification token
  * @returns {string} The challenge string, it must be the http response body
  * @throws {number} 500 if verify_token is not specified
@@ -53,11 +53,11 @@ export function get(params: Params, verify_token: string): string {
  * POST helper callback for messages
  *
  * @callback OnMessage
- * @param {String} phoneID The bot's phoneID
- * @param {String} phone The user's phone number
- * @param {Object} message The messages object
- * @param {String} name The username
- * @param {Object} raw The raw data from the API
+ * @param {string} phoneID The bot's phoneID
+ * @param {string} phone The user's phone number
+ * @param {ServerMessage} message The messages object
+ * @param {string} [name] The username
+ * @param {Data} raw The raw data from the API
  */
 export type OnMessage = (
     phoneID: string,
@@ -71,13 +71,14 @@ export type OnMessage = (
  * POST helper callback for statuses
  *
  * @callback OnStatus
- * @param {String} phoneID The bot's phoneID
- * @param {String} phone The user's phone number
- * @param {String} status The message status
- * @param {String} messageID The message ID
- * @param {Object} conversation The conversation object
- * @param {Object} pricing The pricing object
- * @param {Object} raw The raw data from the API
+ * @param {string} phoneID The bot's phoneID
+ * @param {string} phone The user's phone number
+ * @param {string} status The message status
+ * @param {string} messageID The message ID
+ * @param {ServerConversation} [conversation] The conversation object
+ * @param {ServerPricing} [pricing] The pricing object
+ * @param {ServerError} [error] The error object
+ * @param {Data} raw The raw data from the API
  */
 export type OnStatus = (
     phoneID: string,

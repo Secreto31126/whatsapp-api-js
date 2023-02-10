@@ -13,8 +13,8 @@ export default class Reaction {
     /**
      * Create a Reaction object for the API
      *
-     * @param {String} message_id The message's id (wamid) to react to
-     * @param {String} emoji The emoji to react with, defaults to empty string to remove a reaction
+     * @param {string} message_id The message's id (wamid) to react to
+     * @param {string} emoji The emoji to react with, defaults to empty string to remove a reaction
      * @throws {Error} If message_id is not provided
      * @throws {Error} If a non-emoji or more than one emoji is provided
      */
