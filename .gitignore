@@ -114,3 +114,6 @@ docs/
 
 # Types
 types/
+
+# JetBrains IDEs
+.idea
