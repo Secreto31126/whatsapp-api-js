@@ -50,12 +50,6 @@ class WhatsAppAPI extends EventEmitter {
         this.webhookVerifyToken = webhookVerifyToken;
         this.v = v;
         this.parsed = !!parsed;
-
-        /**
-         * @type {Logger}
-         * @private
-         */
-        this._register = (..._) => {};
     }
 
     /**
@@ -69,22 +63,6 @@ class WhatsAppAPI extends EventEmitter {
      * @param {(String|Void)} id The message id, undefined if parsed is set to false
      * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
      */
-
-    /**
-     * Set a callback function for sendMessage
-     *
-     * @param {Logger} callback The callback function to set
-     * @returns {WhatsAppAPI} The API object, for chaining
-     * @throws {Error} If callback is truthy and is not a function
-     */
-    logSentMessages(callback = (..._) => {}) {
-        if (typeof callback !== "function")
-            throw new TypeError(
-                "Callback must be a function. To unset, call the function without parameters."
-            );
-        this._register = callback;
-        return this;
-    }
 
     /**
      * Send a Whatsapp message
@@ -118,7 +96,8 @@ class WhatsAppAPI extends EventEmitter {
         if (response) {
             response.then((data) => {
                 const id = data?.messages ? data.messages[0]?.id : undefined;
-                this._register(
+                this.emit(
+                    "sent",
                     phoneID,
                     request.to,
                     JSON.parse(request[request.type]),
@@ -128,7 +107,8 @@ class WhatsAppAPI extends EventEmitter {
                 );
             });
         } else {
-            this._register(
+            this.emit(
+                "sent",
                 phoneID,
                 request.to,
                 JSON.parse(request[request.type]),
