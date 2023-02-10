@@ -9,27 +9,39 @@ const { Template } = require("./messages/template");
 const Text = require("./messages/text");
 
 const api = require("./fetch");
+const { post, get } = require("./requests");
+
+const EventEmitter = require("node:events")
+const { createHmac } = require('node:crypto');
 
 /**
  * The main API object
  *
  * @property {String} token The API token
+ * @property {String} appSecret The app secret
+ * @property {String} webhookVerifyToken The webhook verify token
  * @property {String} v The API version to use
  * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
  */
-class WhatsAppAPI {
+class WhatsAppAPI extends EventEmitter {
     /**
      * Initiate the Whatsapp API app
      *
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
+     * @param {String} appSecret The app secret, given at setup.
+     * @param {String} webhookVerifyToken The webhook verify token, given at setup.
      * @param {String} v The version of the API, defaults to v14.0
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v15.0", parsed = true) {
+    constructor(token, appSecret = "", webhookVerifyToken = "", v = "v15.0", parsed = true) {
         if (!token) throw new Error("Token must be specified");
 
+        super();
+
         this.token = token;
+        this.appSecret = appSecret;
+        this.webhookVerifyToken = webhookVerifyToken;
         this.v = v;
         this.parsed = !!parsed;
 
@@ -37,7 +49,8 @@ class WhatsAppAPI {
          * @type {Logger}
          * @private
          */
-        this._register = (..._) => {};
+        this._register = (..._) => {
+        };
     }
 
     /**
@@ -59,7 +72,8 @@ class WhatsAppAPI {
      * @returns {WhatsAppAPI} The API object, for chaining
      * @throws {Error} If callback is truthy and is not a function
      */
-    logSentMessages(callback = (..._) => {}) {
+    logSentMessages(callback = (..._) => {
+    }) {
         if (typeof callback !== "function")
             throw new TypeError(
                 "Callback must be a function. To unset, call the function without parameters."
@@ -279,7 +293,7 @@ class WhatsAppAPI {
              *
              * @type {Blob}
              */
-            // @ts-ignore
+                // @ts-ignore
             const file = form.get("file");
 
             if (!file.type)
@@ -307,7 +321,7 @@ class WhatsAppAPI {
             ];
 
             if (!validMediaTypes.includes(file.type))
-                throw new Error(`Invalid media type: ${file.type}`);
+                throw new Error(`Invalid media type: ${ file.type }`);
 
             const validMediaSizes = {
                 audio: 16_000_000,
@@ -324,7 +338,7 @@ class WhatsAppAPI {
                     : file.type.split("/")[0];
             if (file.size && file.size > validMediaSizes[mediaType])
                 throw new Error(
-                    `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
+                    `File is too big (${ file.size } bytes) for a ${ mediaType } (${ validMediaSizes[mediaType] } bytes limit)`
                 );
         }
 
@@ -378,6 +392,48 @@ class WhatsAppAPI {
     _authenicatedRequest(url) {
         if (!url) throw new Error("URL must be specified");
         return api.authenticatedRequest(this.token, url);
+    }
+
+    /**
+     * POST helper, must be called inside the post function of your code.
+     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     *
+     * @param {Object} request The request object sent by Whatsapp
+     * @returns {Number} 200, it's the expected http/s response code
+     * @throws {Number} 400 if the POST request isn't valid
+     */
+    post(request) {
+        //Validating payload
+        const signature = request.header("X-Hub-Signature-256");
+        if (!signature) throw 400;
+
+        const hash = createHmac("sha256", this.appSecret)
+            .update(request.rawBody)
+            .digest("hex");
+        if (signature.split("=")[1] !== hash) throw 400;
+
+        return post(
+            request.body,
+            (...message) => {
+                this.emit('message', ...message);
+            },
+            (...status) => {
+                this.emit('status', ...status);
+            })
+    }
+
+    /**
+     * GET helper, must be called inside the get function of your code.
+     * Used once at the first webhook setup.
+     *
+     * @param {Object} request The request object sent by Whatsapp
+     * @returns {String} The challenge string, it must be the http response body
+     * @throws {Number} 500 if verify_token is not specified
+     * @throws {Number} 400 if the request is missing data
+     * @throws {Number} 403 if the verification tokens don't match
+     */
+    get(request) {
+        return get(request.params, this.webhookVerifyToken)
     }
 }
 

@@ -36,6 +36,30 @@ describe("WhatsAppAPI", function () {
         });
     });
 
+    describe("App secret", function () {
+        it("should work with empty as default", function () {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+            assert.equal(Whatsapp.appSecret, "");
+        });
+
+        it("should work with any specified app secret", function () {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "YOUR_APP_SECRET");
+            assert.equal(Whatsapp.appSecret, "YOUR_APP_SECRET");
+        });
+    });
+
+    describe("Webhook verify token", function () {
+        it("should work with empty as default", function () {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+            assert.equal(Whatsapp.webhookVerifyToken, "");
+        });
+
+        it("should work with any specified webhook verify token", function () {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "", "YOUR_WEBHOOK_VERIFY_TOKEN");
+            assert.equal(Whatsapp.webhookVerifyToken, "YOUR_WEBHOOK_VERIFY_TOKEN");
+        });
+    });
+
     describe("Version", function () {
         it("should work with v15.0 as default", function () {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
@@ -43,7 +67,7 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should work with any specified version", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0");
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "", "", "v13.0");
             assert.equal(Whatsapp.v, "v13.0");
         });
     });
@@ -57,6 +81,8 @@ describe("WhatsAppAPI", function () {
         it("should be able to set parsed to true", function () {
             const Whatsapp = new WhatsAppAPI(
                 "YOUR_ACCESS_TOKEN",
+                "",
+                "",
                 "v13.0",
                 true
             );
@@ -66,6 +92,8 @@ describe("WhatsAppAPI", function () {
         it("should be able to set parsed to false", function () {
             const Whatsapp = new WhatsAppAPI(
                 "YOUR_ACCESS_TOKEN",
+                "",
+                "",
                 "v13.0",
                 false
             );
