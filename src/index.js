@@ -49,8 +49,7 @@ class WhatsAppAPI extends EventEmitter {
          * @type {Logger}
          * @private
          */
-        this._register = (..._) => {
-        };
+        this._register = (..._) => {};
     }
 
     /**
@@ -72,8 +71,7 @@ class WhatsAppAPI extends EventEmitter {
      * @returns {WhatsAppAPI} The API object, for chaining
      * @throws {Error} If callback is truthy and is not a function
      */
-    logSentMessages(callback = (..._) => {
-    }) {
+    logSentMessages(callback = (..._) => {}) {
         if (typeof callback !== "function")
             throw new TypeError(
                 "Callback must be a function. To unset, call the function without parameters."
@@ -293,7 +291,7 @@ class WhatsAppAPI extends EventEmitter {
              *
              * @type {Blob}
              */
-                // @ts-ignore
+            // @ts-ignore
             const file = form.get("file");
 
             if (!file.type)
@@ -321,7 +319,7 @@ class WhatsAppAPI extends EventEmitter {
             ];
 
             if (!validMediaTypes.includes(file.type))
-                throw new Error(`Invalid media type: ${ file.type }`);
+                throw new Error(`Invalid media type: ${file.type}`);
 
             const validMediaSizes = {
                 audio: 16_000_000,
@@ -338,7 +336,7 @@ class WhatsAppAPI extends EventEmitter {
                     : file.type.split("/")[0];
             if (file.size && file.size > validMediaSizes[mediaType])
                 throw new Error(
-                    `File is too big (${ file.size } bytes) for a ${ mediaType } (${ validMediaSizes[mediaType] } bytes limit)`
+                    `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
                 );
         }
 
