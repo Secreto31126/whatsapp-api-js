@@ -295,7 +295,7 @@ class Row {
         if (title.length > 24)
             throw new Error("Row title must be 24 characters or less");
         // Yours truly, JScheck.
-        if (!description?.length || description.length > 72)
+        if (description && description.length > 72)
             throw new Error("Row description must be 72 characters or less");
 
         this.id = id;
