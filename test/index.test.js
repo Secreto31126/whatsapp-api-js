@@ -67,7 +67,7 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should work with any specified version", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "YOUR_APP_SECRET", "", "v13.0");
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "YOUR_APP_SECRET", "YOUR_WEBHOOK_VERIFY_TOKEN", "v13.0");
             assert.equal(Whatsapp.v, "v13.0");
         });
     });
