@@ -15,7 +15,7 @@ class Interactive {
      * Create an Interactive object for the API
      *
      * @param {(ActionList|ActionButtons|ActionCatalog)} action The action component of the interactive message
-     * @param {Body} body The body component of the interactive message
+     * @param {Body} [body] The body component of the interactive message
      * @param {Header} [header] The header component of the interactive message
      * @param {Footer} [footer] The footer component of the interactive message
      * @throws {Error} If action is not provided
