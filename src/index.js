@@ -11,8 +11,8 @@ const Text = require("./messages/text");
 const api = require("./fetch");
 const { post, get } = require("./requests");
 
-const EventEmitter = require("node:events")
-const { createHmac } = require('node:crypto');
+const EventEmitter = require("node:events");
+const { createHmac } = require("node:crypto");
 
 /**
  * The main API object
@@ -34,7 +34,13 @@ class WhatsAppAPI extends EventEmitter {
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
-    constructor(token, appSecret = "", webhookVerifyToken = "", v = "v15.0", parsed = true) {
+    constructor(
+        token,
+        appSecret = "",
+        webhookVerifyToken = "",
+        v = "v15.0",
+        parsed = true
+    ) {
         if (!token) throw new Error("Token must be specified");
 
         super();
@@ -413,11 +419,12 @@ class WhatsAppAPI extends EventEmitter {
         return post(
             request.body,
             (...message) => {
-                this.emit('message', ...message);
+                this.emit("message", ...message);
             },
             (...status) => {
-                this.emit('status', ...status);
-            })
+                this.emit("status", ...status);
+            }
+        );
     }
 
     /**
@@ -431,7 +438,7 @@ class WhatsAppAPI extends EventEmitter {
      * @throws {Number} 403 if the verification tokens don't match
      */
     get(request) {
-        return get(request.params, this.webhookVerifyToken)
+        return get(request.params, this.webhookVerifyToken);
     }
 }
 
