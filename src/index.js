@@ -9,35 +9,47 @@ const { Template } = require("./messages/template");
 const Text = require("./messages/text");
 
 const api = require("./fetch");
+const { post, get } = require("./requests");
+
+const EventEmitter = require("node:events");
+const { createHmac } = require("node:crypto");
 
 /**
  * The main API object
  *
  * @property {String} token The API token
+ * @property {String} appSecret The app secret
+ * @property {String} webhookVerifyToken The webhook verify token
  * @property {String} v The API version to use
  * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
  */
-class WhatsAppAPI {
+class WhatsAppAPI extends EventEmitter {
     /**
      * Initiate the Whatsapp API app
      *
      * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
+     * @param {String} appSecret The app secret, given at setup.
+     * @param {String} webhookVerifyToken The webhook verify token, configured at setup.
      * @param {String} v The version of the API, defaults to v14.0
      * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
      * @throws {Error} If token is not specified
      */
-    constructor(token, v = "v15.0", parsed = true) {
+    constructor(
+        token,
+        appSecret = "",
+        webhookVerifyToken = "",
+        v = "v15.0",
+        parsed = true
+    ) {
         if (!token) throw new Error("Token must be specified");
 
+        super();
+
         this.token = token;
+        this.appSecret = appSecret;
+        this.webhookVerifyToken = webhookVerifyToken;
         this.v = v;
         this.parsed = !!parsed;
-
-        /**
-         * @type {Logger}
-         * @private
-         */
-        this._register = (..._) => {};
     }
 
     /**
@@ -51,22 +63,6 @@ class WhatsAppAPI {
      * @param {(String|Void)} id The message id, undefined if parsed is set to false
      * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
      */
-
-    /**
-     * Set a callback function for sendMessage
-     *
-     * @param {Logger} callback The callback function to set
-     * @returns {WhatsAppAPI} The API object, for chaining
-     * @throws {Error} If callback is truthy and is not a function
-     */
-    logSentMessages(callback = (..._) => {}) {
-        if (typeof callback !== "function")
-            throw new TypeError(
-                "Callback must be a function. To unset, call the function without parameters."
-            );
-        this._register = callback;
-        return this;
-    }
 
     /**
      * Send a Whatsapp message
@@ -100,7 +96,8 @@ class WhatsAppAPI {
         if (response) {
             response.then((data) => {
                 const id = data?.messages ? data.messages[0]?.id : undefined;
-                this._register(
+                this.emit(
+                    "sent",
                     phoneID,
                     request.to,
                     JSON.parse(request[request.type]),
@@ -110,7 +107,8 @@ class WhatsAppAPI {
                 );
             });
         } else {
-            this._register(
+            this.emit(
+                "sent",
                 phoneID,
                 request.to,
                 JSON.parse(request[request.type]),
@@ -378,6 +376,49 @@ class WhatsAppAPI {
     _authenicatedRequest(url) {
         if (!url) throw new Error("URL must be specified");
         return api.authenticatedRequest(this.token, url);
+    }
+
+    /**
+     * POST helper, must be called inside the post function of your code.
+     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     *
+     * @param {Object} request The request object sent by Whatsapp
+     * @returns {Number} 200, it's the expected http/s response code
+     * @throws {Number} 400 if the POST request isn't valid
+     */
+    post(request) {
+        //Validating payload
+        const signature = request.header("X-Hub-Signature-256");
+        if (!signature) throw 400;
+
+        const hash = createHmac("sha256", this.appSecret)
+            .update(request.rawBody)
+            .digest("hex");
+        if (signature.split("=")[1] !== hash) throw 400;
+
+        return post(
+            request.body,
+            (...message) => {
+                this.emit("message", ...message);
+            },
+            (...status) => {
+                this.emit("status", ...status);
+            }
+        );
+    }
+
+    /**
+     * GET helper, must be called inside the get function of your code.
+     * Used once at the first webhook setup.
+     *
+     * @param {Object} request The request object sent by Whatsapp
+     * @returns {String} The challenge string, it must be the http response body
+     * @throws {Number} 500 if verify_token is not specified
+     * @throws {Number} 400 if the request is missing data
+     * @throws {Number} 403 if the verification tokens don't match
+     */
+    get(request) {
+        return get(request.params, this.webhookVerifyToken);
     }
 }
 
