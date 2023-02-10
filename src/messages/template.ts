@@ -42,7 +42,6 @@ export class Template {
         this.name = name;
         this.language =
             language instanceof Language ? language : new Language(language);
-        // @ts-ignore
         if (components)
             this.components = components
                 .map((cmpt) =>
@@ -350,7 +349,7 @@ export class Parameter {
 
         if (!parameter._) {
             throw new Error(
-                "Unexpected internal error (component._ is not defined)"
+                "Unexpected internal error (parameter._ is not defined)"
             );
         }
 
