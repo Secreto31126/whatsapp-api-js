@@ -100,7 +100,7 @@ export default class WhatsAppAPI extends EventEmitter {
         phoneID: string,
         to: string,
         object: ClientMessage,
-        context = ""
+        context?: string
     ): Promise<object | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");

@@ -140,7 +140,7 @@ export function sendMessage(
     phoneID: string,
     to: string,
     object: ClientMessage,
-    context: string
+    context?: string
 ): SendMessageResponse {
     const request = new Request(object, to, context);
 
