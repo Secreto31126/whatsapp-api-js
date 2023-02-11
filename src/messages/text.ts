@@ -1,6 +1,5 @@
 /**
  * Text API object
- *
  * @public
  */
 export default class Text {
