@@ -30,6 +30,7 @@ export class Interactive {
      * @throws {Error} If body is not provided, unless action is an ActionCatalog with a single product
      * @throws {Error} If header is provided for an ActionCatalog with a single product
      * @throws {Error} If header of type Text is not provided for an ActionCatalog with a product list
+     * @throws {Error} If header is not of type text, unless action is an ActionButtons
      */
     constructor(
         action: ActionList | ActionButtons | ActionCatalog,
@@ -56,6 +57,8 @@ export class Interactive {
             throw new Error(
                 "Interactive must have a Text header component if action is a product list"
             );
+        if (header && action._ !== "button" && header?.type !== "text")
+            throw new Error("Interactive header must be of type Text");
 
         this.type = action._;
         delete action._;
@@ -140,6 +143,7 @@ export class Header {
      * @throws {Error} If object is not provided
      * @throws {Error} If object is not a Document, Image, Text, or Video
      * @throws {Error} If object is a Text and is over 60 characters
+     * @throws {Error} If object is a Media and has a caption
      */
     constructor(object: Document | Image | Text | Video) {
         if (!object) throw new Error("Header must have an object");
@@ -163,6 +167,10 @@ export class Header {
             this[object._] = object.body;
         } else {
             delete object._;
+
+            // Now I think about it, all interactive can go to hell too
+            if (Object.prototype.hasOwnProperty.call(object, "caption"))
+                throw new Error(`Header ${this.type} must not have a caption`);
 
             // @ts-ignore - TS dumb, the _ will always match the type
             this[this.type] = object;

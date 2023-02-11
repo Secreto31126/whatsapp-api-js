@@ -115,3 +115,6 @@ docs/
 
 # Builds
 lib/
+
+# JetBrains IDEs
+.idea

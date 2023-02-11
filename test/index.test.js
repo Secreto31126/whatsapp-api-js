@@ -36,6 +36,40 @@ describe("WhatsAppAPI", function () {
         });
     });
 
+    describe("App secret", function () {
+        it("should work with empty as default", function () {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+            assert.equal(Whatsapp.appSecret, "");
+        });
+
+        it("should work with any specified app secret", function () {
+            const Whatsapp = new WhatsAppAPI(
+                "YOUR_ACCESS_TOKEN",
+                "YOUR_APP_SECRET"
+            );
+            assert.equal(Whatsapp.appSecret, "YOUR_APP_SECRET");
+        });
+    });
+
+    describe("Webhook verify token", function () {
+        it("should work with empty as default", function () {
+            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
+            assert.equal(Whatsapp.webhookVerifyToken, "");
+        });
+
+        it("should work with any specified webhook verify token", function () {
+            const Whatsapp = new WhatsAppAPI(
+                "YOUR_ACCESS_TOKEN",
+                "YOUR_APP_SECRET",
+                "YOUR_WEBHOOK_VERIFY_TOKEN"
+            );
+            assert.equal(
+                Whatsapp.webhookVerifyToken,
+                "YOUR_WEBHOOK_VERIFY_TOKEN"
+            );
+        });
+    });
+
     describe("Version", function () {
         it("should work with v15.0 as default", function () {
             const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN");
@@ -43,7 +77,12 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should work with any specified version", function () {
-            const Whatsapp = new WhatsAppAPI("YOUR_ACCESS_TOKEN", "v13.0");
+            const Whatsapp = new WhatsAppAPI(
+                "YOUR_ACCESS_TOKEN",
+                "YOUR_APP_SECRET",
+                "YOUR_WEBHOOK_VERIFY_TOKEN",
+                "v13.0"
+            );
             assert.equal(Whatsapp.v, "v13.0");
         });
     });
@@ -57,6 +96,8 @@ describe("WhatsAppAPI", function () {
         it("should be able to set parsed to true", function () {
             const Whatsapp = new WhatsAppAPI(
                 "YOUR_ACCESS_TOKEN",
+                "YOUR_APP_SECRET",
+                "YOUR_WEBHOOK_VERIFY_TOKEN",
                 "v13.0",
                 true
             );
@@ -66,6 +107,8 @@ describe("WhatsAppAPI", function () {
         it("should be able to set parsed to false", function () {
             const Whatsapp = new WhatsAppAPI(
                 "YOUR_ACCESS_TOKEN",
+                "YOUR_APP_SECRET",
+                "YOUR_WEBHOOK_VERIFY_TOKEN",
                 "v13.0",
                 false
             );
@@ -106,49 +149,10 @@ describe("WhatsAppAPI", function () {
             Whatsapp.parsed = true;
         });
 
-        it("should set the logger if truthy and is a function", function () {
-            const logger = console.log;
-            Whatsapp.logSentMessages(logger);
-            assert.equal(Whatsapp._register, logger);
-        });
-
-        it("should unset the logger if no parameters is given", function () {
-            Whatsapp.logSentMessages(console.log).logSentMessages();
-            assert.equal(typeof Whatsapp._register, "function");
-            assert.doesNotThrow(function () {
-                Whatsapp._register(
-                    "this",
-                    "is",
-                    "a",
-                    "noop",
-                    "function",
-                    "and",
-                    "can",
-                    "take",
-                    Infinity,
-                    "arguments"
-                );
-            });
-        });
-
-        it("should fail if the logger is not a function", function () {
-            assert.throws(function () {
-                Whatsapp.logSentMessages(0);
-            }, TypeError);
-
-            assert.throws(function () {
-                Whatsapp.logSentMessages(true);
-            }, TypeError);
-
-            assert.throws(function () {
-                Whatsapp.logSentMessages({});
-            }, TypeError);
-        });
-
-        it("should run the logger after sending a message if the logger is truthy", async function () {
+        it("should run the logger after sending a message", async function () {
             const spy = sinon.spy();
 
-            Whatsapp.logSentMessages(spy);
+            Whatsapp.on("sent", spy);
 
             clientFacebook
                 .intercept({
@@ -177,7 +181,7 @@ describe("WhatsAppAPI", function () {
         it("should handle failed deliveries responses", async function () {
             const spy = sinon.spy();
 
-            Whatsapp.logSentMessages(spy);
+            Whatsapp.on("sent", spy);
 
             const unexpectedResponse = {
                 error: {
@@ -218,7 +222,7 @@ describe("WhatsAppAPI", function () {
 
             const spy = sinon.spy();
 
-            Whatsapp.logSentMessages(spy);
+            Whatsapp.on("sent", spy);
 
             Whatsapp.sendMessage(bot, user, message);
 
