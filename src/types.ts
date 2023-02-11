@@ -1,3 +1,37 @@
+import type Text from "./messages/text";
+import type { Audio, Document, Image, Sticker, Video } from "./messages/media";
+import type Location from "./messages/location";
+import type { Contacts } from "./messages/contacts";
+import type { Interactive } from "./messages/interactive";
+import type { Template } from "./messages/template";
+import type Reaction from "./messages/reaction";
+
+export type ClientMessage =
+    | Text
+    | Audio
+    | Document
+    | Image
+    | Sticker
+    | Video
+    | Location
+    | Contacts
+    | Interactive
+    | Template
+    | Reaction;
+
+export type ClientMessageNames =
+    | "text"
+    | "audio"
+    | "document"
+    | "image"
+    | "sticker"
+    | "video"
+    | "location"
+    | "contacts"
+    | "interactive"
+    | "template"
+    | "reaction";
+
 export type ServerTextMessage = {
     type: "text";
     text: {
