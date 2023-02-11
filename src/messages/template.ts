@@ -10,26 +10,34 @@ type BuiltButtonComponent = {
 
 /**
  * Template API object
- *
- * @property {string} name The name of the template
- * @property {Language} language The language of the template
- * @property {Array<(HeaderComponent|BodyComponent|BuiltButtonComponent)>} [components] The components of the template
- * @property {"template"} [_] The type of the object, for internal use only
  */
 export class Template {
+    /**
+     * The name of the template
+     */
     name: string;
+    /**
+     * The language of the template
+     */
     language: Language;
+    /**
+     * The components of the template
+     */
     components?: (HeaderComponent | BodyComponent | BuiltButtonComponent)[];
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "template";
 
     /**
      * Create a Template object for the API
      *
-     * @param {string} name Name of the template
-     * @param {(string|Language)} language The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param  {...(HeaderComponent|BodyComponent|ButtonComponent)} components Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
-     * @throws {Error} If name is not provided
-     * @throws {Error} If language is not provided
+     * @param name - Name of the template
+     * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
+     * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @throws If name is not provided
+     * @throws If language is not provided
      */
     constructor(
         name: string,
@@ -61,20 +69,23 @@ export class Template {
 
 /**
  * Language API object
- *
- * @property {string} code The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
- * @property {"deterministic"} policy The language policy
  */
 export class Language {
+    /**
+     * The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
+     */
     code: string;
+    /**
+     * The language policy
+     */
     policy: "deterministic";
 
     /**
      * Create a Language component for a Template message
      *
-     * @param {string} code The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param {string} [policy] The language policy the message should follow. The only supported option is 'deterministic'. The variable isn't even read by my code :)
-     * @throws {Error} If code is not provided
+     * @param code - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
+     * @param policy - The language policy the message should follow. The only supported option is 'deterministic'. The variable isn't even read by my code :)
+     * @throws If code is not provided
      */
     constructor(code: string, policy: "deterministic" = "deterministic") {
         if (!code) throw new Error("Language must have a code");
@@ -85,27 +96,35 @@ export class Language {
 
 /**
  * Currency API object
- *
- * @property {number} amount_1000 The amount of the currency by 1000
- * @property {string} code The currency code
- * @property {string} fallback_value The fallback value
- * @property {"currency"} [_] The type of the object, for internal use only
  */
 export class Currency {
+    /**
+     * The amount of the currency by 1000
+     */
     amount_1000: number;
+    /**
+     * The currency code
+     */
     code: string;
+    /**
+     * The fallback value
+     */
     fallback_value: string;
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "currency";
 
     /**
      * Builds a currency object for a Parameter
      *
-     * @param {number} amount_1000 Amount multiplied by 1000
-     * @param {string} code Currency code as defined in ISO 4217
-     * @param {string} fallback_value Default text if localization fails
-     * @throws {Error} If amount_1000 is not provided
-     * @throws {Error} If code is not provided
-     * @throws {Error} If fallback_value is not provided
+     * @param amount_1000 - Amount multiplied by 1000
+     * @param code - Currency code as defined in ISO 4217
+     * @param fallback_value - Default text if localization fails
+     * @throws If amount_1000 is not provided
+     * @throws If code is not provided
+     * @throws If fallback_value is not provided
      */
     constructor(amount_1000: number, code: string, fallback_value: string) {
         if (!amount_1000 && amount_1000 !== 0)
@@ -123,19 +142,23 @@ export class Currency {
 
 /**
  * DateTime API object
- *
- * @property {string} fallback_value The fallback value
- * @property {"date_time"} [_] The type of the object, for internal use only
  */
 export class DateTime {
+    /**
+     * The fallback value
+     */
     fallback_value: string;
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "date_time";
 
     /**
      * Builds a date_time object for a Parameter
      *
-     * @param {string} fallback_value Default text. For Cloud API, we always use the fallback value, and we do not attempt to localize using other optional fields.
-     * @throws {Error} If fallback_value is not provided
+     * @param fallback_value - Default text. For Cloud API, we always use the fallback value, and we do not attempt to localize using other optional fields.
+     * @throws If fallback_value is not provided
      */
     constructor(fallback_value: string) {
         if (!fallback_value)
@@ -147,26 +170,30 @@ export class DateTime {
 
 /**
  * Components API object
- *
- * @property {"button"} type The type of the component
- * @property {("url"|"quick_reply")} sub_type The subtype of the component
- * @property {Array<ButtonParameter>} parameters The ButtonParameters to be used in the build function
- * @property {Function} build The function to build the component as a compatible API object
  */
 export class ButtonComponent {
+    /**
+     * The type of the component
+     */
     type: "button";
+    /**
+     * The subtype of the component
+     */
     sub_type: "url" | "quick_reply";
+    /**
+     * The ButtonParameters to be used in the build function
+     */
     parameters: ButtonParameter[];
 
     /**
      * Builds a button component for a Template message.
      * The index of the buttons is defined by the order in which you add them to the Template parameters.
      *
-     * @param {("url"|"quick_reply")} sub_type The type of button to create.
-     * @param {...string} parameters Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
-     * @throws {Error} If sub_type is not either 'url' or 'quick_reply'
-     * @throws {Error} If parameters is not provided
-     * @throws {Error} If parameters has over 3 elements
+     * @param sub_type - The type of button to create.
+     * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
+     * @throws If sub_type is not either 'url' or 'quick_reply'
+     * @throws If parameters is not provided
+     * @throws If parameters has over 3 elements
      */
     constructor(sub_type: "url" | "quick_reply", ...parameters: string[]) {
         if (!["url", "quick_reply"].includes(sub_type))
@@ -189,10 +216,11 @@ export class ButtonComponent {
     }
 
     /**
-     * Generates the buttons components for a Template message. For internal use only.
+     * The function to build the component as a compatible API object.
+     * Generates the buttons components for a Template message.
      *
-     * @package
-     * @returns {Array<BuiltButtonComponent>} An array of API compatible buttons components
+     * @internal
+     * @returns An array of API compatible buttons components
      */
     build(): Array<BuiltButtonComponent> {
         return this.parameters.map((p, i) => {
@@ -208,23 +236,28 @@ export class ButtonComponent {
 
 /**
  * Button Parameter API object
- *
- * @property {("text"|"payload")} type The type of the button
- * @property {string} [text] The text of the button
- * @property {string} [payload] The payload of the button
  */
 export class ButtonParameter {
+    /**
+     * The type of the button
+     */
     type: "text" | "payload";
+    /**
+     * The text of the button
+     */
     text?: string;
+    /**
+     * The payload of the button
+     */
     payload?: string;
 
     /**
      * Builds a button parameter for a ButtonComponent
      *
-     * @param {string} param Developer-provided data that is used to fill in the template.
-     * @param {("text"|"payload")} type The type of the button. Can be either 'text' or 'payload'.
-     * @throws {Error} If param is not provided
-     * @throws {Error} If type is not either 'text' or 'payload'
+     * @param param - Developer-provided data that is used to fill in the template.
+     * @param type - The type of the button. Can be either 'text' or 'payload'.
+     * @throws If param is not provided
+     * @throws If type is not either 'text' or 'payload'
      */
     constructor(param: string, type: "text" | "payload") {
         if (!param) throw new Error("UrlButton must have a param");
@@ -240,18 +273,21 @@ export class ButtonParameter {
 
 /**
  * Components API object
- *
- * @property {"header"} type The type of the component
- * @property {Array<Parameter>} [parameters] The parameters of the component
  */
 export class HeaderComponent {
+    /**
+     * The type of the component
+     */
     type: "header";
+    /**
+     * The parameters of the component
+     */
     parameters?: Parameter[];
 
     /**
      * Builds a header component for a Template message
      *
-     * @param {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
+     * @param parameters - Parameters of the body component
      */
     constructor(
         ...parameters: (
@@ -274,18 +310,21 @@ export class HeaderComponent {
 
 /**
  * Components API object
- *
- * @property {"body"} type The type of the component
- * @property {Array<Parameter>} [parameters] The parameters of the component
  */
 export class BodyComponent {
+    /**
+     * The type of the component
+     */
     type: "body";
+    /**
+     * The parameters of the component
+     */
     parameters?: Parameter[];
 
     /**
      * Builds a body component for a Template message
      *
-     * @param  {...(Text|Currency|DateTime|Image|Document|Video|Parameter)} parameters Parameters of the body component
+     * @param parameters - Parameters of the body component
      */
     constructor(
         ...parameters: (
@@ -308,22 +347,35 @@ export class BodyComponent {
 
 /**
  * Parameter API object
- *
- * @property {("text"|"currency"|"date_time"|"image"|"document"|"video")} type The type of the parameter
- * @property {string} [text] The text of the parameter
- * @property {Currency} [currency] The currency of the parameter
- * @property {DateTime} [date_time] The datetime of the parameter
- * @property {Image} [image] The image of the parameter
- * @property {Document} [document] The document of the parameter
- * @property {Video} [video] The video of the parameter
  */
 export class Parameter {
+    /**
+     * The type of the parameter
+     */
     type: "text" | "currency" | "date_time" | "image" | "document" | "video";
+    /**
+     * The text of the parameter
+     */
     text?: string;
+    /**
+     * The currency of the parameter
+     */
     currency?: Currency;
+    /**
+     * The datetime of the parameter
+     */
     date_time?: DateTime;
+    /**
+     * The image of the parameter
+     */
     image?: Image;
+    /**
+     * The document of the parameter
+     */
     document?: Document;
+    /**
+     * The video of the parameter
+     */
     video?: Video;
 
     /**
@@ -331,11 +383,11 @@ export class Parameter {
      * For Text parameter, the header component character limit is 60, and the body component character limit is 1024.
      * For Document parameter, only PDF documents are supported for document-based message templates.
      *
-     * @param {(Text|Currency|DateTime|Image|Document|Video)} parameter The parameter to be used in the template
-     * @param {("header"|"body")} [whoami] The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
-     * @throws {Error} If parameter is not provided
-     * @throws {Error} If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
-     * @throws {Error} If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
+     * @param parameter - The parameter to be used in the template
+     * @param whoami - The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
+     * @throws If parameter is not provided
+     * @throws If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
+     * @throws If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
      */
     constructor(
         parameter: Text | Currency | DateTime | Image | Document | Video,
