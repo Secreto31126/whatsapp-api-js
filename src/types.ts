@@ -293,3 +293,57 @@ export type ServerError = {
     code: string;
     title: string;
 };
+
+export type GetParams = {
+    "hub.mode": "subscribe";
+    "hub.verify_token": string;
+    "hub.challenge": string;
+};
+
+export type PostData = {
+    object: string;
+    entry: {
+        id: string;
+        changes: {
+            value:
+                | {
+                      messaging_product: "whatsapp";
+                      metadata: {
+                          display_phone_number: string;
+                          phone_number_id: string;
+                      };
+                  } & (
+                      | {
+                            contacts: [ServerContacts];
+                            messages: [ServerMessage];
+                        }
+                      | {
+                            statuses: [
+                                {
+                                    id: string;
+                                    status: ServerStatus;
+                                    timestamp: string;
+                                    recipient_id: string;
+                                } & (
+                                    | {
+                                          conversation: ServerConversation;
+                                          pricing: ServerPricing;
+                                          errors: undefined;
+                                      }
+                                    | {
+                                          conversation: undefined;
+                                          pricing: undefined;
+                                          errors: [ServerError];
+                                      }
+                                )
+                            ];
+                        }
+                  );
+            field: "messages";
+        }[];
+    }[];
+};
+
+export type ServerMessageResponse = {
+    // IDK, I will do it tomorrow
+};
