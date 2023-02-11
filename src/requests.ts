@@ -5,7 +5,7 @@ import type {
     ServerMessage,
     ServerPricing,
     ServerStatus
-} from "./server_types";
+} from "./types";
 
 type Params = {
     "hub.mode": "subscribe";
@@ -17,21 +17,21 @@ type Params = {
  * GET helper, must be called inside the get function of your code.
  * Used once at the first webhook setup.
  *
- * @param {Params} params The GET request parameters in object format
- * @param {string} verify_token The verification token
- * @returns {string} The challenge string, it must be the http response body
- * @throws {number} 500 if verify_token is not specified
- * @throws {number} 400 if the request is missing data
- * @throws {number} 403 if the verification tokens don't match
+ * @param params - The GET request parameters in object format
+ * @param verify_token - The verification token
+ * @returns The challenge string, it must be the http response body
+ * @throws 500 if verify_token is not specified
+ * @throws 400 if the request is missing data
+ * @throws 403 if the verification tokens don't match
  */
 export function get(params: Params, verify_token: string): string {
     // verify_token is required
     if (!verify_token) throw 500;
 
     // Parse params from the webhook verification request
-    let mode = params["hub.mode"];
-    let token = params["hub.verify_token"];
-    let challenge = params["hub.challenge"];
+    const mode = params["hub.mode"];
+    const token = params["hub.verify_token"];
+    const challenge = params["hub.challenge"];
 
     // Check if a token and mode were sent
     if (mode && token) {
@@ -52,12 +52,11 @@ export function get(params: Params, verify_token: string): string {
 /**
  * POST helper callback for messages
  *
- * @callback OnMessage
- * @param {string} phoneID The bot's phoneID
- * @param {string} phone The user's phone number
- * @param {ServerMessage} message The messages object
- * @param {string} [name] The username
- * @param {Data} raw The raw data from the API
+ * @param phoneID - The bot's phoneID
+ * @param phone - The user's phone number
+ * @param message - The messages object
+ * @param name - The username
+ * @param raw - The raw data from the API
  */
 export type OnMessage = (
     phoneID: string,
@@ -65,20 +64,19 @@ export type OnMessage = (
     message: ServerMessage,
     name: string | undefined,
     raw: Data
-) => any;
+) => void;
 
 /**
  * POST helper callback for statuses
  *
- * @callback OnStatus
- * @param {string} phoneID The bot's phoneID
- * @param {string} phone The user's phone number
- * @param {string} status The message status
- * @param {string} messageID The message ID
- * @param {ServerConversation} [conversation] The conversation object
- * @param {ServerPricing} [pricing] The pricing object
- * @param {ServerError} [error] The error object
- * @param {Data} raw The raw data from the API
+ * @param phoneID - The bot's phoneID
+ * @param phone - The user's phone number
+ * @param status - The message status
+ * @param messageID - The message ID
+ * @param conversation - The conversation object
+ * @param pricing - The pricing object
+ * @param error - The error object
+ * @param raw - The raw data from the API
  */
 export type OnStatus = (
     phoneID: string,
@@ -89,7 +87,7 @@ export type OnStatus = (
     pricing: ServerPricing | undefined,
     error: ServerError | undefined,
     raw: Data
-) => any;
+) => void;
 
 export type Data = {
     object: string;
@@ -139,11 +137,11 @@ export type Data = {
  * POST helper, must be called inside the post function of your code.
  * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
  *
- * @param {Object} data The post data sent by Whatsapp, already parsed to object
- * @param {OnMessage} onMessage The function to be called if the post request is a valid message
- * @param {OnStatus} [onStatus] The function to be called if the post request is a valid status update
- * @returns {number} 200, it's the expected http/s response code
- * @throws {number} 400 if the POST request isn't valid
+ * @param data - The post data sent by Whatsapp, already parsed to object
+ * @param onMessage - The function to be called if the post request is a valid message
+ * @param onStatus - The function to be called if the post request is a valid status update
+ * @returns 200, it's the expected http/s response code
+ * @throws 400 if the POST request isn't valid
  */
 export function post(
     data: Data,
