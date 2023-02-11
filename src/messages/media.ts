@@ -1,29 +1,35 @@
 /**
  * Placeholder class for all the media types
- *
- * @property {string} [id] The id of the media
- * @property {string} [link] The link of the media
- * @property {("audio"|"document"|"image"|"sticker"|"video")} [_] The type of the object, for internal use only
  */
 export class Media {
+    /**
+     * The id of the media
+     */
     id?: string;
+    /**
+     * The link of the media
+     */
     link?: string;
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "audio" | "document" | "image" | "sticker" | "video";
 
     /**
      * This method works as a placeholder so the documentation looks nice.
-     * You shouldn't be using it directly ¯\_(ツ)_/¯.
+     * You shouldn't be using it directly ¯\\_(ツ)_/¯.
      *
-     * @param {("audio"|"document"|"image"|"sticker"|"video")} type Type of the parameter
-     * @param {string} file File to be sent
-     * @param {boolean} isItAnID If the file is an ID (true) or an URL (false)
-     * @throws {Error} If type is not provided
-     * @throws {Error} If file is not provided
+     * @param type - Type of the parameter
+     * @param file - File to be sent
+     * @param isItAnID - If the file is an ID (true) or an URL (false)
+     * @throws If type is not provided
+     * @throws If file is not provided
      */
     constructor(
         type: "audio" | "document" | "image" | "sticker" | "video",
         file: string,
-        isItAnID: boolean = false
+        isItAnID = false
     ) {
         if (!type) throw new Error("Media must have a type");
         if (!file) throw new Error("Media must have a file");
@@ -35,20 +41,21 @@ export class Media {
 
 /**
  * Audio API component
- *
- * @extends Media
- * @property {"audio"} [_] The type of the object, for internal use only
  */
 export class Audio extends Media {
+    /**
+     * The type of the object, for internal use only
+     * @internal
+     */
     _?: "audio";
 
     /**
      * Create an Audio object for the API
      *
-     * @param {string} audio The audio file's link or id
-     * @param {Boolean} isItAnID Whether audio is an id (true) or a link (false)
+     * @param audio - The audio file's link or id
+     * @param isItAnID - Whether audio is an id (true) or a link (false)
      */
-    constructor(audio: string, isItAnID: boolean = false) {
+    constructor(audio: string, isItAnID = false) {
         if (!audio) throw new Error("Audio must have an audio link or id");
         super("audio", audio, isItAnID);
     }
@@ -56,30 +63,35 @@ export class Audio extends Media {
 
 /**
  * Document API component
- *
- * @extends Media
- * @property {string} [caption] The file's caption
- * @property {string} [filename] The file's filename
- * @property {"document"} [_] The type of the object, for internal use only
  */
 export class Document extends Media {
+    /**
+     * The file's caption
+     */
     caption?: string;
+    /**
+     * The file's filename
+     */
     filename?: string;
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "document";
 
     /**
      * Create a Document object for the API
      *
-     * @param {string} document The document file's link or id
-     * @param {Boolean} isItAnID Whether document is an id (true) or a link (false)
-     * @param {string} [caption] Describes the specified document media
-     * @param {string} [filename] Describes the filename for the specific document
+     * @param document - The document file's link or id
+     * @param isItAnID - Whether document is an id (true) or a link (false)
+     * @param caption - Describes the specified document media
+     * @param filename - Describes the filename for the specific document
      */
     constructor(
         document: string,
-        isItAnID: boolean = false,
-        caption: string,
-        filename: string
+        isItAnID = false,
+        caption?: string,
+        filename?: string
     ) {
         if (!document)
             throw new Error("Document must have a document link or id");
@@ -91,23 +103,26 @@ export class Document extends Media {
 
 /**
  * Image API component
- *
- * @extends Media
- * @property {string} [caption] The file's caption
- * @property {"image"} [_] The type of the object, for internal use only
  */
 export class Image extends Media {
+    /**
+     * The file's caption
+     */
     caption?: string;
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "image";
 
     /**
      * Create a Image object for the API
      *
-     * @param {string} image The image file's link or id
-     * @param {Boolean} isItAnID Whether image is an id (true) or a link (false)
-     * @param {string} [caption] Describes the specified image media
+     * @param image - The image file's link or id
+     * @param isItAnID - Whether image is an id (true) or a link (false)
+     * @param caption - Describes the specified image media
      */
-    constructor(image: string, isItAnID: boolean = false, caption: string) {
+    constructor(image: string, isItAnID = false, caption?: string) {
         if (!image) throw new Error("Image must have an image link or id");
         super("image", image, isItAnID);
         if (caption) this.caption = caption;
@@ -116,20 +131,21 @@ export class Image extends Media {
 
 /**
  * Sticker API component
- *
- * @extends Media
- * @property {"sticker"} [_] The type of the object, for internal use only
  */
 export class Sticker extends Media {
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "sticker";
 
     /**
      * Create a Sticker object for the API
      *
-     * @param {string} sticker The sticker file's link
-     * @param {Boolean} isItAnID Whether sticker is an id (true) or a link (false)
+     * @param sticker - The sticker file's link
+     * @param isItAnID - Whether sticker is an id (true) or a link (false)
      */
-    constructor(sticker: string, isItAnID: boolean = false) {
+    constructor(sticker: string, isItAnID = false) {
         if (!sticker) throw new Error("Sticker must have a sticker link or id");
         super("sticker", sticker, isItAnID);
     }
@@ -137,23 +153,26 @@ export class Sticker extends Media {
 
 /**
  * Video API component
- *
- * @extends Media
- * @property {string} [caption] The file's caption
- * @property {"video"} [_] The type of the object, for internal use only
  */
 export class Video extends Media {
+    /**
+     * The file's caption
+     */
     caption?: string;
+    /**
+     * The type of the object
+     * @internal
+     */
     _?: "video";
 
     /**
      * Create a Video object for the API
      *
-     * @param {string} video The video file's link
-     * @param {Boolean} isItAnID Whether video is an id (true) or a link (false)
-     * @param {string} [caption] Describes the specified video media
+     * @param video - The video file's link
+     * @param isItAnID - Whether video is an id (true) or a link (false)
+     * @param caption - Describes the specified video media
      */
-    constructor(video: string, isItAnID: boolean = false, caption: string) {
+    constructor(video: string, isItAnID = false, caption: string) {
         if (!video) throw new Error("Video must have a video link or id");
         super("video", video, isItAnID);
         if (caption) this.caption = caption;
