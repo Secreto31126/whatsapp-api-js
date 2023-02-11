@@ -110,6 +110,7 @@ dist
 playground.js
 
 # Documentation
+docs_temp/
 docs/
 
 # Builds

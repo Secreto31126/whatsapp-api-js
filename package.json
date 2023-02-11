@@ -19,8 +19,8 @@
     "prettier": "prettier --check src",
     "prettier:write": "prettier --write src",
     "coverage": "nyc --reporter=text mocha --reporter min",
-    "document": "jsdoc -c jsdoc.conf.json -R README.md && cp docs_statics/* docs/",
-    "clear": "rm -rf docs/ lib/ coverage/ .nyc_output"
+    "document": "npm run build -- --emitDeclarationOnly && api-extractor run && api-documenter markdown -i ./docs_temp -o ./docs",
+    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output"
   },
   "keywords": [
     "whatsapp",
@@ -48,6 +48,7 @@
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
   "devDependencies": {
+    "@microsoft/api-documenter": "^7.21.5",
     "@microsoft/api-extractor": "^7.34.4",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",

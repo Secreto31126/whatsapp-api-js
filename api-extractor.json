@@ -13,7 +13,7 @@
 
   "docModel": {
     "enabled": true,
-    "apiJsonFilePath": "<projectFolder>/temp/<unscopedPackageName>.api.json",
+    "apiJsonFilePath": "<projectFolder>/docs_temp/<unscopedPackageName>.api.json",
     "projectFolderUrl": "http://github.com/Secreto31126/whatsapp-api-js"
   },
 
