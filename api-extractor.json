@@ -1,10 +1,10 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
-  "mainEntryPointFilePath": "<projectFolder>/lib/index.d.ts",
+  "mainEntryPointFilePath": "<projectFolder>/lib/standalone/whatsappapi.d.ts",
   "bundledPackages": [],
-  "newlineKind": "lf",
+  "newlineKind": "crlf",
   "compiler": {
-    "tsconfigFilePath": "<projectFolder>/tsconfig.json"
+    "tsconfigFilePath": "<projectFolder>/tsconfig.standalone.json"
   },
 
   "apiReport": {
