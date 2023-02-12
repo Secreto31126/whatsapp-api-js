@@ -5,13 +5,14 @@
   "description": "A Whatsapp Official API framework for Node.js",
   "license": "MIT",
   "type": "module",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/common/index.js",
+  "module": "lib/module/index.js",
+  "types": "lib/types/index.d.ts",
   "files": [
     "lib/**/*"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:module && npm run build:common && npm run build:types",
     "build:watch": "tsc --watch",
     "build:module": "tsc",
     "build:common": "tsc -p tsconfig.common.json",
