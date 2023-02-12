@@ -15,19 +15,20 @@ import type {
 import type { OnSentArgs } from "./emitters";
 
 import type { fetch as FetchType, Response } from "undici/types/fetch";
-import type { Blob } from "node:buffer";
+import type { FormData } from "undici/types/formdata";
 import type { BinaryLike } from "node:crypto";
+import type { Blob } from "node:buffer";
 
 import * as api from "./fetch";
 import { post, get } from "./requests";
-
-import { FormData } from "undici";
 
 import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
 
 /**
  * The main API Class
+ *
+ * @alpha
  */
 export default class WhatsAppAPI extends EventEmitter {
     /**
@@ -51,11 +52,11 @@ export default class WhatsAppAPI extends EventEmitter {
      */
     fetch: typeof FetchType;
     /**
-     * If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
+     * If true, API operations will return the fetch promise instead. Intended for low level debugging.
      */
     parsed: boolean;
     /**
-     *
+     * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
      */
     secure: boolean;
 
@@ -80,52 +81,72 @@ export default class WhatsAppAPI extends EventEmitter {
         /**
          * The API token, given at setup. It can be either a temporal token or a permanent one.
          */
-        token: string;
+        token: unknown;
         /**
          * The app secret, given at setup
          */
-        appSecret?: string;
+        appSecret?: unknown;
         /**
          * The webhook verify token, configured at setup
          */
-        webhookVerifyToken?: string;
+        webhookVerifyToken?: unknown;
         /**
          * The version of the API, defaults to v16.0
          */
-        v?: string;
+        v?: unknown;
         /**
          * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
          */
-        parsed?: boolean;
+        parsed?: unknown;
         /**
          * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
          */
-        secure?: boolean;
+        secure?: unknown;
         /**
          * The fetch function to use for the requests. If not specified, it will use the fetch function from the enviroment.
          */
-        ponyfill?: typeof FetchType;
+        ponyfill?: unknown;
     }) {
-        if (!token) throw new Error("Token must be specified");
-        if (secure && !appSecret) {
-            throw new Error("App secret must be specified if secure is true");
+        super();
+
+        if (typeof token !== "string") {
+            throw new Error("Token must be a string");
         }
 
-        if (!ponyfill || typeof ponyfill !== "function") {
+        this.token = token;
+
+        this.secure = !!secure;
+
+        if (this.secure) {
+            if (typeof appSecret !== "string") {
+                throw new Error(
+                    "App secret must be a string. To ignore this parameter, set secure to false (Not recommended)."
+                );
+            } else {
+                this.appSecret = appSecret;
+            }
+        }
+
+        if (typeof webhookVerifyToken === "string") {
+            this.webhookVerifyToken = webhookVerifyToken;
+        }
+
+        if (typeof ponyfill !== "function") {
             throw new Error(
-                "fetch is not defined in the enviroment, please provide a ponyfill function with the parameter { ponyfill }."
+                "fetch is not defined in the enviroment, please provide a ponyfill function with the parameter 'ponyfill'."
             );
         }
 
-        super();
+        // Let's hope the user is using a valid ponyfill
+        this.fetch = ponyfill as typeof FetchType;
 
-        this.token = token;
-        this.appSecret = appSecret;
-        this.webhookVerifyToken = webhookVerifyToken;
+        if (typeof v !== "string") {
+            throw new Error("Version must be a string");
+        }
+
         this.v = v;
-        this.fetch = ponyfill;
-        this.parsed = parsed;
-        this.secure = secure;
+
+        this.parsed = !!parsed;
     }
 
     /**
@@ -309,9 +330,9 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!id) throw new Error("ID must be specified");
         const promise = api.getMedia(this.token, this.v, id, phoneID);
         return this.parsed
-            ? (promise.then((e) =>
-                  e.json()
-              ) as Promise<ServerMediaRetrieveResponse>)
+            ? ((await (
+                  await promise
+              ).json()) as Promise<ServerMediaRetrieveResponse>)
             : promise;
     }
 
@@ -328,12 +349,16 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws If check is set to true and the form file is too big for the file type
      * @example
-     * const \{ WhatsAppAPI \} = require("whatsapp-api-js");
-     * const Whatsapp = new WhatsAppAPI("token");
+     * import WhatsAppAPI from "whatsapp-api-js";
+     *
+     * const token = "token";
+     * const appSecret = "appSecret";
+     *
+     * const Whatsapp = new WhatsAppAPI(\{ token, appSecret \});
      *
      * // If required:
-     * // const formdata = require("undici").FormData;
-     * // const blob = require("node:buffer").Blob;
+     * // import FormData from "undici";
+     * // import \{ Blob \} from "node:buffer";
      *
      * const form = new FormData();
      *
@@ -345,19 +370,23 @@ export default class WhatsAppAPI extends EventEmitter {
      * // has an easy way to do this:
      * // form.append("file", fs.createReadStream("image.png"), \{ contentType: "image/png" \});
      *
-     * Whatsapp.uploadMedia("phoneID", form).then(console.log);
+     * console.log(await Whatsapp.uploadMedia("phoneID", form));
      * // Expected output: \{ id: "mediaID" \}
      */
     async uploadMedia(
         phoneID: string,
-        form: FormData,
+        form: unknown,
         check = true
     ): Promise<ServerMediaUploadResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!form) throw new Error("Form must be specified");
 
         if (check) {
-            if (!(form instanceof FormData))
+            if (
+                typeof form !== "object" ||
+                !("get" in form) ||
+                typeof form.get !== "function"
+            )
                 throw new TypeError(
                     "File's Form must be an instance of FormData"
                 );
@@ -414,7 +443,12 @@ export default class WhatsAppAPI extends EventEmitter {
                 );
         }
 
-        const promise = api.uploadMedia(this.token, this.v, phoneID, form);
+        const promise = api.uploadMedia(
+            this.token,
+            this.v,
+            phoneID,
+            form as FormData
+        );
         return this.parsed
             ? ((await (await promise).json()) as ServerMediaUploadResponse)
             : promise;
@@ -428,13 +462,16 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns The fetch raw response
      * @throws If url is not a valid url
      * @example
-     * const \{ WhatsAppAPI \} = require("whatsapp-api-js");
-     * const Whatsapp = new WhatsAppAPI("token");
+     * import WhatsAppAPI from "whatsapp-api-js";
+     *
+     * const token = "token";
+     * const appSecret = "appSecret";
+     *
+     * const Whatsapp = new WhatsAppAPI(\{ token, appSecret \});
      *
      * const id = "mediaID";
-     * const url = Whatsapp.retrieveMedia(id).then(data =\> \{
-     *     const response = Whatsapp.fetchMedia(data.url);
-     * \});
+     * const \{ url \} = await Whatsapp.retrieveMedia(id);
+     * const response = Whatsapp.fetchMedia(url);
      */
     fetchMedia(url: string): Promise<Response> {
         // Hacky way to check if the url is valid and throw if invalid
