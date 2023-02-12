@@ -113,20 +113,6 @@ class Request {
 }
 
 /**
- * The sendMessage response object
- */
-export type SendMessageResponse = {
-    /**
-     * The fetch promise
-     */
-    promise: Promise<Response>;
-    /**
-     * The request sent to the server
-     */
-    request: Request;
-};
-
-/**
  * Make a message post request to the API
  *
  * @internal
@@ -145,7 +131,16 @@ export function sendMessage(
     to: string,
     object: ClientMessage,
     context?: string
-): SendMessageResponse {
+): {
+    /**
+     * The fetch promise
+     */
+    promise: Promise<Response>;
+    /**
+     * The request sent to the server
+     */
+    request: Request;
+} {
     const request = new Request(object, to, context);
 
     // Make the post request
