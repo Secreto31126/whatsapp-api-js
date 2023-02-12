@@ -395,11 +395,30 @@ export type ServerMarkAsReadResponse =
     | ServerSuccessResponse
     | ServerErrorResponse;
 
-export type ServerMediaUploadResponse =
+export type ServerQR = {
+    code: string;
+    prefilled_message: string;
+    deep_link_url: string;
+    qr_image_url?: string;
+};
+
+export type ServerCreateQR = ServerQR | ServerErrorResponse;
+
+export type ServerRetrieveQR =
     | {
-          id: string;
+          data: ServerQR[];
       }
     | ServerErrorResponse;
+
+export type ServerUpdateQR = ServerQR | ServerErrorResponse;
+
+export type ServerDeleteQR = ServerSuccessResponse | ServerErrorResponse;
+
+export type ServerMedia = {
+    id: string;
+};
+
+export type ServerMediaUploadResponse = ServerMedia | ServerErrorResponse;
 
 export type ValidMimeTypes =
     | "audio/aac"
@@ -422,14 +441,13 @@ export type ValidMimeTypes =
     | "image/webp";
 
 export type ServerMediaRetrieveResponse =
-    | {
+    | ({
           messaging_product: "whatsapp";
           url: string;
           mime_type: ValidMimeTypes;
           sha256: string;
           file_size: string;
-          id: string;
-      }
+      } & ServerMedia)
     | ServerErrorResponse;
 
 export type ServerMediaDeleteResponse =

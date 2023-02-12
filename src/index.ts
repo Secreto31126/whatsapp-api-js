@@ -4,6 +4,10 @@ import type {
     ClientMessage,
     ServerMessageResponse,
     ServerMarkAsReadResponse,
+    ServerCreateQR,
+    ServerRetrieveQR,
+    ServerUpdateQR,
+    ServerDeleteQR,
     ServerMediaRetrieveResponse,
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
@@ -17,7 +21,7 @@ import type { BinaryLike } from "node:crypto";
 import * as api from "./fetch";
 import { post, get } from "./requests";
 
-import { FormData } from "undici/types/formdata";
+import { FormData } from "undici";
 
 import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
@@ -33,7 +37,7 @@ export default class WhatsAppAPI extends EventEmitter {
     /**
      * The app secret
      */
-    appSecret: string;
+    appSecret?: string;
     /**
      * The webhook verify token
      */
@@ -58,12 +62,8 @@ export default class WhatsAppAPI extends EventEmitter {
     /**
      * Initiate the Whatsapp API app
      *
-     * @param token - The API token, given at setup. It can be either a temporal token or a permanent one.
-     * @param appSecret - The app secret, given at setup.
-     * @param webhookVerifyToken - The webhook verify token, configured at setup.
-     * @param v - The version of the API, defaults to v16.0
-     * @param parsed - Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
-     * @throws If token is not specified
+     * @throws If token is not defined
+     * @throws If appSecret is not defined and secure is true
      * @throws If fetch is not defined in the enviroment or the provided ponyfill isn't a function.
      */
     constructor({
@@ -77,19 +77,45 @@ export default class WhatsAppAPI extends EventEmitter {
         // @ts-ignore - fetch might not be defined in the enviroment, hence giving the option to provide a ponyfill
         ponyfill = fetch
     }: {
+        /**
+         * The API token, given at setup. It can be either a temporal token or a permanent one.
+         */
         token: string;
-        appSecret: string;
+        /**
+         * The app secret, given at setup
+         */
+        appSecret?: string;
+        /**
+         * The webhook verify token, configured at setup
+         */
         webhookVerifyToken?: string;
-        v: string;
-        parsed: boolean;
-        secure: boolean;
-        ponyfill: typeof FetchType;
+        /**
+         * The version of the API, defaults to v16.0
+         */
+        v?: string;
+        /**
+         * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
+         */
+        parsed?: boolean;
+        /**
+         * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
+         */
+        secure?: boolean;
+        /**
+         * The fetch function to use for the requests. If not specified, it will use the fetch function from the enviroment.
+         */
+        ponyfill?: typeof FetchType;
     }) {
         if (!token) throw new Error("Token must be specified");
-        if (!ponyfill || typeof ponyfill !== "function")
+        if (secure && !appSecret) {
+            throw new Error("App secret must be specified if secure is true");
+        }
+
+        if (!ponyfill || typeof ponyfill !== "function") {
             throw new Error(
                 "fetch is not defined in the enviroment, please provide a ponyfill function with the parameter { ponyfill }."
             );
+        }
 
         super();
 
@@ -201,7 +227,9 @@ export default class WhatsAppAPI extends EventEmitter {
             message,
             format
         );
-        return this.parsed ? ((await (await promise).json()) as {}) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerCreateQR)
+            : promise;
     }
 
     /**
@@ -212,10 +240,15 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns The server response
      * @throws If phoneID is not specified
      */
-    async retrieveQR(phoneID: string, id?: string): Promise<object | Response> {
+    async retrieveQR(
+        phoneID: string,
+        id?: string
+    ): Promise<ServerRetrieveQR | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         const promise = api.getQR(this.token, this.v, phoneID, id);
-        return this.parsed ? ((await (await promise).json()) as {}) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerRetrieveQR)
+            : promise;
     }
 
     /**
@@ -238,7 +271,9 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
         const promise = api.updateQR(this.token, this.v, phoneID, id, message);
-        return this.parsed ? ((await (await promise).json()) as {}) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerUpdateQR)
+            : promise;
     }
 
     /**
@@ -254,7 +289,9 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteQR(this.token, this.v, phoneID, id);
-        return this.parsed ? ((await (await promise).json()) as {}) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerDeleteQR)
+            : promise;
     }
 
     /**
@@ -444,11 +481,13 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param request - The request object sent by Whatsapp
      * @returns 200, it's the expected http/s response code
      * @throws 400 if the POST request isn't valid
+     * @throws 500 if the appSecret isn't specified
      */
     post(request: PostData, signature?: string, rawBody?: BinaryLike): number {
         //Validating payload
         if (this.secure) {
             if (!signature || !rawBody) throw 400;
+            if (!this.appSecret) throw 500;
 
             const hash = createHmac("sha256", this.appSecret)
                 .update(rawBody)
