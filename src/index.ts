@@ -3,6 +3,7 @@ import type {
     GetParams,
     ClientMessage,
     ServerMessageResponse,
+    ServerMarkAsReadResponse,
     ServerMediaRetrieveResponse,
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
@@ -22,7 +23,7 @@ import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
 
 /**
- * The main API object
+ * The main API Class
  */
 export default class WhatsAppAPI extends EventEmitter {
     /**
@@ -106,29 +107,29 @@ export default class WhatsAppAPI extends EventEmitter {
      *
      * @param phoneID - The bot's phone ID
      * @param to - The user's phone number
-     * @param object - A Whatsapp component, built using the corresponding module for each type of message.
+     * @param message - A Whatsapp component, built using the corresponding module for each type of message.
      * @param context - The message ID of the message to reply to
      * @returns The server response
      * @throws If phoneID is not specified
      * @throws If to is not specified
-     * @throws If object is not specified
+     * @throws If message is not specified
      */
     async sendMessage(
         phoneID: string,
         to: string,
-        object: ClientMessage,
+        message: ClientMessage,
         context?: string
     ): Promise<ServerMessageResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
-        if (!object) throw new Error("Message must have a message object");
+        if (!message) throw new Error("Message must be specified");
 
         const { request, promise } = api.sendMessage(
             this.token,
             this.v,
             phoneID,
             to,
-            object,
+            message,
             context
         );
 
@@ -164,11 +165,13 @@ export default class WhatsAppAPI extends EventEmitter {
     async markAsRead(
         phoneID: string,
         messageId: string
-    ): Promise<object | Response> {
+    ): Promise<ServerMarkAsReadResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
         const promise = api.readMessage(this.token, this.v, phoneID, messageId);
-        return this.parsed ? ((await (await promise).json()) as {}) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerMarkAsReadResponse)
+            : promise;
     }
 
     /**
