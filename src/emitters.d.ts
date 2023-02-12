@@ -1,4 +1,5 @@
 import type {
+    ServerMessageResponse,
     ServerConversation,
     ServerError,
     ServerMessage,
@@ -9,65 +10,102 @@ import type {
 /**
  * Callback for "sent" event
  *
- * @param phoneID - The bot's phoneID from where the message was sent
- * @param to - The user's phone number
- * @param object - The message object
- * @param request - The object sent to the server
- * @param id - The message id, undefined if parsed is set to false
- * @param response - The parsed response from the server, undefined if parsed is set to false
+ * @public
+ * @param args - The arguments object
  */
-export type OnSent = ({
-    phoneID,
-    to,
-    object,
-    request,
-    id,
-    response
-}: {
+export type OnSent = (args: {
+    /**
+     * The bot's phoneID from where the message was sent
+     */
     phoneID: string;
+    /**
+     * The user's phone number
+     */
     to: string;
-    object: ServerMessage;
-    request: any;
+    /**
+     * The message object
+     */
+    message: ServerMessage;
+    /**
+     * The object sent to the server
+     */
+    request: object;
+    /**
+     * The message id, undefined if parsed is set to false
+     */
     id?: string;
-    response?: any;
+    /**
+     * The parsed response from the server, undefined if parsed is set to false
+     */
+    response?: ServerMessageResponse;
 }) => void;
 
 /**
  * Callback for "message" event
  *
- * @param phoneID - The bot's phoneID
- * @param phone - The user's phone number
- * @param message - The messages object
- * @param name - The username
- * @param raw - The raw data from the API
+ * @public
+ * @param args - The arguments object
  */
-export type OnMessage = (
-    phoneID: string,
-    phone: string,
-    message: ServerMessage,
-    name: string | undefined,
-    raw: PostData
-) => void;
+export type OnMessage = (args: {
+    /**
+     * The bot's phoneID
+     */
+    phoneID: string;
+    /**
+     * The user's phone number
+     */
+    from: string;
+    /**
+     * The messages object
+     */
+    message: ServerMessage;
+    /**
+     * The username
+     */
+    name?: string;
+    /**
+     * The raw data from the API
+     */
+    raw: PostData;
+}) => void;
 
 /**
  * Callback for "status" event
  *
- * @param phoneID - The bot's phoneID
- * @param phone - The user's phone number
- * @param status - The message status
- * @param messageID - The message ID
- * @param conversation - The conversation object
- * @param pricing - The pricing object
- * @param error - The error object
- * @param raw - The raw data from the API
+ * @public
+ * @param args - The arguments object
  */
-export type OnStatus = (
-    phoneID: string,
-    phone: string,
-    status: string,
-    messageID: string,
-    conversation: ServerConversation | undefined,
-    pricing: ServerPricing | undefined,
-    error: ServerError | undefined,
-    raw: PostData
-) => void;
+export type OnStatus = (args: {
+    /**
+     * The bot's phoneID
+     */
+    phoneID: string;
+    /**
+     * The user's phone number
+     */
+    phone: string;
+    /**
+     * The message status
+     */
+    status: string;
+    /**
+     * The message ID
+     */
+    id: string;
+    /**
+     * The conversation object
+     */
+    conversation?: ServerConversation;
+    /**
+     * The pricing object
+     */
+    pricing?: ServerPricing;
+    /**
+     * The error object
+     */
+    error?: ServerError;
+    /**
+     * The raw data from the API
+     */
+    raw: PostData;
+}) => void;
