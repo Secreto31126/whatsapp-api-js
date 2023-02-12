@@ -4,5 +4,6 @@
         "src/index.ts",
         "./src/messages/index.ts"
     ],
-    "out": "docs"
+    "out": "docs",
+    "includeVersion": true
 }
