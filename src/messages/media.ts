@@ -47,7 +47,7 @@ export class Audio extends Media {
      * The type of the object, for internal use only
      * @internal
      */
-    _?: "audio";
+    declare _?: "audio";
 
     /**
      * Create an Audio object for the API
@@ -77,7 +77,7 @@ export class Document extends Media {
      * The type of the object
      * @internal
      */
-    _?: "document";
+    declare _?: "document";
 
     /**
      * Create a Document object for the API
@@ -113,7 +113,7 @@ export class Image extends Media {
      * The type of the object
      * @internal
      */
-    _?: "image";
+    declare _?: "image";
 
     /**
      * Create a Image object for the API
@@ -137,7 +137,7 @@ export class Sticker extends Media {
      * The type of the object
      * @internal
      */
-    _?: "sticker";
+    declare _?: "sticker";
 
     /**
      * Create a Sticker object for the API
@@ -163,7 +163,7 @@ export class Video extends Media {
      * The type of the object
      * @internal
      */
-    _?: "video";
+    declare _?: "video";
 
     /**
      * Create a Video object for the API
