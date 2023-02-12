@@ -50,7 +50,7 @@ export function get(params: GetParams, verify_token: string): string {
 export function post(
     data: PostData,
     onMessage: OnMessage,
-    onStatus?: OnStatus
+    onStatus: OnStatus
 ): number {
     // Validate the webhook
     if (data.object) {
@@ -61,32 +61,32 @@ export function post(
         if ("messages" in value) {
             const contact = value.contacts[0];
 
-            const phone = contact.wa_id;
+            const from = contact.wa_id;
             const name = contact.profile.name;
 
             const message = value.messages[0];
 
-            onMessage(phoneID, phone, message, name, data);
-        } else if ("statuses" in value && onStatus) {
+            onMessage({ phoneID, from, message, name, raw: data });
+        } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
             const phone = statuses.recipient_id;
             const status = statuses.status;
-            const messageID = statuses.id;
+            const id = statuses.id;
             const conversation = statuses.conversation;
             const pricing = statuses.pricing;
             const error = statuses.errors?.[0];
 
-            onStatus(
+            onStatus({
                 phoneID,
                 phone,
                 status,
-                messageID,
+                id,
                 conversation,
                 pricing,
                 error,
-                data
-            );
+                raw: data
+            });
         }
 
         return 200;
