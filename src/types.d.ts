@@ -374,21 +374,23 @@ export type ServerSuccessResponse = {
     success: true;
 };
 
+export type ServerSentMessageResponse = {
+    messaging_product: "whatsapp";
+    contacts: [
+        {
+            input: string;
+            wa_id: string;
+        }
+    ];
+    messages: [
+        {
+            id: string;
+        }
+    ];
+};
+
 export type ServerMessageResponse =
-    | {
-          messaging_product: "whatsapp";
-          contacts: [
-              {
-                  input: string;
-                  wa_id: string;
-              }
-          ];
-          messages: [
-              {
-                  id: string;
-              }
-          ];
-      }
+    | ServerSentMessageResponse
     | ServerErrorResponse;
 
 export type ServerMarkAsReadResponse =
