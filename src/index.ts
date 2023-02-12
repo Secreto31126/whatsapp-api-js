@@ -1,7 +1,17 @@
-import type { ClientMessage, PostData } from "./types";
+import type {
+    PostData,
+    GetParams,
+    ClientMessage,
+    ServerMessageResponse,
+    ServerMediaRetrieveResponse,
+    ServerMediaUploadResponse,
+    ServerMediaDeleteResponse
+} from "./types";
+import type { OnSentArgs } from "./emitters";
 
 import type { fetch as FetchType, Response } from "undici/types/fetch";
 import type { Blob } from "node:buffer";
+import type { BinaryLike } from "node:crypto";
 
 import * as api from "./fetch";
 import { post, get } from "./requests";
@@ -39,6 +49,10 @@ export default class WhatsAppAPI extends EventEmitter {
      * If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
      */
     parsed: boolean;
+    /**
+     *
+     */
+    secure: boolean;
 
     /**
      * Initiate the Whatsapp API app
@@ -57,6 +71,7 @@ export default class WhatsAppAPI extends EventEmitter {
         webhookVerifyToken,
         v = "v16.0",
         parsed = true,
+        secure = true,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - fetch might not be defined in the enviroment, hence giving the option to provide a ponyfill
         ponyfill = fetch
@@ -66,6 +81,7 @@ export default class WhatsAppAPI extends EventEmitter {
         webhookVerifyToken?: string;
         v: string;
         parsed: boolean;
+        secure: boolean;
         ponyfill: typeof FetchType;
     }) {
         if (!token) throw new Error("Token must be specified");
@@ -81,7 +97,8 @@ export default class WhatsAppAPI extends EventEmitter {
         this.webhookVerifyToken = webhookVerifyToken;
         this.v = v;
         this.fetch = ponyfill;
-        this.parsed = !!parsed;
+        this.parsed = parsed;
+        this.secure = secure;
     }
 
     /**
@@ -96,12 +113,12 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If to is not specified
      * @throws If object is not specified
      */
-    sendMessage(
+    async sendMessage(
         phoneID: string,
         to: string,
         object: ClientMessage,
         context?: string
-    ): Promise<object | Response> {
+    ): Promise<ServerMessageResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!object) throw new Error("Message must have a message object");
@@ -114,34 +131,23 @@ export default class WhatsAppAPI extends EventEmitter {
             object,
             context
         );
+
         const response = this.parsed
-            ? promise.then((e) => e.json()) // as IDK yet
+            ? ((await (await promise).json()) as ServerMessageResponse)
             : undefined;
 
-        if (response) {
-            response.then((data) => {
-                const id = data?.messages ? data.messages[0]?.id : undefined;
-                this.emit(
-                    "sent",
-                    phoneID,
-                    request.to,
-                    JSON.parse(request[request.type]),
-                    request,
-                    id,
-                    data
-                );
-            });
-        } else {
-            this.emit(
-                "sent",
-                phoneID,
-                request.to,
-                JSON.parse(request[request.type]),
-                request,
-                undefined,
-                undefined
-            );
-        }
+        this.emit("sent", {
+            phoneID,
+            to: request.to,
+            message: JSON.parse(request[request.type] as string),
+            request,
+            id: response
+                ? "messages" in response
+                    ? response.messages[0].id
+                    : undefined
+                : undefined,
+            response: response ? response : undefined
+        } as OnSentArgs);
 
         return response ?? promise;
     }
@@ -155,11 +161,14 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If phoneID is not specified
      * @throws If messageId is not specified
      */
-    markAsRead(phoneID: string, messageId: string): Promise<object | Response> {
+    async markAsRead(
+        phoneID: string,
+        messageId: string
+    ): Promise<object | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
         const promise = api.readMessage(this.token, this.v, phoneID, messageId);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed ? ((await (await promise).json()) as {}) : promise;
     }
 
     /**
@@ -173,7 +182,7 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If message is not specified
      * @throws If format is not either 'png' or 'svn'
      */
-    createQR(
+    async createQR(
         phoneID: string,
         message: string,
         format: "png" | "svg" = "png"
@@ -189,7 +198,7 @@ export default class WhatsAppAPI extends EventEmitter {
             message,
             format
         );
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed ? ((await (await promise).json()) as {}) : promise;
     }
 
     /**
@@ -200,10 +209,10 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns The server response
      * @throws If phoneID is not specified
      */
-    retrieveQR(phoneID: string, id?: string): Promise<object | Response> {
+    async retrieveQR(phoneID: string, id?: string): Promise<object | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         const promise = api.getQR(this.token, this.v, phoneID, id);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed ? ((await (await promise).json()) as {}) : promise;
     }
 
     /**
@@ -217,7 +226,7 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If id is not specified
      * @throws If message is not specified
      */
-    updateQR(
+    async updateQR(
         phoneID: string,
         id: string,
         message: string
@@ -226,7 +235,7 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
         const promise = api.updateQR(this.token, this.v, phoneID, id, message);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed ? ((await (await promise).json()) as {}) : promise;
     }
 
     /**
@@ -238,11 +247,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If phoneID is not specified
      * @throws If id is not specified
      */
-    deleteQR(phoneID: string, id: string): Promise<object | Response> {
+    async deleteQR(phoneID: string, id: string): Promise<object | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteQR(this.token, this.v, phoneID, id);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed ? ((await (await promise).json()) as {}) : promise;
     }
 
     /**
@@ -253,17 +262,24 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns The server response
      * @throws If id is not specified
      */
-    retrieveMedia(id: string, phoneID?: string): Promise<object | Response> {
+    async retrieveMedia(
+        id: string,
+        phoneID?: string
+    ): Promise<ServerMediaRetrieveResponse | Response> {
         if (!id) throw new Error("ID must be specified");
         const promise = api.getMedia(this.token, this.v, id, phoneID);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed
+            ? (promise.then((e) =>
+                  e.json()
+              ) as Promise<ServerMediaRetrieveResponse>)
+            : promise;
     }
 
     /**
      * Upload a Media to the server
      *
      * @param phoneID - The bot's phone ID
-     * @param form - The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's, which is the ponyfill of this package for the fetch method. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
+     * @param form - The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
      * @param check - If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns The server response
      * @throws If phoneID is not specified
@@ -292,11 +308,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * Whatsapp.uploadMedia("phoneID", form).then(console.log);
      * // Expected output: \{ id: "mediaID" \}
      */
-    uploadMedia(
+    async uploadMedia(
         phoneID: string,
         form: FormData,
         check = true
-    ): Promise<object | Response> {
+    ): Promise<ServerMediaUploadResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!form) throw new Error("Form must be specified");
 
@@ -359,7 +375,9 @@ export default class WhatsAppAPI extends EventEmitter {
         }
 
         const promise = api.uploadMedia(this.token, this.v, phoneID, form);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerMediaUploadResponse)
+            : promise;
     }
 
     /**
@@ -391,16 +409,22 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns The server response
      * @throws If id is not specified
      */
-    deleteMedia(id: string, phoneID?: string): Promise<object | Response> {
+    async deleteMedia(
+        id: string,
+        phoneID?: string
+    ): Promise<ServerMediaDeleteResponse | Response> {
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteMedia(this.token, this.v, id, phoneID);
-        return this.parsed ? promise.then((e) => e.json()) : promise;
+        return this.parsed
+            ? ((await (await promise).json()) as ServerMediaDeleteResponse)
+            : promise;
     }
 
     /**
      * Make an authenticated request to any url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
      *
+     * @internal
      * @param url - The url to request to
      * @returns The fetch response
      * @throws If url is not specified
@@ -418,18 +442,20 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns 200, it's the expected http/s response code
      * @throws 400 if the POST request isn't valid
      */
-    post(request: PostData): number {
+    post(request: PostData, signature?: string, rawBody?: BinaryLike): number {
         //Validating payload
-        const signature = request.header("X-Hub-Signature-256");
-        if (!signature) throw 400;
+        if (this.secure) {
+            if (!signature || !rawBody) throw 400;
 
-        const hash = createHmac("sha256", this.appSecret)
-            .update(request.rawBody)
-            .digest("hex");
-        if (signature.split("=")[1] !== hash) throw 400;
+            const hash = createHmac("sha256", this.appSecret)
+                .update(rawBody)
+                .digest("hex");
+
+            if (signature.split("=")[1] !== hash) throw 400;
+        }
 
         return post(
-            request.body,
+            request,
             (message) => {
                 this.emit("message", message);
             },
@@ -445,11 +471,12 @@ export default class WhatsAppAPI extends EventEmitter {
      *
      * @param request - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body
-     * @throws 500 if verify_token is not specified
+     * @throws 500 if webhookVerifyToken is not specified
      * @throws 400 if the request is missing data
      * @throws 403 if the verification tokens don't match
      */
-    get(request: object): string {
-        return get(request.params, this.webhookVerifyToken);
+    get(request: GetParams): string {
+        if (!this.webhookVerifyToken) throw 500;
+        return get(request, this.webhookVerifyToken);
     }
 }

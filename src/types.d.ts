@@ -204,6 +204,15 @@ export type ServerOrderMessage = {
     };
 };
 
+export type ServerSystemMessage = {
+    type: "system";
+    system: {
+        body: string;
+        new_wa_id: number | string; // TODO: check if this is always a number
+        type: string | "user_changed_number";
+    };
+};
+
 export type ServerUnknownMessage = {
     type: "unknown";
     errors: [
@@ -255,10 +264,10 @@ export type ServerMessage = {
     | ServerLocationMessage
     | ServerContactsMessage
     | ServerInteractiveMessage
-    | ServerOrderMessage
     | ServerButtonMessage
-    | ServerUnknownMessage
     | ServerReactionMessage
+    | ServerOrderMessage
+    | ServerUnknownMessage
 );
 
 export type ServerContacts = {
@@ -301,7 +310,7 @@ export type GetParams = {
 };
 
 export type PostData = {
-    object: string;
+    object: "whatsapp_business_account";
     entry: {
         id: string;
         changes: {
@@ -344,6 +353,85 @@ export type PostData = {
     }[];
 };
 
-export type ServerMessageResponse = {
-    // IDK, I will do it tomorrow
+/**
+ * @see https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes
+ */
+export type ServerErrorResponse = {
+    error: {
+        message: string;
+        type: string;
+        code: number;
+        error_data: {
+            messaging_product: "whatsapp";
+            details: string;
+        };
+        error_subcode: number;
+        fbtrace_id: string;
+    };
 };
+
+export type ServerSuccessResponse = {
+    success: true;
+};
+
+export type ServerMessageResponse =
+    | {
+          messaging_product: "whatsapp";
+          contacts: [
+              {
+                  input: string;
+                  wa_id: string;
+              }
+          ];
+          messages: [
+              {
+                  id: string;
+              }
+          ];
+      }
+    | ServerErrorResponse;
+
+export type ServerMarkAsReadResponse =
+    | ServerSuccessResponse
+    | ServerErrorResponse;
+
+export type ServerMediaUploadResponse =
+    | {
+          id: string;
+      }
+    | ServerErrorResponse;
+
+export type ValidMimeTypes =
+    | "audio/aac"
+    | "audio/mp4"
+    | "audio/mpeg"
+    | "audio/amr"
+    | "audio/ogg"
+    | "text/plain"
+    | "application/pdf"
+    | "application/vnd.ms-powerpoint"
+    | "application/msword"
+    | "application/vnd.ms-excel"
+    | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    | "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+    | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    | "image/jpeg"
+    | "image/png"
+    | "video/mp4"
+    | "video/3gp"
+    | "image/webp";
+
+export type ServerMediaRetrieveResponse =
+    | {
+          messaging_product: "whatsapp";
+          url: string;
+          mime_type: ValidMimeTypes;
+          sha256: string;
+          file_size: string;
+          id: string;
+      }
+    | ServerErrorResponse;
+
+export type ServerMediaDeleteResponse =
+    | ServerSuccessResponse
+    | ServerErrorResponse;
