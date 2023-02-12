@@ -108,6 +108,7 @@ dist
 
 # Test code
 playground.js
+playground.mjs
 
 # Documentation
 docs_temp/
