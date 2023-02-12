@@ -5,6 +5,7 @@
   "description": "A Whatsapp Official API framework for Node.js",
   "license": "MIT",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "files": [
     "lib/**/*"
   ],
