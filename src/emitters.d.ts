@@ -13,7 +13,9 @@ import type {
  * @public
  * @param args - The arguments object
  */
-export type OnSent = (args: {
+export type OnSent = (args: OnSentArgs) => void;
+
+export type OnSentArgs = {
     /**
      * The bot's phoneID from where the message was sent
      */
@@ -38,7 +40,7 @@ export type OnSent = (args: {
      * The parsed response from the server, undefined if parsed is set to false
      */
     response?: ServerMessageResponse;
-}) => void;
+};
 
 /**
  * Callback for "message" event
@@ -46,7 +48,9 @@ export type OnSent = (args: {
  * @public
  * @param args - The arguments object
  */
-export type OnMessage = (args: {
+export type OnMessage = (args: OnMessageArgs) => void;
+
+export type OnMessageArgs = {
     /**
      * The bot's phoneID
      */
@@ -67,7 +71,7 @@ export type OnMessage = (args: {
      * The raw data from the API
      */
     raw: PostData;
-}) => void;
+};
 
 /**
  * Callback for "status" event
@@ -75,7 +79,9 @@ export type OnMessage = (args: {
  * @public
  * @param args - The arguments object
  */
-export type OnStatus = (args: {
+export type OnStatus = (args: OnStatusArgs) => void;
+
+export type OnStatusArgs = {
     /**
      * The bot's phoneID
      */
@@ -108,4 +114,4 @@ export type OnStatus = (args: {
      * The raw data from the API
      */
     raw: PostData;
-}) => void;
+};
