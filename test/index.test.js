@@ -1,5 +1,5 @@
+/* eslint-disable */
 // @ts-nocheck
-/* eslint-disable no-undef */
 
 // Unit tests with mocha and sinon
 const assert = require("assert");
