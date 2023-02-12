@@ -11,6 +11,18 @@
   "files": [
     "lib/**/*"
   ],
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./module/index.js",
+      "require": "./common/index.js"
+    },
+    "./messages": {
+      "types": "./types/messages/index.d.ts",
+      "import": "./module/messages/index.js",
+      "require": "./common/messages/index.js"
+    }
+  },
   "scripts": {
     "build": "npm run build:module && npm run build:common && npm run build:types",
     "build:watch": "tsc --watch",
