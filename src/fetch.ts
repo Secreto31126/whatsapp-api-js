@@ -24,6 +24,10 @@ class Request {
      */
     to: string;
     /**
+     * Undocumented, optional (the framework doesn't use it)
+     */
+    recipient_type?: "individual";
+    /**
      * The message to reply to
      */
     context?: {
