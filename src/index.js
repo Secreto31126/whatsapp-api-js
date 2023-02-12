@@ -418,7 +418,7 @@ class WhatsAppAPI extends EventEmitter {
      * @throws {Number} 403 if the verification tokens don't match
      */
     get(request) {
-        return get(request.params, this.webhookVerifyToken);
+        return get(request.query, this.webhookVerifyToken);
     }
 }
 
