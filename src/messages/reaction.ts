@@ -10,11 +10,14 @@ export default class Reaction {
      * The reaction emoji
      */
     emoji: string;
+
     /**
      * The type of the object
      * @internal
      */
-    _?: "reaction";
+    get _(): "reaction" {
+        return "reaction";
+    }
 
     /**
      * Create a Reaction object for the API
@@ -31,6 +34,5 @@ export default class Reaction {
 
         this.message_id = message_id;
         this.emoji = emoji;
-        this._ = "reaction";
     }
 }

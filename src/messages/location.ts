@@ -18,11 +18,14 @@ export default class Location {
      * The address of the location
      */
     address?: string;
+
     /**
      * The type of the object
      * @internal
      */
-    _?: "location";
+    get _(): "location" {
+        return "location";
+    }
 
     /**
      * Create a Location object for the API
@@ -44,6 +47,5 @@ export default class Location {
         this.latitude = latitude;
         if (name) this.name = name;
         if (address) this.address = address;
-        this._ = "location";
     }
 }

@@ -25,11 +25,14 @@ export class Interactive {
      * The footer component of the interactive message
      */
     footer?: Footer;
+
     /**
-     * The type of the interactive message
+     * The type of the object
      * @internal
      */
-    _?: "interactive";
+    get _(): "interactive" {
+        return "interactive";
+    }
 
     /**
      * Create an Interactive object for the API
@@ -73,14 +76,11 @@ export class Interactive {
             throw new Error("Interactive header must be of type Text");
 
         this.type = action._;
-        delete action._;
 
         this.action = action;
         if (body) this.body = body;
         if (header) this.header = header;
         if (footer) this.footer = footer;
-
-        this._ = "interactive";
     }
 }
 
@@ -189,8 +189,6 @@ export class Header {
                 throw new Error("Header text must be 60 characters or less");
             this[object._] = object.body;
         } else {
-            delete object._;
-
             // Now I think about it, all interactive can go to hell too
             if ("caption" in object)
                 throw new Error(`Header ${this.type} must not have a caption`);
@@ -214,7 +212,9 @@ export class ActionButtons {
      * The type of the action
      * @internal
      */
-    _?: "button";
+    get _(): "button" {
+        return "button";
+    }
 
     /**
      * Builds a reply buttons component for an Interactive message
@@ -239,7 +239,6 @@ export class ActionButtons {
             throw new Error("Reply buttons must have unique titles");
 
         this.buttons = button;
-        this._ = "button";
     }
 }
 
@@ -310,7 +309,9 @@ export class ActionList {
      * The type of the action
      * @internal
      */
-    _?: "list";
+    get _(): "list" {
+        return "list";
+    }
 
     /**
      * Builds an action component for an Interactive message
@@ -334,7 +335,6 @@ export class ActionList {
                 "All sections must have a title if more than 1 section is provided"
             );
 
-        this._ = "list";
         this.button = button;
         this.sections = sections;
     }
@@ -433,11 +433,15 @@ export class ActionCatalog {
      * The section to be added to the catalog
      */
     sections?: ProductSection[];
+
+    #_: "product" | "product_list";
     /**
      * The type of the action
      * @internal
      */
-    _?: "product" | "product_list";
+    get _(): "product" | "product_list" {
+        return this.#_;
+    }
 
     /**
      * Builds a catalog component for an Interactive message
@@ -489,7 +493,7 @@ export class ActionCatalog {
         // @ts-ignore - TS doesn't know that if it's not a single product, it's a product list
         else this.sections = products;
 
-        this._ = is_single_product ? "product" : "product_list";
+        this.#_ = is_single_product ? "product" : "product_list";
     }
 }
 

@@ -200,7 +200,6 @@ export default class WhatsAppAPI extends EventEmitter {
         }
 
         const type = message._;
-        delete message._;
 
         const request = {
             messaging_product: "whatsapp",

@@ -10,32 +10,19 @@ export class Media {
      * The link of the media
      */
     link?: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    _?: "audio" | "document" | "image" | "sticker" | "video";
 
     /**
      * This method works as a placeholder so the documentation looks nice.
      * You shouldn't be using it directly ¯\\_(ツ)_/¯.
      *
-     * @param type - Type of the parameter
      * @param file - File to be sent
      * @param isItAnID - If the file is an ID (true) or an URL (false)
      * @throws If type is not provided
      * @throws If file is not provided
      */
-    constructor(
-        type: "audio" | "document" | "image" | "sticker" | "video",
-        file: string,
-        isItAnID = false
-    ) {
-        if (!type) throw new Error("Media must have a type");
+    constructor(file: string, isItAnID = false) {
         if (!file) throw new Error("Media must have a file");
-
         this[isItAnID ? "id" : "link"] = file;
-        this._ = type;
     }
 }
 
@@ -44,10 +31,12 @@ export class Media {
  */
 export class Audio extends Media {
     /**
-     * The type of the object, for internal use only
+     * The type of the object
      * @internal
      */
-    declare _?: "audio";
+    get _(): "audio" {
+        return "audio";
+    }
 
     /**
      * Create an Audio object for the API
@@ -57,7 +46,7 @@ export class Audio extends Media {
      */
     constructor(audio: string, isItAnID = false) {
         if (!audio) throw new Error("Audio must have an audio link or id");
-        super("audio", audio, isItAnID);
+        super(audio, isItAnID);
     }
 }
 
@@ -73,11 +62,14 @@ export class Document extends Media {
      * The file's filename
      */
     filename?: string;
+
     /**
      * The type of the object
      * @internal
      */
-    declare _?: "document";
+    get _(): "document" {
+        return "document";
+    }
 
     /**
      * Create a Document object for the API
@@ -95,7 +87,7 @@ export class Document extends Media {
     ) {
         if (!document)
             throw new Error("Document must have a document link or id");
-        super("document", document, isItAnID);
+        super(document, isItAnID);
         if (caption) this.caption = caption;
         if (filename) this.filename = filename;
     }
@@ -109,11 +101,14 @@ export class Image extends Media {
      * The file's caption
      */
     caption?: string;
+
     /**
      * The type of the object
      * @internal
      */
-    declare _?: "image";
+    get _(): "image" {
+        return "image";
+    }
 
     /**
      * Create a Image object for the API
@@ -124,7 +119,7 @@ export class Image extends Media {
      */
     constructor(image: string, isItAnID = false, caption?: string) {
         if (!image) throw new Error("Image must have an image link or id");
-        super("image", image, isItAnID);
+        super(image, isItAnID);
         if (caption) this.caption = caption;
     }
 }
@@ -137,7 +132,9 @@ export class Sticker extends Media {
      * The type of the object
      * @internal
      */
-    declare _?: "sticker";
+    get _(): "sticker" {
+        return "sticker";
+    }
 
     /**
      * Create a Sticker object for the API
@@ -147,7 +144,7 @@ export class Sticker extends Media {
      */
     constructor(sticker: string, isItAnID = false) {
         if (!sticker) throw new Error("Sticker must have a sticker link or id");
-        super("sticker", sticker, isItAnID);
+        super(sticker, isItAnID);
     }
 }
 
@@ -159,11 +156,14 @@ export class Video extends Media {
      * The file's caption
      */
     caption?: string;
+
     /**
      * The type of the object
      * @internal
      */
-    declare _?: "video";
+    get _(): "video" {
+        return "video";
+    }
 
     /**
      * Create a Video object for the API
@@ -172,9 +172,9 @@ export class Video extends Media {
      * @param isItAnID - Whether video is an id (true) or a link (false)
      * @param caption - Describes the specified video media
      */
-    constructor(video: string, isItAnID = false, caption: string) {
+    constructor(video: string, isItAnID = false, caption?: string) {
         if (!video) throw new Error("Video must have a video link or id");
-        super("video", video, isItAnID);
+        super(video, isItAnID);
         if (caption) this.caption = caption;
     }
 }

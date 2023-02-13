@@ -16,11 +16,14 @@ export class Contacts {
      * The contacts of the message
      */
     contacts: BuiltContact[];
+
     /**
      * The type of the object
      * @internal
      */
-    _?: "contacts";
+    get _(): "contacts" {
+        return "contacts";
+    }
 
     /**
      * Create a Contacts object for the API
@@ -52,7 +55,6 @@ export class Contacts {
                     );
 
                 const name = component._;
-                delete component._;
 
                 if (component instanceof Birthday)
                     if (!contact.birthday)
@@ -91,8 +93,6 @@ export class Contacts {
 
             this.contacts.push(contact);
         }
-
-        this._ = "contacts";
     }
 }
 
@@ -128,11 +128,14 @@ export class Address {
      * The type of the address
      */
     type?: string;
+
     /**
      * The type of the object
      * @internal
      */
-    _?: "addresses";
+    get _(): "addresses" {
+        return "addresses";
+    }
 
     /**
      * Builds an address object for a contact.
@@ -162,7 +165,6 @@ export class Address {
         if (street) this.street = street;
         if (zip) this.zip = zip;
         if (type) this.type = type;
-        this._ = "addresses";
     }
 }
 
@@ -178,7 +180,9 @@ export class Birthday {
      * The type of the object
      * @internal
      */
-    _?: "birthday";
+    get _(): "birthday" {
+        return "birthday";
+    }
 
     /**
      * Builds a birthday object for a contact
@@ -193,7 +197,6 @@ export class Birthday {
         if (month?.length !== 2) throw new Error("Month must be 2 digits");
         if (day?.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
-        this._ = "birthday";
     }
 }
 
@@ -213,7 +216,9 @@ export class Email {
      * The type of the object
      * @internal
      */
-    _?: "emails";
+    get _(): "emails" {
+        return "emails";
+    }
 
     /**
      * Builds an email object for a contact.
@@ -225,7 +230,6 @@ export class Email {
     constructor(email?: string, type?: string) {
         if (email) this.email = email;
         if (type) this.type = type;
-        this._ = "emails";
     }
 }
 
@@ -261,7 +265,9 @@ export class Name {
      * The type of the object
      * @internal
      */
-    _?: "name";
+    get _(): "name" {
+        return "name";
+    }
 
     /**
      * Builds a name object for a contact, required for contacts.
@@ -293,11 +299,11 @@ export class Name {
         if (suffix) this.suffix = suffix;
         if (prefix) this.prefix = prefix;
 
-        if (Object.keys(this).length < 2)
+        if (Object.keys(this).length < 2) {
             throw new Error(
                 "Name must have at least one of the following: first_name, last_name, middle_name, prefix, suffix"
             );
-        this._ = "name";
+        }
     }
 }
 
@@ -321,7 +327,9 @@ export class Organization {
      * The type of the object
      * @internal
      */
-    _?: "org";
+    get _(): "org" {
+        return "org";
+    }
 
     /**
      * Builds an organization object for a contact
@@ -334,7 +342,6 @@ export class Organization {
         if (company) this.company = company;
         if (department) this.department = department;
         if (title) this.title = title;
-        this._ = "org";
     }
 }
 
@@ -358,7 +365,9 @@ export class Phone {
      * The type of the object
      * @internal
      */
-    _?: "phones";
+    get _(): "phones" {
+        return "phones";
+    }
 
     /**
      * Builds a phone object for a contact.
@@ -372,7 +381,6 @@ export class Phone {
         if (phone) this.phone = phone;
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
-        this._ = "phones";
     }
 }
 
@@ -392,7 +400,9 @@ export class Url {
      * The type of the object
      * @internal
      */
-    _?: "urls";
+    get _(): "urls" {
+        return "urls";
+    }
 
     /**
      * Builds an url object for a contact.
@@ -404,6 +414,5 @@ export class Url {
     constructor(url?: string, type?: string) {
         if (url) this.url = url;
         if (type) this.type = type;
-        this._ = "urls";
     }
 }

@@ -11,11 +11,14 @@ export default class Text {
      * Whether to enable preview for the text message
      */
     preview_url?: boolean;
+
     /**
      * The type of the object
      * @internal
      */
-    _?: "text";
+    get _(): "text" {
+        return "text";
+    }
 
     /**
      * Create a Text object for the API
@@ -31,6 +34,5 @@ export default class Text {
             throw new Error("Text body must be less than 4096 characters");
         this.body = body;
         if (preview_url !== undefined) this.preview_url = preview_url;
-        this._ = "text";
     }
 }

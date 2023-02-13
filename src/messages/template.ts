@@ -24,11 +24,14 @@ export class Template {
      * The components of the template
      */
     components?: (HeaderComponent | BodyComponent | BuiltButtonComponent)[];
+
     /**
      * The type of the object
      * @internal
      */
-    _?: "template";
+    get _(): "template" {
+        return "template";
+    }
 
     /**
      * Create a Template object for the API
@@ -62,8 +65,6 @@ export class Template {
                 | BodyComponent
                 | BuiltButtonComponent
             )[];
-
-        this._ = "template";
     }
 }
 
@@ -114,7 +115,9 @@ export class Currency {
      * The type of the object
      * @internal
      */
-    _?: "currency";
+    get _(): "currency" {
+        return "currency";
+    }
 
     /**
      * Builds a currency object for a Parameter
@@ -136,7 +139,6 @@ export class Currency {
         this.amount_1000 = amount_1000;
         this.code = code;
         this.fallback_value = fallback_value;
-        this._ = "currency";
     }
 }
 
@@ -152,7 +154,9 @@ export class DateTime {
      * The type of the object
      * @internal
      */
-    _?: "date_time";
+    get _(): "date_time" {
+        return "date_time";
+    }
 
     /**
      * Builds a date_time object for a Parameter
@@ -164,7 +168,6 @@ export class DateTime {
         if (!fallback_value)
             throw new Error("DateTime must have a fallback_value");
         this.fallback_value = fallback_value;
-        this._ = "date_time";
     }
 }
 
@@ -406,7 +409,6 @@ export class Parameter {
         }
 
         this.type = parameter._;
-        delete parameter._;
 
         // Text type can go to hell
         if (parameter instanceof Text) {
