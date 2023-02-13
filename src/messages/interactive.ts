@@ -192,7 +192,7 @@ export class Header {
             delete object._;
 
             // Now I think about it, all interactive can go to hell too
-            if (Object.prototype.hasOwnProperty.call(object, "caption"))
+            if ("caption" in object)
                 throw new Error(`Header ${this.type} must not have a caption`);
 
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -329,12 +329,7 @@ export class ActionList {
             throw new Error("Button content must be 20 characters or less");
         if (!sections.length || sections.length > 10)
             throw new Error("Action must have between 1 and 10 sections");
-        if (
-            sections.length > 1 &&
-            !sections.every((obj) =>
-                Object.prototype.hasOwnProperty.call(obj, "title")
-            )
-        )
+        if (sections.length > 1 && !sections.every((obj) => "title" in obj))
             throw new Error(
                 "All sections must have a title if more than 1 section is provided"
             );
@@ -477,7 +472,7 @@ export class ActionCatalog {
                 );
             if (products.length > 1) {
                 for (const obj of products) {
-                    if (!Object.prototype.hasOwnProperty.call(obj, "title")) {
+                    if (!("title" in obj)) {
                         throw new Error(
                             "All sections must have a title if more than 1 section is provided"
                         );
