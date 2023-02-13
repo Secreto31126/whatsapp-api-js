@@ -1,3 +1,6 @@
+// eslint-disable-next-line tsdoc/syntax
+/** @module WhatsAppAPI */
+
 import type {
     PostData,
     GetParams,

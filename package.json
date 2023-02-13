@@ -37,7 +37,7 @@
     "prettier": "prettier --check src",
     "prettier:write": "prettier --write src",
     "coverage": "nyc --reporter=text mocha --reporter min",
-    "document": "typedoc",
+    "document": "typedoc && cp -r docs_statics/* docs/",
     "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output"
   },
   "keywords": [
