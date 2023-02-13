@@ -1,5 +1,5 @@
-import { Document, Image, Video } from "./media";
-import Text from "./text";
+import { Document, Image, Video } from "./media.js";
+import Text from "./text.js";
 
 /**
  * Interactive API object

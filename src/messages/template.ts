@@ -1,5 +1,6 @@
-import Text from "./text";
 import type { Document, Image, Video } from "./media";
+
+import Text from "./text.js";
 
 type BuiltButtonComponent = {
     type: "button";

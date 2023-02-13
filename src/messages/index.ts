@@ -1,8 +1,8 @@
-import Text from "./text";
-import Location from "./location";
-import Reaction from "./reaction";
+import Text from "./text.js";
+import Location from "./location.js";
+import Reaction from "./reaction.js";
 export { Text, Location, Reaction };
-export * from "./contacts";
-export * from "./interactive";
-export * from "./media";
-export * from "./template";
+export * from "./contacts.js";
+export * from "./interactive.js";
+export * from "./media.js";
+export * from "./template.js";
