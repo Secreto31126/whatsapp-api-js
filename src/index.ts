@@ -679,13 +679,15 @@ export default class WhatsAppAPI extends EventEmitter {
 
             const message = value.messages[0];
 
-            this.emit("message", {
+            const args: OnMessageArgs = {
                 phoneID,
                 from,
                 message,
                 name,
                 raw: data
-            } as OnMessageArgs);
+            };
+
+            this.emit("message", args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -696,7 +698,7 @@ export default class WhatsAppAPI extends EventEmitter {
             const pricing = statuses.pricing;
             const error = statuses.errors?.[0];
 
-            this.emit("status", {
+            const args: OnStatusArgs = {
                 phoneID,
                 phone,
                 status,
@@ -705,7 +707,9 @@ export default class WhatsAppAPI extends EventEmitter {
                 pricing,
                 error,
                 raw: data
-            } as OnStatusArgs);
+            };
+
+            this.emit("status", args);
         }
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
