@@ -5,6 +5,8 @@ import type {
     PostData,
     GetParams,
     ClientMessage,
+    ServerMessageTypes,
+    ClientMessageRequest,
     ServerMessageResponse,
     ServerMarkAsReadResponse,
     ServerCreateQRResponse,
@@ -21,8 +23,6 @@ import type { fetch as FetchType, Request, Response } from "undici/types/fetch";
 import type { FormData } from "undici/types/formdata";
 import type { BinaryLike } from "node:crypto";
 import type { Blob } from "node:buffer";
-
-import MessageRequest from "./request";
 
 import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
@@ -193,8 +193,32 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!message) throw new Error("Message must be specified");
+        if (!message._) {
+            throw new Error(
+                "Unexpected internal error (message._ is not defined)"
+            );
+        }
 
-        const request = new MessageRequest(message, to, context);
+        const type = message._;
+        delete message._;
+
+        const request = {
+            messaging_product: "whatsapp",
+            type,
+            to
+        } as ClientMessageRequest;
+
+        if (context) request.context = { message_id: context };
+
+        // FUTURE ME: If WhatsApp does ever decide to add another array-like (arralike) message, kill them
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - TS dumb, idk why it insists that message._ is not a key of message
+        // prettier-ignore
+        const object: ServerMessageTypes = type in message && Array.isArray(message[type]) ? message[type] : message;
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - TS dumb, the _ will always match the type
+        request[request.type] = JSON.stringify(object);
 
         // Make the post request
         const promise = this.fetch(
@@ -213,10 +237,11 @@ export default class WhatsAppAPI extends EventEmitter {
             ? ((await (await promise).json()) as ServerMessageResponse)
             : undefined;
 
-        this.emit("sent", {
+        const args: OnSentArgs = {
             phoneID,
-            to: request.to,
-            message: JSON.parse(request[request.type] as string),
+            to,
+            type,
+            message,
             request,
             id: response
                 ? "messages" in response
@@ -224,7 +249,9 @@ export default class WhatsAppAPI extends EventEmitter {
                     : undefined
                 : undefined,
             response: response ? response : undefined
-        } as OnSentArgs);
+        };
+
+        this.emit("sent", args);
 
         return response ?? promise;
     }
