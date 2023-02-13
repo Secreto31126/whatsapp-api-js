@@ -22,7 +22,7 @@ import type { FormData } from "undici/types/formdata";
 import type { BinaryLike } from "node:crypto";
 import type { Blob } from "node:buffer";
 
-import * as api from "./fetch";
+import MessageRequest from "./request";
 
 import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
@@ -33,6 +33,7 @@ import { createHmac } from "node:crypto";
  * @alpha
  */
 export default class WhatsAppAPI extends EventEmitter {
+    //#region Properties
     /**
      * The API token
      */
@@ -61,6 +62,7 @@ export default class WhatsAppAPI extends EventEmitter {
      * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
      */
     secure: boolean;
+    //#endregion
 
     /**
      * Initiate the Whatsapp API app
@@ -151,6 +153,8 @@ export default class WhatsAppAPI extends EventEmitter {
         this.parsed = !!parsed;
     }
 
+    //#region Message Operations
+
     /**
      * Send a Whatsapp message
      *
@@ -173,13 +177,19 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!to) throw new Error("To must be specified");
         if (!message) throw new Error("Message must be specified");
 
-        const { request, promise } = api.sendMessage(
-            this.token,
-            this.v,
-            phoneID,
-            to,
-            message,
-            context
+        const request = new MessageRequest(message, to, context);
+
+        // Make the post request
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(request)
+            }
         );
 
         const response = this.parsed
@@ -217,11 +227,31 @@ export default class WhatsAppAPI extends EventEmitter {
     ): Promise<ServerMarkAsReadResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!messageId) throw new Error("To must be specified");
-        const promise = api.readMessage(this.token, this.v, phoneID, messageId);
+
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    status: "read",
+                    messageId
+                })
+            }
+        );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerMarkAsReadResponse)
             : promise;
     }
+
+    //#endregion
+
+    //#region QR Operations
 
     /**
      * Generate a QR code for sharing the bot
@@ -243,13 +273,17 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!message) throw new Error("Message must be specified");
         if (!["png", "svg"].includes(format))
             throw new Error("Format must be either 'png' or 'svg'");
-        const promise = api.makeQR(
-            this.token,
-            this.v,
-            phoneID,
-            message,
-            format
+
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls?generate_qr_image=${format}&prefilled_message=${message}`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            }
         );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerCreateQRResponse)
             : promise;
@@ -268,7 +302,18 @@ export default class WhatsAppAPI extends EventEmitter {
         id?: string
     ): Promise<ServerRetrieveQRResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
-        const promise = api.getQR(this.token, this.v, phoneID, id);
+
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${
+                id ?? ""
+            }`,
+            {
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            }
+        );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerRetrieveQRResponse)
             : promise;
@@ -293,7 +338,17 @@ export default class WhatsAppAPI extends EventEmitter {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
-        const promise = api.updateQR(this.token, this.v, phoneID, id, message);
+
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}?prefilled_message=${message}`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            }
+        );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerUpdateQRResponse)
             : promise;
@@ -314,11 +369,25 @@ export default class WhatsAppAPI extends EventEmitter {
     ): Promise<ServerDeleteQRResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
-        const promise = api.deleteQR(this.token, this.v, phoneID, id);
+
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            }
+        );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerDeleteQRResponse)
             : promise;
     }
+
+    //#endregion
+
+    //#region Media Operations
 
     /**
      * Get a Media object data with an ID
@@ -333,7 +402,17 @@ export default class WhatsAppAPI extends EventEmitter {
         phoneID?: string
     ): Promise<ServerMediaRetrieveResponse | Response> {
         if (!id) throw new Error("ID must be specified");
-        const promise = api.getMedia(this.token, this.v, id, phoneID);
+
+        const params = phoneID ? `phone_number_id=${phoneID}` : "";
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${id}?${params}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            }
+        );
+
         return this.parsed
             ? ((await (
                   await promise
@@ -448,12 +527,18 @@ export default class WhatsAppAPI extends EventEmitter {
                 );
         }
 
-        const promise = api.uploadMedia(
-            this.token,
-            this.v,
-            phoneID,
-            form as FormData
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${phoneID}/media?messaging_product=whatsapp`,
+            {
+                method: "POST",
+                body: form as FormData,
+                headers: {
+                    Authorization: `Bearer ${this.token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            }
         );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerMediaUploadResponse)
             : promise;
@@ -496,11 +581,24 @@ export default class WhatsAppAPI extends EventEmitter {
         phoneID?: string
     ): Promise<ServerMediaDeleteResponse | Response> {
         if (!id) throw new Error("ID must be specified");
-        const promise = api.deleteMedia(this.token, this.v, id, phoneID);
+
+        const params = phoneID ? `phone_number_id=${phoneID}` : "";
+        const promise = this.fetch(
+            `https://graph.facebook.com/${this.v}/${id}?${params}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${this.token}`
+                }
+            }
+        );
+
         return this.parsed
             ? ((await (await promise).json()) as ServerMediaDeleteResponse)
             : promise;
     }
+
+    // #endregion
 
     /**
      * Make an authenticated request to any url.
@@ -513,14 +611,23 @@ export default class WhatsAppAPI extends EventEmitter {
      */
     _authenicatedRequest(url: URL | string): Promise<Response> {
         if (!url) throw new Error("URL must be specified");
-        return api.authenticatedRequest(this.token, url);
+
+        return this.fetch(url, {
+            headers: {
+                Authorization: `Bearer ${this.token}`
+            }
+        });
     }
+
+    // #region Webhooks
 
     /**
      * POST helper, must be called inside the post function of your code.
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
      *
-     * @param data - The request object sent by Whatsapp
+     * @param data - The POSTed data object sent by Whatsapp
+     * @param signature - The X-Hub-Signature-256 header signature sent by Whatsapp
+     * @param rawBody - The raw body of the POST request
      * @returns 200, it's the expected http/s response code
      * @throws 400 if the POST request body is empty or missing data
      * @throws 401 if the signature is missing
@@ -584,6 +691,7 @@ export default class WhatsAppAPI extends EventEmitter {
             } as OnStatusArgs);
         }
         // If unknown payload, just ignore it
+        // Facebook doesn't care about your server's opinion
 
         return 200;
     }
@@ -623,4 +731,6 @@ export default class WhatsAppAPI extends EventEmitter {
         // Responds with "403 Forbidden" if verify tokens do not match
         throw 403;
     }
+
+    // #endregion
 }
