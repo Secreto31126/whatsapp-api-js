@@ -4,10 +4,10 @@ import type {
     ClientMessage,
     ServerMessageResponse,
     ServerMarkAsReadResponse,
-    ServerCreateQR,
-    ServerRetrieveQR,
-    ServerUpdateQR,
-    ServerDeleteQR,
+    ServerCreateQRResponse,
+    ServerRetrieveQRResponse,
+    ServerUpdateQRResponse,
+    ServerDeleteQRResponse,
     ServerMediaRetrieveResponse,
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
@@ -236,7 +236,7 @@ export default class WhatsAppAPI extends EventEmitter {
         phoneID: string,
         message: string,
         format: "png" | "svg" = "png"
-    ): Promise<object | Response> {
+    ): Promise<ServerCreateQRResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!message) throw new Error("Message must be specified");
         if (!["png", "svg"].includes(format))
@@ -249,7 +249,7 @@ export default class WhatsAppAPI extends EventEmitter {
             format
         );
         return this.parsed
-            ? ((await (await promise).json()) as ServerCreateQR)
+            ? ((await (await promise).json()) as ServerCreateQRResponse)
             : promise;
     }
 
@@ -264,11 +264,11 @@ export default class WhatsAppAPI extends EventEmitter {
     async retrieveQR(
         phoneID: string,
         id?: string
-    ): Promise<ServerRetrieveQR | Response> {
+    ): Promise<ServerRetrieveQRResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         const promise = api.getQR(this.token, this.v, phoneID, id);
         return this.parsed
-            ? ((await (await promise).json()) as ServerRetrieveQR)
+            ? ((await (await promise).json()) as ServerRetrieveQRResponse)
             : promise;
     }
 
@@ -287,13 +287,13 @@ export default class WhatsAppAPI extends EventEmitter {
         phoneID: string,
         id: string,
         message: string
-    ): Promise<object | Response> {
+    ): Promise<ServerUpdateQRResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         if (!message) throw new Error("Message must be specified");
         const promise = api.updateQR(this.token, this.v, phoneID, id, message);
         return this.parsed
-            ? ((await (await promise).json()) as ServerUpdateQR)
+            ? ((await (await promise).json()) as ServerUpdateQRResponse)
             : promise;
     }
 
@@ -306,12 +306,15 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws If phoneID is not specified
      * @throws If id is not specified
      */
-    async deleteQR(phoneID: string, id: string): Promise<object | Response> {
+    async deleteQR(
+        phoneID: string,
+        id: string
+    ): Promise<ServerDeleteQRResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!id) throw new Error("ID must be specified");
         const promise = api.deleteQR(this.token, this.v, phoneID, id);
         return this.parsed
-            ? ((await (await promise).json()) as ServerDeleteQR)
+            ? ((await (await promise).json()) as ServerDeleteQRResponse)
             : promise;
     }
 

@@ -404,17 +404,19 @@ export type ServerQR = {
     qr_image_url?: string;
 };
 
-export type ServerCreateQR = ServerQR | ServerErrorResponse;
+export type ServerCreateQRResponse = ServerQR | ServerErrorResponse;
 
-export type ServerRetrieveQR =
+export type ServerRetrieveQRResponse =
     | {
           data: ServerQR[];
       }
     | ServerErrorResponse;
 
-export type ServerUpdateQR = ServerQR | ServerErrorResponse;
+export type ServerUpdateQRResponse = ServerQR | ServerErrorResponse;
 
-export type ServerDeleteQR = ServerSuccessResponse | ServerErrorResponse;
+export type ServerDeleteQRResponse =
+    | ServerSuccessResponse
+    | ServerErrorResponse;
 
 export type ServerMedia = {
     id: string;
