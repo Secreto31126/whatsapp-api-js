@@ -15,6 +15,9 @@ import type {
  */
 export type OnSent = (args: OnSentArgs) => void;
 
+/**
+ * @public
+ */
 export type OnSentArgs = {
     /**
      * The bot's phoneID from where the message was sent
@@ -50,6 +53,9 @@ export type OnSentArgs = {
  */
 export type OnMessage = (args: OnMessageArgs) => void;
 
+/**
+ * @public
+ */
 export type OnMessageArgs = {
     /**
      * The bot's phoneID
@@ -81,6 +87,9 @@ export type OnMessageArgs = {
  */
 export type OnStatus = (args: OnStatusArgs) => void;
 
+/**
+ * @public
+ */
 export type OnStatusArgs = {
     /**
      * The bot's phoneID
