@@ -1,10 +1,16 @@
-import type Text from "./messages/text";
-import type { Audio, Document, Image, Sticker, Video } from "./messages/media";
-import type Location from "./messages/location";
-import type { Contacts } from "./messages/contacts";
-import type { Interactive } from "./messages/interactive";
-import type { Template } from "./messages/template";
-import type Reaction from "./messages/reaction";
+import type {
+    Text,
+    Audio,
+    Document,
+    Image,
+    Sticker,
+    Video,
+    Location,
+    Contacts,
+    Interactive,
+    Template,
+    Reaction
+} from "./messages";
 
 export type ClientMessage =
     | Text
