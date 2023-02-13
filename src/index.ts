@@ -15,7 +15,7 @@ import type {
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
 } from "./types";
-import type { OnSentArgs } from "./emitters";
+import type { OnMessageArgs, OnSentArgs, OnStatusArgs } from "./emitters";
 
 import type { fetch as FetchType, Response } from "undici/types/fetch";
 import type { FormData } from "undici/types/formdata";
@@ -23,7 +23,6 @@ import type { BinaryLike } from "node:crypto";
 import type { Blob } from "node:buffer";
 
 import * as api from "./fetch";
-import { post, get } from "./requests";
 
 import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
@@ -521,47 +520,107 @@ export default class WhatsAppAPI extends EventEmitter {
      * POST helper, must be called inside the post function of your code.
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
      *
-     * @param request - The request object sent by Whatsapp
+     * @param data - The request object sent by Whatsapp
      * @returns 200, it's the expected http/s response code
-     * @throws 400 if the POST request isn't valid
+     * @throws 400 if the POST request body is empty or missing data
+     * @throws 401 if the signature is missing
      * @throws 500 if the appSecret isn't specified
      */
-    post(request: PostData, signature?: string, rawBody?: BinaryLike): number {
-        //Validating payload
+    post(data: PostData, signature?: string, rawBody?: BinaryLike): number {
+        //Validating the payload
         if (this.secure) {
-            if (!signature || !rawBody) throw 400;
+            if (!rawBody) throw 400;
+            if (!signature) throw 401;
             if (!this.appSecret) throw 500;
 
             const hash = createHmac("sha256", this.appSecret)
                 .update(rawBody)
                 .digest("hex");
 
-            if (signature.split("=")[1] !== hash) throw 400;
+            if (signature.split("=")[1] !== hash) throw 401;
         }
 
-        return post(
-            request,
-            (message) => {
-                this.emit("message", message);
-            },
-            (status) => {
-                this.emit("status", status);
-            }
-        );
+        // Throw "400 Bad Request" if data is not a valid WhatsApp API request
+        if (!data.object) throw 400;
+
+        const value = data.entry[0].changes[0].value;
+        const phoneID = value.metadata.phone_number_id;
+
+        // Check if the message is a message or a status update
+        if ("messages" in value) {
+            const contact = value.contacts[0];
+
+            const from = contact.wa_id;
+            const name = contact.profile.name;
+
+            const message = value.messages[0];
+
+            this.emit("message", {
+                phoneID,
+                from,
+                message,
+                name,
+                raw: data
+            } as OnMessageArgs);
+        } else if ("statuses" in value) {
+            const statuses = value.statuses[0];
+
+            const phone = statuses.recipient_id;
+            const status = statuses.status;
+            const id = statuses.id;
+            const conversation = statuses.conversation;
+            const pricing = statuses.pricing;
+            const error = statuses.errors?.[0];
+
+            this.emit("status", {
+                phoneID,
+                phone,
+                status,
+                id,
+                conversation,
+                pricing,
+                error,
+                raw: data
+            } as OnStatusArgs);
+        }
+        // If unknown payload, just ignore it
+
+        return 200;
     }
 
     /**
      * GET helper, must be called inside the get function of your code.
      * Used once at the first webhook setup.
      *
-     * @param request - The request object sent by Whatsapp
+     * @param params - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body
      * @throws 500 if webhookVerifyToken is not specified
      * @throws 400 if the request is missing data
      * @throws 403 if the verification tokens don't match
      */
-    get(request: GetParams): string {
+    get(params: GetParams): string {
         if (!this.webhookVerifyToken) throw 500;
-        return get(request, this.webhookVerifyToken);
+
+        // Parse params from the webhook verification request
+        const {
+            "hub.mode": mode,
+            "hub.verify_token": token,
+            "hub.challenge": challenge
+        } = params;
+
+        // Check if a token and mode were sent
+        if (!mode || !token) {
+            // Responds with "400 Bad Request" if it's missing data
+            throw 400;
+        }
+
+        // Check the mode and token sent are correct
+        if (mode === "subscribe" && token === this.webhookVerifyToken) {
+            // Respond with 200 OK and challenge token from the request
+            return challenge;
+        }
+
+        // Responds with "403 Forbidden" if verify tokens do not match
+        throw 403;
     }
 }
