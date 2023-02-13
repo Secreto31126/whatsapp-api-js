@@ -33,6 +33,6 @@ export default class Text {
         if (body.length > 4096)
             throw new Error("Text body must be less than 4096 characters");
         this.body = body;
-        if (preview_url !== undefined) this.preview_url = preview_url;
+        if (preview_url) this.preview_url = preview_url;
     }
 }
