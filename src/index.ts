@@ -81,31 +81,31 @@ export default class WhatsAppAPI extends EventEmitter {
         /**
          * The API token, given at setup. It can be either a temporal token or a permanent one.
          */
-        token: unknown;
+        token: unknown | string;
         /**
          * The app secret, given at setup
          */
-        appSecret?: unknown;
+        appSecret?: unknown | string;
         /**
          * The webhook verify token, configured at setup
          */
-        webhookVerifyToken?: unknown;
+        webhookVerifyToken?: unknown | string;
         /**
          * The version of the API, defaults to v16.0
          */
-        v?: unknown;
+        v?: unknown | string;
         /**
          * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
          */
-        parsed?: unknown;
+        parsed?: unknown | boolean;
         /**
          * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
          */
-        secure?: unknown;
+        secure?: unknown | boolean;
         /**
          * The fetch function to use for the requests. If not specified, it will use the fetch function from the enviroment.
          */
-        ponyfill?: unknown;
+        ponyfill?: unknown | typeof FetchType;
     }) {
         super();
 
