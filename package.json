@@ -56,7 +56,7 @@
     "nyc": "^15.1.0",
     "prettier": "2.8.4",
     "rewire": "^6.0.0",
-    "sinon": "^14.0.0",
+    "sinon": "^15.0.1",
     "typescript": "^4.8.4"
   },
   "dependencies": {
