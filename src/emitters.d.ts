@@ -1,9 +1,11 @@
 import type {
+    ClientMessage,
+    ClientMessageRequest,
+    ServerMessage,
     ServerMessageResponse,
     ServerConversation,
-    ServerError,
-    ServerMessage,
     ServerPricing,
+    ServerError,
     PostData
 } from "./types";
 
@@ -28,13 +30,17 @@ export type OnSentArgs = {
      */
     to: string;
     /**
+     * The message type
+     */
+    type: string;
+    /**
      * The message object
      */
-    message: ServerMessage;
+    message: ClientMessage;
     /**
      * The object sent to the server
      */
-    request: object;
+    request: ClientMessageRequest;
     /**
      * The message id, undefined if parsed is set to false
      */

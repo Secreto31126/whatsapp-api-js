@@ -32,6 +32,80 @@ export type ClientMessageNames =
     | "template"
     | "reaction";
 
+// #region Client Message Request
+
+export type ClientMessageRequest =
+    | {
+          /**
+           * The messaging product
+           */
+          messaging_product: "whatsapp";
+          /**
+           * The user's phone number
+           */
+          to: string;
+          /**
+           * Undocumented, optional (the framework doesn't use it)
+           */
+          recipient_type?: "individual";
+          /**
+           * The message to reply to
+           */
+          context?: {
+              /**
+               * The message id to reply to
+               */
+              message_id: string;
+          };
+      } & (
+          | {
+                type: "text";
+                text?: string;
+            }
+          | {
+                type: "audio";
+                audio?: string;
+            }
+          | {
+                type: "document";
+                document?: string;
+            }
+          | {
+                type: "image";
+                image?: string;
+            }
+          | {
+                type: "sticker";
+                sticker?: string;
+            }
+          | {
+                type: "video";
+                video?: string;
+            }
+          | {
+                type: "location";
+                location?: string;
+            }
+          | {
+                type: "contacts";
+                contacts?: string;
+            }
+          | {
+                type: "interactive";
+                interactive?: string;
+            }
+          | {
+                type: "template";
+                template?: string;
+            }
+          | {
+                type: "reaction";
+                reaction?: string;
+            }
+      );
+
+// #endregion
+
 export type ServerTextMessage = {
     type: "text";
     text: {
@@ -224,6 +298,21 @@ export type ServerUnknownMessage = {
     ];
 };
 
+export type ServerMessageTypes =
+    | ServerTextMessage
+    | ServerAudioMessage
+    | ServerDocumentMessage
+    | ServerImageMessage
+    | ServerStickerMessage
+    | ServerVideoMessage
+    | ServerLocationMessage
+    | ServerContactsMessage
+    | ServerInteractiveMessage
+    | ServerButtonMessage
+    | ServerReactionMessage
+    | ServerOrderMessage
+    | ServerUnknownMessage;
+
 export type ServerMessage = {
     from: string;
     id: string;
@@ -254,21 +343,7 @@ export type ServerMessage = {
         video_url: string;
         thumbnail_url: string;
     };
-} & (
-    | ServerTextMessage
-    | ServerAudioMessage
-    | ServerDocumentMessage
-    | ServerImageMessage
-    | ServerStickerMessage
-    | ServerVideoMessage
-    | ServerLocationMessage
-    | ServerContactsMessage
-    | ServerInteractiveMessage
-    | ServerButtonMessage
-    | ServerReactionMessage
-    | ServerOrderMessage
-    | ServerUnknownMessage
-);
+} & ServerMessageTypes;
 
 export type ServerContacts = {
     profile: {
