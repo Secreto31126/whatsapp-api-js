@@ -17,7 +17,7 @@ import type {
 } from "./types";
 import type { OnMessageArgs, OnSentArgs, OnStatusArgs } from "./emitters";
 
-import type { fetch as FetchType, Response } from "undici/types/fetch";
+import type { fetch as FetchType, Request, Response } from "undici/types/fetch";
 import type { FormData } from "undici/types/formdata";
 import type { BinaryLike } from "node:crypto";
 import type { Blob } from "node:buffer";
@@ -26,6 +26,21 @@ import MessageRequest from "./request";
 
 import EventEmitter from "node:events";
 import { createHmac } from "node:crypto";
+
+/**
+ * This type allows both type-safety in the constructor and a super nice documentation.
+ *
+ * @internal
+ */
+type UnknownArgsConstructor = {
+    token: unknown;
+    appSecret?: unknown;
+    webhookVerifyToken?: unknown;
+    v?: unknown;
+    parsed?: unknown;
+    secure?: unknown;
+    ponyfill?: unknown;
+};
 
 /**
  * The main API Class
@@ -81,36 +96,38 @@ export default class WhatsAppAPI extends EventEmitter {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - fetch might not be defined in the enviroment, hence giving the option to provide a ponyfill
         ponyfill = fetch
-    }: {
-        /**
-         * The API token, given at setup. It can be either a temporal token or a permanent one.
-         */
-        token: unknown | string;
-        /**
-         * The app secret, given at setup
-         */
-        appSecret?: unknown | string;
-        /**
-         * The webhook verify token, configured at setup
-         */
-        webhookVerifyToken?: unknown | string;
-        /**
-         * The version of the API, defaults to v16.0
-         */
-        v?: unknown | string;
-        /**
-         * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
-         */
-        parsed?: unknown | boolean;
-        /**
-         * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
-         */
-        secure?: unknown | boolean;
-        /**
-         * The fetch function to use for the requests. If not specified, it will use the fetch function from the enviroment.
-         */
-        ponyfill?: unknown | typeof FetchType;
-    }) {
+    }:
+        | {
+              /**
+               * The API token, given at setup. It can be either a temporal token or a permanent one.
+               */
+              token: string;
+              /**
+               * The app secret, given at setup
+               */
+              appSecret?: string;
+              /**
+               * The webhook verify token, configured at setup
+               */
+              webhookVerifyToken?: string;
+              /**
+               * The version of the API, defaults to v16.0
+               */
+              v?: string;
+              /**
+               * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
+               */
+              parsed?: boolean;
+              /**
+               * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
+               */
+              secure?: boolean;
+              /**
+               * The fetch function to use for the requests. If not specified, it will use the fetch function from the enviroment.
+               */
+              ponyfill?: typeof FetchType;
+          }
+        | UnknownArgsConstructor) {
         super();
 
         if (typeof token !== "string") {
@@ -609,7 +626,7 @@ export default class WhatsAppAPI extends EventEmitter {
      * @returns The fetch response
      * @throws If url is not specified
      */
-    _authenicatedRequest(url: URL | string): Promise<Response> {
+    _authenicatedRequest(url: string | URL | Request): Promise<Response> {
         if (!url) throw new Error("URL must be specified");
 
         return this.fetch(url, {
