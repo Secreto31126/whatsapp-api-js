@@ -1,4 +1,4 @@
-type Contact = {
+type BuiltContact = {
     name: Name;
     birthday?: string;
     org?: Organization;
@@ -15,7 +15,7 @@ export class Contacts {
     /**
      * The contacts of the message
      */
-    contacts: Contact[];
+    contacts: BuiltContact[];
     /**
      * The type of the object
      * @internal
@@ -43,7 +43,7 @@ export class Contacts {
         this.contacts = [];
 
         for (const components of contact) {
-            const contact = {} as Contact;
+            const contact = {} as BuiltContact;
 
             for (const component of components) {
                 if (!component._)
