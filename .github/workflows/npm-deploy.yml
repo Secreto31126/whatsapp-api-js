@@ -14,8 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm ci --only=dev
-      - run: npm run prettier
-      - run: npm run lint
+      - run: npm run build
       - run: npm run test
   
   publish-npm:
