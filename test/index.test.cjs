@@ -101,7 +101,11 @@ describe("WhatsAppAPI", function () {
     });
 
     describe("Ponyfill", function () {
-        it("should default to the enviroment fetch", function () {
+        it("should default to the enviroment fetch (skip if not defined)", function () {
+            if (typeof fetch === "undefined") {
+                return;
+            }
+
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret
