@@ -1,8 +1,4 @@
-/**
- * @package
- * @ignore
- */
-class MessageMock {
+export class MessageWebhookMock {
     /**
      * Helper class to test the messages post request, conditionally creating the object based on the available data
      */
@@ -33,7 +29,7 @@ class MessageMock {
         }
 
         if (message) {
-            this.entry[0].changes[0].value.messages = [ message ];
+            this.entry[0].changes[0].value.messages = [message];
         }
 
         if (name) {
@@ -43,15 +39,11 @@ class MessageMock {
     }
 }
 
-/**
- * @package
- * @ignore
- */
-class StatusMock {
+export class StatusWebhookMock {
     /**
      * Helper class to test the status post request, conditionally creating the object based on the available data
      */
-     constructor(phoneID, phone, status, messageID, conversation, pricing) {
+    constructor(phoneID, phone, status, messageID, conversation, pricing) {
         this.object = "whatsapp_business_account";
         this.entry = [{
             id: "WHATSAPP_BUSINESS_ACCOUNT_ID",
@@ -96,5 +88,3 @@ class StatusMock {
         }
     }
 }
-
-module.exports = { MessageMock, StatusMock };

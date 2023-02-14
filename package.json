@@ -27,18 +27,19 @@
     "build": "npm run build:module && npm run build:common && npm run build:types",
     "build:watch": "tsc --watch",
     "build:module": "tsc",
+    "build:module:types": "tsc -d",
     "build:common": "tsc -p tsconfig.common.json",
     "build:standalone": "tsc -p tsconfig.standalone.json",
     "build:types": "tsc -p tsconfig.types.json",
     "test": "mocha",
-    "test:watch": "mocha --reporter min --watch",
+    "test:watch": "echo \"Doesn't work with ESM\" # mocha --reporter min --watch",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "prettier": "prettier --check src",
     "prettier:write": "prettier --write src",
     "coverage": "nyc --reporter=text mocha --reporter min",
     "document": "typedoc && cp -r docs_statics/* docs/",
-    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output"
+    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output/"
   },
   "keywords": [
     "whatsapp",
