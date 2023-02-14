@@ -25,35 +25,35 @@ describe("WhatsAppAPI", function () {
 
     describe("Token", function () {
         it("should create a WhatsAppAPI object with the token", function () {
-            const Whatsapp = new WhatsAppAPI({ token, appSecret });
+            const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
             equal(Whatsapp.token, token);
         });
 
         it("should fail if no access token is provided", function () {
             throws(function () {
-                new WhatsAppAPI({ appSecret });
+                new WhatsAppAPI({ appSecret, ponyfill: undici_fetch });
             });
         });
     });
 
     describe("App secret", function () {
         it("should create a WhatsAppAPI object with the appSecret", function () {
-            const Whatsapp = new WhatsAppAPI({ token, appSecret });
+            const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
             equal(Whatsapp.appSecret, appSecret);
         });
 
         it("should fail if no app secret is provided and secure is true (default)", function () {
             throws(function () {
-                new WhatsAppAPI({ token });
+                new WhatsAppAPI({ token, ponyfill: undici_fetch });
             });
 
             throws(function () {
-                new WhatsAppAPI({ token, secure: true });
+                new WhatsAppAPI({ token, secure: true, ponyfill: undici_fetch });
             });
         });
 
         it("should work if no app secret is provided and secure is false", function () {
-            new WhatsAppAPI({ token, secure: false });
+            new WhatsAppAPI({ token, secure: false, ponyfill: undici_fetch });
         });
     });
 
@@ -62,7 +62,8 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                webhookVerifyToken
+                webhookVerifyToken,
+                ponyfill: undici_fetch
             });
             equal(
                 Whatsapp.webhookVerifyToken,
@@ -75,7 +76,8 @@ describe("WhatsAppAPI", function () {
         it("should work with v16.0 as default", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
-                appSecret
+                appSecret,
+                ponyfill: undici_fetch
             });
             equal(Whatsapp.v, "v16.0");
         });
@@ -84,7 +86,8 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                v: "v13.0"
+                v: "v13.0",
+                ponyfill: undici_fetch
             });
             equal(Whatsapp.v, "v13.0");
         });
@@ -94,7 +97,8 @@ describe("WhatsAppAPI", function () {
                 new WhatsAppAPI({
                     token,
                     appSecret,
-                    v: 16
+                    v: 16,
+                    ponyfill: undici_fetch
                 });
             });
         });
@@ -108,7 +112,8 @@ describe("WhatsAppAPI", function () {
 
             const Whatsapp = new WhatsAppAPI({
                 token,
-                appSecret
+                appSecret,
+                ponyfill: undici_fetch
             });
             equal(typeof Whatsapp.fetch, "function");
         });
@@ -138,7 +143,8 @@ describe("WhatsAppAPI", function () {
         it("should set parsed to true by default", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
-                appSecret
+                appSecret,
+                ponyfill: undici_fetch
             });
             equal(Whatsapp.parsed, true);
         });
@@ -147,7 +153,8 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                parsed: true
+                parsed: true,
+                ponyfill: undici_fetch
             });
             equal(Whatsapp.parsed, true);
         });
@@ -156,7 +163,8 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                parsed: false
+                parsed: false,
+                ponyfill: undici_fetch
             });
             equal(Whatsapp.parsed, false);
         });
@@ -196,7 +204,8 @@ describe("WhatsAppAPI", function () {
         this.beforeEach(function () {
             Whatsapp = new WhatsAppAPI({
                 token,
-                appSecret
+                appSecret,
+                ponyfill: undici_fetch
             });
         });
 
@@ -520,7 +529,7 @@ describe("WhatsAppAPI", function () {
         const message = "Hello World";
         const code = "something_random";
 
-        const Whatsapp = new WhatsAppAPI({ token, appSecret });
+        const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
 
         this.beforeEach(function () {
             Whatsapp.parsed = true;
@@ -925,7 +934,7 @@ describe("WhatsAppAPI", function () {
         const bot = "1";
         const id = "2";
 
-        const Whatsapp = new WhatsAppAPI({ token, appSecret });
+        const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
 
         let form;
         this.beforeEach(function () {
@@ -1414,7 +1423,8 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                webhookVerifyToken
+                webhookVerifyToken,
+                ponyfill: undici_fetch
             });
 
             this.beforeEach(function () {
@@ -1506,7 +1516,8 @@ describe("WhatsAppAPI", function () {
 
             const Whatsapp = new WhatsAppAPI({
                 token,
-                appSecret
+                appSecret,
+                ponyfill: undici_fetch
             });
 
             this.beforeEach(function () {
@@ -1716,7 +1727,11 @@ describe("WhatsAppAPI", function () {
     });
 
     describe("_authenicatedRequest", function () {
-        const Whatsapp = new WhatsAppAPI({ token, appSecret });
+        const Whatsapp = new WhatsAppAPI({
+            token,
+            appSecret,
+            ponyfill: undici_fetch
+        });
 
         it("should make an authenticated request to any url", async function () {
             clientExample
