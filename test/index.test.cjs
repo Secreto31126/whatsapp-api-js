@@ -13,7 +13,7 @@ const { Text } = require("../lib/common/messages/index.js");
 // Mock the https requests
 const { agent, clientFacebook, clientExample } = require("./server.mocks.cjs");
 const { MessageWebhookMock, StatusWebhookMock } = require("./webhooks.mocks.cjs");
-const { setGlobalDispatcher, fetch, FormData } = require("undici");
+const { setGlobalDispatcher, fetch: undici_fetch, FormData } = require("undici");
 const { Blob } = require("node:buffer");
 
 setGlobalDispatcher(agent);
@@ -301,7 +301,7 @@ describe("WhatsAppAPI", function () {
         const Whatsapp = new WhatsAppAPI({
             token,
             appSecret,
-            ponyfill: fetch
+            ponyfill: undici_fetch
         });
 
         this.beforeEach(function () {
