@@ -77,9 +77,9 @@
     "eslint-plugin-tsdoc": "^0.2.17",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "prettier": "2.7.1",
+    "prettier": "2.8.4",
     "rewire": "^6.0.0",
-    "sinon": "^14.0.0",
+    "sinon": "^15.0.1",
     "typedoc": "^0.23.25",
     "typescript": "^4.8.4",
     "undici": "^5.18.0"
