@@ -115,7 +115,11 @@ docs_temp/
 docs/
 
 # Builds
-lib/
+lib/*
+!lib/common/
+
+lib/common/*
+!lib/common/package.json
 
 # JetBrains IDEs
 .idea

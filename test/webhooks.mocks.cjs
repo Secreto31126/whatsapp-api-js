@@ -1,4 +1,4 @@
-export class MessageWebhookMock {
+class MessageWebhookMock {
     /**
      * Helper class to test the messages post request, conditionally creating the object based on the available data
      */
@@ -39,7 +39,7 @@ export class MessageWebhookMock {
     }
 }
 
-export class StatusWebhookMock {
+class StatusWebhookMock {
     /**
      * Helper class to test the status post request, conditionally creating the object based on the available data
      */
@@ -88,3 +88,8 @@ export class StatusWebhookMock {
         }
     }
 }
+
+module.exports = {
+    MessageWebhookMock,
+    StatusWebhookMock
+};
