@@ -656,6 +656,7 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws 400 if the rawBody is missing and secure is true
      * @throws 401 if the signature is missing and secure is true
      * @throws 500 if the appSecret isn't specified and secure is true
+     * @throws 401 if the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
      */
     post(data: PostData, rawBody?: BinaryLike, signature?: string): number {
