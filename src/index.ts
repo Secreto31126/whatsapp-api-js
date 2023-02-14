@@ -650,14 +650,15 @@ export default class WhatsAppAPI extends EventEmitter {
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
      *
      * @param data - The POSTed data object sent by Whatsapp
-     * @param signature - The X-Hub-Signature-256 header signature sent by Whatsapp
      * @param rawBody - The raw body of the POST request
+     * @param signature - The X-Hub-Signature-256 header signature sent by Whatsapp
      * @returns 200, it's the expected http/s response code
-     * @throws 400 if the POST request body is empty or missing data
-     * @throws 401 if the signature is missing
-     * @throws 500 if the appSecret isn't specified
+     * @throws 400 if the rawBody is missing and secure is true
+     * @throws 401 if the signature is missing and secure is true
+     * @throws 500 if the appSecret isn't specified and secure is true
+     * @throws 400 if the POSTed data is not a valid Whatsapp API request
      */
-    post(data: PostData, signature?: string, rawBody?: BinaryLike): number {
+    post(data: PostData, rawBody?: BinaryLike, signature?: string): number {
         //Validating the payload
         if (this.secure) {
             if (!rawBody) throw 400;
