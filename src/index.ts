@@ -643,25 +643,6 @@ export default class WhatsAppAPI extends EventEmitter {
 
     // #endregion
 
-    /**
-     * Make an authenticated request to any url.
-     * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
-     *
-     * @internal
-     * @param url - The url to request to
-     * @returns The fetch response
-     * @throws If url is not specified
-     */
-    _authenicatedRequest(url: string | URL | Request): Promise<Response> {
-        if (!url) throw new Error("URL must be specified");
-
-        return this.fetch(url, {
-            headers: {
-                Authorization: `Bearer ${this.token}`
-            }
-        });
-    }
-
     // #region Webhooks
 
     /**
@@ -780,4 +761,23 @@ export default class WhatsAppAPI extends EventEmitter {
     }
 
     // #endregion
+
+    /**
+     * Make an authenticated request to any url.
+     * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
+     *
+     * @internal
+     * @param url - The url to request to
+     * @returns The fetch response
+     * @throws If url is not specified
+     */
+    _authenicatedRequest(url: string | URL | Request): Promise<Response> {
+        if (!url) throw new Error("URL must be specified");
+
+        return this.fetch(url, {
+            headers: {
+                Authorization: `Bearer ${this.token}`
+            }
+        });
+    }
 }
