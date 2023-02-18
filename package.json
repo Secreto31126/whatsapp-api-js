@@ -13,14 +13,14 @@
   ],
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "import": "./module/index.js",
-      "require": "./common/index.js"
+      "types": "./lib/types/index.d.ts",
+      "import": "./lib/module/index.js",
+      "require": "./lib/common/index.js"
     },
     "./messages": {
-      "types": "./types/messages/index.d.ts",
-      "import": "./module/messages/index.js",
-      "require": "./common/messages/index.js"
+      "types": "./lib/types/messages/index.d.ts",
+      "import": "./lib/module/messages/index.js",
+      "require": "./lib/common/messages/index.js"
     }
   },
   "scripts": {
