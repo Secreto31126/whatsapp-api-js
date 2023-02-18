@@ -107,7 +107,7 @@ describe("WhatsAppAPI", function () {
     describe("Ponyfill", function () {
         it("should default to the enviroment fetch (skip if not defined)", function () {
             if (typeof fetch === "undefined") {
-                return;
+                this.skip();
             }
 
             const Whatsapp = new WhatsAppAPI({
