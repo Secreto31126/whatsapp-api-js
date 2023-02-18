@@ -8,8 +8,8 @@ on:
     types: [created]
 
 jobs:
-  checks:
-    name: Pre-Checks
+  release:
+    name: Build, test and release to NPM
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
