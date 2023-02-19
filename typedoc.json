@@ -1,0 +1,11 @@
+{
+    // Comments are supported, like tsconfig.json
+    "entryPoints": [
+        "src/index.ts",
+        "src/types.d.ts",
+        "src/emitters.d.ts",
+        "./src/messages/index.ts"
+    ],
+    "out": "docs",
+    "includeVersion": true
+}

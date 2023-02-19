@@ -112,5 +112,5 @@ playground.js
 # Documentation
 docs/
 
-# Types
-types/
+# TS output
+lib/

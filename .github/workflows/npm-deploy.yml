@@ -8,52 +8,32 @@ on:
     types: [created]
 
 jobs:
-  checks:
-    name: Pre-Checks
+  release:
+    name: Build, test and release to NPM
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - run: npm ci --only=dev
-      - run: npm run prettier
-      - run: npm run lint
-      - run: npm run test
-  
-  publish-npm:
-    name: Public Release
-    runs-on: ubuntu-latest
-    needs: checks
-    if: "!github.event.release.prerelease"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
+      
+      - name: Build and test
+        run: npm ci --only=dev && npm run build && npm run test
       
       - name: Give me 1 minute to reconsider my life actions
         run: sleep 60s
       
-      - name: Ok, now publish it
-        run: npm run types && npm publish
+      - name: Public Release
+        if: "!github.event.release.prerelease"
+        run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-  preview-npm:
-    name: Beta Release
-    runs-on: ubuntu-latest
-    needs: checks
-    if: "github.event.release.prerelease"
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-
-      - name: Set package version to prerelease tag
-        run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
       
       - name: Beta Release
-        run: npm run types && npm publish --tag beta
+        if: "github.event.release.prerelease"
+        run: |
+          npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
+          npm publish --tag beta
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

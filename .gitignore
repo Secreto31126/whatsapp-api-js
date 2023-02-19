@@ -108,12 +108,18 @@ dist
 
 # Test code
 playground.js
+playground.mjs
 
 # Documentation
+docs_temp/
 docs/
 
-# Types
-types/
+# Builds
+lib/*
+!lib/common/
+
+lib/common/*
+!lib/common/package.json
 
 # JetBrains IDEs
 .idea

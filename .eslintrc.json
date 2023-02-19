@@ -1,22 +1,30 @@
 {
     "env": {
-        "browser": true,
-        "commonjs": true,
-        "es2021": true,
-        "node": true
+        "es6": true,
+        "node": true,
+        "mocha": true
     },
+    "plugins": [
+        "@typescript-eslint",
+        "eslint-plugin-tsdoc"
+    ],
     "extends": [
         "eslint:recommended",
-        "prettier"
+        "prettier",
+        "plugin:@typescript-eslint/recommended"
     ],
-    "overrides": [
-    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "module"
     },
     "rules": {
         "no-unused-vars": [
             "off"
-        ]
+        ],
+        "tsdoc/syntax": "warn"
+    },
+    "globals": {
+        "fetch": "readonly"
     }
 }

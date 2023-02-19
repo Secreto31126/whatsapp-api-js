@@ -2,26 +2,21 @@
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
-A Whatsapp's Official API framework for Node.js @^16 [(and others)](#running-outside-of-nodejs)
+A Node.js Whatsapp's Official API framework written in Typescript.
 
 ## List of contents
 
-- [Disclaimers](#disclaimers)
 - [Set up](#set-up)
-- [Running outside of Node.js](#running-outside-of-nodejs)
+- [Changelog](#changelog)
+- [Examples](#enviroments-examples)
+    - [Node.js](#nodejs)
+    - [Deno](#deno)
+    - [Bun](#bun)
+    - [Websites](#websites)
 - [Breaking changes](#breaking-changes)
 - [Documentation](#documentation)
 - [Beta Releases](#beta-releases)
 - [Comments](#comments)
-
-## Disclaimers
-
- 1. Whatsapp's Official API is now generally available.
-To get started, you can follow [this steps](https://developers.facebook.com/docs/whatsapp/getting-started/signing-up).
-
- 2. This project is a work in progress. Breaking changes are expected from mid-version to mid-version until it hits version 1.0.0.
-
- 3. To know what changes between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
 
 ## Set up
 
@@ -31,58 +26,68 @@ Get the API token, either a temporal or a permanent one.
 
 In your server you can install the module using npm:
 
-```
+```sh
 npm install whatsapp-api-js
 ```
 
 Now you can write code like this:
 
 ```js
-// Read Running outside of Nodejs to see support for other engines
-const { WhatsAppAPI, Handlers, Types } = require("whatsapp-api-js");
-const { Text, Media, Contacts } = Types;
+import WhatsAppAPI from "whatsapp-api-js";
+import { Text, Image, Document } from "whatsapp-api-js/messages";
+import * as Contacts from "whatsapp-api-js/messages/contacts";
 
-const Token = "YOUR_TOKEN";
+// Kind reminder to not hardcode your token and secret
+const TOKEN = "YOUR_TOKEN";
+const APP_SECRET = "YOUR_SECRET";
 
-const Whatsapp = new WhatsAppAPI(Token);
+const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-    // The Handlers work with any middleware, as long as you pass the correct data
-    return Handlers.post(JSON.parse(e.data), onMessage);
+    // The handlers work with any middleware, as long as you pass the correct data
+    return Whatsapp.post(JSON.parse(e.data));
 }
 
-async function onMessage(phoneID, phone, message, name, raw_data) {
-    console.log(`User ${phone} (${name}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
+Whatsapp.on("message", ({ phoneID, from, message, name, raw }) => {
+    console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
     let promise;
 
-    if (message.type === "text") promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`), message.id);
+    if (message.type === "text") {
+        promise = Whatsapp.sendMessage(phoneID, from, new Text(`*${name}* said:\n\n${message.text.body}`), message.id);
+    }
 
-    if (message.type === "image") promise = Whatsapp.sendMessage(phoneID, phone, new Media.Image(message.image.id, true, `Nice photo, ${name}`));
+    if (message.type === "image") {
+        promise = Whatsapp.sendMessage(phoneID, from, new Image(message.image.id, true, `Nice photo, ${name}`));
+    }
 
-    if (message.type === "document") promise = Whatsapp.sendMessage(phoneID, phone, new Media.Document(message.document.id, true, undefined, "Our document"));
+    if (message.type === "document") {
+        promise = Whatsapp.sendMessage(phoneID, from, new Document(message.document.id, true, undefined, "Our document"));
+    }
 
-    if (message.type === "contacts") promise = Whatsapp.sendMessage(phoneID, phone, new Contacts.Contacts(
-        [
-            new Contacts.Name(name, "First name", "Last name"),
-            new Contacts.Phone(phone),
-            new Contacts.Birthday("2022", "04", "25"),
-        ],
-        [
-            new Contacts.Name("John", "First name", "Last name"),
-            new Contacts.Organization("Company", "Department", "Title"),
-            new Contacts.Url("https://www.google.com", "WORK"),
-        ]
-    ));
+    if (message.type === "contacts") {
+        promise = Whatsapp.sendMessage(phoneID, from, new Contacts.Contacts(
+            [
+                new Contacts.Name(name, "First name", "Last name"),
+                new Contacts.Phone(phone),
+                new Contacts.Birthday("2022", "04", "25"),
+            ],
+            [
+                new Contacts.Name("John", "First name", "Last name"),
+                new Contacts.Organization("Company", "Department", "Title"),
+                new Contacts.Url("https://www.google.com", "WORK"),
+            ]
+        ));
+    }
 
     console.log(await promise ?? "There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.");
     
     Whatsapp.markAsRead(phoneID, message.id);
-}
+});
 
-Whatsapp.logSentMessages((phoneID, phone, message, raw_data) => {
-    console.log(`Bot ${phoneID} sent to user ${phone} ${JSON.stringify(message)}\n\n${JSON.stringify(raw_data)}`);
+Whatsapp.on("sent", ({ phoneID, to, message, raw }) => {
+    console.log(`Bot ${phoneID} sent to user ${to} ${message}\n\n${JSON.stringify(raw_data)}`);
 });
 ```
 
@@ -92,12 +97,21 @@ While setting up, you will be asked a Verify Token. This can be any string you w
 The app also has a GET wizard for the webhook authentication:
 
 ```js
-const { Handlers } = require("whatsapp-api-js");
+import WhatsAppAPI from "whatsapp-api-js";
+
+const TOKEN = "YOUR_TOKEN";
+const APP_SECRET = "YOUR_SECRET";
+const VERIFY_TOKEN = "YOUR_VERIFY_TOKEN";
+
+const Whatsapp = new WhatsAppAPI({
+    token: TOKEN,
+    appSecret: APP_SECRET,
+    webhookVerifyToken: VERIFY_TOKEN
+});
 
 // Assuming get is called on a GET request to your server
 function get(e) {
-    // The Handlers work with any middleware, as long as you pass the correct data
-    return Handlers.get(JSON.parse(e.params), "your_verify_token");
+    return Whatsapp.get(JSON.parse(e.params), "your_verify_token");
 }
 ```
 
@@ -106,35 +120,99 @@ There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
-## Running outside of Node.js
+## Changelog
 
-Since @0.4.2, the module will check if fetch is available, and fallback to "undici"
-(or "cross-fetch" if using prior @0.8.0) if not. This will allow the same script to
-be run in many different enviroments, such as a web browser, Deno and Bun.
+To know what changed between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
+
+## Examples
+
+The code is _almost_ server agnostic (might work on an EventEmitter ponyfill), which allows it to work on most environments.
+
+### Node.js
+
+If using ESM, you can import the module like this:
+
+```js
+import WhatsAppAPI from "whatsapp-api-js";
+```
+
+If using CommonJS, you can require the package:
+
+```js
+const WhatsAppAPI = require("whatsapp-api-js");
+```
+
+### Deno
 
 With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It's really simple to use:
 
 ```js
-import { WhatsAppAPI } from "npm:whatsapp-api-js";
-const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
+import WhatsAppAPI from "npm:whatsapp-api-js";
 ```
 
-However, the npm support is still experimental and behind the --unstable flag.
-If you want to use prior versions of Deno, use [https://esm.sh/whatsapp-api-js](https://esm.sh/) to import the code.
+If you want to use prior versions of Deno, use [https://esm.sh/whatsapp-api-js](https://esm.sh/whatsapp-api-js) to import the code.
 
-Bun also works by running ```bun install whatsapp-api-js```.
+### Bun
+
+Bun _should_ also work by running:
+
+```sh
+bun install whatsapp-api-js
+```
+
+```js
+import WhatsAppAPI from "whatsapp-api-js";
+```
+
+### Websites
 
 HTML module example:
 
 ```html
 <script type="module">
- import { WhatsAppAPI } from "https://esm.sh/whatsapp-api-js";
- const Whatsapp = new WhatsAppAPI("YOUR_TOKEN_HERE");
+ import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
  <!-- Please, never use your API tokens in a website, use this method wisely -->
 </script>
 ```
 
 ## Breaking changes
+
+### 1.0.0
+
+The module was rewritten in TypeScript, and most of the import syntax changed.
+CommonJS is still supported.
+
+Examples:
+
+```js
+// ESM
+import WhatsAppAPI from "whatsapp-api-js";
+import { Text, Image, Document } from "whatsapp-api-js/messages";
+import Location from "whatsapp-api-js/messages/location";
+```
+
+```js
+// CommonJS
+const WhatsAppAPI = require("whatsapp-api-js");
+const { Text, Image, Document } = require("whatsapp-api-js/messages");
+const Location = require("whatsapp-api-js/messages/location");
+```
+
+The default undici fallback was also removed, and the module now uses the enviroment fetch implementation.
+Ponyfilling is still possible via the new parameter at the WhatsAppAPI() constructor:
+
+```js
+import WhatsAppAPI from "whatsapp-api-js";
+import { fetch } from "undici";
+
+const Whatsapp = new WhatsAppAPI({
+    token: "YOUR_TOKEN_HERE",
+    appSecret: "YOUR_SECRET_HERE",
+    ponyfill: fetch
+});
+```
+
+This change also restores the compatibility with previous Node.js versions, making the module more server agnostic.
 
 ### 0.8.0
 
