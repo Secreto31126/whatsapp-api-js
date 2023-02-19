@@ -434,13 +434,12 @@ export class ActionCatalog {
      */
     sections?: ProductSection[];
 
-    #_: "product" | "product_list";
     /**
      * The type of the action
      * @internal
      */
     get _(): "product" | "product_list" {
-        return this.#_;
+        return this.product_retailer_id ? "product" : "product_list";
     }
 
     /**
@@ -492,8 +491,6 @@ export class ActionCatalog {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - TS doesn't know that if it's not a single product, it's a product list
         else this.sections = products;
-
-        this.#_ = is_single_product ? "product" : "product_list";
     }
 }
 
