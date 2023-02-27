@@ -8,7 +8,7 @@ A Node.js Whatsapp's Official API framework written in Typescript.
 
 - [Set up](#set-up)
 - [Changelog](#changelog)
-- [Examples](#enviroments-examples)
+- [Examples](#examples)
     - [Node.js](#nodejs)
     - [Deno](#deno)
     - [Bun](#bun)
@@ -87,7 +87,7 @@ Whatsapp.on("message", ({ phoneID, from, message, name, raw }) => {
 });
 
 Whatsapp.on("sent", ({ phoneID, to, message, raw }) => {
-    console.log(`Bot ${phoneID} sent to user ${to} ${message}\n\n${JSON.stringify(raw_data)}`);
+    console.log(`Bot ${phoneID} sent to user ${to} ${message}\n\n${JSON.stringify(raw)}`);
 });
 ```
 
