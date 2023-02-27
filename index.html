@@ -1,230 +1,197 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    
-    <meta charset="utf-8">
-    <title>Home - Documentation</title>
-    
-    
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
-    <script src="scripts/nav.js" defer></script>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
-
-<label for="nav-trigger" class="overlay"></label>
-
-<nav >
-    
-    
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ActionButtons.html">ActionButtons</a></li><li><a href="ActionCatalog.html">ActionCatalog</a></li><li><a href="ActionList.html">ActionList</a></li><li><a href="Address.html">Address</a></li><li><a href="Audio.html">Audio</a></li><li><a href="Birthday.html">Birthday</a></li><li><a href="Body.html">Body</a></li><li><a href="BodyComponent.html">BodyComponent</a></li><li><a href="Button.html">Button</a></li><li><a href="ButtonComponent.html">ButtonComponent</a><ul class='methods'><li data-type='method'><a href="ButtonComponent.html#build">build</a></li></ul></li><li><a href="ButtonParameter.html">ButtonParameter</a></li><li><a href="Contacts.html">Contacts</a></li><li><a href="Currency.html">Currency</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Document.html">Document</a></li><li><a href="Email.html">Email</a></li><li><a href="Footer.html">Footer</a></li><li><a href="Header.html">Header</a></li><li><a href="HeaderComponent.html">HeaderComponent</a></li><li><a href="Image.html">Image</a></li><li><a href="Interactive.html">Interactive</a></li><li><a href="Language.html">Language</a></li><li><a href="ListSection.html">ListSection</a></li><li><a href="Location.html">Location</a></li><li><a href="Media.html">Media</a></li><li><a href="Name.html">Name</a></li><li><a href="Organization.html">Organization</a></li><li><a href="Parameter.html">Parameter</a></li><li><a href="Phone.html">Phone</a></li><li><a href="Product.html">Product</a></li><li><a href="ProductSection.html">ProductSection</a></li><li><a href="Reaction.html">Reaction</a></li><li><a href="Request.html">Request</a></li><li><a href="Row.html">Row</a></li><li><a href="Sticker.html">Sticker</a></li><li><a href="Template.html">Template</a></li><li><a href="Text.html">Text</a></li><li><a href="Url.html">Url</a></li><li><a href="Video.html">Video</a></li><li><a href="WhatsAppAPI.html">WhatsAppAPI</a><ul class='methods'><li data-type='method'><a href="WhatsAppAPI.html#_authenicatedRequest">_authenicatedRequest</a></li><li data-type='method'><a href="WhatsAppAPI.html#createQR">createQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#deleteMedia">deleteMedia</a></li><li data-type='method'><a href="WhatsAppAPI.html#deleteQR">deleteQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#fetchMedia">fetchMedia</a></li><li data-type='method'><a href="WhatsAppAPI.html#get">get</a></li><li data-type='method'><a href="WhatsAppAPI.html#markAsRead">markAsRead</a></li><li data-type='method'><a href="WhatsAppAPI.html#post">post</a></li><li data-type='method'><a href="WhatsAppAPI.html#retrieveMedia">retrieveMedia</a></li><li data-type='method'><a href="WhatsAppAPI.html#retrieveQR">retrieveQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="WhatsAppAPI.html#updateQR">updateQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#uploadMedia">uploadMedia</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="Exports.html">Exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#get">get</a></li><li><a href="global.html#post">post</a></li></ul>
-    
-</nav>
-
-<div id="main">
-    
-
-    
-
-
-
-    
-
-
-    <section class="package">
-        <h3> </h3>		
-    </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    <section class="readme usertext">
-        <article><h1>whatsapp-api-js</h1>
+<!DOCTYPE html><html class="default" lang="en"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>whatsapp-api-js - v1.0.0</title><meta name="description" content="Documentation for whatsapp-api-js - v1.0.0"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os"</script><header class="tsd-page-toolbar">
+<div class="tsd-toolbar-contents container">
+<div class="table-cell" id="tsd-search" data-base=".">
+<div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
+<div class="field">
+<div id="tsd-toolbar-links"></div></div>
+<ul class="results">
+<li class="state loading">Preparing search index...</li>
+<li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">whatsapp-api-js - v1.0.0</a></div>
+<div class="table-cell" id="tsd-widgets"><a href="#" class="tsd-widget tsd-toolbar-icon menu no-caption" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="7" width="14" height="2" fill="var(--color-text)"></rect><rect x="1" y="11" width="14" height="2" fill="var(--color-text)"></rect></svg></a></div></div></header>
+<div class="container container-main">
+<div class="col-8 col-content">
+<div class="tsd-page-title">
+<h2>whatsapp-api-js - v1.0.0</h2></div>
+<div class="tsd-panel tsd-typography">
+<a href="#whatsapp-api-js" id="whatsapp-api-js" style="color: inherit; text-decoration: none;">
+  <h1>whatsapp-api-js</h1>
+</a>
 <p><a href="https://badge.fury.io/js/whatsapp-api-js"><img src="https://badge.fury.io/js/whatsapp-api-js.svg" alt="npm version"></a></p>
-<p>A Whatsapp's Official API framework for Node.js @^16 <a href="#running-outside-of-nodejs">(and others)</a></p>
-<h2>List of contents</h2>
+<p>A Node.js Whatsapp&#39;s Official API framework written in Typescript.</p>
+
+<a href="#list-of-contents" id="list-of-contents" style="color: inherit; text-decoration: none;">
+  <h2>List of contents</h2>
+</a>
 <ul>
-<li><a href="#disclaimers">Disclaimers</a></li>
 <li><a href="#set-up">Set up</a></li>
-<li><a href="#running-outside-of-nodejs">Running outside of Node.js</a></li>
+<li><a href="#changelog">Changelog</a></li>
+<li><a href="#examples">Examples</a><ul>
+<li><a href="#nodejs">Node.js</a></li>
+<li><a href="#deno">Deno</a></li>
+<li><a href="#bun">Bun</a></li>
+<li><a href="#websites">Websites</a></li>
+</ul>
+</li>
 <li><a href="#breaking-changes">Breaking changes</a></li>
 <li><a href="#documentation">Documentation</a></li>
 <li><a href="#beta-releases">Beta Releases</a></li>
 <li><a href="#comments">Comments</a></li>
 </ul>
-<h2>Disclaimers</h2>
-<ol>
-<li>
-<p>Whatsapp's Official API is now generally available.
-To get started, you can follow <a href="https://developers.facebook.com/docs/whatsapp/getting-started/signing-up">this steps</a>.</p>
-</li>
-<li>
-<p>This project is a work in progress. Breaking changes are expected from mid-version to mid-version until it hits version 1.0.0.</p>
-</li>
-<li>
-<p>To know what changes between updates, check out the <a href="https://github.com/Secreto31126/whatsapp-api-js/releases">releases on Github</a>.</p>
-</li>
-</ol>
-<h2>Set up</h2>
+
+<a href="#set-up" id="set-up" style="color: inherit; text-decoration: none;">
+  <h2>Set up</h2>
+</a>
 <p>First, you need a Facebook app with the Whatsapp API activated.
 You can create your first app following <a href="https://developers.facebook.com/docs/whatsapp/getting-started/signing-up">this steps</a>.
 Get the API token, either a temporal or a permanent one.</p>
 <p>In your server you can install the module using npm:</p>
-<pre class="prettyprint source"><code>npm install whatsapp-api-js
+<pre><code class="language-sh"><span class="hl-0">npm </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">whatsapp-api-js</span>
 </code></pre>
 <p>Now you can write code like this:</p>
-<pre class="prettyprint source lang-js"><code>// Read Running outside of Nodejs to see support for other engines
-const { WhatsAppAPI, Handlers, Types } = require(&quot;whatsapp-api-js&quot;);
-const { Text, Media, Contacts } = Types;
-
-const Token = &quot;YOUR_TOKEN&quot;;
-
-const Whatsapp = new WhatsAppAPI(Token);
-
-// Assuming post is called on a POST request to your server
-function post(e) {
-    // The Handlers work with any middleware, as long as you pass the correct data
-    return Handlers.post(JSON.parse(e.data), onMessage);
-}
-
-async function onMessage(phoneID, phone, message, name, raw_data) {
-    console.log(`User ${phone} (${name}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
-
-    let promise;
-
-    if (message.type === &quot;text&quot;) promise = Whatsapp.sendMessage(phoneID, phone, new Text(`*${name}* said:\n\n${message.text.body}`), message.id);
-
-    if (message.type === &quot;image&quot;) promise = Whatsapp.sendMessage(phoneID, phone, new Media.Image(message.image.id, true, `Nice photo, ${name}`));
-
-    if (message.type === &quot;document&quot;) promise = Whatsapp.sendMessage(phoneID, phone, new Media.Document(message.document.id, true, undefined, &quot;Our document&quot;));
-
-    if (message.type === &quot;contacts&quot;) promise = Whatsapp.sendMessage(phoneID, phone, new Contacts.Contacts(
-        [
-            new Contacts.Name(name, &quot;First name&quot;, &quot;Last name&quot;),
-            new Contacts.Phone(phone),
-            new Contacts.Birthday(&quot;2022&quot;, &quot;04&quot;, &quot;25&quot;),
-        ],
-        [
-            new Contacts.Name(&quot;John&quot;, &quot;First name&quot;, &quot;Last name&quot;),
-            new Contacts.Organization(&quot;Company&quot;, &quot;Department&quot;, &quot;Title&quot;),
-            new Contacts.Url(&quot;https://www.google.com&quot;, &quot;WORK&quot;),
-        ]
-    ));
-
-    console.log(await promise ?? &quot;There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.&quot;);
-    
-    Whatsapp.markAsRead(phoneID, message.id);
-}
-
-Whatsapp.logSentMessages((phoneID, phone, message, raw_data) => {
-    console.log(`Bot ${phoneID} sent to user ${phone} ${JSON.stringify(message)}\n\n${JSON.stringify(raw_data)}`);
-});
+<pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">Text</span><span class="hl-0">, </span><span class="hl-3">Image</span><span class="hl-0">, </span><span class="hl-3">Document</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js/messages&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-4">*</span><span class="hl-0"> </span><span class="hl-2">as</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js/messages/contacts&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-5">// Kind reminder to not hardcode your token and secret</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">TOKEN</span><span class="hl-0"> = </span><span class="hl-1">&quot;YOUR_TOKEN&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">APP_SECRET</span><span class="hl-0"> = </span><span class="hl-1">&quot;YOUR_SECRET&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">Whatsapp</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">WhatsAppAPI</span><span class="hl-0">({ </span><span class="hl-3">token:</span><span class="hl-0"> </span><span class="hl-6">TOKEN</span><span class="hl-0">, </span><span class="hl-3">appSecret:</span><span class="hl-0"> </span><span class="hl-6">APP_SECRET</span><span class="hl-0"> });</span><br/><br/><span class="hl-5">// Assuming post is called on a POST request to your server</span><br/><span class="hl-4">function</span><span class="hl-0"> </span><span class="hl-7">post</span><span class="hl-0">(</span><span class="hl-3">e</span><span class="hl-0">) {</span><br/><span class="hl-0">    </span><span class="hl-5">// The handlers work with any middleware, as long as you pass the correct data</span><br/><span class="hl-0">    </span><span class="hl-2">return</span><span class="hl-0"> </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">post</span><span class="hl-0">(</span><span class="hl-6">JSON</span><span class="hl-0">.</span><span class="hl-7">parse</span><span class="hl-0">(</span><span class="hl-3">e</span><span class="hl-0">.</span><span class="hl-3">data</span><span class="hl-0">));</span><br/><span class="hl-0">}</span><br/><br/><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">on</span><span class="hl-0">(</span><span class="hl-1">&quot;message&quot;</span><span class="hl-0">, ({ </span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">from</span><span class="hl-0">, </span><span class="hl-3">message</span><span class="hl-0">, </span><span class="hl-3">name</span><span class="hl-0">, </span><span class="hl-3">raw</span><span class="hl-0"> }) </span><span class="hl-4">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-7">log</span><span class="hl-0">(</span><span class="hl-1">`User </span><span class="hl-4">${</span><span class="hl-3">name</span><span class="hl-4">}</span><span class="hl-1"> (</span><span class="hl-4">${</span><span class="hl-3">from</span><span class="hl-4">}</span><span class="hl-1">) sent to bot </span><span class="hl-4">${</span><span class="hl-3">phoneID</span><span class="hl-4">}</span><span class="hl-1"> </span><span class="hl-4">${</span><span class="hl-6">JSON</span><span class="hl-8">.</span><span class="hl-7">stringify</span><span class="hl-8">(</span><span class="hl-3">message</span><span class="hl-8">)</span><span class="hl-4">}</span><span class="hl-1">`</span><span class="hl-0">);</span><br/><br/><span class="hl-0">    </span><span class="hl-4">let</span><span class="hl-0"> </span><span class="hl-3">promise</span><span class="hl-0">;</span><br/><br/><span class="hl-0">    </span><span class="hl-2">if</span><span class="hl-0"> (</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">type</span><span class="hl-0"> === </span><span class="hl-1">&quot;text&quot;</span><span class="hl-0">) {</span><br/><span class="hl-0">        </span><span class="hl-3">promise</span><span class="hl-0"> = </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">sendMessage</span><span class="hl-0">(</span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">from</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">Text</span><span class="hl-0">(</span><span class="hl-1">`*</span><span class="hl-4">${</span><span class="hl-3">name</span><span class="hl-4">}</span><span class="hl-1">* said:</span><span class="hl-9">\n\n</span><span class="hl-4">${</span><span class="hl-3">message</span><span class="hl-8">.</span><span class="hl-3">text</span><span class="hl-8">.</span><span class="hl-3">body</span><span class="hl-4">}</span><span class="hl-1">`</span><span class="hl-0">), </span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">id</span><span class="hl-0">);</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    </span><span class="hl-2">if</span><span class="hl-0"> (</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">type</span><span class="hl-0"> === </span><span class="hl-1">&quot;image&quot;</span><span class="hl-0">) {</span><br/><span class="hl-0">        </span><span class="hl-3">promise</span><span class="hl-0"> = </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">sendMessage</span><span class="hl-0">(</span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">from</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">Image</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">image</span><span class="hl-0">.</span><span class="hl-3">id</span><span class="hl-0">, </span><span class="hl-4">true</span><span class="hl-0">, </span><span class="hl-1">`Nice photo, </span><span class="hl-4">${</span><span class="hl-3">name</span><span class="hl-4">}</span><span class="hl-1">`</span><span class="hl-0">));</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    </span><span class="hl-2">if</span><span class="hl-0"> (</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">type</span><span class="hl-0"> === </span><span class="hl-1">&quot;document&quot;</span><span class="hl-0">) {</span><br/><span class="hl-0">        </span><span class="hl-3">promise</span><span class="hl-0"> = </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">sendMessage</span><span class="hl-0">(</span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">from</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">Document</span><span class="hl-0">(</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">document</span><span class="hl-0">.</span><span class="hl-3">id</span><span class="hl-0">, </span><span class="hl-4">true</span><span class="hl-0">, </span><span class="hl-4">undefined</span><span class="hl-0">, </span><span class="hl-1">&quot;Our document&quot;</span><span class="hl-0">));</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    </span><span class="hl-2">if</span><span class="hl-0"> (</span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">type</span><span class="hl-0"> === </span><span class="hl-1">&quot;contacts&quot;</span><span class="hl-0">) {</span><br/><span class="hl-0">        </span><span class="hl-3">promise</span><span class="hl-0"> = </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">sendMessage</span><span class="hl-0">(</span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">from</span><span class="hl-0">, </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Contacts</span><span class="hl-0">(</span><br/><span class="hl-0">            [</span><br/><span class="hl-0">                </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Name</span><span class="hl-0">(</span><span class="hl-3">name</span><span class="hl-0">, </span><span class="hl-1">&quot;First name&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;Last name&quot;</span><span class="hl-0">),</span><br/><span class="hl-0">                </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Phone</span><span class="hl-0">(</span><span class="hl-3">phone</span><span class="hl-0">),</span><br/><span class="hl-0">                </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Birthday</span><span class="hl-0">(</span><span class="hl-1">&quot;2022&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;04&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;25&quot;</span><span class="hl-0">),</span><br/><span class="hl-0">            ],</span><br/><span class="hl-0">            [</span><br/><span class="hl-0">                </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Name</span><span class="hl-0">(</span><span class="hl-1">&quot;John&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;First name&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;Last name&quot;</span><span class="hl-0">),</span><br/><span class="hl-0">                </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Organization</span><span class="hl-0">(</span><span class="hl-1">&quot;Company&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;Department&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;Title&quot;</span><span class="hl-0">),</span><br/><span class="hl-0">                </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-3">Contacts</span><span class="hl-0">.</span><span class="hl-7">Url</span><span class="hl-0">(</span><span class="hl-1">&quot;https://www.google.com&quot;</span><span class="hl-0">, </span><span class="hl-1">&quot;WORK&quot;</span><span class="hl-0">),</span><br/><span class="hl-0">            ]</span><br/><span class="hl-0">        ));</span><br/><span class="hl-0">    }</span><br/><br/><span class="hl-0">    </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-7">log</span><span class="hl-0">(</span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">promise</span><span class="hl-0"> ?? </span><span class="hl-1">&quot;There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.&quot;</span><span class="hl-0">);</span><br/><span class="hl-0">    </span><br/><span class="hl-0">    </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">markAsRead</span><span class="hl-0">(</span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">message</span><span class="hl-0">.</span><span class="hl-3">id</span><span class="hl-0">);</span><br/><span class="hl-0">});</span><br/><br/><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">on</span><span class="hl-0">(</span><span class="hl-1">&quot;sent&quot;</span><span class="hl-0">, ({ </span><span class="hl-3">phoneID</span><span class="hl-0">, </span><span class="hl-3">to</span><span class="hl-0">, </span><span class="hl-3">message</span><span class="hl-0">, </span><span class="hl-3">raw</span><span class="hl-0"> }) </span><span class="hl-4">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">    </span><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-7">log</span><span class="hl-0">(</span><span class="hl-1">`Bot </span><span class="hl-4">${</span><span class="hl-3">phoneID</span><span class="hl-4">}</span><span class="hl-1"> sent to user </span><span class="hl-4">${</span><span class="hl-3">to</span><span class="hl-4">}</span><span class="hl-1"> </span><span class="hl-4">${</span><span class="hl-3">message</span><span class="hl-4">}</span><span class="hl-9">\n\n</span><span class="hl-4">${</span><span class="hl-6">JSON</span><span class="hl-8">.</span><span class="hl-7">stringify</span><span class="hl-8">(</span><span class="hl-3">raw</span><span class="hl-8">)</span><span class="hl-4">}</span><span class="hl-1">`</span><span class="hl-0">);</span><br/><span class="hl-0">});</span>
 </code></pre>
 <p>To recieve the post requests on message, you must setup the webhook at your Facebook app.
 While setting up, you will be asked a Verify Token. This can be any string you want.</p>
 <p>The app also has a GET wizard for the webhook authentication:</p>
-<pre class="prettyprint source lang-js"><code>const { Handlers } = require(&quot;whatsapp-api-js&quot;);
-
-// Assuming get is called on a GET request to your server
-function get(e) {
-    // The Handlers work with any middleware, as long as you pass the correct data
-    return Handlers.get(JSON.parse(e.params), &quot;your_verify_token&quot;);
-}
+<pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">TOKEN</span><span class="hl-0"> = </span><span class="hl-1">&quot;YOUR_TOKEN&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">APP_SECRET</span><span class="hl-0"> = </span><span class="hl-1">&quot;YOUR_SECRET&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">VERIFY_TOKEN</span><span class="hl-0"> = </span><span class="hl-1">&quot;YOUR_VERIFY_TOKEN&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">Whatsapp</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">WhatsAppAPI</span><span class="hl-0">({</span><br/><span class="hl-0">    </span><span class="hl-3">token:</span><span class="hl-0"> </span><span class="hl-6">TOKEN</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-3">appSecret:</span><span class="hl-0"> </span><span class="hl-6">APP_SECRET</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-3">webhookVerifyToken:</span><span class="hl-0"> </span><span class="hl-6">VERIFY_TOKEN</span><br/><span class="hl-0">});</span><br/><br/><span class="hl-5">// Assuming get is called on a GET request to your server</span><br/><span class="hl-4">function</span><span class="hl-0"> </span><span class="hl-7">get</span><span class="hl-0">(</span><span class="hl-3">e</span><span class="hl-0">) {</span><br/><span class="hl-0">    </span><span class="hl-2">return</span><span class="hl-0"> </span><span class="hl-3">Whatsapp</span><span class="hl-0">.</span><span class="hl-7">get</span><span class="hl-0">(</span><span class="hl-6">JSON</span><span class="hl-0">.</span><span class="hl-7">parse</span><span class="hl-0">(</span><span class="hl-3">e</span><span class="hl-0">.</span><span class="hl-3">params</span><span class="hl-0">), </span><span class="hl-1">&quot;your_verify_token&quot;</span><span class="hl-0">);</span><br/><span class="hl-0">}</span>
 </code></pre>
 <p>Once you are done, click administrate, and set the webhook to subscribe to messages only.
 There might be a future update to support the other types of subscriptions.</p>
-<p>And that's it! Now you have a functioning Whatsapp Bot connected to your server.</p>
-<h2>Running outside of Node.js</h2>
-<p>Since @0.4.2, the module will check if fetch is available, and fallback to &quot;undici&quot;
-(or &quot;cross-fetch&quot; if using prior @0.8.0) if not. This will allow the same script to
-be run in many different enviroments, such as a web browser, Deno and Bun.</p>
-<p>With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It's really simple to use:</p>
-<pre class="prettyprint source lang-js"><code>import { WhatsAppAPI } from &quot;npm:whatsapp-api-js&quot;;
-const Whatsapp = new WhatsAppAPI(&quot;YOUR_TOKEN_HERE&quot;);
+<p>And that&#39;s it! Now you have a functioning Whatsapp Bot connected to your server.</p>
+
+<a href="#changelog" id="changelog" style="color: inherit; text-decoration: none;">
+  <h2>Changelog</h2>
+</a>
+<p>To know what changed between updates, check out the <a href="https://github.com/Secreto31126/whatsapp-api-js/releases">releases on Github</a>.</p>
+
+<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+  <h2>Examples</h2>
+</a>
+<p>The code is <em>almost</em> server agnostic (might work on an EventEmitter ponyfill), which allows it to work on most environments.</p>
+
+<a href="#nodejs" id="nodejs" style="color: inherit; text-decoration: none;">
+  <h3>Node.js</h3>
+</a>
+<p>If using ESM, you can import the module like this:</p>
+<pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">;</span>
 </code></pre>
-<p>However, the npm support is still experimental and behind the --unstable flag.
-If you want to use prior versions of Deno, use <a href="https://esm.sh/">https://esm.sh/whatsapp-api-js</a> to import the code.</p>
-<p>Bun also works by running <code>bun install whatsapp-api-js</code>.</p>
+<p>If using CommonJS, you can require the package:</p>
+<pre><code class="language-js"><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">WhatsAppAPI</span><span class="hl-0"> = </span><span class="hl-7">require</span><span class="hl-0">(</span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">);</span>
+</code></pre>
+
+<a href="#deno" id="deno" style="color: inherit; text-decoration: none;">
+  <h3>Deno</h3>
+</a>
+<p>With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It&#39;s really simple to use:</p>
+<pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;npm:whatsapp-api-js&quot;</span><span class="hl-0">;</span>
+</code></pre>
+<p>If you want to use prior versions of Deno, use <a href="https://esm.sh/whatsapp-api-js">https://esm.sh/whatsapp-api-js</a> to import the code.</p>
+
+<a href="#bun" id="bun" style="color: inherit; text-decoration: none;">
+  <h3>Bun</h3>
+</a>
+<p>Bun <em>should</em> also work by running:</p>
+<pre><code class="language-sh"><span class="hl-0">bun </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">whatsapp-api-js</span>
+</code></pre>
+<pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">;</span>
+</code></pre>
+
+<a href="#websites" id="websites" style="color: inherit; text-decoration: none;">
+  <h3>Websites</h3>
+</a>
 <p>HTML module example:</p>
-<pre class="prettyprint source lang-html"><code>&lt;script type=&quot;module&quot;>
- import { WhatsAppAPI } from &quot;https://esm.sh/whatsapp-api-js&quot;;
- const Whatsapp = new WhatsAppAPI(&quot;YOUR_TOKEN_HERE&quot;);
- &lt;!-- Please, never use your API tokens in a website, use this method wisely -->
-&lt;/script>
+<pre><code class="language-html"><span class="hl-10">&lt;</span><span class="hl-11">script</span><span class="hl-8"> </span><span class="hl-12">type</span><span class="hl-8">=</span><span class="hl-13">&quot;module&quot;</span><span class="hl-10">&gt;</span><br/><span class="hl-8"> </span><span class="hl-2">import</span><span class="hl-8"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-8"> </span><span class="hl-2">from</span><span class="hl-8"> </span><span class="hl-1">&quot;https://esm.sh/whatsapp-api-js&quot;</span><span class="hl-8">;</span><br/><span class="hl-8"> </span><span class="hl-0">&lt;!--</span><span class="hl-8"> </span><span class="hl-3">Please</span><span class="hl-8">, </span><span class="hl-3">never</span><span class="hl-8"> </span><span class="hl-3">use</span><span class="hl-8"> </span><span class="hl-3">your</span><span class="hl-8"> </span><span class="hl-6">API</span><span class="hl-8"> </span><span class="hl-3">tokens</span><span class="hl-8"> </span><span class="hl-4">in</span><span class="hl-8"> </span><span class="hl-3">a</span><span class="hl-8"> </span><span class="hl-3">website</span><span class="hl-8">, </span><span class="hl-3">use</span><span class="hl-8"> </span><span class="hl-4">this</span><span class="hl-8"> </span><span class="hl-3">method</span><span class="hl-8"> </span><span class="hl-3">wisely</span><span class="hl-8"> </span><span class="hl-0">--&gt;</span><br/><span class="hl-10">&lt;/</span><span class="hl-11">script</span><span class="hl-10">&gt;</span>
 </code></pre>
-<h2>Breaking changes</h2>
-<h3>0.8.0</h3>
+
+<a href="#breaking-changes" id="breaking-changes" style="color: inherit; text-decoration: none;">
+  <h2>Breaking changes</h2>
+</a>
+
+<a href="#100" id="100" style="color: inherit; text-decoration: none;">
+  <h3>1.0.0</h3>
+</a>
+<p>The module was rewritten in TypeScript, and most of the import syntax changed.
+CommonJS is still supported.</p>
+<p>Examples:</p>
+<pre><code class="language-js"><span class="hl-5">// ESM</span><br/><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">Text</span><span class="hl-0">, </span><span class="hl-3">Image</span><span class="hl-0">, </span><span class="hl-3">Document</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js/messages&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">Location</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js/messages/location&quot;</span><span class="hl-0">;</span>
+</code></pre>
+<pre><code class="language-js"><span class="hl-5">// CommonJS</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">WhatsAppAPI</span><span class="hl-0"> = </span><span class="hl-7">require</span><span class="hl-0">(</span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">);</span><br/><span class="hl-4">const</span><span class="hl-0"> { </span><span class="hl-6">Text</span><span class="hl-0">, </span><span class="hl-6">Image</span><span class="hl-0">, </span><span class="hl-6">Document</span><span class="hl-0"> } = </span><span class="hl-7">require</span><span class="hl-0">(</span><span class="hl-1">&quot;whatsapp-api-js/messages&quot;</span><span class="hl-0">);</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">Location</span><span class="hl-0"> = </span><span class="hl-7">require</span><span class="hl-0">(</span><span class="hl-1">&quot;whatsapp-api-js/messages/location&quot;</span><span class="hl-0">);</span>
+</code></pre>
+<p>The default undici fallback was also removed, and the module now uses the enviroment fetch implementation.
+Ponyfilling is still possible via the new parameter at the WhatsAppAPI() constructor:</p>
+<pre><code class="language-js"><span class="hl-2">import</span><span class="hl-0"> </span><span class="hl-3">WhatsAppAPI</span><span class="hl-0"> </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;whatsapp-api-js&quot;</span><span class="hl-0">;</span><br/><span class="hl-2">import</span><span class="hl-0"> { </span><span class="hl-3">fetch</span><span class="hl-0"> } </span><span class="hl-2">from</span><span class="hl-0"> </span><span class="hl-1">&quot;undici&quot;</span><span class="hl-0">;</span><br/><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">Whatsapp</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">WhatsAppAPI</span><span class="hl-0">({</span><br/><span class="hl-0">    </span><span class="hl-3">token:</span><span class="hl-0"> </span><span class="hl-1">&quot;YOUR_TOKEN_HERE&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-3">appSecret:</span><span class="hl-0"> </span><span class="hl-1">&quot;YOUR_SECRET_HERE&quot;</span><span class="hl-0">,</span><br/><span class="hl-0">    </span><span class="hl-3">ponyfill:</span><span class="hl-0"> </span><span class="hl-3">fetch</span><br/><span class="hl-0">});</span>
+</code></pre>
+<p>This change also restores the compatibility with previous Node.js versions, making the module more server agnostic.</p>
+
+<a href="#080" id="080" style="color: inherit; text-decoration: none;">
+  <h3>0.8.0</h3>
+</a>
 <p>The module changed from using &quot;cross-fetch&quot; to &quot;undici&quot; as the fallback fetch implementation in order
 to use FormData for the Media upload support, which is not (easily) available in &quot;cross-fetch&quot;.</p>
-<p>Although this change doesn't affect existing code, it forces the Node.js version to be at least 16.
+<p>Although this change doesn&#39;t affect existing code, it forces the Node.js version to be at least 16.
 If the module is downloaded using a lower version, npm will throw an error.</p>
-<h3>0.7.0</h3>
-<p>With the release of cart support for Cloud API, some naming changes where made within the interactive's classes.
+
+<a href="#070" id="070" style="color: inherit; text-decoration: none;">
+  <h3>0.7.0</h3>
+</a>
+<p>With the release of cart support for Cloud API, some naming changes where made within the interactive&#39;s classes.
 The Section class, which was a component of the ActionList, was renamed to ListSection, to avoid confusion with
 the new ProductSection.</p>
-<h3>0.6.0</h3>
-<p>Since 0.6.0, the module will no longer return the raw fetch request, now it's internally parsed and returned.
+
+<a href="#060" id="060" style="color: inherit; text-decoration: none;">
+  <h3>0.6.0</h3>
+</a>
+<p>Since 0.6.0, the module will no longer return the raw fetch request, now it&#39;s internally parsed and returned.
 This change was made in order to improve the logSentMessages function, as it can now log the server response too.
 To get the raw request as before, you can use the <code>parsed</code> property of the main object as follows.</p>
-<pre class="prettyprint source lang-js"><code>const parsed = false;
-const Whatsapp = new WhatsAppAPI(&quot;YOUR_TOKEN&quot;, undefined, parsed);
-// All the API operations, like sendMessage, will now return the raw request.
-// Keep in mind, now when using logSentMessage the id and response parameters will be undefined.
+<pre><code class="language-js"><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">parsed</span><span class="hl-0"> = </span><span class="hl-4">false</span><span class="hl-0">;</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-6">Whatsapp</span><span class="hl-0"> = </span><span class="hl-4">new</span><span class="hl-0"> </span><span class="hl-7">WhatsAppAPI</span><span class="hl-0">(</span><span class="hl-1">&quot;YOUR_TOKEN&quot;</span><span class="hl-0">, </span><span class="hl-4">undefined</span><span class="hl-0">, </span><span class="hl-3">parsed</span><span class="hl-0">);</span><br/><span class="hl-5">// All the API operations, like sendMessage, will now return the raw request.</span><br/><span class="hl-5">// Keep in mind, now when using logSentMessage the id and response parameters will be undefined.</span>
 </code></pre>
-<h2>Documentation</h2>
+
+<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+  <h2>Documentation</h2>
+</a>
 <p>The package documentation is available in <a href="https://whatsappapijs.web.app/">whatsappapijs.web.app</a> and
 <a href="https://secreto31126.github.io/whatsapp-api-js/">secreto31126.github.io/whatsapp-api-js</a>.</p>
-<h2>Beta releases</h2>
+
+<a href="#beta-releases" id="beta-releases" style="color: inherit; text-decoration: none;">
+  <h2>Beta releases</h2>
+</a>
 <p>Install the latest beta realease with <code>npm install whatsapp-api-js@beta</code>.
 As any beta, it is 110% likely to break. I also use this tag to test npm releases.
 Use it at your own risk.</p>
-<h2>Comments</h2>
-<p>Even though the code already supports all the message types, there's still a long way to go.
+
+<a href="#comments" id="comments" style="color: inherit; text-decoration: none;">
+  <h2>Comments</h2>
+</a>
+<p>Even though the code already supports all the message types, there&#39;s still a long way to go.
 I will keep updating it until I like how it works.</p>
-<p>Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.</p></article>
-    </section>
-
-
-
-
-
-
-    
-    
-</div>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.0</a> on Sun Feb 12 2023 10:07:23 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
-</footer>
-
-<script>prettyPrint();</script>
-<script src="scripts/polyfill.js"></script>
-<script src="scripts/linenumber.js"></script>
-
-
-
-</body>
-</html>
+<p>Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.</p>
+</div></div>
+<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+<div class="tsd-navigation settings">
+<details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Settings</h3></summary>
+<div class="tsd-accordion-details">
+<div class="tsd-filter-visibility">
+<h4 class="uppercase">Member Visibility</h4><form>
+<ul id="tsd-filter-options">
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-private" name="private"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Private</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li>
+<li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></form></div>
+<div class="tsd-theme-toggle">
+<h4 class="uppercase">Theme</h4><select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
+<nav class="tsd-navigation primary">
+<details class="tsd-index-accordion" open><summary class="tsd-accordion-summary">
+<h3><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4.93896 8.531L12 15.591L19.061 8.531L16.939 6.409L12 11.349L7.06098 6.409L4.93896 8.531Z" fill="var(--color-text)"></path></svg> Modules</h3></summary>
+<div class="tsd-accordion-details">
+<ul>
+<li class="current selected"><a href="modules.html">whatsapp-<wbr/>api-<wbr/>js -<wbr/> v1.0.0</a>
+<ul>
+<li class="tsd-kind-module"><a href="modules/WhatsAppAPI.html">Whats<wbr/>AppAPI</a></li>
+<li class="tsd-kind-module"><a href="modules/emitters.html">emitters</a></li>
+<li class="tsd-kind-module"><a href="modules/messages.html">messages</a></li>
+<li class="tsd-kind-module"><a href="modules/types.html">types</a></li></ul></li></ul></div></details></nav></div></div>
+<div class="container tsd-generator">
+<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
+<div class="overlay"></div><script src="assets/main.js"></script></body></html>
