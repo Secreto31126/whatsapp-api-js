@@ -4,9 +4,8 @@ import type {
     ClientBuildableMessageComponent,
     ClientTypedMessageComponent
 } from "../types";
+import type Text from "./text.js";
 import type { Document, Image, Video } from "./media";
-
-import Text from "./text.js";
 
 type BuiltButtonComponent = {
     type: "button";

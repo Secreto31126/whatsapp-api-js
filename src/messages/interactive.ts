@@ -3,9 +3,8 @@ import type {
     ClientMessageComponent,
     ClientTypedMessageComponent
 } from "../types.js";
-
-import { Document, Image, Video } from "./media.js";
-import Text from "./text.js";
+import type Text from "./text.js";
+import type { Document, Image, Video } from "./media.js";
 
 /**
  * Interactive API object
@@ -198,7 +197,7 @@ export class Header {
         this.type = object._type;
 
         // Text type can go to hell
-        if (object instanceof Text) {
+        if (object._type === "text") {
             if (object.body.length > 60)
                 throw new Error("Header text must be 60 characters or less");
             this[object._type] = object.body;
