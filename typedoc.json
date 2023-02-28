@@ -6,6 +6,9 @@
         "src/emitters.d.ts",
         "./src/messages/index.ts"
     ],
+    "exclude": [
+        "**/node_modules/**"
+    ],
     "out": "docs",
     "includeVersion": true
 }

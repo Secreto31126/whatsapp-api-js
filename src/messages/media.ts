@@ -1,7 +1,9 @@
+import type { ClientMessage, ClientMessageNames } from "../types";
+
 /**
  * Placeholder class for all the media types
  */
-export class Media {
+export class Media implements ClientMessage {
     /**
      * The id of the media
      */
@@ -10,6 +12,10 @@ export class Media {
      * The link of the media
      */
     link?: string;
+
+    get _type(): ClientMessageNames {
+        throw new Error("Media is a placeholder class, don't use it directly");
+    }
 
     /**
      * This method works as a placeholder so the documentation looks nice.
@@ -24,17 +30,17 @@ export class Media {
         if (!file) throw new Error("Media must have a file");
         this[isItAnID ? "id" : "link"] = file;
     }
+
+    _build() {
+        return JSON.stringify(this);
+    }
 }
 
 /**
  * Audio API component
  */
 export class Audio extends Media {
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "audio" {
+    get _type(): "audio" {
         return "audio";
     }
 
@@ -63,11 +69,7 @@ export class Document extends Media {
      */
     filename?: string;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "document" {
+    get _type(): "document" {
         return "document";
     }
 
@@ -102,11 +104,7 @@ export class Image extends Media {
      */
     caption?: string;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "image" {
+    get _type(): "image" {
         return "image";
     }
 
@@ -128,11 +126,7 @@ export class Image extends Media {
  * Sticker API component
  */
 export class Sticker extends Media {
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "sticker" {
+    get _type(): "sticker" {
         return "sticker";
     }
 
@@ -157,11 +151,7 @@ export class Video extends Media {
      */
     caption?: string;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "video" {
+    get _type(): "video" {
         return "video";
     }
 

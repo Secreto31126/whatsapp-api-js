@@ -1,7 +1,9 @@
+import type { ClientMessage } from "../types";
+
 /**
  * Reaction API object
  */
-export default class Reaction {
+export default class Reaction implements ClientMessage {
     /**
      * The message's id to react to
      */
@@ -11,11 +13,7 @@ export default class Reaction {
      */
     emoji: string;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "reaction" {
+    get _type(): "reaction" {
         return "reaction";
     }
 
@@ -34,5 +32,9 @@ export default class Reaction {
 
         this.message_id = message_id;
         this.emoji = emoji;
+    }
+
+    _build() {
+        return JSON.stringify(this);
     }
 }

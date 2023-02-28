@@ -5,7 +5,7 @@ import type {
     PostData,
     GetParams,
     ClientMessage,
-    ServerMessageTypes,
+    ClientMessageBuiltin,
     ClientMessageRequest,
     ServerMessageResponse,
     ServerMarkAsReadResponse,
@@ -187,19 +187,19 @@ export default class WhatsAppAPI extends EventEmitter {
     async sendMessage(
         phoneID: string,
         to: string,
-        message: ClientMessage,
+        message: ClientMessage | ClientMessageBuiltin,
         context?: string
     ): Promise<ServerMessageResponse | Response> {
         if (!phoneID) throw new Error("Phone ID must be specified");
         if (!to) throw new Error("To must be specified");
         if (!message) throw new Error("Message must be specified");
-        if (!message._) {
+        if (!message._type) {
             throw new Error(
-                "Unexpected internal error (message._ is not defined)"
+                "Unexpected internal error (message._type is not defined)"
             );
         }
 
-        const type = message._;
+        const type = message._type;
 
         const request = {
             messaging_product: "whatsapp",
@@ -209,15 +209,12 @@ export default class WhatsAppAPI extends EventEmitter {
 
         if (context) request.context = { message_id: context };
 
-        // FUTURE ME: If WhatsApp does ever decide to add another array-like (arralike) message, kill them
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - TS dumb, idk why it insists that message._ is not a key of message
-        // prettier-ignore
-        const object: ServerMessageTypes = type in message && Array.isArray(message[type]) ? message[type] : message;
-
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - TS dumb, the _ will always match the type
-        request[request.type] = JSON.stringify(object);
+        // @ts-ignore - TS dumb, the _type will always match the type
+        request[type] =
+            // Prettier will probably kill me, but this comment has a purpose.
+            // It prevents ts-ignore from ignoring more than intended.
+            message._build();
 
         // Make the post request
         const promise = this.fetch(

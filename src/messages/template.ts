@@ -1,6 +1,11 @@
+import type {
+    ClientMessage,
+    ClientMessageComponent,
+    ClientBuildableMessageComponent,
+    ClientTypedMessageComponent
+} from "../types";
+import type Text from "./text.js";
 import type { Document, Image, Video } from "./media";
-
-import Text from "./text.js";
 
 type BuiltButtonComponent = {
     type: "button";
@@ -12,7 +17,7 @@ type BuiltButtonComponent = {
 /**
  * Template API object
  */
-export class Template {
+export class Template implements ClientMessage {
     /**
      * The name of the template
      */
@@ -20,17 +25,18 @@ export class Template {
     /**
      * The language of the template
      */
-    language: Language;
+    language: Language | ClientMessageComponent;
     /**
      * The components of the template
      */
-    components?: (HeaderComponent | BodyComponent | BuiltButtonComponent)[];
+    components?: (
+        | HeaderComponent
+        | BodyComponent
+        | BuiltButtonComponent
+        | ClientMessageComponent
+    )[];
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "template" {
+    get _type(): "template" {
         return "template";
     }
 
@@ -45,27 +51,32 @@ export class Template {
      */
     constructor(
         name: string,
-        language: string | Language,
-        ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]
+        language: string | Language | ClientMessageComponent,
+        ...components: (
+            | HeaderComponent
+            | BodyComponent
+            | ButtonComponent
+            | ClientBuildableMessageComponent
+        )[]
     ) {
         if (!name) throw new Error("Template must have a name");
         if (!language) throw new Error("Template must have a language");
 
         this.name = name;
         this.language =
-            language instanceof Language ? language : new Language(language);
+            typeof language === "string" ? new Language(language) : language;
         if (components)
             this.components = components
-                .map((cmpt) =>
-                    "build" in cmpt && typeof cmpt.build === "function"
-                        ? cmpt.build()
-                        : cmpt
-                )
+                .map((cmpt) => cmpt._build())
                 .flat() as (
                 | HeaderComponent
                 | BodyComponent
                 | BuiltButtonComponent
             )[];
+    }
+
+    _build() {
+        return JSON.stringify(this);
     }
 }
 
@@ -99,7 +110,7 @@ export class Language {
 /**
  * Currency API object
  */
-export class Currency {
+export class Currency implements ClientTypedMessageComponent {
     /**
      * The amount of the currency by 1000
      */
@@ -112,11 +123,8 @@ export class Currency {
      * The fallback value
      */
     fallback_value: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "currency" {
+
+    get _type(): "currency" {
         return "currency";
     }
 
@@ -146,16 +154,13 @@ export class Currency {
 /**
  * DateTime API object
  */
-export class DateTime {
+export class DateTime implements ClientTypedMessageComponent {
     /**
      * The fallback value
      */
     fallback_value: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "date_time" {
+
+    get _type(): "date_time" {
         return "date_time";
     }
 
@@ -175,7 +180,7 @@ export class DateTime {
 /**
  * Components API object
  */
-export class ButtonComponent {
+export class ButtonComponent implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
@@ -226,7 +231,7 @@ export class ButtonComponent {
      * @internal
      * @returns An array of API compatible buttons components
      */
-    build(): Array<BuiltButtonComponent> {
+    _build(): Array<BuiltButtonComponent> {
         return this.parameters.map((p, i) => {
             return {
                 type: this.type,
@@ -278,7 +283,7 @@ export class ButtonParameter {
 /**
  * Components API object
  */
-export class HeaderComponent {
+export class HeaderComponent implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
@@ -309,6 +314,10 @@ export class HeaderComponent {
             this.parameters = parameters.map((e) =>
                 e instanceof Parameter ? e : new Parameter(e, "header")
             );
+    }
+
+    _build() {
+        return this;
     }
 }
 
@@ -347,6 +356,10 @@ export class BodyComponent {
                 e instanceof Parameter ? e : new Parameter(e, "body")
             );
     }
+
+    _build() {
+        return this;
+    }
 }
 
 /**
@@ -356,7 +369,14 @@ export class Parameter {
     /**
      * The type of the parameter
      */
-    type: "text" | "currency" | "date_time" | "image" | "document" | "video";
+    type:
+        | "text"
+        | "currency"
+        | "date_time"
+        | "image"
+        | "document"
+        | "video"
+        | string;
     /**
      * The text of the parameter
      */
@@ -364,7 +384,7 @@ export class Parameter {
     /**
      * The currency of the parameter
      */
-    currency?: Currency;
+    currency?: Currency | ClientTypedMessageComponent;
     /**
      * The datetime of the parameter
      */
@@ -385,7 +405,7 @@ export class Parameter {
     /**
      * Builds a parameter object for a HeaderComponent or BodyComponent.
      * For Text parameter, the header component character limit is 60, and the body component character limit is 1024.
-     * For Document parameter, only PDF documents are supported for document-based message templates.
+     * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
      *
      * @param parameter - The parameter to be used in the template
      * @param whoami - The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
@@ -394,7 +414,14 @@ export class Parameter {
      * @throws If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
      */
     constructor(
-        parameter: Text | Currency | DateTime | Image | Document | Video,
+        parameter:
+            | Text
+            | Currency
+            | DateTime
+            | Image
+            | Document
+            | Video
+            | ClientTypedMessageComponent,
         whoami?: "header" | "body"
     ) {
         if (!parameter) {
@@ -403,16 +430,16 @@ export class Parameter {
             );
         }
 
-        if (!parameter._) {
+        if (!parameter._type) {
             throw new Error(
                 "Unexpected internal error (parameter._ is not defined)"
             );
         }
 
-        this.type = parameter._;
+        this.type = parameter._type;
 
         // Text type can go to hell
-        if (parameter instanceof Text) {
+        if (parameter._type === "text") {
             if (whoami === "header" && parameter.body.length > 60)
                 throw new Error("Header text must be 60 characters or less");
 
