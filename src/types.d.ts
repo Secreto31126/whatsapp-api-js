@@ -16,12 +16,15 @@ export interface ClientMessage {
     /**
      * The message type
      *
+     * @internal
      * @privateRemarks The built-in classes will return values within {@link ClientMessageNames},
      * however, in order to allow custom messages, it's defined as a string.
      */
     get _type(): ClientMessageNames | string;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
+     *
+     * @internal
      */
     _build(): string;
 }
@@ -35,6 +38,8 @@ export interface ClientMessageComponent {
 export interface ClientTypedMessageComponent extends ClientMessageComponent {
     /**
      * The message's component type
+     *
+     * @internal
      */
     get _type(): string;
 }
@@ -43,6 +48,8 @@ export interface ClientBuildableMessageComponent
     extends ClientMessageComponent {
     /**
      * The message's component builder method
+     *
+     * @internal
      */
     // Allow the user create custom components
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
