@@ -27,7 +27,6 @@ export default class Text implements ClientMessage {
      * @throws If body is over 4096 characters
      */
     constructor(body: string, preview_url?: boolean) {
-        if (!body) throw new Error("Text must have a body object");
         if (body.length > 4096)
             throw new Error("Text body must be less than 4096 characters");
         this.body = body;

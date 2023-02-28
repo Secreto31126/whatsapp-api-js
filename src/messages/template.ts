@@ -4,11 +4,10 @@ import type {
     ClientBuildableMessageComponent,
     ClientTypedMessageComponent
 } from "../types";
+import type Text from "./text.js";
 import type { Document, Image, Video } from "./media";
 
-import Text from "./text.js";
-
-type BuiltButtonComponent = {
+export type BuiltButtonComponent = {
     type: "button";
     sub_type: "url" | "quick_reply";
     index: string;
@@ -47,8 +46,6 @@ export class Template implements ClientMessage {
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
-     * @throws If name is not provided
-     * @throws If language is not provided
      */
     constructor(
         name: string,
@@ -60,9 +57,6 @@ export class Template implements ClientMessage {
             | ClientBuildableMessageComponent
         )[]
     ) {
-        if (!name) throw new Error("Template must have a name");
-        if (!language) throw new Error("Template must have a language");
-
         this.name = name;
         this.language =
             typeof language === "string" ? new Language(language) : language;
@@ -99,10 +93,8 @@ export class Language {
      *
      * @param code - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param policy - The language policy the message should follow. The only supported option is 'deterministic'. The variable isn't even read by my code :)
-     * @throws If code is not provided
      */
     constructor(code: string, policy: "deterministic" = "deterministic") {
-        if (!code) throw new Error("Language must have a code");
         this.policy = policy;
         this.code = code;
     }
@@ -135,16 +127,11 @@ export class Currency implements ClientTypedMessageComponent {
      * @param amount_1000 - Amount multiplied by 1000
      * @param code - Currency code as defined in ISO 4217
      * @param fallback_value - Default text if localization fails
-     * @throws If amount_1000 is not provided
-     * @throws If code is not provided
-     * @throws If fallback_value is not provided
+     * @throws If amount_1000 is not greater than 0
      */
     constructor(amount_1000: number, code: string, fallback_value: string) {
-        if (!amount_1000 && amount_1000 !== 0)
-            throw new Error("Currency must have an amount_1000");
-        if (!code) throw new Error("Currency must have a code");
-        if (!fallback_value)
-            throw new Error("Currency must have a fallback_value");
+        if (amount_1000 <= 0)
+            throw new Error("Currency must have an amount_1000 greater than 0");
 
         this.amount_1000 = amount_1000;
         this.code = code;
@@ -169,11 +156,8 @@ export class DateTime implements ClientTypedMessageComponent {
      * Builds a date_time object for a Parameter
      *
      * @param fallback_value - Default text. For Cloud API, we always use the fallback value, and we do not attempt to localize using other optional fields.
-     * @throws If fallback_value is not provided
      */
     constructor(fallback_value: string) {
-        if (!fallback_value)
-            throw new Error("DateTime must have a fallback_value");
         this.fallback_value = fallback_value;
     }
 }
@@ -202,18 +186,13 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
      * @param sub_type - The type of button to create.
      * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
      * @throws If sub_type is not either 'url' or 'quick_reply'
-     * @throws If parameters is not provided
-     * @throws If parameters has over 3 elements
+     * @throws If parameters has less than 1 or over 3 elements
      */
     constructor(sub_type: "url" | "quick_reply", ...parameters: string[]) {
-        if (!["url", "quick_reply"].includes(sub_type))
+        if (!parameters.length || parameters.length > 3)
             throw new Error(
-                "ButtonComponent sub_type must be either 'url' or 'quick_reply'"
+                "ButtonComponent must have between 1 and 3 parameters"
             );
-        if (!parameters.length)
-            throw new Error("ButtonComponent must have at least 1 parameter");
-        if (parameters.length > 3)
-            throw new Error("ButtonComponent can only have up to 3 parameters");
 
         const buttonType = sub_type === "url" ? "text" : "payload";
         const processed = parameters.map(
@@ -225,13 +204,6 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
         this.parameters = processed;
     }
 
-    /**
-     * The function to build the component as a compatible API object.
-     * Generates the buttons components for a Template message.
-     *
-     * @internal
-     * @returns An array of API compatible buttons components
-     */
     _build(): Array<BuiltButtonComponent> {
         return this.parameters.map((p, i) => {
             return {
@@ -265,17 +237,9 @@ export class ButtonParameter {
      * Builds a button parameter for a ButtonComponent
      *
      * @param param - Developer-provided data that is used to fill in the template.
-     * @param type - The type of the button. Can be either 'text' or 'payload'.
-     * @throws If param is not provided
-     * @throws If type is not either 'text' or 'payload'
+     * @param type - The type of the button
      */
     constructor(param: string, type: "text" | "payload") {
-        if (!param) throw new Error("UrlButton must have a param");
-        if (!["text", "payload"].includes(type))
-            throw new Error(
-                "UrlButton type must be either 'text' or 'payload'"
-            );
-
         this.type = type;
         this[type] = param;
     }
@@ -370,14 +334,7 @@ export class Parameter {
     /**
      * The type of the parameter
      */
-    type:
-        | "text"
-        | "currency"
-        | "date_time"
-        | "image"
-        | "document"
-        | "video"
-        | string;
+    type: "text" | "currency" | "date_time" | "image" | "document" | "video";
     /**
      * The text of the parameter
      */
@@ -385,7 +342,7 @@ export class Parameter {
     /**
      * The currency of the parameter
      */
-    currency?: Currency | ClientTypedMessageComponent;
+    currency?: Currency;
     /**
      * The datetime of the parameter
      */
@@ -409,34 +366,14 @@ export class Parameter {
      * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
      *
      * @param parameter - The parameter to be used in the template
-     * @param whoami - The parent component, used to check if a Text object is too long. Can be either 'header' or 'body'
-     * @throws If parameter is not provided
+     * @param whoami - The parent component, used to check if a Text object is too long
      * @throws If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
      * @throws If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
      */
     constructor(
-        parameter:
-            | Text
-            | Currency
-            | DateTime
-            | Image
-            | Document
-            | Video
-            | ClientTypedMessageComponent,
+        parameter: Text | Currency | DateTime | Image | Document | Video,
         whoami?: "header" | "body"
     ) {
-        if (!parameter) {
-            throw new Error(
-                "Parameter object must have a parameter parameter :)"
-            );
-        }
-
-        if (!parameter._type) {
-            throw new Error(
-                "Unexpected internal error (parameter._ is not defined)"
-            );
-        }
-
         this.type = parameter._type;
 
         // Text type can go to hell
