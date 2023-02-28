@@ -1,6 +1,6 @@
 import type { ClientMessage, ContactComponent } from "../types";
 
-type BuiltContact = {
+export type BuiltContact = {
     name: Name;
     birthday?: string;
     org?: Organization;
@@ -31,10 +31,7 @@ export class Contacts implements ClientMessage {
      *
      * @param contact - Array of contact's components
      * @throws If contact is not provided
-     * @throws If contact does not contain a name component
-     * @throws If contact contains more than one name component
-     * @throws If contact contains more than one birthday component
-     * @throws If contact contains more than one organization component
+     * @throws If contact contains multiple of the same components and _many is set to false (for example, Name, Birthday and Organization)
      */
     constructor(
         ...contact: Array<
@@ -57,17 +54,17 @@ export class Contacts implements ClientMessage {
             const contact = {} as BuiltContact;
 
             for (const component of components) {
-                if (!component._type)
-                    throw new Error(
-                        "Unexpected internal error (component._type is not defined)"
-                    );
-
                 const name = component._type;
 
                 if (component._many) {
                     if (!(name in contact)) {
                         Object.defineProperty(contact, name, {
-                            value: [] as Address[] | Email[] | Phone[] | Url[]
+                            value: [] as
+                                | Address[]
+                                | Email[]
+                                | Phone[]
+                                | Url[]
+                                | ContactComponent[]
                         });
                     }
 
@@ -294,7 +291,6 @@ export class Name implements ContactComponent {
      * @param middle_name - Middle name
      * @param suffix - Name suffix
      * @param prefix - Name prefix
-     * @throws If formatted_name is not defined
      * @throws If no other component apart from formatted_name is defined
      */
     constructor(
@@ -305,8 +301,6 @@ export class Name implements ContactComponent {
         suffix?: string,
         prefix?: string
     ) {
-        if (!formatted_name) throw new Error("Name must have a formatted_name");
-
         this.formatted_name = formatted_name;
         if (first_name) this.first_name = first_name;
         if (last_name) this.last_name = last_name;

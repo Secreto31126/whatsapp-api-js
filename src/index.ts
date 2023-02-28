@@ -84,7 +84,8 @@ export default class WhatsAppAPI extends EventEmitter {
      *
      * @throws If token is not defined
      * @throws If appSecret is not defined and secure is true
-     * @throws If fetch is not defined in the enviroment or the provided ponyfill isn't a function.
+     * @throws If fetch is not defined in the enviroment or the provided ponyfill isn't a function
+     * @throws If v is not a string
      */
     constructor({
         token,
@@ -180,9 +181,6 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param message - A Whatsapp component, built using the corresponding module for each type of message.
      * @param context - The message ID of the message to reply to
      * @returns The server response
-     * @throws If phoneID is not specified
-     * @throws If to is not specified
-     * @throws If message is not specified
      */
     async sendMessage(
         phoneID: string,
@@ -190,15 +188,6 @@ export default class WhatsAppAPI extends EventEmitter {
         message: ClientMessage | ClientMessageBuiltin,
         context?: string
     ): Promise<ServerMessageResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!to) throw new Error("To must be specified");
-        if (!message) throw new Error("Message must be specified");
-        if (!message._type) {
-            throw new Error(
-                "Unexpected internal error (message._type is not defined)"
-            );
-        }
-
         const type = message._type;
 
         const request = {
@@ -258,16 +247,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param phoneID - The bot's phone ID
      * @param messageId - The message ID
      * @returns The server response
-     * @throws If phoneID is not specified
-     * @throws If messageId is not specified
      */
     async markAsRead(
         phoneID: string,
         messageId: string
     ): Promise<ServerMarkAsReadResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!messageId) throw new Error("To must be specified");
-
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
             {
@@ -300,20 +284,12 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param message - The quick message on the QR code
      * @param format - The format of the QR code
      * @returns The server response
-     * @throws If phoneID is not specified
-     * @throws If message is not specified
-     * @throws If format is not either 'png' or 'svn'
      */
     async createQR(
         phoneID: string,
         message: string,
         format: "png" | "svg" = "png"
     ): Promise<ServerCreateQRResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!message) throw new Error("Message must be specified");
-        if (!["png", "svg"].includes(format))
-            throw new Error("Format must be either 'png' or 'svg'");
-
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls?generate_qr_image=${format}&prefilled_message=${message}`,
             {
@@ -335,14 +311,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param phoneID - The bot's phone ID
      * @param id - The QR's id to find. If not specified, all QRs will be returned
      * @returns The server response
-     * @throws If phoneID is not specified
      */
     async retrieveQR(
         phoneID: string,
         id?: string
     ): Promise<ServerRetrieveQRResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${
                 id ?? ""
@@ -366,19 +339,12 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param id - The QR's id to edit
      * @param message - The new quick message for the QR code
      * @returns The server response
-     * @throws If phoneID is not specified
-     * @throws If id is not specified
-     * @throws If message is not specified
      */
     async updateQR(
         phoneID: string,
         id: string,
         message: string
     ): Promise<ServerUpdateQRResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!id) throw new Error("ID must be specified");
-        if (!message) throw new Error("Message must be specified");
-
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}?prefilled_message=${message}`,
             {
@@ -400,16 +366,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param phoneID - The bot's phone ID
      * @param id - The QR's id to delete
      * @returns The server response
-     * @throws If phoneID is not specified
-     * @throws If id is not specified
      */
     async deleteQR(
         phoneID: string,
         id: string
     ): Promise<ServerDeleteQRResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!id) throw new Error("ID must be specified");
-
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}`,
             {
@@ -435,14 +396,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param id - The Media's ID
      * @param phoneID - Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns The server response
-     * @throws If id is not specified
      */
     async retrieveMedia(
         id: string,
         phoneID?: string
     ): Promise<ServerMediaRetrieveResponse | Response> {
-        if (!id) throw new Error("ID must be specified");
-
         const params = phoneID ? `phone_number_id=${phoneID}` : "";
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${id}?${params}`,
@@ -467,8 +425,6 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param form - The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
      * @param check - If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
      * @returns The server response
-     * @throws If phoneID is not specified
-     * @throws If form is not specified
      * @throws If check is set to true and form is not a FormData
      * @throws If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws If check is set to true and the form file is too big for the file type
@@ -502,11 +458,9 @@ export default class WhatsAppAPI extends EventEmitter {
         form: unknown,
         check = true
     ): Promise<ServerMediaUploadResponse | Response> {
-        if (!phoneID) throw new Error("Phone ID must be specified");
-        if (!form) throw new Error("Form must be specified");
-
         if (check) {
             if (
+                !form ||
                 typeof form !== "object" ||
                 !("get" in form) ||
                 typeof form.get !== "function"
@@ -614,14 +568,11 @@ export default class WhatsAppAPI extends EventEmitter {
      * @param id - The Media's ID
      * @param phoneID - Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns The server response
-     * @throws If id is not specified
      */
     async deleteMedia(
         id: string,
         phoneID?: string
     ): Promise<ServerMediaDeleteResponse | Response> {
-        if (!id) throw new Error("ID must be specified");
-
         const params = phoneID ? `phone_number_id=${phoneID}` : "";
         const promise = this.fetch(
             `https://graph.facebook.com/${this.v}/${id}?${params}`,

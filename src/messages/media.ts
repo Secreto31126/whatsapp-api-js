@@ -23,11 +23,8 @@ export class Media implements ClientMessage {
      *
      * @param file - File to be sent
      * @param isItAnID - If the file is an ID (true) or an URL (false)
-     * @throws If type is not provided
-     * @throws If file is not provided
      */
     constructor(file: string, isItAnID = false) {
-        if (!file) throw new Error("Media must have a file");
         this[isItAnID ? "id" : "link"] = file;
     }
 
@@ -51,7 +48,6 @@ export class Audio extends Media {
      * @param isItAnID - Whether audio is an id (true) or a link (false)
      */
     constructor(audio: string, isItAnID = false) {
-        if (!audio) throw new Error("Audio must have an audio link or id");
         super(audio, isItAnID);
     }
 }
@@ -87,8 +83,6 @@ export class Document extends Media {
         caption?: string,
         filename?: string
     ) {
-        if (!document)
-            throw new Error("Document must have a document link or id");
         super(document, isItAnID);
         if (caption) this.caption = caption;
         if (filename) this.filename = filename;
@@ -116,7 +110,6 @@ export class Image extends Media {
      * @param caption - Describes the specified image media
      */
     constructor(image: string, isItAnID = false, caption?: string) {
-        if (!image) throw new Error("Image must have an image link or id");
         super(image, isItAnID);
         if (caption) this.caption = caption;
     }
@@ -137,7 +130,6 @@ export class Sticker extends Media {
      * @param isItAnID - Whether sticker is an id (true) or a link (false)
      */
     constructor(sticker: string, isItAnID = false) {
-        if (!sticker) throw new Error("Sticker must have a sticker link or id");
         super(sticker, isItAnID);
     }
 }
@@ -163,7 +155,6 @@ export class Video extends Media {
      * @param caption - Describes the specified video media
      */
     constructor(video: string, isItAnID = false, caption?: string) {
-        if (!video) throw new Error("Video must have a video link or id");
         super(video, isItAnID);
         if (caption) this.caption = caption;
     }

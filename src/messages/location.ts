@@ -39,8 +39,6 @@ export default class Location implements ClientMessage {
         name?: string,
         address?: string
     ) {
-        if (!longitude) throw new Error("Longitude must be specified");
-        if (!latitude) throw new Error("Latitude must be specified");
         this.longitude = longitude;
         this.latitude = latitude;
         if (name) this.name = name;

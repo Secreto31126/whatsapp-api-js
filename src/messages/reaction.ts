@@ -26,7 +26,6 @@ export default class Reaction implements ClientMessage {
      * @throws If a non-emoji or more than one emoji is provided
      */
     constructor(message_id: string, emoji = "") {
-        if (!message_id) throw new Error("Reaction must have a message id");
         if (emoji && !/^\p{Extended_Pictographic}$/u.test(emoji))
             throw new Error("Reaction emoji must be a single emoji");
 
