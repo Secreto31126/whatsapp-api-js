@@ -3,9 +3,8 @@ import type {
     ClientMessageComponent,
     ClientTypedMessageComponent
 } from "../types.js";
-
-import { Document, Image, Video } from "./media.js";
-import Text from "./text.js";
+import type Text from "./text.js";
+import type { Document, Image, Video } from "./media.js";
 
 /**
  * Interactive API object
