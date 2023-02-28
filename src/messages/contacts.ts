@@ -1,3 +1,5 @@
+import type { ClientMessage, ContactComponent } from "../types";
+
 type BuiltContact = {
     name: Name;
     birthday?: string;
@@ -6,22 +8,21 @@ type BuiltContact = {
     phones?: Phone[];
     emails?: Email[];
     urls?: Url[];
+    // Allow the user create custom components
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
 };
 
 /**
  * Contacts API object
  */
-export class Contacts {
+export class Contacts implements ClientMessage {
     /**
      * The contacts of the message
      */
-    contacts: BuiltContact[];
+    component: BuiltContact[];
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "contacts" {
+    get _type(): "contacts" {
         return "contacts";
     }
 
@@ -37,45 +38,33 @@ export class Contacts {
      */
     constructor(
         ...contact: Array<
-            Address | Birthday | Email | Name | Organization | Phone | Url
+            | Address
+            | Birthday
+            | Email
+            | Name
+            | Organization
+            | Phone
+            | Url
+            | ContactComponent
         >[]
     ) {
         if (!contact.length)
             throw new Error("Contacts must have at least one contact");
 
-        this.contacts = [];
+        this.component = [];
 
         for (const components of contact) {
             const contact = {} as BuiltContact;
 
             for (const component of components) {
-                if (!component._)
+                if (!component._type)
                     throw new Error(
-                        "Unexpected internal error (component._ is not defined)"
+                        "Unexpected internal error (component._type is not defined)"
                     );
 
-                const name = component._;
+                const name = component._type;
 
-                if (component instanceof Birthday)
-                    if (!contact.birthday)
-                        contact.birthday = component.birthday;
-                    else
-                        throw new Error(
-                            "Contacts can only have one birthday component"
-                        );
-                else if (component instanceof Name)
-                    if (!contact.name) contact.name = component;
-                    else
-                        throw new Error(
-                            "Contacts can only have one name component"
-                        );
-                else if (component instanceof Organization)
-                    if (!contact.org) contact.org = component;
-                    else
-                        throw new Error(
-                            "Contacts can only have one organization component"
-                        );
-                else {
+                if (component._many) {
                     if (!(name in contact)) {
                         Object.defineProperty(contact, name, {
                             value: [] as Address[] | Email[] | Phone[] | Url[]
@@ -83,23 +72,34 @@ export class Contacts {
                     }
 
                     // TypeScript doesn't know that contact[name] is an array
-                    const pointer = contact[name] as typeof component[];
-                    pointer.push(component);
+                    const pointer = contact[name] as (typeof component)[];
+                    pointer.push(component._build());
+                } else {
+                    if (name in contact)
+                        throw new Error(
+                            `Contact already has a ${name} component and _many is set to false`
+                        );
+
+                    contact[name] = component._build();
                 }
             }
 
             if (!contact.name)
                 throw new Error("Contact must have a name component");
 
-            this.contacts.push(contact);
+            this.component.push(contact);
         }
+    }
+
+    _build() {
+        return JSON.stringify(this.component);
     }
 }
 
 /**
  * Address API object
  */
-export class Address {
+export class Address implements ContactComponent {
     /**
      * The country of the address
      */
@@ -129,11 +129,11 @@ export class Address {
      */
     type?: string;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "addresses" {
+    get _many() {
+        return true;
+    }
+
+    get _type(): "addresses" {
         return "addresses";
     }
 
@@ -166,21 +166,26 @@ export class Address {
         if (zip) this.zip = zip;
         if (type) this.type = type;
     }
+
+    _build() {
+        return this;
+    }
 }
 
 /**
  * Birthday API object
  */
-export class Birthday {
+export class Birthday implements ContactComponent {
     /**
      * The birthday of the contact
      */
     birthday: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "birthday" {
+
+    get _many() {
+        return false;
+    }
+
+    get _type(): "birthday" {
         return "birthday";
     }
 
@@ -198,12 +203,16 @@ export class Birthday {
         if (day?.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
     }
+
+    _build() {
+        return this.birthday;
+    }
 }
 
 /**
  * Email API object
  */
-export class Email {
+export class Email implements ContactComponent {
     /**
      * The email of the contact
      */
@@ -212,11 +221,12 @@ export class Email {
      * The type of the email
      */
     type?: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "emails" {
+
+    get _many() {
+        return true;
+    }
+
+    get _type(): "emails" {
         return "emails";
     }
 
@@ -231,12 +241,16 @@ export class Email {
         if (email) this.email = email;
         if (type) this.type = type;
     }
+
+    _build() {
+        return this;
+    }
 }
 
 /**
  * Name API object
  */
-export class Name {
+export class Name implements ContactComponent {
     /**
      * The formatted name of the contact
      */
@@ -261,11 +275,12 @@ export class Name {
      * The prefix of the contact
      */
     prefix?: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "name" {
+
+    get _many() {
+        return false;
+    }
+
+    get _type(): "name" {
         return "name";
     }
 
@@ -305,12 +320,16 @@ export class Name {
             );
         }
     }
+
+    _build() {
+        return this;
+    }
 }
 
 /**
  * Organization API object
  */
-export class Organization {
+export class Organization implements ContactComponent {
     /**
      * The company of the contact
      */
@@ -323,11 +342,12 @@ export class Organization {
      * The title of the contact
      */
     title?: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "org" {
+
+    get _many() {
+        return false;
+    }
+
+    get _type(): "org" {
         return "org";
     }
 
@@ -343,12 +363,16 @@ export class Organization {
         if (department) this.department = department;
         if (title) this.title = title;
     }
+
+    _build() {
+        return this;
+    }
 }
 
 /**
  * Phone API object
  */
-export class Phone {
+export class Phone implements ContactComponent {
     /**
      * The phone number of the contact
      */
@@ -361,11 +385,12 @@ export class Phone {
      * The WhatsApp ID of the contact
      */
     wa_id?: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "phones" {
+
+    get _many() {
+        return true;
+    }
+
+    get _type(): "phones" {
         return "phones";
     }
 
@@ -382,12 +407,16 @@ export class Phone {
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
     }
+
+    _build() {
+        return this;
+    }
 }
 
 /**
  * Url API object
  */
-export class Url {
+export class Url implements ContactComponent {
     /**
      * The URL of the contact
      */
@@ -396,11 +425,12 @@ export class Url {
      * The type of the URL
      */
     type?: string;
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "urls" {
+
+    get _many() {
+        return true;
+    }
+
+    get _type(): "urls" {
         return "urls";
     }
 
@@ -414,5 +444,9 @@ export class Url {
     constructor(url?: string, type?: string) {
         if (url) this.url = url;
         if (type) this.type = type;
+    }
+
+    _build() {
+        return this;
     }
 }

@@ -1,7 +1,9 @@
+import type { ClientMessage } from "../types";
+
 /**
  * Location API component
  */
-export default class Location {
+export default class Location implements ClientMessage {
     /**
      * The latitude of the location
      */
@@ -19,11 +21,7 @@ export default class Location {
      */
     address?: string;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "location" {
+    get _type(): "location" {
         return "location";
     }
 
@@ -47,5 +45,9 @@ export default class Location {
         this.latitude = latitude;
         if (name) this.name = name;
         if (address) this.address = address;
+    }
+
+    _build() {
+        return JSON.stringify(this);
     }
 }

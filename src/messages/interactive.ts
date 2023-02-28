@@ -1,36 +1,42 @@
+import type {
+    ClientMessage,
+    ClientMessageComponent,
+    ClientTypedMessageComponent
+} from "../types.js";
+
 import { Document, Image, Video } from "./media.js";
 import Text from "./text.js";
 
 /**
  * Interactive API object
  */
-export class Interactive {
+export class Interactive implements ClientMessage {
     /**
      * The action component of the interactive message
      */
-    action: ActionList | ActionButtons | ActionCatalog;
+    action:
+        | ActionList
+        | ActionButtons
+        | ActionCatalog
+        | ClientTypedMessageComponent;
     /**
      * The type of the interactive message
      */
-    type: "list" | "button" | "product" | "product_list";
+    type: "list" | "button" | "product" | "product_list" | string;
     /**
      * The body component of the interactive message
      */
-    body?: Body;
+    body?: Body | ClientMessageComponent;
     /**
      * The header component of the interactive message
      */
-    header?: Header;
+    header?: Header | ClientMessageComponent;
     /**
      * The footer component of the interactive message
      */
-    footer?: Footer;
+    footer?: Footer | ClientMessageComponent;
 
-    /**
-     * The type of the object
-     * @internal
-     */
-    get _(): "interactive" {
+    get _type(): "interactive" {
         return "interactive";
     }
 
@@ -48,7 +54,11 @@ export class Interactive {
      * @throws If header is not of type text, unless action is an ActionButtons
      */
     constructor(
-        action: ActionList | ActionButtons | ActionCatalog,
+        action:
+            | ActionList
+            | ActionButtons
+            | ActionCatalog
+            | ClientTypedMessageComponent,
         body?: Body,
         header?: Header,
         footer?: Footer
@@ -56,31 +66,35 @@ export class Interactive {
         if (!action)
             throw new Error("Interactive must have an action component");
 
-        if (!action._) {
+        if (!action._type) {
             throw new Error(
                 "Unexpected internal error (action._ is not defined)"
             );
         }
 
-        if (action._ !== "product" && !body)
+        if (action._type !== "product" && !body)
             throw new Error("Interactive must have a body component");
-        if (action._ === "product" && header)
+        if (action._type === "product" && header)
             throw new Error(
                 "Interactive must not have a header component if action is a single product"
             );
-        if (action._ === "product_list" && header?.type !== "text")
+        if (action._type === "product_list" && header?.type !== "text")
             throw new Error(
                 "Interactive must have a Text header component if action is a product list"
             );
-        if (header && action._ !== "button" && header?.type !== "text")
+        if (header && action._type !== "button" && header?.type !== "text")
             throw new Error("Interactive header must be of type Text");
 
-        this.type = action._;
+        this.type = action._type;
 
         this.action = action;
         if (body) this.body = body;
         if (header) this.header = header;
         if (footer) this.footer = footer;
+    }
+
+    _build() {
+        return JSON.stringify(this);
     }
 }
 
@@ -170,24 +184,24 @@ export class Header {
      */
     constructor(object: Document | Image | Text | Video) {
         if (!object) throw new Error("Header must have an object");
-        if (!object._) {
+        if (!object._type) {
             throw new Error(
                 "Unexpected internal error (object._ is not defined)"
             );
         }
 
-        if (!["text", "video", "image", "document"].includes(object._))
+        if (!["text", "video", "image", "document"].includes(object._type))
             throw new Error(
                 "Header object must be either Text, Video, Image or Document."
             );
 
-        this.type = object._;
+        this.type = object._type;
 
         // Text type can go to hell
         if (object instanceof Text) {
             if (object.body.length > 60)
                 throw new Error("Header text must be 60 characters or less");
-            this[object._] = object.body;
+            this[object._type] = object.body;
         } else {
             // Now I think about it, all interactive can go to hell too
             if ("caption" in object)
@@ -203,16 +217,13 @@ export class Header {
 /**
  * Action API object
  */
-export class ActionButtons {
+export class ActionButtons implements ClientTypedMessageComponent {
     /**
      * The buttons of the action
      */
     buttons: Button[];
-    /**
-     * The type of the action
-     * @internal
-     */
-    get _(): "button" {
+
+    get _type(): "button" {
         return "button";
     }
 
@@ -296,7 +307,7 @@ export class Button {
 /**
  * Action API object
  */
-export class ActionList {
+export class ActionList implements ClientTypedMessageComponent {
     /**
      * The button text
      */
@@ -305,11 +316,8 @@ export class ActionList {
      * The sections of the action
      */
     sections: ListSection[];
-    /**
-     * The type of the action
-     * @internal
-     */
-    get _(): "list" {
+
+    get _type(): "list" {
         return "list";
     }
 
@@ -420,7 +428,7 @@ export class Row {
 /**
  * Action API object
  */
-export class ActionCatalog {
+export class ActionCatalog implements ClientTypedMessageComponent {
     /**
      * The id of the catalog from where to get the products
      */
@@ -434,11 +442,7 @@ export class ActionCatalog {
      */
     sections?: ProductSection[];
 
-    /**
-     * The type of the action
-     * @internal
-     */
-    get _(): "product" | "product_list" {
+    get _type(): "product" | "product_list" {
         return this.product_retailer_id ? "product" : "product_list";
     }
 
