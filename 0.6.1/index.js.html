@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="ActionButtons.html">ActionButtons</a></li><li><a href="ActionList.html">ActionList</a></li><li><a href="Address.html">Address</a></li><li><a href="Audio.html">Audio</a></li><li><a href="Birthday.html">Birthday</a></li><li><a href="Body.html">Body</a></li><li><a href="BodyComponent.html">BodyComponent</a></li><li><a href="Button.html">Button</a></li><li><a href="ButtonComponent.html">ButtonComponent</a><ul class='methods'><li data-type='method'><a href="ButtonComponent.html#build">build</a></li></ul></li><li><a href="ButtonParameter.html">ButtonParameter</a></li><li><a href="Contacts.html">Contacts</a></li><li><a href="Currency.html">Currency</a></li><li><a href="DateTime.html">DateTime</a></li><li><a href="Document.html">Document</a></li><li><a href="Email.html">Email</a></li><li><a href="Footer.html">Footer</a></li><li><a href="Header.html">Header</a></li><li><a href="HeaderComponent.html">HeaderComponent</a></li><li><a href="Image.html">Image</a></li><li><a href="Interactive.html">Interactive</a></li><li><a href="Language.html">Language</a></li><li><a href="Location.html">Location</a></li><li><a href="Media.html">Media</a></li><li><a href="Name.html">Name</a></li><li><a href="Organization.html">Organization</a></li><li><a href="Parameter.html">Parameter</a></li><li><a href="Phone.html">Phone</a></li><li><a href="Request.html">Request</a></li><li><a href="Row.html">Row</a></li><li><a href="Section.html">Section</a></li><li><a href="Sticker.html">Sticker</a></li><li><a href="Template.html">Template</a></li><li><a href="Text.html">Text</a></li><li><a href="Url.html">Url</a></li><li><a href="Video.html">Video</a></li><li><a href="WhatsAppAPI.html">WhatsAppAPI</a><ul class='methods'><li data-type='method'><a href="WhatsAppAPI.html#createQR">createQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#deleteQR">deleteQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#logSentMessages">logSentMessages</a></li><li data-type='method'><a href="WhatsAppAPI.html#markAsRead">markAsRead</a></li><li data-type='method'><a href="WhatsAppAPI.html#retrieveQR">retrieveQR</a></li><li data-type='method'><a href="WhatsAppAPI.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="WhatsAppAPI.html#updateQR">updateQR</a></li></ul></li></ul><h3>Namespaces</h3><ul><li><a href="Exports.html">Exports</a></li></ul><h3>Global</h3><ul><li><a href="global.html#get">get</a></li><li><a href="global.html#post">post</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Most of these imports are here only for types checks
+
+const { Contacts } = require('./types/contacts');
+const { Interactive } = require("./types/interactive");
+const { Audio, Document, Image, Sticker, Video } = require('./types/media');
+const Location = require('./types/location');
+const { Template } = require('./types/template');
+const Text = require('./types/text');
+
+const api = require('./fetch');
+const { Request } = api;
+
+/**
+ * The main API object
+ * 
+ * @property {String} token The API token
+ * @property {String} v The API version to use
+ * @property {Boolean} parsed If truthy, API operations will return the fetch promise instead. Intended for low level debugging.
+ */
+class WhatsAppAPI {
+    /**
+     * Initiate the Whatsapp API app
+     * 
+     * @param {String} token The API token, given at setup. It can be either a temporal token or a permanent one.
+     * @param {String} v The version of the API, defaults to v14.0
+     * @param {Boolean} parsed Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
+     * @throws {Error} If token is not specified
+     */
+    constructor(token, v = "v14.0", parsed = true) {
+        if (!token) throw new Error("Token must be specified");
+        this.token = token;
+        this.v = v;
+        this.parsed = !!parsed;
+    }
+    
+    /**
+     * Callback function after a sendMessage request is sent
+     *
+     * @callback Logger
+     * @param {String} phoneID The bot's phoneID from where the message was sent
+     * @param {String} to The user's phone number
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object The message object
+     * @param {Request} request The object sent to the server
+     * @param {(String|Void)} id The message id, undefined if parsed is set to false
+     * @param {(Object|Void)} response The parsed response from the server, undefined if parsed is set to false
+     */
+
+    /**
+     * Set a callback function for sendMessage
+     * 
+     * @param {Logger} callback The callback function to set
+     * @returns {WhatsAppAPI} The API object, for chaining
+     * @throws {Error} If callback is truthy and is not a function
+     */
+    logSentMessages(callback) {
+        if (callback &amp;&amp; typeof callback !== "function") throw new TypeError("Callback must be a function");
+        this._register = callback;
+        return this;
+    }
+
+    /**
+     * Send a Whatsapp message
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} to The user's phone number
+     * @param {(Text|Audio|Document|Image|Sticker|Video|Location|Contacts|Interactive|Template)} object A Whatsapp component, built using the corresponding module for each type of message.
+     * @param {String} [context] The message ID of the message to reply to
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If to is not specified
+     * @throws {Error} If object is not specified
+     */
+    sendMessage(phoneID, to, object, context = "") {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!to) throw new Error("To must be specified");
+        if (!object) throw new Error("Message must have a message object");
+
+        const { request, promise } = api.sendMessage(this.token, this.v, phoneID, to, object, context);
+        const response = this.parsed ? promise.then(e => e.json()) : undefined;
+
+
+        if (this._register) {
+            if (response) {
+                response.then(data => {
+                    const id = data?.messages ? data.messages[0]?.id : undefined;
+                    this._register(phoneID, request.to, JSON.parse(request[request.type]), request, id, data);
+                });
+            } else {
+                this._register(phoneID, request.to, JSON.parse(request[request.type]), request);
+            }
+        }
+
+        return response ?? promise;
+    }
+
+    /**
+     * Mark a message as read
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} messageId The message ID
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If messageId is not specified
+     */
+    markAsRead(phoneID, messageId) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!messageId) throw new Error("To must be specified");
+        const promise = api.readMessage(this.token, this.v, phoneID, messageId);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+    
+    /**
+     * Generate a QR code for sharing the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} message The quick message on the QR code
+     * @param {String} format The format of the QR code (png or svn)
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If message is not specified
+     * @throws {Error} If format is not either 'png' or 'svn'
+     */
+    createQR(phoneID, message, format = "png") {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!message) throw new Error("Message must be specified");
+        if (!["png", "svg"].includes(format)) throw new Error("Format must be either 'png' or 'svg'");
+        const promise = api.makeQR(this.token, this.v, phoneID, message, format);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Get one or many QR codes of the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} [id] The QR's id to find. If not specified, all QRs will be returned
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     */
+    retrieveQR(phoneID, id) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        const promise = api.getQR(this.token, this.v, phoneID, id);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Update a QR code of the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} id The QR's id to edit
+     * @param {String} message The new quick message for the QR code
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If id is not specified
+     * @throws {Error} If message is not specified
+     */
+    updateQR(phoneID, id, message) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!id) throw new Error("ID must be specified");
+        if (!message) throw new Error("Message must be specified");
+        const promise = api.updateQR(this.token, this.v, phoneID, id, message);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+
+    /**
+     * Delete a QR code of the bot
+     * 
+     * @param {String} phoneID The bot's phone ID
+     * @param {String} id The QR's id to delete
+     * @returns {Promise} The server response
+     * @throws {Error} If phoneID is not specified
+     * @throws {Error} If id is not specified
+     */
+    deleteQR(phoneID, id) {
+        if (!phoneID) throw new Error("Phone ID must be specified");
+        if (!id) throw new Error("ID must be specified");
+        const promise = api.deleteQR(this.token, this.v, phoneID, id);
+        return this.parsed ? promise.then(e => e.json()) : promise;
+    }
+}
+
+/**
+ * @namespace Exports
+ * @property {WhatsAppAPI}      WhatsAppAPI                     The main API object
+ * @property {Object}           Handlers                        The handlers object
+ * @property {Function}         Handlers.post                   The post handler
+ * @property {Function}         Handlers.get                    The get handler
+ * @property {Object}           Types                           The API types objects
+ * @property {Object}           Types.Contacts                  The Contacts module
+ * @property {Contacts}         Types.Contacts.Contacts         The API Contacts type object
+ * @property {Address}          Types.Contacts.Address          The API Address type object
+ * @property {Birthday}         Types.Contacts.Birthday         The API Birthday type object
+ * @property {Email}            Types.Contacts.Email            The API Email type object
+ * @property {Name}             Types.Contacts.Name             The API Name type object
+ * @property {Organization}     Types.Contacts.Organization     The API Organization type object
+ * @property {Phone}            Types.Contacts.Phone            The API Phone type object
+ * @property {Url}              Types.Contacts.Url              The API Url type object
+ * @property {Object}           Types.Interactive               The Interactive module
+ * @property {Interactive}      Types.Interactive.Interactive   The API Interactive type object
+ * @property {Body}             Types.Interactive.Body          The API Body type object
+ * @property {Footer}           Types.Interactive.Footer        The API Footer type object
+ * @property {Header}           Types.Interactive.Header        The API Header type object
+ * @property {ActionList}       Types.Interactive.ActionList    The API Action type object
+ * @property {Section}          Types.Interactive.Section       The API Section type object
+ * @property {Row}              Types.Interactive.Row           The API Row type object
+ * @property {ActionButtons}    Types.Interactive.ActionButtons The API Action type object
+ * @property {Button}           Types.Interactive.Button        The API Button type object
+ * @property {Location}         Types.Location                  The API Location type object
+ * @property {Object}           Types.Media                     The Media module
+ * @property {Media}            Types.Media.Media               Placeholder, don't use
+ * @property {Audio}            Types.Media.Audio               The API Audio type object
+ * @property {Document}         Types.Media.Document            The API Document type object
+ * @property {Image}            Types.Media.Image               The API Image type object
+ * @property {Sticker}          Types.Media.Sticker             The API Sticker type object
+ * @property {Video}            Types.Media.Video               The API Video type object
+ * @property {Object}           Types.Template                  The Template module
+ * @property {Template}         Types.Template.Template         The API Template type object
+ * @property {Language}         Types.Template.Language         The API Language type object
+ * @property {ButtonComponent}  Types.Template.ButtonComponent  The API ButtonComponent type object
+ * @property {ButtonParameter}  Types.Template.ButtonParameter  The API ButtonParameter type object
+ * @property {HeaderComponent}  Types.Template.HeaderComponent  The API HeaderComponent type object
+ * @property {BodyComponent}    Types.Template.BodyComponent    The API BodyComponent type object
+ * @property {Parameter}        Types.Template.Parameter        The API Parameter type object
+ * @property {Currency}         Types.Template.Currency         The API Currency type object
+ * @property {DateTime}         Types.Template.DateTime         The API DateTime type object
+ * @property {Text}             Types.Text                      The API Text type object
+ */
+module.exports = {
+    WhatsAppAPI,
+    Handlers: require('./requests'),
+    Types: {
+        Contacts: require('./types/contacts'),
+        Interactive: require('./types/interactive'),
+        Location: require('./types/location'),
+        Media: require('./types/media'),
+        Template: require('./types/template'),
+        Text: require('./types/text'),
+    }
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.10</a> on Tue Feb 28 2023 15:01:03 GMT-0300 (hora estándar de Argentina) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>
