@@ -19,28 +19,11 @@ import type {
 } from "./types";
 import type { OnMessageArgs, OnSentArgs, OnStatusArgs } from "./emitters";
 
-import type { fetch as FetchType, Request, Response } from "undici/types/fetch";
-import type { FormData } from "undici/types/formdata";
-import type { BinaryLike } from "node:crypto";
+import type { fetch as FetchType, Request, Response, FormData } from "undici";
+import type { verify as VerifyType } from "node:crypto";
 import type { Blob } from "node:buffer";
 
 import EventEmitter from "node:events";
-import { createHmac } from "node:crypto";
-
-/**
- * This type allows both type-safety in the constructor and a super nice documentation.
- *
- * @internal
- */
-type UnknownArgsConstructor = {
-    token: unknown;
-    appSecret?: unknown;
-    webhookVerifyToken?: unknown;
-    v?: unknown;
-    parsed?: unknown;
-    secure?: unknown;
-    ponyfill?: unknown;
-};
 
 /**
  * The main API Class
@@ -70,6 +53,10 @@ export default class WhatsAppAPI extends EventEmitter {
      */
     fetch: typeof FetchType;
     /**
+     * The createHmac function for checking the signatures
+     */
+    verify?: typeof VerifyType;
+    /**
      * If true, API operations will return the fetch promise instead. Intended for low level debugging.
      */
     parsed: boolean;
@@ -84,7 +71,7 @@ export default class WhatsAppAPI extends EventEmitter {
      *
      * @throws If token is not defined
      * @throws If appSecret is not defined and secure is true
-     * @throws If fetch is not defined in the enviroment or the provided ponyfill isn't a function
+     * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If v is not a string
      */
     constructor({
@@ -94,77 +81,100 @@ export default class WhatsAppAPI extends EventEmitter {
         v = "v16.0",
         parsed = true,
         secure = true,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - fetch might not be defined in the enviroment, hence giving the option to provide a ponyfill
-        ponyfill = fetch
-    }:
-        | {
-              /**
-               * The API token, given at setup. It can be either a temporal token or a permanent one.
-               */
-              token: string;
-              /**
-               * The app secret, given at setup
-               */
-              appSecret?: string;
-              /**
-               * The webhook verify token, configured at setup
-               */
-              webhookVerifyToken?: string;
-              /**
-               * The version of the API, defaults to v16.0
-               */
-              v?: string;
-              /**
-               * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
-               */
-              parsed?: boolean;
-              /**
-               * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
-               */
-              secure?: boolean;
-              /**
-               * The fetch function to use for the requests. If not specified, it will use the fetch function from the enviroment.
-               */
-              ponyfill?: typeof FetchType;
-          }
-        | UnknownArgsConstructor) {
+        ponyfill = {}
+    }: {
+        /**
+         * The API token, given at setup. It can be either a temporal token or a permanent one.
+         */
+        token: string;
+        /**
+         * The app secret, given at setup
+         */
+        appSecret?: string;
+        /**
+         * The webhook verify token, configured at setup
+         */
+        webhookVerifyToken?: string;
+        /**
+         * The version of the API, defaults to v16.0
+         */
+        v: string;
+        /**
+         * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
+         */
+        parsed: boolean;
+        /**
+         * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
+         */
+        secure: boolean;
+        ponyfill: {
+            /**
+             * The fetch ponyfill to use for the requests. If not specified, it defaults to the fetch function from the enviroment.
+             */
+            fetch?: typeof FetchType;
+            /**
+             * The verify ponyfill to use for the signatures. If not specified, it defaults to the verify function from node:crypto
+             */
+            verify?: typeof VerifyType;
+        };
+    }) {
         super();
 
-        if (typeof token !== "string") {
-            throw new Error("Token must be a string");
-        }
-
         this.token = token;
-
         this.secure = !!secure;
 
         if (this.secure) {
-            if (typeof appSecret !== "string") {
+            if (!appSecret) {
                 throw new Error(
-                    "App secret must be a string. To ignore this parameter, set secure to false (Not recommended)."
+                    "App secret must be defined if secure is true. To ignore this parameter, set secure to false (Not recommended)."
                 );
-            } else {
-                this.appSecret = appSecret;
+            }
+
+            this.appSecret = appSecret;
+
+            if (typeof ponyfill.verify !== "function") {
+                // Fun fact, constructors cannot be async, so the best we can do is warn the user
+                // and later, when needed, import the module or throw a real error
+                import("node:crypto")
+                    .then((m) => {
+                        if (!m.verify) {
+                            console.warn(
+                                "Failed to import verify from node:crypto and secure is set to true, Whatsapp.post() method will throw 500.",
+                                "Please provide a valid ponyfill with the parameter 'ponyfill.verify' or set secure to false (Not recommended)."
+                            );
+                        } else {
+                            this.verify = m.verify;
+                        }
+                    })
+                    .catch(() => {
+                        console.warn(
+                            "Failed to import createHmac from node:crypto and secure is set to true, Whatsapp.post() method will throw 500.",
+                            "Please provide a valid ponyfill with the parameter 'ponyfill.createHmac' or set secure to false (Not recommended)."
+                        );
+                    });
             }
         }
 
-        if (typeof webhookVerifyToken === "string") {
-            this.webhookVerifyToken = webhookVerifyToken;
-        }
+        if (webhookVerifyToken) this.webhookVerifyToken = webhookVerifyToken;
 
-        if (typeof ponyfill !== "function") {
+        if (
+            typeof ponyfill.fetch !== "function" &&
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore - fetch might not be defined in the enviroment
+            typeof fetch !== "function"
+        ) {
             throw new Error(
-                "fetch is not defined in the enviroment, please provide a ponyfill function with the parameter 'ponyfill'."
+                "fetch is not defined in the enviroment, please provide a valid ponyfill function with the parameter 'ponyfill.fetch'."
             );
         }
 
         // Let's hope the user is using a valid ponyfill
-        this.fetch = ponyfill as typeof FetchType;
-
-        if (typeof v !== "string") {
-            throw new Error("Version must be a string");
-        }
+        this.fetch =
+            ponyfill.fetch ||
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore - fetch might not be defined in the enviroment
+            // Splitted in two lines to reduce the impact of the ts-ignore
+            fetch;
 
         this.v = v;
 
@@ -598,27 +608,36 @@ export default class WhatsAppAPI extends EventEmitter {
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
      *
      * @param data - The POSTed data object sent by Whatsapp
-     * @param rawBody - The raw body of the POST request
+     * @param raw_body - The raw body of the POST request
      * @param signature - The X-Hub-Signature-256 header signature sent by Whatsapp
      * @returns 200, it's the expected http/s response code
-     * @throws 400 if the rawBody is missing and secure is true
-     * @throws 401 if the signature is missing and secure is true
-     * @throws 500 if the appSecret isn't specified and secure is true
-     * @throws 401 if the signature doesn't match the hash
+     * @throws 500 if secure and the appSecret isn't specified
+     * @throws 501 if secure and node:crypto verify method or ponyfill isn't available
+     * @throws 400 if secure and the rawBody is missing
+     * @throws 401 if secure and the signature is missing
+     * @throws 401 if secure and the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
      */
-    post(data: PostData, rawBody?: BinaryLike, signature?: string): number {
+    post(data: PostData, raw_body?: string, signature?: string): number {
         //Validating the payload
         if (this.secure) {
-            if (!rawBody) throw 400;
-            if (!signature) throw 401;
             if (!this.appSecret) throw 500;
+            if (!this.verify) throw 501;
 
-            const hash = createHmac("sha256", this.appSecret)
-                .update(rawBody)
-                .digest("hex");
+            if (!raw_body) throw 400;
+            if (!signature) throw 401;
 
-            if (signature.split("=")[1] !== hash) throw 401;
+            const raw_body_buffer = Buffer.from(raw_body, "utf8");
+            const signature_buffer = Buffer.from(signature.split("=")[1]);
+
+            const match = this.verify(
+                "sha256",
+                raw_body_buffer,
+                this.appSecret,
+                signature_buffer
+            );
+
+            if (!match) throw 401;
         }
 
         // Throw "400 Bad Request" if data is not a valid WhatsApp API request
