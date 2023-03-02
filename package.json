@@ -25,10 +25,11 @@
   },
   "scripts": {
     "build": "npm run build:module && npm run build:common && npm run build:types",
-    "build:watch": "tsc --watch",
     "build:module": "tsc",
+    "build:module:watch": "tsc --watch",
     "build:module:types": "tsc -d",
     "build:common": "tsc -p tsconfig.common.json",
+    "build:common:watch": "tsc -p tsconfig.common.json --watch",
     "build:common:types": "tsc -p tsconfig.common.json -d",
     "build:types": "tsc -p tsconfig.types.json",
     "build:standalone": "tsc -p tsconfig.standalone.json",
