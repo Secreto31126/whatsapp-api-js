@@ -142,9 +142,7 @@ export default class WhatsAppAPI extends EventEmitter {
                                 "Failed to import verify from node:crypto and secure is set to true, Whatsapp.post() method will throw 500.",
                                 "Please provide a valid ponyfill with the parameter 'ponyfill.verify' or set secure to false (Not recommended)."
                             );
-                        } else {
-                            this.verify = m.verify;
-                        }
+                        } else this.verify = m.verify;
                     })
                     .catch(() => {
                         console.warn(
