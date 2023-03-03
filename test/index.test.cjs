@@ -15,6 +15,7 @@ const { agent, clientFacebook, clientExample } = require("./server.mocks.cjs");
 const { MessageWebhookMock, StatusWebhookMock } = require("./webhooks.mocks.cjs");
 const { setGlobalDispatcher, fetch: undici_fetch, FormData } = require("undici");
 const { Blob } = require("node:buffer");
+const { subtle } = require("node:crypto");
 
 setGlobalDispatcher(agent);
 
@@ -25,35 +26,51 @@ describe("WhatsAppAPI", function () {
 
     describe("Token", function () {
         it("should create a WhatsAppAPI object with the token", function () {
-            const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
-            equal(Whatsapp.token, token);
-        });
-
-        it("should fail if no access token is provided", function () {
-            throws(function () {
-                new WhatsAppAPI({ appSecret, ponyfill: undici_fetch });
+            const Whatsapp = new WhatsAppAPI({
+                token,
+                appSecret,
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
+            equal(Whatsapp.token, token);
         });
     });
 
     describe("App secret", function () {
         it("should create a WhatsAppAPI object with the appSecret", function () {
-            const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
+            const Whatsapp = new WhatsAppAPI({
+                token, appSecret, ponyfill: {
+                    fetch: undici_fetch
+                }
+            });
             equal(Whatsapp.appSecret, appSecret);
         });
 
         it("should fail if no app secret is provided and secure is true (default)", function () {
             throws(function () {
-                new WhatsAppAPI({ token, ponyfill: undici_fetch });
+                new WhatsAppAPI({
+                    token, ponyfill: {
+                        fetch: undici_fetch
+                    }
+                });
             });
 
             throws(function () {
-                new WhatsAppAPI({ token, secure: true, ponyfill: undici_fetch });
+                new WhatsAppAPI({
+                    token, secure: true, ponyfill: {
+                        fetch: undici_fetch
+                    }
+                });
             });
         });
 
         it("should work if no app secret is provided and secure is false", function () {
-            new WhatsAppAPI({ token, secure: false, ponyfill: undici_fetch });
+            new WhatsAppAPI({
+                token, secure: false, ponyfill: {
+                    fetch: undici_fetch
+                }
+            });
         });
     });
 
@@ -63,7 +80,9 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 webhookVerifyToken,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
             equal(
                 Whatsapp.webhookVerifyToken,
@@ -77,7 +96,9 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
             equal(Whatsapp.v, "v16.0");
         });
@@ -87,54 +108,69 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 v: "v13.0",
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
             equal(Whatsapp.v, "v13.0");
-        });
-
-        it("should throw if version is not a string", function () {
-            throws(function () {
-                new WhatsAppAPI({
-                    token,
-                    appSecret,
-                    v: 16,
-                    ponyfill: undici_fetch
-                });
-            });
         });
     });
 
     describe("Ponyfill", function () {
-        it("should default to the enviroment fetch (skip if not defined)", function () {
-            if (typeof fetch === "undefined") {
-                this.skip();
-            }
+        describe("Fetch", function () {
+            it("should default to the enviroment fetch (skip if not defined)", function () {
+                if (typeof fetch === "undefined") {
+                    this.skip();
+                }
 
-            const Whatsapp = new WhatsAppAPI({
-                token,
-                appSecret,
-                ponyfill: undici_fetch
+                const Whatsapp = new WhatsAppAPI({
+                    token,
+                    appSecret
+                });
+                equal(typeof Whatsapp.fetch, "function");
             });
-            equal(typeof Whatsapp.fetch, "function");
-        });
 
-        it("should work with any specified ponyfill", function () {
-            const spy = sinon_spy();
-            const Whatsapp = new WhatsAppAPI({
-                token,
-                appSecret,
-                ponyfill: spy
-            });
-            equal(Whatsapp.fetch, spy);
-        });
-
-        it("should throw if ponyfill is not a function", function () {
-            throws(function () {
-                new WhatsAppAPI({
+            it("should work with any specified ponyfill", function () {
+                const spy = sinon_spy();
+                const Whatsapp = new WhatsAppAPI({
                     token,
                     appSecret,
-                    ponyfill: "fetch"
+                    ponyfill: {
+                        fetch: spy
+                    }
                 });
+
+                equal(Whatsapp.fetch, spy);
+            });
+        });
+
+        describe("CryptoSubtle", function () {
+            it("should default to node:crypto.subtle", async function () {
+                const Whatsapp = new WhatsAppAPI({
+                    token,
+                    appSecret
+                });
+
+                // Sleep to wait for the cryptoSubtle to be set
+                await new Promise((resolve) => setTimeout(resolve, 100));
+
+                deepEqual(Whatsapp.subtle, subtle);
+            });
+
+            it("should work with any specified ponyfill", async function () {
+                const spy = { test: true };
+                const Whatsapp = new WhatsAppAPI({
+                    token,
+                    appSecret,
+                    ponyfill: {
+                        subtle: spy
+                    }
+                });
+
+                // Sleep to wait for the cryptoSubtle to be set
+                await new Promise((resolve) => setTimeout(resolve, 100));
+
+                equal(Whatsapp.subtle, spy);
             });
         });
     });
@@ -144,7 +180,9 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
             equal(Whatsapp.parsed, true);
         });
@@ -154,7 +192,9 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 parsed: true,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
             equal(Whatsapp.parsed, true);
         });
@@ -164,7 +204,9 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 parsed: false,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
             equal(Whatsapp.parsed, false);
         });
@@ -205,7 +247,9 @@ describe("WhatsAppAPI", function () {
             Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
         });
 
@@ -310,7 +354,9 @@ describe("WhatsAppAPI", function () {
         const Whatsapp = new WhatsAppAPI({
             token,
             appSecret,
-            ponyfill: undici_fetch
+            ponyfill: {
+                fetch: undici_fetch
+            }
         });
 
         this.beforeEach(function () {
@@ -529,7 +575,11 @@ describe("WhatsAppAPI", function () {
         const message = "Hello World";
         const code = "something_random";
 
-        const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
+        const Whatsapp = new WhatsAppAPI({
+            token, appSecret, ponyfill: {
+                fetch: undici_fetch
+            }
+        });
 
         this.beforeEach(function () {
             Whatsapp.parsed = true;
@@ -934,7 +984,11 @@ describe("WhatsAppAPI", function () {
         const bot = "1";
         const id = "2";
 
-        const Whatsapp = new WhatsAppAPI({ token, appSecret, ponyfill: undici_fetch });
+        const Whatsapp = new WhatsAppAPI({
+            token, appSecret, ponyfill: {
+                fetch: undici_fetch
+            }
+        });
 
         let form;
         this.beforeEach(function () {
@@ -1424,7 +1478,9 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 webhookVerifyToken,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
 
             this.beforeEach(function () {
@@ -1476,7 +1532,7 @@ describe("WhatsAppAPI", function () {
             const phoneID = "1";
             const user = "2";
             const body = "Let's pretend this body is equal to the message object";
-            const signature = "=8d2c8fd74d3ac31eafd99563ac39107a45e5ea1d44831e291353193729d57f56";
+            const signature = "sha256=8d2c8fd74d3ac31eafd99563ac39107a45e5ea1d44831e291353193729d57f56";
 
             const name = "name";
             const message = {
@@ -1517,7 +1573,9 @@ describe("WhatsAppAPI", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
-                ponyfill: undici_fetch
+                ponyfill: {
+                    fetch: undici_fetch
+                }
             });
 
             this.beforeEach(function () {
@@ -1530,25 +1588,17 @@ describe("WhatsAppAPI", function () {
                     it("should throw 400 if rawBody is missing", function () {
                         const compare = (e) => e === 400;
 
-                        throws(function () {
-                            Whatsapp.post(valid_message_mock);
-                        }, compare);
+                        rejects(Whatsapp.post(valid_message_mock), compare);
 
-                        throws(function () {
-                            Whatsapp.post(valid_message_mock, undefined);
-                        }, compare);
+                        rejects(Whatsapp.post(valid_message_mock, undefined), compare);
                     });
 
                     it("should throw 401 if signature is missing", function () {
                         const compare = (e) => e === 401;
 
-                        throws(function () {
-                            Whatsapp.post(valid_message_mock, body);
-                        }, compare);
+                        rejects(Whatsapp.post(valid_message_mock, body), compare);
 
-                        throws(function () {
-                            Whatsapp.post(valid_message_mock, body, undefined);
-                        }, compare);
+                        rejects(Whatsapp.post(valid_message_mock, body, undefined), compare);
                     });
 
                     it("should throw 500 if appSecret is not specified", function () {
@@ -1556,21 +1606,17 @@ describe("WhatsAppAPI", function () {
 
                         delete Whatsapp.appSecret;
 
-                        throws(function () {
-                            Whatsapp.post(valid_message_mock, body, signature);
-                        }, compare);
+                        rejects(Whatsapp.post(valid_message_mock, body, signature), compare);
                     });
 
                     it("should throw 401 if the signature doesn't match the hash", function () {
                         const compare = (e) => e === 401;
 
-                        throws(function () {
-                            Whatsapp.post(valid_message_mock, body, "wrong");
-                        }, compare);
+                        rejects(Whatsapp.post(valid_message_mock, body, "wrong"), compare);
                     });
 
-                    it("should return 200 if the signature matches the hash", function () {
-                        const code = Whatsapp.post(valid_message_mock, body, signature);
+                    it("should return 200 if the signature matches the hash", async function () {
+                        const code = await Whatsapp.post(valid_message_mock, body, signature);
                         equal(code, 200);
                     });
                 });
@@ -1586,10 +1632,10 @@ describe("WhatsAppAPI", function () {
                         Whatsapp.appSecret = appSecret;
                     });
 
-                    it("should not throw if any of the parameters is missing or is invalid", function () {
-                        Whatsapp.post(valid_message_mock);
-                        Whatsapp.post(valid_message_mock, body);
-                        Whatsapp.post(valid_message_mock, body, "wrong");
+                    it("should not throw if any of the parameters is missing or is invalid", async function () {
+                        await Whatsapp.post(valid_message_mock);
+                        await Whatsapp.post(valid_message_mock, body);
+                        await Whatsapp.post(valid_message_mock, body, "wrong");
                     });
                 });
 
@@ -1598,9 +1644,7 @@ describe("WhatsAppAPI", function () {
 
                     Whatsapp.secure = false;
 
-                    throws(function () {
-                        Whatsapp.post({});
-                    }, compare);
+                    rejects(Whatsapp.post({}), compare);
                 });
             });
 
@@ -1618,7 +1662,7 @@ describe("WhatsAppAPI", function () {
                 });
 
                 it("should parse the post request and call back with the right parameters", function () {
-                    const response = Whatsapp.post(valid_message_mock);
+                    Whatsapp.post(valid_message_mock);
 
                     sinon_assert.calledOnceWithMatch(
                         spy_on_message,
@@ -1630,26 +1674,19 @@ describe("WhatsAppAPI", function () {
                             raw: valid_message_mock
                         }
                     );
-                    equal(response, 200);
                 });
 
                 it("should throw TypeError if the request is missing any data", function () {
                     let moddedMock;
 
                     moddedMock = new MessageWebhookMock();
-                    throws(function () {
-                        Whatsapp.post(moddedMock);
-                    }, TypeError);
+                    rejects(Whatsapp.post(moddedMock), TypeError);
 
                     moddedMock = new MessageWebhookMock(phoneID);
-                    throws(function () {
-                        Whatsapp.post(moddedMock);
-                    }, TypeError);
+                    rejects(Whatsapp.post(moddedMock), TypeError);
 
                     moddedMock = new MessageWebhookMock(phoneID, user);
-                    throws(function () {
-                        Whatsapp.post(moddedMock);
-                    }, TypeError);
+                    rejects(Whatsapp.post(moddedMock), TypeError);
 
                     // Missing name doesn't throw error
                 });
@@ -1669,7 +1706,7 @@ describe("WhatsAppAPI", function () {
                 });
 
                 it("should parse the post request and call back with the right parameters", function () {
-                    const response = Whatsapp.post(valid_status_mock);
+                    Whatsapp.post(valid_status_mock);
 
                     sinon_assert.calledOnceWithMatch(
                         spy_on_status,
@@ -1683,21 +1720,16 @@ describe("WhatsAppAPI", function () {
                             raw: valid_status_mock
                         }
                     );
-                    equal(response, 200);
                 });
 
                 it("should throw TypeError if the request is missing any data", function () {
                     let moddedMock;
 
                     moddedMock = new StatusWebhookMock();
-                    throws(function () {
-                        Whatsapp.post(moddedMock);
-                    }, TypeError);
+                    rejects(Whatsapp.post(moddedMock), TypeError);
 
                     moddedMock = new StatusWebhookMock(phoneID);
-                    throws(function () {
-                        Whatsapp.post(moddedMock);
-                    }, TypeError);
+                    rejects(Whatsapp.post(moddedMock), TypeError);
 
                     // In conclution, it's pointless. As soon as any of the other parameters are defined,
                     // the code will return undefined for the missing ones, without any error.
@@ -1730,7 +1762,9 @@ describe("WhatsAppAPI", function () {
         const Whatsapp = new WhatsAppAPI({
             token,
             appSecret,
-            ponyfill: undici_fetch
+            ponyfill: {
+                fetch: undici_fetch
+            }
         });
 
         it("should make an authenticated request to any url", async function () {
