@@ -208,7 +208,9 @@ import { fetch } from "undici";
 const Whatsapp = new WhatsAppAPI({
     token: "YOUR_TOKEN_HERE",
     appSecret: "YOUR_SECRET_HERE",
-    ponyfill: fetch
+    ponyfill: {
+        fetch
+    }
 });
 ```
 
