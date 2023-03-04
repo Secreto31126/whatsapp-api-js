@@ -16,6 +16,8 @@ export type BuiltButtonComponent = {
 
 /**
  * Template API object
+ *
+ * @group Template
  */
 export class Template implements ClientMessage {
     /**
@@ -77,6 +79,8 @@ export class Template implements ClientMessage {
 
 /**
  * Language API object
+ *
+ * @group Template
  */
 export class Language {
     /**
@@ -102,6 +106,8 @@ export class Language {
 
 /**
  * Currency API object
+ *
+ * @group Template
  */
 export class Currency implements ClientTypedMessageComponent {
     /**
@@ -141,6 +147,8 @@ export class Currency implements ClientTypedMessageComponent {
 
 /**
  * DateTime API object
+ *
+ * @group Template
  */
 export class DateTime implements ClientTypedMessageComponent {
     /**
@@ -164,6 +172,8 @@ export class DateTime implements ClientTypedMessageComponent {
 
 /**
  * Components API object
+ *
+ * @group Template
  */
 export class ButtonComponent implements ClientBuildableMessageComponent {
     /**
@@ -218,6 +228,8 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
 
 /**
  * Button Parameter API object
+ *
+ * @group Template
  */
 export class ButtonParameter {
     /**
@@ -247,6 +259,8 @@ export class ButtonParameter {
 
 /**
  * Components API object
+ *
+ * @group Template
  */
 export class HeaderComponent implements ClientBuildableMessageComponent {
     /**
@@ -288,6 +302,8 @@ export class HeaderComponent implements ClientBuildableMessageComponent {
 
 /**
  * Components API object
+ *
+ * @group Template
  */
 export class BodyComponent {
     /**
@@ -329,6 +345,8 @@ export class BodyComponent {
 
 /**
  * Parameter API object
+ *
+ * @group Template
  */
 export class Parameter {
     /**

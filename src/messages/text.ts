@@ -2,7 +2,8 @@ import { ClientMessage } from "../types";
 
 /**
  * Text API object
- * @public
+ *
+ * @group Text
  */
 export default class Text implements ClientMessage {
     /**

@@ -8,6 +8,8 @@ import type { Document, Image, Video } from "./media.js";
 
 /**
  * Interactive API object
+ *
+ * @group Interactive
  */
 export class Interactive implements ClientMessage {
     /**
@@ -89,6 +91,8 @@ export class Interactive implements ClientMessage {
 
 /**
  * Body API object
+ *
+ * @group Interactive
  */
 export class Body {
     /**
@@ -112,6 +116,8 @@ export class Body {
 
 /**
  * Footer API object
+ *
+ * @group Interactive
  */
 export class Footer {
     /**
@@ -135,6 +141,8 @@ export class Footer {
 
 /**
  * Header API object
+ *
+ * @group Interactive
  */
 export class Header {
     /**
@@ -193,6 +201,8 @@ export class Header {
 
 /**
  * Action API object
+ *
+ * @group Interactive
  */
 export class ActionButtons implements ClientTypedMessageComponent {
     /**
@@ -232,6 +242,8 @@ export class ActionButtons implements ClientTypedMessageComponent {
 
 /**
  * Button API object
+ *
+ * @group Interactive
  */
 export class Button {
     /**
@@ -279,6 +291,8 @@ export class Button {
 
 /**
  * Action API object
+ *
+ * @group Interactive
  */
 export class ActionList implements ClientTypedMessageComponent {
     /**
@@ -321,6 +335,8 @@ export class ActionList implements ClientTypedMessageComponent {
 
 /**
  * Section API object
+ *
+ * @group Interactive
  */
 export class ListSection {
     /**
@@ -353,6 +369,8 @@ export class ListSection {
 
 /**
  * Row API object
+ *
+ * @group Interactive
  */
 export class Row {
     /**
@@ -394,6 +412,8 @@ export class Row {
 
 /**
  * Action API object
+ *
+ * @group Interactive
  */
 export class ActionCatalog implements ClientTypedMessageComponent {
     /**
@@ -465,6 +485,8 @@ export class ActionCatalog implements ClientTypedMessageComponent {
 
 /**
  * Section API object
+ *
+ * @group Interactive
  */
 export class ProductSection {
     /**
@@ -497,6 +519,8 @@ export class ProductSection {
 
 /**
  * Product API object
+ *
+ * @group Interactive
  */
 export class Product {
     /**
