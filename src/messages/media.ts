@@ -2,6 +2,8 @@ import type { ClientMessage, ClientMessageNames } from "../types";
 
 /**
  * Placeholder class for all the media types
+ *
+ * @group Media
  */
 export class Media implements ClientMessage {
     /**
@@ -35,6 +37,8 @@ export class Media implements ClientMessage {
 
 /**
  * Audio API component
+ *
+ * @group Media
  */
 export class Audio extends Media {
     get _type(): "audio" {
@@ -54,6 +58,8 @@ export class Audio extends Media {
 
 /**
  * Document API component
+ *
+ * @group Media
  */
 export class Document extends Media {
     /**
@@ -91,6 +97,8 @@ export class Document extends Media {
 
 /**
  * Image API component
+ *
+ * @group Media
  */
 export class Image extends Media {
     /**
@@ -117,6 +125,8 @@ export class Image extends Media {
 
 /**
  * Sticker API component
+ *
+ * @group Media
  */
 export class Sticker extends Media {
     get _type(): "sticker" {
@@ -136,6 +146,8 @@ export class Sticker extends Media {
 
 /**
  * Video API component
+ *
+ * @group Media
  */
 export class Video extends Media {
     /**

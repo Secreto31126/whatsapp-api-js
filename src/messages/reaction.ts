@@ -2,6 +2,8 @@ import type { ClientMessage } from "../types";
 
 /**
  * Reaction API object
+ *
+ * @group Reaction
  */
 export default class Reaction implements ClientMessage {
     /**

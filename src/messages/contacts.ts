@@ -15,6 +15,8 @@ export type BuiltContact = {
 
 /**
  * Contacts API object
+ *
+ * @group Contacts
  */
 export class Contacts implements ClientMessage {
     /**
@@ -95,6 +97,8 @@ export class Contacts implements ClientMessage {
 
 /**
  * Address API object
+ *
+ * @group Contacts
  */
 export class Address implements ContactComponent {
     /**
@@ -171,6 +175,8 @@ export class Address implements ContactComponent {
 
 /**
  * Birthday API object
+ *
+ * @group Contacts
  */
 export class Birthday implements ContactComponent {
     /**
@@ -208,6 +214,8 @@ export class Birthday implements ContactComponent {
 
 /**
  * Email API object
+ *
+ * @group Contacts
  */
 export class Email implements ContactComponent {
     /**
@@ -246,6 +254,8 @@ export class Email implements ContactComponent {
 
 /**
  * Name API object
+ *
+ * @group Contacts
  */
 export class Name implements ContactComponent {
     /**
@@ -322,6 +332,8 @@ export class Name implements ContactComponent {
 
 /**
  * Organization API object
+ *
+ * @group Contacts
  */
 export class Organization implements ContactComponent {
     /**
@@ -365,6 +377,8 @@ export class Organization implements ContactComponent {
 
 /**
  * Phone API object
+ *
+ * @group Contacts
  */
 export class Phone implements ContactComponent {
     /**
@@ -409,6 +423,8 @@ export class Phone implements ContactComponent {
 
 /**
  * Url API object
+ *
+ * @group Contacts
  */
 export class Url implements ContactComponent {
     /**

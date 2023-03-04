@@ -2,6 +2,8 @@ import type { ClientMessage } from "../types";
 
 /**
  * Location API component
+ *
+ * @group Location
  */
 export default class Location implements ClientMessage {
     /**
