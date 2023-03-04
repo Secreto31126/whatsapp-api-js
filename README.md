@@ -49,7 +49,7 @@ function post(e) {
     return Whatsapp.post(JSON.parse(e.data));
 }
 
-Whatsapp.on("message", ({ phoneID, from, message, name, raw }) => {
+Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
     console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
     let promise;
@@ -84,11 +84,11 @@ Whatsapp.on("message", ({ phoneID, from, message, name, raw }) => {
     console.log(await promise ?? "There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.");
     
     Whatsapp.markAsRead(phoneID, message.id);
-});
+};
 
-Whatsapp.on("sent", ({ phoneID, to, message, raw }) => {
+Whatsapp.on.sent = ({ phoneID, to, message, raw }) => {
     console.log(`Bot ${phoneID} sent to user ${to} ${message}\n\n${JSON.stringify(raw)}`);
-});
+};
 ```
 
 To recieve the post requests on message, you must setup the webhook at your Facebook app.
