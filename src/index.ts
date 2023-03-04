@@ -17,20 +17,25 @@ import type {
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
 } from "./types";
-import type { OnMessageArgs, OnSentArgs, OnStatusArgs } from "./emitters";
+import type {
+    OnMessage,
+    OnMessageArgs,
+    OnSent,
+    OnSentArgs,
+    OnStatus,
+    OnStatusArgs
+} from "./emitters";
 
 import type { fetch as FetchType, Request, Response, FormData } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
 import type { Blob } from "node:buffer";
-
-import EventEmitter from "node:events";
 
 /**
  * The main API Class
  *
  * @alpha
  */
-export default class WhatsAppAPI extends EventEmitter {
+export default class WhatsAppAPI {
     //#region Properties
     /**
      * The API token
@@ -64,6 +69,28 @@ export default class WhatsAppAPI extends EventEmitter {
      * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
      */
     secure: boolean;
+    /**
+     * The callbacks for the events (message, sent, status)
+     *
+     * @example
+     * ```ts
+     * const Whatsapp = new WhatsAppAPI({
+     *     token: "my-token",
+     *     appSecret: "my-app-secret"
+     * });
+     *
+     * // Set the callback
+     * Whatsapp.on.message = ({ from, phoneID }) => console.log(`Message from ${from} to bot ${phoneID}`);
+     *
+     * // Remove the callback
+     * Whatsapp.on.message = undefined;
+     * ```
+     */
+    on: {
+        message?: OnMessage;
+        sent?: OnSent;
+        status?: OnStatus;
+    };
     //#endregion
 
     /**
@@ -107,6 +134,24 @@ export default class WhatsAppAPI extends EventEmitter {
          * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
          */
         secure: boolean;
+        /**
+         * The ponyfills to use
+         *
+         * @example
+         * ```ts
+         * import { fetch } from "undici";
+         * import { subtle } from "node:crypto";
+         *
+         * const api = new WhatsAppAPI({
+         *     token: "my-token",
+         *     appSecret: "my-app-secret",
+         *     ponyfill: {
+         *         fetch,
+         *         subtle
+         *     }
+         * });
+         * ```
+         */
         ponyfill: {
             /**
              * The fetch ponyfill to use for the requests. If not specified, it defaults to the fetch function from the enviroment.
@@ -118,10 +163,9 @@ export default class WhatsAppAPI extends EventEmitter {
             subtle?: typeof CryptoSubtle;
         };
     }) {
-        super();
-
         this.token = token;
         this.secure = !!secure;
+        this.on = {};
 
         if (this.secure) {
             if (!appSecret) {
@@ -244,7 +288,7 @@ export default class WhatsAppAPI extends EventEmitter {
             response: response ? response : undefined
         };
 
-        this.emit("sent", args);
+        this.on.sent?.(args);
 
         return response ?? promise;
     }
@@ -677,7 +721,7 @@ export default class WhatsAppAPI extends EventEmitter {
                 raw: data
             };
 
-            this.emit("message", args);
+            this.on.message?.(args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -699,7 +743,7 @@ export default class WhatsAppAPI extends EventEmitter {
                 raw: data
             };
 
-            this.emit("status", args);
+            this.on.status?.(args);
         }
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
