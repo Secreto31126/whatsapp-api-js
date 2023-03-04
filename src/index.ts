@@ -20,7 +20,7 @@ import type {
 import type { OnMessageArgs, OnSentArgs, OnStatusArgs } from "./emitters";
 
 import type { fetch as FetchType, Request, Response, FormData } from "undici";
-import type { verify as VerifyType } from "node:crypto";
+import type { subtle as CryptoSubtle } from "node:crypto";
 import type { Blob } from "node:buffer";
 
 import EventEmitter from "node:events";
@@ -53,9 +53,9 @@ export default class WhatsAppAPI extends EventEmitter {
      */
     fetch: typeof FetchType;
     /**
-     * The createHmac function for checking the signatures
+     * The CryptoSubtle library for checking the signatures
      */
-    verify?: typeof VerifyType;
+    subtle?: typeof CryptoSubtle;
     /**
      * If true, API operations will return the fetch promise instead. Intended for low level debugging.
      */
@@ -115,7 +115,7 @@ export default class WhatsAppAPI extends EventEmitter {
             /**
              * The verify ponyfill to use for the signatures. If not specified, it defaults to the verify function from node:crypto
              */
-            verify?: typeof VerifyType;
+            subtle?: typeof CryptoSubtle;
         };
     }) {
         super();
@@ -132,25 +132,25 @@ export default class WhatsAppAPI extends EventEmitter {
 
             this.appSecret = appSecret;
 
-            if (typeof ponyfill.verify !== "function") {
+            if (!ponyfill.subtle) {
                 // Fun fact, constructors cannot be async, so the best we can do is warn the user
-                // and later, when needed, import the module or throw a real error
+                // and later, when needed, throw a real error on post()
                 import("node:crypto")
                     .then((m) => {
-                        if (!m.verify) {
+                        if (!m.subtle) {
                             console.warn(
-                                "Failed to import verify from node:crypto and secure is set to true, Whatsapp.post() method will throw 500.",
+                                "Failed to import subtle from node:crypto and secure is set to true, Whatsapp.post() method will throw 501.",
                                 "Please provide a valid ponyfill with the parameter 'ponyfill.verify' or set secure to false (Not recommended)."
                             );
-                        } else this.verify = m.verify;
+                        } else this.subtle = m.subtle;
                     })
                     .catch(() => {
                         console.warn(
-                            "Failed to import createHmac from node:crypto and secure is set to true, Whatsapp.post() method will throw 500.",
+                            "Failed to import node:crypto and secure is set to true, Whatsapp.post() method will throw 501.",
                             "Please provide a valid ponyfill with the parameter 'ponyfill.createHmac' or set secure to false (Not recommended)."
                         );
                     });
-            }
+            } else this.subtle = ponyfill.subtle;
         }
 
         if (webhookVerifyToken) this.webhookVerifyToken = webhookVerifyToken;
@@ -616,26 +616,42 @@ export default class WhatsAppAPI extends EventEmitter {
      * @throws 401 if secure and the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
      */
-    post(data: PostData, raw_body?: string, signature?: string): number {
+    async post(
+        data: PostData,
+        raw_body?: string,
+        signature?: string
+    ): Promise<200> {
         //Validating the payload
         if (this.secure) {
             if (!this.appSecret) throw 500;
-            if (!this.verify) throw 501;
+            if (!this.subtle) throw 501;
 
             if (!raw_body) throw 400;
+
+            signature = signature?.split("sha256=")[1];
             if (!signature) throw 401;
 
-            const raw_body_buffer = Buffer.from(raw_body, "utf8");
-            const signature_buffer = Buffer.from(signature.split("=")[1]);
+            const encoder = new TextEncoder();
+            const keyBuffer = encoder.encode(this.appSecret);
 
-            const match = this.verify(
-                "sha256",
-                raw_body_buffer,
-                this.appSecret,
-                signature_buffer
+            const key = await this.subtle.importKey(
+                "raw",
+                keyBuffer,
+                { name: "HMAC", hash: "SHA-256" },
+                true,
+                ["sign", "verify"]
             );
 
-            if (!match) throw 401;
+            const data = encoder.encode(raw_body);
+            const result = await this.subtle.sign("HMAC", key, data.buffer);
+            const result_array = Array.from(new Uint8Array(result));
+
+            // Convert an array of bytes to a hex string
+            const check = result_array
+                .map((b) => b.toString(16).padStart(2, "0"))
+                .join("");
+
+            if (signature !== check) throw 401;
         }
 
         // Throw "400 Bad Request" if data is not a valid WhatsApp API request
