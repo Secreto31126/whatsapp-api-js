@@ -256,7 +256,7 @@ describe("WhatsAppAPI", function () {
         it("should run the logger after sending a message", async function () {
             const spy = sinon_spy();
 
-            Whatsapp.on("sent", spy);
+            Whatsapp.on.sent = spy;
 
             clientFacebook
                 .intercept({
@@ -288,7 +288,7 @@ describe("WhatsAppAPI", function () {
         it("should handle failed deliveries responses", async function () {
             const spy = sinon_spy();
 
-            Whatsapp.on("sent", spy);
+            Whatsapp.on.sent = spy;
 
             const unexpectedResponse = {
                 error: {
@@ -331,7 +331,7 @@ describe("WhatsAppAPI", function () {
 
             const spy = sinon_spy();
 
-            Whatsapp.on("sent", spy);
+            Whatsapp.on.sent = spy;
 
             Whatsapp.sendMessage(bot, user, message);
 
@@ -1652,7 +1652,7 @@ describe("WhatsAppAPI", function () {
                 let spy_on_message;
                 this.beforeEach(function () {
                     spy_on_message = sinon_spy();
-                    Whatsapp.on("message", spy_on_message);
+                    Whatsapp.on.message = spy_on_message;
                 });
 
                 this.beforeEach(function () {
@@ -1696,7 +1696,7 @@ describe("WhatsAppAPI", function () {
                 let spy_on_status;
                 this.beforeEach(function () {
                     spy_on_status = sinon_spy();
-                    Whatsapp.on("status", spy_on_status);
+                    Whatsapp.on.status = spy_on_status;
                 });
 
                 this.beforeEach(function () {
