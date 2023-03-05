@@ -126,7 +126,7 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 ## Examples
 
-The code is _almost_ server agnostic (might work on an EventEmitter ponyfill), which allows it to work on most environments.
+The code is server agnostic, which allows it to work on most environments.
 
 ### Node.js
 
