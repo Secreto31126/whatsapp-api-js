@@ -1,4 +1,4 @@
-import { ClientMessage } from "../types";
+import type { ClientMessage } from "../types";
 
 /**
  * Text API object
