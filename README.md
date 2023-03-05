@@ -111,7 +111,7 @@ const Whatsapp = new WhatsAppAPI({
 
 // Assuming get is called on a GET request to your server
 function get(e) {
-    return Whatsapp.get(JSON.parse(e.params), "your_verify_token");
+    return Whatsapp.get(JSON.parse(e.params));
 }
 ```
 
