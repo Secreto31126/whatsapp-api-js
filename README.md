@@ -2,21 +2,21 @@
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
-A Node.js Whatsapp's Official API framework written in Typescript.
+A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
-- [Set up](#set-up)
-- [Changelog](#changelog)
-- [Examples](#examples)
-    - [Node.js](#nodejs)
-    - [Deno](#deno)
-    - [Bun](#bun)
-    - [Websites](#websites)
-- [Breaking changes](#breaking-changes)
-- [Documentation](#documentation)
-- [Beta Releases](#beta-releases)
-- [Comments](#comments)
+-   [Set up](#set-up)
+-   [Changelog](#changelog)
+-   [Examples](#examples)
+    -   [Node.js](#nodejs)
+    -   [Deno](#deno)
+    -   [Bun](#bun)
+    -   [Websites](#websites)
+-   [Breaking changes](#breaking-changes)
+-   [Documentation](#documentation)
+-   [Beta Releases](#beta-releases)
+-   [Comments](#comments)
 
 ## Set up
 
@@ -46,7 +46,7 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The handlers work with any middleware, as long as you pass the correct data
-    return Whatsapp.post(JSON.parse(e.data));
+    return Whatsapp.post(JSON.parse(e.data), e.headers["X-Hub-Signature-256"], e.data);
 }
 
 Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
@@ -82,7 +82,7 @@ Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
     }
 
     console.log(await promise ?? "There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.");
-    
+
     Whatsapp.markAsRead(phoneID, message.id);
 };
 
@@ -111,7 +111,7 @@ const Whatsapp = new WhatsAppAPI({
 
 // Assuming get is called on a GET request to your server
 function get(e) {
-    return Whatsapp.get(JSON.parse(e.params), "your_verify_token");
+    return Whatsapp.get(JSON.parse(e.params));
 }
 ```
 
@@ -126,7 +126,7 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 ## Examples
 
-The code is _almost_ server agnostic (might work on an EventEmitter ponyfill), which allows it to work on most environments.
+The code is server agnostic, which allows it to work on most environments.
 
 ### Node.js
 
@@ -170,8 +170,8 @@ HTML module example:
 
 ```html
 <script type="module">
- import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
- <!-- Please, never use your API tokens in a website, use this method wisely -->
+    import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
+    <!-- Please, never use your API tokens in a website, use this method wisely -->
 </script>
 ```
 
@@ -245,8 +245,8 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
 
 ## Documentation
 
-The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/) and
-[secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
+The lateset package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
+and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Beta releases
 
