@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
-A Node.js Whatsapp's Official API framework written in Typescript.
+A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
