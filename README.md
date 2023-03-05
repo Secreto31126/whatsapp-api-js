@@ -6,17 +6,17 @@ A Node.js Whatsapp's Official API framework written in Typescript.
 
 ## List of contents
 
-- [Set up](#set-up)
-- [Changelog](#changelog)
-- [Examples](#examples)
-    - [Node.js](#nodejs)
-    - [Deno](#deno)
-    - [Bun](#bun)
-    - [Websites](#websites)
-- [Breaking changes](#breaking-changes)
-- [Documentation](#documentation)
-- [Beta Releases](#beta-releases)
-- [Comments](#comments)
+-   [Set up](#set-up)
+-   [Changelog](#changelog)
+-   [Examples](#examples)
+    -   [Node.js](#nodejs)
+    -   [Deno](#deno)
+    -   [Bun](#bun)
+    -   [Websites](#websites)
+-   [Breaking changes](#breaking-changes)
+-   [Documentation](#documentation)
+-   [Beta Releases](#beta-releases)
+-   [Comments](#comments)
 
 ## Set up
 
@@ -82,7 +82,7 @@ Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
     }
 
     console.log(await promise ?? "There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.");
-    
+
     Whatsapp.markAsRead(phoneID, message.id);
 };
 
@@ -170,8 +170,8 @@ HTML module example:
 
 ```html
 <script type="module">
- import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
- <!-- Please, never use your API tokens in a website, use this method wisely -->
+    import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
+    <!-- Please, never use your API tokens in a website, use this method wisely -->
 </script>
 ```
 
