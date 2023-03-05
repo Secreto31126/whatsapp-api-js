@@ -245,8 +245,8 @@ const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
 
 ## Documentation
 
-The package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/) and
-[secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
+The lateset package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
+and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Beta releases
 
