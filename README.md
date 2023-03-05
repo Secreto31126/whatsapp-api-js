@@ -46,7 +46,7 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The handlers work with any middleware, as long as you pass the correct data
-    return Whatsapp.post(JSON.parse(e.data));
+    return Whatsapp.post(JSON.parse(e.data), e.headers["X-Hub-Signature-256"], e.data);
 }
 
 Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
