@@ -4,28 +4,34 @@ class MessageWebhookMock {
      */
     constructor(phoneID, phone, message, name) {
         this.object = "whatsapp_business_account";
-        this.entry = [{
-            id: "WHATSAPP_BUSINESS_ACCOUNT_ID",
-            changes: [{
-                field: "messages",
-                value: {
-                    messaging_product: "whatsapp",
-                    messages: [{}],
-                }
-            }],
-        }];
+        this.entry = [
+            {
+                id: "WHATSAPP_BUSINESS_ACCOUNT_ID",
+                changes: [
+                    {
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            messages: [{}]
+                        }
+                    }
+                ]
+            }
+        ];
 
         if (phoneID) {
             this.entry[0].changes[0].value.metadata = {
                 display_phone_number: phoneID,
-                phone_number_id: phoneID,
+                phone_number_id: phoneID
             };
         }
 
         if (phone) {
-            this.entry[0].changes[0].value.contacts = [{
-                wa_id: phone,
-            }];
+            this.entry[0].changes[0].value.contacts = [
+                {
+                    wa_id: phone
+                }
+            ];
         }
 
         if (message) {
@@ -33,7 +39,8 @@ class MessageWebhookMock {
         }
 
         if (name) {
-            if (!this.entry[0].changes[0].value.contacts) this.entry[0].changes[0].value.contacts = [{}];
+            if (!this.entry[0].changes[0].value.contacts)
+                this.entry[0].changes[0].value.contacts = [{}];
             this.entry[0].changes[0].value.contacts[0].profile = { name };
         }
     }
@@ -45,21 +52,25 @@ class StatusWebhookMock {
      */
     constructor(phoneID, phone, status, messageID, conversation, pricing) {
         this.object = "whatsapp_business_account";
-        this.entry = [{
-            id: "WHATSAPP_BUSINESS_ACCOUNT_ID",
-            changes: [{
-                field: "messages",
-                value: {
-                    messaging_product: "whatsapp",
-                    statuses: [{}],
-                }
-            }],
-        }];
+        this.entry = [
+            {
+                id: "WHATSAPP_BUSINESS_ACCOUNT_ID",
+                changes: [
+                    {
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            statuses: [{}]
+                        }
+                    }
+                ]
+            }
+        ];
 
         if (phoneID) {
             this.entry[0].changes[0].value.metadata = {
                 display_phone_number: phoneID,
-                phone_number_id: phoneID,
+                phone_number_id: phoneID
             };
         }
 
@@ -76,14 +87,17 @@ class StatusWebhookMock {
         }
 
         if (conversation) {
-            this.entry[0].changes[0].value.statuses[0].conversation = conversation;
+            this.entry[0].changes[0].value.statuses[0].conversation =
+                conversation;
         }
 
         if (pricing) {
             this.entry[0].changes[0].value.statuses[0].pricing = pricing;
         }
 
-        if (Object.keys(this.entry[0].changes[0].value.statuses[0]).length === 0) {
+        if (
+            Object.keys(this.entry[0].changes[0].value.statuses[0]).length === 0
+        ) {
             this.entry[0].changes[0].value.statuses = [];
         }
     }

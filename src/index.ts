@@ -177,7 +177,7 @@ export default class WhatsAppAPI {
 
             if (!ponyfill.subtle) {
                 // Fun fact, constructors cannot be async, so the best we can do is warn the user
-                // and later, when needed, throw a real error on post()
+                // and later, if needed, throw a real error on post()
                 import("node:crypto")
                     .then((m) => {
                         if (!m.subtle) {

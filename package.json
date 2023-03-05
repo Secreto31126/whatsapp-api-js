@@ -37,8 +37,8 @@
     "test:watch": "mocha --reporter min --watch",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "prettier": "prettier --check src",
-    "prettier:write": "prettier --write src",
+    "prettier": "prettier --check src test",
+    "prettier:write": "prettier --write src test",
     "coverage": "nyc --reporter=text mocha --reporter min",
     "document": "typedoc && cp -r docs_statics/* docs/",
     "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output/"
