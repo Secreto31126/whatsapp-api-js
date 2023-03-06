@@ -37,7 +37,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.token, token);
@@ -50,7 +51,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.appSecret, appSecret);
@@ -61,7 +63,8 @@ describe("WhatsAppAPI", function () {
                 new WhatsAppAPI({
                     token,
                     ponyfill: {
-                        fetch: undici_fetch
+                        fetch: undici_fetch,
+                        subtle
                     }
                 });
             });
@@ -71,7 +74,8 @@ describe("WhatsAppAPI", function () {
                     token,
                     secure: true,
                     ponyfill: {
-                        fetch: undici_fetch
+                        fetch: undici_fetch,
+                        subtle
                     }
                 });
             });
@@ -82,7 +86,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 secure: false,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
         });
@@ -95,7 +100,8 @@ describe("WhatsAppAPI", function () {
                 appSecret,
                 webhookVerifyToken,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.webhookVerifyToken, webhookVerifyToken);
@@ -108,7 +114,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.v, "v16.0");
@@ -120,7 +127,8 @@ describe("WhatsAppAPI", function () {
                 appSecret,
                 v: "v13.0",
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.v, "v13.0");
@@ -147,7 +155,8 @@ describe("WhatsAppAPI", function () {
                     token,
                     appSecret,
                     ponyfill: {
-                        fetch: spy
+                        fetch: spy,
+                        subtle
                     }
                 });
 
@@ -159,7 +168,10 @@ describe("WhatsAppAPI", function () {
             it("should default to node:crypto.subtle", async function () {
                 const Whatsapp = new WhatsAppAPI({
                     token,
-                    appSecret
+                    appSecret,
+                    ponyfill: {
+                        fetch: undici_fetch
+                    }
                 });
 
                 // Sleep to wait for the cryptoSubtle to be set
@@ -174,6 +186,7 @@ describe("WhatsAppAPI", function () {
                     token,
                     appSecret,
                     ponyfill: {
+                        fetch: undici_fetch,
                         subtle: spy
                     }
                 });
@@ -192,7 +205,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.parsed, true);
@@ -204,7 +218,8 @@ describe("WhatsAppAPI", function () {
                 appSecret,
                 parsed: true,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.parsed, true);
@@ -216,7 +231,8 @@ describe("WhatsAppAPI", function () {
                 appSecret,
                 parsed: false,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
             equal(Whatsapp.parsed, false);
@@ -259,7 +275,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
         });
@@ -357,7 +374,8 @@ describe("WhatsAppAPI", function () {
             token,
             appSecret,
             ponyfill: {
-                fetch: undici_fetch
+                fetch: undici_fetch,
+                subtle
             }
         });
 
@@ -583,7 +601,8 @@ describe("WhatsAppAPI", function () {
             token,
             appSecret,
             ponyfill: {
-                fetch: undici_fetch
+                fetch: undici_fetch,
+                subtle
             }
         });
 
@@ -994,7 +1013,8 @@ describe("WhatsAppAPI", function () {
             token,
             appSecret,
             ponyfill: {
-                fetch: undici_fetch
+                fetch: undici_fetch,
+                subtle
             }
         });
 
@@ -1487,7 +1507,8 @@ describe("WhatsAppAPI", function () {
                 appSecret,
                 webhookVerifyToken,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
 
@@ -1592,7 +1613,8 @@ describe("WhatsAppAPI", function () {
                 token,
                 appSecret,
                 ponyfill: {
-                    fetch: undici_fetch
+                    fetch: undici_fetch,
+                    subtle
                 }
             });
 
@@ -1794,7 +1816,8 @@ describe("WhatsAppAPI", function () {
             token,
             appSecret,
             ponyfill: {
-                fetch: undici_fetch
+                fetch: undici_fetch,
+                subtle
             }
         });
 
