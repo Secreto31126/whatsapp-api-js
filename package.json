@@ -11,6 +11,9 @@
   "files": [
     "lib/**/*"
   ],
+  "engines": {
+    "node": ">10.10"
+  },
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
@@ -39,7 +42,7 @@
     "lint:fix": "eslint src --fix",
     "prettier": "prettier --check src test",
     "prettier:write": "prettier --write src test",
-    "coverage": "nyc --reporter=text mocha --reporter min",
+    "coverage": "c8 mocha --reporter min",
     "document": "typedoc && cp -r docs_statics/* docs/",
     "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output/"
   },
@@ -72,11 +75,11 @@
     "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
+    "c8": "^7.13.0",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "mocha": "^10.0.0",
-    "nyc": "^15.1.0",
     "prettier": "2.8.4",
     "sinon": "^15.0.1",
     "typedoc": "^0.23.25",
