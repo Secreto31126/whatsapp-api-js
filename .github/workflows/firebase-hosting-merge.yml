@@ -18,7 +18,7 @@ jobs:
     name: Build documentation and deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: npm ci --only=dev
       - run: npm run document
       - uses: FirebaseExtended/action-hosting-deploy@v0
