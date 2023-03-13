@@ -31,7 +31,7 @@
     "build:module": "tsc",
     "build:module:watch": "tsc --watch",
     "build:module:types": "tsc -d",
-    "build:common": "tsc -p tsconfig.common.json",
+    "build:common": "tsc -p tsconfig.common.json && echo {\"type\": \"commonjs\"} > ./lib/common/package.json",
     "build:common:watch": "tsc -p tsconfig.common.json --watch",
     "build:common:types": "tsc -p tsconfig.common.json -d",
     "build:types": "tsc -p tsconfig.types.json",
