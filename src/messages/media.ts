@@ -15,7 +15,7 @@ export abstract class Media implements ClientMessage {
      */
     link?: string;
 
-    get _type(): ClientMessageNames;
+    abstract get _type(): ClientMessageNames;
 
     /**
      * @param file - File to be sent
