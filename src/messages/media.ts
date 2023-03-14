@@ -1,11 +1,11 @@
 import type { ClientMessage, ClientMessageNames } from "../types";
 
 /**
- * Placeholder class for all the media types
+ * Abstract class for all the media types
  *
  * @group Media
  */
-export class Media implements ClientMessage {
+export abstract class Media implements ClientMessage {
     /**
      * The id of the media
      */
@@ -15,14 +15,9 @@ export class Media implements ClientMessage {
      */
     link?: string;
 
-    get _type(): ClientMessageNames {
-        throw new Error("Media is a placeholder class, don't use it directly");
-    }
+    abstract get _type(): ClientMessageNames;
 
     /**
-     * This method works as a placeholder so the documentation looks nice.
-     * You shouldn't be using it directly ¯\\_(ツ)_/¯.
-     *
      * @param file - File to be sent
      * @param isItAnID - If the file is an ID (true) or an URL (false)
      */
