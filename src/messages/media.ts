@@ -5,7 +5,7 @@ import type { ClientMessage, ClientMessageNames } from "../types";
  *
  * @group Media
  */
-export class abstract Media implements ClientMessage {
+export abstract class Media implements ClientMessage {
     /**
      * The id of the media
      */
