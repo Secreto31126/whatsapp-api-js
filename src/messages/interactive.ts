@@ -177,6 +177,7 @@ export class Header {
      * @param object - The message object for the header
      * @throws If object is not a Document, Image, Text, or Video
      * @throws If object is a Text and is over 60 characters
+     * @throws If object is a Location and does not have an address and a name
      * @throws If object is a Media and has a caption
      */
     constructor(object: Document | Image | Text | Video | Location) {
