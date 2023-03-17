@@ -4,6 +4,7 @@ import type {
     ClientTypedMessageComponent
 } from "../types.js";
 import type Text from "./text.js";
+import type Location from "./location";
 import type { Document, Image, Video } from "./media.js";
 
 /**
@@ -148,7 +149,7 @@ export class Header {
     /**
      * The type of the header
      */
-    type: "text" | "video" | "image" | "document";
+    type: "text" | "video" | "image" | "document" | "location";
     /**
      * The text of the parameter
      */
@@ -165,6 +166,10 @@ export class Header {
      * The video of the parameter
      */
     video?: Video;
+    /**
+     * The location of the parameter
+     */
+    location?: Location;
 
     /**
      * Builds a header component for an Interactive message
@@ -174,21 +179,23 @@ export class Header {
      * @throws If object is a Text and is over 60 characters
      * @throws If object is a Media and has a caption
      */
-    constructor(object: Document | Image | Text | Video) {
-        if (!["text", "video", "image", "document"].includes(object._type))
-            throw new Error(
-                "Header object must be either Text, Video, Image or Document."
-            );
-
+    constructor(object: Document | Image | Text | Video | Location) {
         this.type = object._type;
 
-        // Text type can go to hell
+        // All interactive's header can go to hell with its "exceptions"
         if (object._type === "text") {
             if (object.body.length > 60)
                 throw new Error("Header text must be 60 characters or less");
+
             this[object._type] = object.body;
+        } else if (object._type === "location") {
+            if (!("name" in object && "address" in object))
+                throw new Error(
+                    "Header location must have an address and name properties"
+                );
+
+            this[object._type] = object;
         } else {
-            // Now I think about it, all interactive can go to hell too
             if ("caption" in object)
                 throw new Error(`Header ${this.type} must not have a caption`);
 
