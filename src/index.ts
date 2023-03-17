@@ -89,7 +89,7 @@ export default class WhatsAppAPI {
         message?: OnMessage;
         sent?: OnSent;
         status?: OnStatus;
-    };
+    } = {};
     //#endregion
 
     /**
@@ -157,14 +157,13 @@ export default class WhatsAppAPI {
              */
             fetch?: typeof FetchType;
             /**
-             * The verify ponyfill to use for the signatures. If not specified, it defaults to the verify function from node:crypto
+             * The subtle ponyfill to use for the signatures. If not specified, it defaults to subtle from node:crypto
              */
             subtle?: typeof CryptoSubtle;
         };
     }) {
         this.token = token;
         this.secure = !!secure;
-        this.on = {};
 
         if (this.secure) {
             if (!appSecret) {
