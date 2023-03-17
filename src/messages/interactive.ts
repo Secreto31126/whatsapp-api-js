@@ -175,11 +175,6 @@ export class Header {
      * @throws If object is a Media and has a caption
      */
     constructor(object: Document | Image | Text | Video) {
-        if (!["text", "video", "image", "document"].includes(object._type))
-            throw new Error(
-                "Header object must be either Text, Video, Image or Document."
-            );
-
         this.type = object._type;
 
         // Text type can go to hell
