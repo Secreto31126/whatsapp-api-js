@@ -562,9 +562,6 @@ export default class WhatsAppAPI {
                     ? "sticker"
                     : (file.type.split("/")[0] as keyof typeof validMediaSizes);
 
-            if (!(mediaType in validMediaSizes))
-                throw new Error(`Invalid media type: ${file.type}`);
-
             if (file.size && file.size > validMediaSizes[mediaType])
                 throw new Error(
                     `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
@@ -797,6 +794,7 @@ export default class WhatsAppAPI {
      * @throws If url is not specified
      */
     _authenicatedRequest(url: string | URL | Request): Promise<Response> {
+        // Keep the check to ensure on runtime that no weird stuff happens
         if (!url) throw new Error("URL must be specified");
 
         return this.fetch(url, {

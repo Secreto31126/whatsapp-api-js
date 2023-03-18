@@ -4,6 +4,8 @@ import type {
     ClientBuildableMessageComponent,
     ClientTypedMessageComponent
 } from "../types.js";
+import { AtLeastOne } from "../utils.js";
+
 import type Text from "./text.js";
 import type { Document, Image, Video } from "./media.js";
 
@@ -196,10 +198,13 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
      * @param sub_type - The type of button to create.
      * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
      * @throws If sub_type is not either 'url' or 'quick_reply'
-     * @throws If parameters has less than 1 or over 3 elements
+     * @throws If parameters is over 3 elements
      */
-    constructor(sub_type: "url" | "quick_reply", ...parameters: string[]) {
-        if (!parameters.length || parameters.length > 3)
+    constructor(
+        sub_type: "url" | "quick_reply",
+        ...parameters: AtLeastOne<string>
+    ) {
+        if (parameters.length > 3)
             throw new Error(
                 "ButtonComponent must have between 1 and 3 parameters"
             );

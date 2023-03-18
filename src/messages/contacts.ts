@@ -1,4 +1,5 @@
 import type { ClientMessage, ContactComponent } from "../types.js";
+import { AtLeastOne } from "../utils.js";
 
 export type BuiltContact = {
     name: Name;
@@ -32,24 +33,22 @@ export class Contacts implements ClientMessage {
      * Create a Contacts object for the API
      *
      * @param contact - Array of contact's components
-     * @throws If contact is not provided
      * @throws If contact contains multiple of the same components and _many is set to false (for example, Name, Birthday and Organization)
      */
     constructor(
-        ...contact: Array<
-            | Address
-            | Birthday
-            | Email
-            | Name
-            | Organization
-            | Phone
-            | Url
-            | ContactComponent
-        >[]
+        ...contact: AtLeastOne<
+            Array<
+                | Address
+                | Birthday
+                | Email
+                | Name
+                | Organization
+                | Phone
+                | Url
+                | ContactComponent
+            >
+        >
     ) {
-        if (!contact.length)
-            throw new Error("Contacts must have at least one contact");
-
         this.component = [];
 
         for (const components of contact) {

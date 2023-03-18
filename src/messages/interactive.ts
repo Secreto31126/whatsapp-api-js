@@ -3,6 +3,8 @@ import type {
     ClientMessageComponent,
     ClientTypedMessageComponent
 } from "../types.js";
+import type { AtLeastOne } from "../utils.js";
+
 import type Text from "./text.js";
 import type Location from "./location.js";
 import type { Document, Image, Video } from "./media.js";
@@ -226,12 +228,12 @@ export class ActionButtons implements ClientTypedMessageComponent {
      * Builds a reply buttons component for an Interactive message
      *
      * @param button - Buttons to be used in the reply buttons. Each button title must be unique within the message. Emojis are supported, markdown is not. Must be between 1 and 3 buttons.
-     * @throws If no buttons are provided or are over 3
+     * @throws If more than 3 buttons are provided
      * @throws If two or more buttons have the same id
      * @throws If two or more buttons have the same title
      */
-    constructor(...button: Button[]) {
-        if (!button.length || button.length > 3)
+    constructor(...button: AtLeastOne<Button>) {
+        if (button.length > 3)
             throw new Error("Reply buttons must have between 1 and 3 buttons");
 
         // Find if there are duplicates in button.id
@@ -323,13 +325,13 @@ export class ActionList implements ClientTypedMessageComponent {
      * @param button - Button content. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
      * @param sections - Sections of the list
      * @throws If button is over 20 characters
-     * @throws If no sections are provided or are over 10
+     * @throws If more than 10 sections are provided
      * @throws If more than 1 section is provided and at least one doesn't have a title
      */
-    constructor(button: string, ...sections: ListSection[]) {
+    constructor(button: string, ...sections: AtLeastOne<ListSection>) {
         if (button.length > 20)
             throw new Error("Button content must be 20 characters or less");
-        if (!sections.length || sections.length > 10)
+        if (sections.length > 10)
             throw new Error("Action must have between 1 and 10 sections");
         if (sections.length > 1 && !sections.every((obj) => "title" in obj))
             throw new Error(
@@ -362,9 +364,9 @@ export class ListSection {
      * @param title - Title of the section, only required if there are more than one section
      * @param rows - Rows of the section
      * @throws If title is over 24 characters if provided
-     * @throws If no rows are provided or are over 10
+     * @throws If more than 10 rows are provided
      */
-    constructor(title: string, ...rows: Row[]) {
+    constructor(title: string, ...rows: AtLeastOne<Row>) {
         if (title && title.length > 24)
             throw new Error("Section title must be 24 characters or less");
         if (!rows.length || rows.length > 10)
@@ -445,32 +447,22 @@ export class ActionCatalog implements ClientTypedMessageComponent {
      * Builds a catalog component for an Interactive message
      *
      * @param catalog_id - The catalog id
-     * @param products - The products to add to the catalog
-     * @throws If products is not provided
-     * @throws If products is a single product and more than 1 product is provided
+     * @param products - The products to add to the catalog. It can be a _single_ Product object, or a list of ProductSections.
      * @throws If products is a product list and more than 10 sections are provided
      * @throws If products is a product list with more than 1 section and at least one section is missing a title
      */
-    constructor(catalog_id: string, ...products: Product[] | ProductSection[]) {
-        if (!products.length)
-            throw new Error(
-                "Catalog must have at least one product or product section"
-            );
+    constructor(
+        catalog_id: string,
+        ...products: [Product] | AtLeastOne<ProductSection>
+    ) {
+        const is_sections = this.isSections(products);
 
-        // TypeScript doesn't support type guards in array destructuring
-        const first_product = products[0];
-        const is_single_product = first_product instanceof Product;
-
-        if (is_single_product && products.length > 1)
-            throw new Error(
-                "Catalog must have only 1 product, use a ProductSection instead"
-            );
-        else {
-            if (products.length > 10)
-                throw new Error(
-                    "Catalog must have between 1 and 10 product sections"
-                );
+        if (is_sections) {
             if (products.length > 1) {
+                if (products.length > 10)
+                    throw new Error(
+                        "Catalog must have between 1 and 10 product sections"
+                    );
                 for (const obj of products) {
                     if (!("title" in obj)) {
                         throw new Error(
@@ -483,11 +475,13 @@ export class ActionCatalog implements ClientTypedMessageComponent {
 
         this.catalog_id = catalog_id;
 
-        if (is_single_product)
-            this.product_retailer_id = first_product.product_retailer_id;
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - TS doesn't know that if it's not a single product, it's a product list
-        else this.sections = products;
+        if (is_sections) this.sections = products;
+        else this.product_retailer_id = products[0].product_retailer_id;
+    }
+
+    // Java knowledge intensifies
+    private isSections(obj: unknown[]): obj is ProductSection[] {
+        return obj[0] instanceof ProductSection;
     }
 }
 
@@ -512,12 +506,12 @@ export class ProductSection {
      * @param title - The title of the product section, only required if more than 1 section will be used
      * @param products - The products to add to the product section
      * @throws If title is over 24 characters if provided
-     * @throws If no products are provided or are over 30
+     * @throws If more than 30 products are provided
      */
-    constructor(title: string, ...products: Product[]) {
+    constructor(title: string, ...products: AtLeastOne<Product>) {
         if (title && title.length > 24)
             throw new Error("Section title must be 24 characters or less");
-        if (!products.length || products.length > 30)
+        if (products.length > 30)
             throw new Error("Section must have between 1 and 30 products");
 
         if (title) this.title = title;
