@@ -201,9 +201,9 @@ export class Birthday implements ContactComponent {
      * @throws If the year, month, or day don't have a valid length
      */
     constructor(year: string, month: string, day: string) {
-        if (year?.length !== 4) throw new Error("Year must be 4 digits");
-        if (month?.length !== 2) throw new Error("Month must be 2 digits");
-        if (day?.length !== 2) throw new Error("Day must be 2 digits");
+        if (year.length !== 4) throw new Error("Year must be 4 digits");
+        if (month.length !== 2) throw new Error("Month must be 2 digits");
+        if (day.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
     }
 
