@@ -4,7 +4,7 @@ import type {
     ClientTypedMessageComponent
 } from "../types.js";
 import type Text from "./text.js";
-import type Location from "./location";
+import type Location from "./location.js";
 import type { Document, Image, Video } from "./media.js";
 
 /**

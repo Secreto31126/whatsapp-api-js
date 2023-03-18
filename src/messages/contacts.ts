@@ -1,4 +1,4 @@
-import type { ClientMessage, ContactComponent } from "../types";
+import type { ClientMessage, ContactComponent } from "../types.js";
 
 export type BuiltContact = {
     name: Name;
