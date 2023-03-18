@@ -1,4 +1,5 @@
-import type { ClientMessage, ContactComponent } from "../types";
+import type { ClientMessage, ContactComponent } from "../types.js";
+import { AtLeastOne } from "../utils.js";
 
 export type BuiltContact = {
     name: Name;
@@ -32,24 +33,22 @@ export class Contacts implements ClientMessage {
      * Create a Contacts object for the API
      *
      * @param contact - Array of contact's components
-     * @throws If contact is not provided
      * @throws If contact contains multiple of the same components and _many is set to false (for example, Name, Birthday and Organization)
      */
     constructor(
-        ...contact: Array<
-            | Address
-            | Birthday
-            | Email
-            | Name
-            | Organization
-            | Phone
-            | Url
-            | ContactComponent
-        >[]
+        ...contact: AtLeastOne<
+            Array<
+                | Address
+                | Birthday
+                | Email
+                | Name
+                | Organization
+                | Phone
+                | Url
+                | ContactComponent
+            >
+        >
     ) {
-        if (!contact.length)
-            throw new Error("Contacts must have at least one contact");
-
         this.component = [];
 
         for (const components of contact) {
@@ -201,9 +200,9 @@ export class Birthday implements ContactComponent {
      * @throws If the year, month, or day don't have a valid length
      */
     constructor(year: string, month: string, day: string) {
-        if (year?.length !== 4) throw new Error("Year must be 4 digits");
-        if (month?.length !== 2) throw new Error("Month must be 2 digits");
-        if (day?.length !== 2) throw new Error("Day must be 2 digits");
+        if (year.length !== 4) throw new Error("Year must be 4 digits");
+        if (month.length !== 2) throw new Error("Month must be 2 digits");
+        if (day.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
     }
 

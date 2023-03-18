@@ -15,7 +15,7 @@ import type {
     ServerMediaRetrieveResponse,
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
-} from "./types";
+} from "./types.js";
 import type {
     OnMessage,
     OnMessageArgs,
@@ -23,7 +23,7 @@ import type {
     OnSentArgs,
     OnStatus,
     OnStatusArgs
-} from "./emitters";
+} from "./emitters.js";
 
 import type { fetch as FetchType, Request, Response, FormData } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
@@ -89,7 +89,7 @@ export default class WhatsAppAPI {
         message?: OnMessage;
         sent?: OnSent;
         status?: OnStatus;
-    };
+    } = {};
     //#endregion
 
     /**
@@ -157,14 +157,13 @@ export default class WhatsAppAPI {
              */
             fetch?: typeof FetchType;
             /**
-             * The verify ponyfill to use for the signatures. If not specified, it defaults to the verify function from node:crypto
+             * The subtle ponyfill to use for the signatures. If not specified, it defaults to subtle from node:crypto
              */
             subtle?: typeof CryptoSubtle;
         };
     }) {
         this.token = token;
         this.secure = !!secure;
-        this.on = {};
 
         if (this.secure) {
             if (!appSecret) {
@@ -563,9 +562,6 @@ export default class WhatsAppAPI {
                     ? "sticker"
                     : (file.type.split("/")[0] as keyof typeof validMediaSizes);
 
-            if (!(mediaType in validMediaSizes))
-                throw new Error(`Invalid media type: ${file.type}`);
-
             if (file.size && file.size > validMediaSizes[mediaType])
                 throw new Error(
                     `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
@@ -798,6 +794,7 @@ export default class WhatsAppAPI {
      * @throws If url is not specified
      */
     _authenicatedRequest(url: string | URL | Request): Promise<Response> {
+        // Keep the check to ensure on runtime that no weird stuff happens
         if (!url) throw new Error("URL must be specified");
 
         return this.fetch(url, {
