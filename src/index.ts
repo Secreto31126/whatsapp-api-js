@@ -479,16 +479,17 @@ export default class WhatsAppAPI {
      * @throws If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws If check is set to true and the form file is too big for the file type
      * @example
+     * ```ts
      * import WhatsAppAPI from "whatsapp-api-js";
      *
      * const token = "token";
      * const appSecret = "appSecret";
      *
-     * const Whatsapp = new WhatsAppAPI(\{ token, appSecret \});
+     * const Whatsapp = new WhatsAppAPI({ token, appSecret });
      *
      * // If required:
      * // import FormData from "undici";
-     * // import \{ Blob \} from "node:buffer";
+     * // import { Blob } from "node:buffer";
      *
      * const form = new FormData();
      *
@@ -498,10 +499,11 @@ export default class WhatsAppAPI {
      * // If you do, you will need to use streams. The module "form-data",
      * // although not spec compliant (hence needing to set check to false),
      * // has an easy way to do this:
-     * // form.append("file", fs.createReadStream("image.png"), \{ contentType: "image/png" \});
+     * // form.append("file", fs.createReadStream("image.png"), { contentType: "image/png" });
      *
      * console.log(await Whatsapp.uploadMedia("phoneID", form));
-     * // Expected output: \{ id: "mediaID" \}
+     * // Expected output: { id: "mediaID" }
+     * ```
      */
     async uploadMedia(
         phoneID: string,
@@ -593,16 +595,18 @@ export default class WhatsAppAPI {
      * @returns The fetch raw response
      * @throws If url is not a valid url
      * @example
+     * ```ts
      * import WhatsAppAPI from "whatsapp-api-js";
      *
      * const token = "token";
      * const appSecret = "appSecret";
      *
-     * const Whatsapp = new WhatsAppAPI(\{ token, appSecret \});
+     * const Whatsapp = new WhatsAppAPI({ token, appSecret });
      *
      * const id = "mediaID";
-     * const \{ url \} = await Whatsapp.retrieveMedia(id);
+     * const { url } = await Whatsapp.retrieveMedia(id);
      * const response = Whatsapp.fetchMedia(url);
+     * ```
      */
     fetchMedia(url: string): Promise<Response> {
         // Hacky way to check if the url is valid and throw if invalid
