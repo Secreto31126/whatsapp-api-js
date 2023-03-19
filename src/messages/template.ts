@@ -98,7 +98,7 @@ export class Language {
      * Create a Language component for a Template message
      *
      * @param code - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param policy - The language policy the message should follow. The only supported option is 'deterministic'. The variable isn't even read by my code :)
+     * @param policy - The language policy the message should follow. The only supported option is 'deterministic'.
      */
     constructor(code: string, policy: "deterministic" = "deterministic") {
         this.policy = policy;
