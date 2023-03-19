@@ -37,35 +37,35 @@ export default class WhatsAppAPI {
     /**
      * The API token
      */
-    token: string;
+    private token: string;
     /**
      * The app secret
      */
-    appSecret?: string;
+    private appSecret?: string;
     /**
      * The webhook verify token
      */
-    webhookVerifyToken?: string;
+    private webhookVerifyToken?: string;
     /**
      * The API version to use
      */
-    v: string;
+    private v: string;
     /**
      * The fetch function for the requests
      */
-    fetch: typeof FetchType;
+    private fetch: typeof FetchType;
     /**
      * The CryptoSubtle library for checking the signatures
      */
-    subtle?: typeof CryptoSubtle;
+    private subtle?: typeof CryptoSubtle;
     /**
      * If true, API operations will return the fetch promise instead. Intended for low level debugging.
      */
-    parsed: boolean;
+    private parsed: boolean;
     /**
      * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
      */
-    secure: boolean;
+    private secure: boolean;
     /**
      * The callbacks for the events (message, sent, status)
      *
@@ -83,7 +83,7 @@ export default class WhatsAppAPI {
      * Whatsapp.on.message = undefined;
      * ```
      */
-    on: {
+    public on: {
         message?: OnMessage;
         sent?: OnSent;
         status?: OnStatus;

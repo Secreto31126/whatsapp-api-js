@@ -9,11 +9,11 @@ export default class Text implements ClientMessage {
     /**
      * Body of the message. Maximum length: 4096 characters.
      */
-    body: string;
+    readonly body: string;
     /**
      * Whether to enable preview for the text message
      */
-    preview_url?: boolean;
+    readonly preview_url?: boolean;
 
     get _type(): "text" {
         return "text";

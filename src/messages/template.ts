@@ -25,15 +25,15 @@ export class Template implements ClientMessage {
     /**
      * The name of the template
      */
-    name: string;
+    readonly name: string;
     /**
      * The language of the template
      */
-    language: Language | ClientMessageComponent;
+    readonly language: Language | ClientMessageComponent;
     /**
      * The components of the template
      */
-    components?: (
+    readonly components?: (
         | HeaderComponent
         | BodyComponent
         | BuiltButtonComponent
@@ -88,11 +88,11 @@ export class Language {
     /**
      * The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      */
-    code: string;
+    readonly code: string;
     /**
      * The language policy
      */
-    policy: "deterministic";
+    readonly policy: "deterministic";
 
     /**
      * Create a Language component for a Template message
@@ -115,15 +115,15 @@ export class Currency implements ClientTypedMessageComponent {
     /**
      * The amount of the currency by 1000
      */
-    amount_1000: number;
+    readonly amount_1000: number;
     /**
      * The currency code
      */
-    code: string;
+    readonly code: string;
     /**
      * The fallback value
      */
-    fallback_value: string;
+    readonly fallback_value: string;
 
     get _type(): "currency" {
         return "currency";
@@ -156,7 +156,7 @@ export class DateTime implements ClientTypedMessageComponent {
     /**
      * The fallback value
      */
-    fallback_value: string;
+    readonly fallback_value: string;
 
     get _type(): "date_time" {
         return "date_time";
@@ -181,15 +181,15 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
-    type: "button";
+    readonly type: "button";
     /**
      * The subtype of the component
      */
-    sub_type: "url" | "quick_reply";
+    readonly sub_type: "url" | "quick_reply";
     /**
      * The ButtonParameters to be used in the build function
      */
-    parameters: ButtonParameter[];
+    readonly parameters: ButtonParameter[];
 
     /**
      * Builds a button component for a Template message.
@@ -240,15 +240,15 @@ export class ButtonParameter {
     /**
      * The type of the button
      */
-    type: "text" | "payload";
+    readonly type: "text" | "payload";
     /**
      * The text of the button
      */
-    text?: string;
+    readonly text?: string;
     /**
      * The payload of the button
      */
-    payload?: string;
+    readonly payload?: string;
 
     /**
      * Builds a button parameter for a ButtonComponent
@@ -271,11 +271,11 @@ export class HeaderComponent implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
-    type: "header";
+    readonly type: "header";
     /**
      * The parameters of the component
      */
-    parameters?: Parameter[];
+    readonly parameters?: Parameter[];
 
     /**
      * Builds a header component for a Template message
@@ -314,11 +314,11 @@ export class BodyComponent {
     /**
      * The type of the component
      */
-    type: "body";
+    readonly type: "body";
     /**
      * The parameters of the component
      */
-    parameters?: Parameter[];
+    readonly parameters?: Parameter[];
 
     /**
      * Builds a body component for a Template message
@@ -357,31 +357,37 @@ export class Parameter {
     /**
      * The type of the parameter
      */
-    type: "text" | "currency" | "date_time" | "image" | "document" | "video";
+    readonly type:
+        | "text"
+        | "currency"
+        | "date_time"
+        | "image"
+        | "document"
+        | "video";
     /**
      * The text of the parameter
      */
-    text?: string;
+    readonly text?: string;
     /**
      * The currency of the parameter
      */
-    currency?: Currency;
+    readonly currency?: Currency;
     /**
      * The datetime of the parameter
      */
-    date_time?: DateTime;
+    readonly date_time?: DateTime;
     /**
      * The image of the parameter
      */
-    image?: Image;
+    readonly image?: Image;
     /**
      * The document of the parameter
      */
-    document?: Document;
+    readonly document?: Document;
     /**
      * The video of the parameter
      */
-    video?: Video;
+    readonly video?: Video;
 
     /**
      * Builds a parameter object for a HeaderComponent or BodyComponent.

@@ -9,11 +9,11 @@ export default class Reaction implements ClientMessage {
     /**
      * The message's id to react to
      */
-    message_id: string;
+    readonly message_id: string;
     /**
      * The reaction emoji
      */
-    emoji: string;
+    readonly emoji: string;
 
     get _type(): "reaction" {
         return "reaction";

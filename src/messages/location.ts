@@ -9,19 +9,19 @@ export default class Location implements ClientMessage {
     /**
      * The latitude of the location
      */
-    longitude: number;
+    readonly longitude: number;
     /**
      * The longitude of the location
      */
-    latitude: number;
+    readonly latitude: number;
     /**
      * The name of the location
      */
-    name?: string;
+    readonly name?: string;
     /**
      * The address of the location
      */
-    address?: string;
+    readonly address?: string;
 
     get _type(): "location" {
         return "location";

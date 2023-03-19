@@ -23,7 +23,7 @@ export class Contacts implements ClientMessage {
     /**
      * The contacts of the message
      */
-    component: BuiltContact[];
+    readonly component: BuiltContact[];
 
     get _type(): "contacts" {
         return "contacts";
@@ -103,31 +103,31 @@ export class Address implements ContactComponent {
     /**
      * The country of the address
      */
-    country?: string;
+    readonly country?: string;
     /**
      * The country code of the address
      */
-    country_code?: string;
+    readonly country_code?: string;
     /**
      * The state of the address
      */
-    state?: string;
+    readonly state?: string;
     /**
      * The city of the address
      */
-    city?: string;
+    readonly city?: string;
     /**
      * The street of the address
      */
-    street?: string;
+    readonly street?: string;
     /**
      * The zip code of the address
      */
-    zip?: string;
+    readonly zip?: string;
     /**
      * The type of the address
      */
-    type?: string;
+    readonly type?: string;
 
     get _many() {
         return true;
@@ -181,7 +181,7 @@ export class Birthday implements ContactComponent {
     /**
      * The birthday of the contact
      */
-    birthday: string;
+    readonly birthday: string;
 
     get _many() {
         return false;
@@ -220,11 +220,11 @@ export class Email implements ContactComponent {
     /**
      * The email of the contact
      */
-    email?: string;
+    readonly email?: string;
     /**
      * The type of the email
      */
-    type?: string;
+    readonly type?: string;
 
     get _many() {
         return true;
@@ -260,27 +260,27 @@ export class Name implements ContactComponent {
     /**
      * The formatted name of the contact
      */
-    formatted_name: string;
+    readonly formatted_name: string;
     /**
      * The first name of the contact
      */
-    first_name?: string;
+    readonly first_name?: string;
     /**
      * The last name of the contact
      */
-    last_name?: string;
+    readonly last_name?: string;
     /**
      * The middle name of the contact
      */
-    middle_name?: string;
+    readonly middle_name?: string;
     /**
      * The suffix of the contact
      */
-    suffix?: string;
+    readonly suffix?: string;
     /**
      * The prefix of the contact
      */
-    prefix?: string;
+    readonly prefix?: string;
 
     get _many() {
         return false;
@@ -338,15 +338,15 @@ export class Organization implements ContactComponent {
     /**
      * The company of the contact
      */
-    company?: string;
+    readonly company?: string;
     /**
      * The department of the contact
      */
-    department?: string;
+    readonly department?: string;
     /**
      * The title of the contact
      */
-    title?: string;
+    readonly title?: string;
 
     get _many() {
         return false;
@@ -383,15 +383,15 @@ export class Phone implements ContactComponent {
     /**
      * The phone number of the contact
      */
-    phone?: string;
+    readonly phone?: string;
     /**
      * The type of the phone number
      */
-    type?: string;
+    readonly type?: string;
     /**
      * The WhatsApp ID of the contact
      */
-    wa_id?: string;
+    readonly wa_id?: string;
 
     get _many() {
         return true;
@@ -429,11 +429,11 @@ export class Url implements ContactComponent {
     /**
      * The URL of the contact
      */
-    url?: string;
+    readonly url?: string;
     /**
      * The type of the URL
      */
-    type?: string;
+    readonly type?: string;
 
     get _many() {
         return true;

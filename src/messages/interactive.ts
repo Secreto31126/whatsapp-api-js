@@ -18,7 +18,7 @@ export class Interactive implements ClientMessage {
     /**
      * The action component of the interactive message
      */
-    action:
+    readonly action:
         | ActionList
         | ActionButtons
         | ActionCatalog
@@ -26,19 +26,19 @@ export class Interactive implements ClientMessage {
     /**
      * The type of the interactive message
      */
-    type: "list" | "button" | "product" | "product_list" | string;
+    readonly type: "list" | "button" | "product" | "product_list" | string;
     /**
      * The body component of the interactive message
      */
-    body?: Body | ClientMessageComponent;
+    readonly body?: Body | ClientMessageComponent;
     /**
      * The header component of the interactive message
      */
-    header?: Header | ClientMessageComponent;
+    readonly header?: Header | ClientMessageComponent;
     /**
      * The footer component of the interactive message
      */
-    footer?: Footer | ClientMessageComponent;
+    readonly footer?: Footer | ClientMessageComponent;
 
     get _type(): "interactive" {
         return "interactive";
@@ -101,7 +101,7 @@ export class Body {
     /**
      * The text of the body
      */
-    text: string;
+    readonly text: string;
 
     /**
      * Builds a body component for an Interactive message
@@ -126,7 +126,7 @@ export class Footer {
     /**
      * The text of the footer
      */
-    text: string;
+    readonly text: string;
 
     /**
      * Builds a footer component for an Interactive message
@@ -151,27 +151,27 @@ export class Header {
     /**
      * The type of the header
      */
-    type: "text" | "video" | "image" | "document" | "location";
+    readonly type: "text" | "video" | "image" | "document" | "location";
     /**
      * The text of the parameter
      */
-    text?: string;
+    readonly text?: string;
     /**
      * The image of the parameter
      */
-    image?: Image;
+    readonly image?: Image;
     /**
      * The document of the parameter
      */
-    document?: Document;
+    readonly document?: Document;
     /**
      * The video of the parameter
      */
-    video?: Video;
+    readonly video?: Video;
     /**
      * The location of the parameter
      */
-    location?: Location;
+    readonly location?: Location;
 
     /**
      * Builds a header component for an Interactive message
@@ -218,7 +218,7 @@ export class ActionButtons implements ClientTypedMessageComponent {
     /**
      * The buttons of the action
      */
-    buttons: Button[];
+    readonly buttons: Button[];
 
     get _type(): "button" {
         return "button";
@@ -259,11 +259,11 @@ export class Button {
     /**
      * The type of the button
      */
-    type: "reply";
+    readonly type: "reply";
     /**
      * The reply object of the row
      */
-    reply: {
+    readonly reply: {
         /**
          * The id of the row
          */
@@ -308,11 +308,11 @@ export class ActionList implements ClientTypedMessageComponent {
     /**
      * The button text
      */
-    button: string;
+    readonly button: string;
     /**
      * The sections of the action
      */
-    sections: ListSection[];
+    readonly sections: ListSection[];
 
     get _type(): "list" {
         return "list";
@@ -352,11 +352,11 @@ export class ListSection {
     /**
      * The rows of the section
      */
-    rows: Row[];
+    readonly rows: Row[];
     /**
      * The title of the section
      */
-    title?: string;
+    readonly title?: string;
 
     /**
      * Builds a section component for ActionList
@@ -386,15 +386,15 @@ export class Row {
     /**
      * The id of the row
      */
-    id: string;
+    readonly id: string;
     /**
      * The title of the row
      */
-    title: string;
+    readonly title: string;
     /**
      * The description of the row
      */
-    description?: string;
+    readonly description?: string;
 
     /**
      * Builds a row component for a Section
@@ -429,15 +429,15 @@ export class ActionCatalog implements ClientTypedMessageComponent {
     /**
      * The id of the catalog from where to get the products
      */
-    catalog_id: string;
+    readonly catalog_id: string;
     /**
      * The product to be added to the catalog
      */
-    product_retailer_id?: string;
+    readonly product_retailer_id?: string;
     /**
      * The section to be added to the catalog
      */
-    sections?: ProductSection[];
+    readonly sections?: ProductSection[];
 
     get _type(): "product" | "product_list" {
         return this.product_retailer_id ? "product" : "product_list";
@@ -494,11 +494,11 @@ export class ProductSection {
     /**
      * The title of the section
      */
-    title?: string;
+    readonly title?: string;
     /**
      * The products of the section
      */
-    product_items: Product[];
+    readonly product_items: Product[];
 
     /**
      * Builds a product section component for an ActionCatalog
@@ -528,7 +528,7 @@ export class Product {
     /**
      * The id of the product
      */
-    product_retailer_id: string;
+    readonly product_retailer_id: string;
 
     /**
      * Builds a product component for ActionCart and ProductSection

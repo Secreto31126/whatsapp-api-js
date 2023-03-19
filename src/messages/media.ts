@@ -9,11 +9,11 @@ export abstract class Media implements ClientMessage {
     /**
      * The id of the media
      */
-    id?: string;
+    readonly id?: string;
     /**
      * The link of the media
      */
-    link?: string;
+    readonly link?: string;
 
     abstract get _type(): ClientMessageNames;
 
@@ -60,11 +60,11 @@ export class Document extends Media {
     /**
      * The file's caption
      */
-    caption?: string;
+    readonly caption?: string;
     /**
      * The file's filename
      */
-    filename?: string;
+    readonly filename?: string;
 
     get _type(): "document" {
         return "document";
@@ -99,7 +99,7 @@ export class Image extends Media {
     /**
      * The file's caption
      */
-    caption?: string;
+    readonly caption?: string;
 
     get _type(): "image" {
         return "image";
@@ -148,7 +148,7 @@ export class Video extends Media {
     /**
      * The file's caption
      */
-    caption?: string;
+    readonly caption?: string;
 
     get _type(): "video" {
         return "video";
