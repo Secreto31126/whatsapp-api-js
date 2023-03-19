@@ -31,8 +31,6 @@ import type { Blob } from "node:buffer";
 
 /**
  * The main API Class
- *
- * @alpha
  */
 export default class WhatsAppAPI {
     //#region Properties
