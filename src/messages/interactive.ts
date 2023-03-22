@@ -5,7 +5,6 @@ import type {
 } from "../types.js";
 import type { AtLeastOne } from "../utils.js";
 
-import type Text from "./text.js";
 import type { Document, Image, Video } from "./media.js";
 
 /**
@@ -52,7 +51,7 @@ export class Interactive implements ClientMessage {
      * @param footer - The footer component of the interactive message
      * @throws If body is not provided, unless action is an ActionCatalog with a single product
      * @throws If header is provided for an ActionCatalog with a single product
-     * @throws If header of type Text is not provided for an ActionCatalog with a product list
+     * @throws If header of type text is not provided for an ActionCatalog with a product list
      * @throws If header is not of type text, unless action is an ActionButtons
      */
     constructor(
@@ -73,10 +72,10 @@ export class Interactive implements ClientMessage {
             );
         if (action._type === "product_list" && header?.type !== "text")
             throw new Error(
-                "Interactive must have a Text header component if action is a product list"
+                "Interactive must have a text header component if action is a product list"
             );
         if (header && action._type !== "button" && header?.type !== "text")
-            throw new Error("Interactive header must be of type Text");
+            throw new Error("Interactive header must be of type text");
 
         this.type = action._type;
 
@@ -150,7 +149,7 @@ export class Header {
     /**
      * The type of the header
      */
-    readonly type: "text" | "video" | "image" | "document";
+    readonly type: "text" | "image" | "video" | "document";
     /**
      * The text of the parameter
      */
@@ -172,27 +171,25 @@ export class Header {
      * Builds a header component for an Interactive message
      *
      * @param object - The message object for the header
-     * @throws If object is not a Document, Image, Text, or Video
-     * @throws If object is a Text and is over 60 characters
+     * @throws If object is a string and is over 60 characters
      * @throws If object is a Media and has a caption
      */
-    constructor(object: Document | Image | Text | Video) {
-        this.type = object._type;
-
+    constructor(object: Document | Image | Video | string) {
         // All interactive's header can go to hell with its "exceptions"
-        if (object._type === "text") {
-            if (object.body.length > 60)
+        if (typeof object === "string") {
+            if (object.length > 60)
                 throw new Error("Header text must be 60 characters or less");
 
-            this[object._type] = object.body;
+            this.type = "text";
         } else {
+            this.type = object._type;
             if ("caption" in object)
                 throw new Error(`Header ${this.type} must not have a caption`);
-
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore - TS dumb, the _type will always match the message type
-            this[this.type as "video" | "image" | "document"] = object;
         }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - TS dumb, the _type will always match the message type
+        this[this.type] = object;
     }
 }
 

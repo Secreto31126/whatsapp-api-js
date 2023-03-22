@@ -6,7 +6,6 @@ import type {
 } from "../types.js";
 import { AtLeastOne } from "../utils.js";
 
-import type Text from "./text.js";
 import type Location from "./location.js";
 import type { Document, Image, Video } from "./media.js";
 
@@ -343,17 +342,17 @@ export class HeaderParameter {
 
     /**
      * Builds a parameter object for a HeaderComponent.
-     * For Text parameter, the character limit is 60.
+     * For text parameter, the character limit is 60.
      * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
      * For Location parameter, the location must have a name and address.
      *
      * @param parameter - The parameter to be used in the template's header
-     * @throws If parameter is a Text and it's over 60 characters
+     * @throws If parameter is a string and it's over 60 characters
      * @throws If parameter is a Location and it doesn't have a name and address
      */
     constructor(
         parameter:
-            | Text
+            | string
             | Currency
             | DateTime
             | Image
@@ -361,16 +360,11 @@ export class HeaderParameter {
             | Video
             | Location
     ) {
-        this.type = parameter._type;
-
-        // Text type can go to hell
-        if (parameter._type === "text") {
-            if (parameter.body.length > 60)
+        if (typeof parameter === "string") {
+            if (parameter.length > 60)
                 throw new Error("Header text must be 60 characters or less");
 
-            Object.defineProperty(this, this.type, {
-                value: parameter.body
-            });
+            this.type = "text";
         } else {
             if (
                 parameter._type === "location" &&
@@ -379,10 +373,12 @@ export class HeaderParameter {
                 throw new Error("Header location must have a name and address");
             }
 
-            Object.defineProperty(this, this.type, {
-                value: parameter
-            });
+            this.type = parameter._type;
         }
+
+        Object.defineProperty(this, this.type, {
+            value: parameter
+        });
     }
 }
 
@@ -452,31 +448,28 @@ export class BodyParameter {
 
     /**
      * Builds a parameter object for a BodyComponent.
-     * For Text parameter, the character limit is 32768 if only one BodyComponent is used for the Template, else it's 1024.
+     * For text parameter, the character limit is 32768 if only one BodyComponent is used for the Template, else it's 1024.
      *
      * @param parameter - The parameter to be used in the template
-     * @throws If parameter is a Text and it's over 32768 characters
-     * @throws If parameter is a Text, there are other components in the Template and it's over 1024 characters
+     * @throws If parameter is a string and it's over 32768 characters
+     * @throws If parameter is a string, there are other components in the Template and it's over 1024 characters
      * @see BodyComponent._build The method that checks the 1024 character limit
      */
-    constructor(parameter: Text | Currency | DateTime) {
-        this.type = parameter._type;
-
-        // Text type can go to hell
-        if (parameter._type === "text") {
-            // We check the upper limit of the text length here
-            // And if a shorter string is needed,
-            // Check and throw an error on the build method of BodyComponent
-            if (parameter.body.length > 32_768)
+    constructor(parameter: string | Currency | DateTime) {
+        if (typeof parameter === "string") {
+            // Check the upper limit of the string length here
+            // If a shorter one is needed, check and throw an
+            // error on the build method of BodyComponent
+            if (parameter.length > 32_768)
                 throw new Error("Body text must be 32768 characters or less");
 
-            Object.defineProperty(this, this.type, {
-                value: parameter.body
-            });
+            this.type = "text";
         } else {
-            Object.defineProperty(this, this.type, {
-                value: parameter
-            });
+            this.type = parameter._type;
         }
+
+        Object.defineProperty(this, this.type, {
+            value: parameter
+        });
     }
 }
