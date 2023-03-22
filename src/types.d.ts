@@ -51,9 +51,7 @@ export interface ClientBuildableMessageComponent
      *
      * @internal
      */
-    // Allow the user create custom components
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    _build(): any;
+    _build(...data);
 }
 
 // Somehow, Contacts still manages to be annoying

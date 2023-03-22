@@ -3,8 +3,9 @@
     "entryPoints": [
         "src/index.ts",
         "src/types.d.ts",
+        "src/utils.d.ts",
         "src/emitters.d.ts",
-        "./src/messages/index.ts"
+        "src/messages/index.ts",
     ],
     "exclude": [
         "**/node_modules/**"
