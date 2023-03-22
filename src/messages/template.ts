@@ -7,6 +7,7 @@ import type {
 import { AtLeastOne } from "../utils.js";
 
 import type Text from "./text.js";
+import type Location from "./location.js";
 import type { Document, Image, Video } from "./media.js";
 
 export type BuiltButtonComponent = {
@@ -44,6 +45,8 @@ export class Template implements ClientMessage {
         return "template";
     }
 
+    // eslint-disable-next-line tsdoc/syntax
+    /** @todo Find out if more than one of each component is allowed */
     /**
      * Create a Template object for the API
      *
@@ -64,14 +67,14 @@ export class Template implements ClientMessage {
         this.name = name;
         this.language =
             typeof language === "string" ? new Language(language) : language;
-        if (components)
+        if (components.length) {
+            const theres_only_body =
+                components.length === 1 &&
+                components[0] instanceof BodyComponent;
             this.components = components
-                .map((cmpt) => cmpt._build())
-                .flat() as (
-                | HeaderComponent
-                | BodyComponent
-                | BuiltButtonComponent
-            )[];
+                .map((cmpt) => cmpt._build(theres_only_body))
+                .flat();
+        }
     }
 
     _build() {
@@ -275,72 +278,16 @@ export class HeaderComponent implements ClientBuildableMessageComponent {
     /**
      * The parameters of the component
      */
-    readonly parameters?: Parameter[];
+    readonly parameters: HeaderParameter[];
 
     /**
      * Builds a header component for a Template message
      *
      * @param parameters - Parameters of the body component
      */
-    constructor(
-        ...parameters: (
-            | Text
-            | Currency
-            | DateTime
-            | Image
-            | Document
-            | Video
-            | Parameter
-        )[]
-    ) {
+    constructor(...parameters: AtLeastOne<HeaderParameter>) {
         this.type = "header";
-        if (parameters)
-            this.parameters = parameters.map((e) =>
-                e instanceof Parameter ? e : new Parameter(e, "header")
-            );
-    }
-
-    _build() {
-        return this;
-    }
-}
-
-/**
- * Components API object
- *
- * @group Template
- */
-export class BodyComponent {
-    /**
-     * The type of the component
-     */
-    readonly type: "body";
-    /**
-     * The parameters of the component
-     */
-    readonly parameters?: Parameter[];
-
-    /**
-     * Builds a body component for a Template message
-     *
-     * @param parameters - Parameters of the body component
-     */
-    constructor(
-        ...parameters: (
-            | Text
-            | Currency
-            | DateTime
-            | Image
-            | Document
-            | Video
-            | Parameter
-        )[]
-    ) {
-        this.type = "body";
-        if (parameters)
-            this.parameters = parameters.map((e) =>
-                e instanceof Parameter ? e : new Parameter(e, "body")
-            );
+        this.parameters = parameters;
     }
 
     _build() {
@@ -353,7 +300,7 @@ export class BodyComponent {
  *
  * @group Template
  */
-export class Parameter {
+export class HeaderParameter {
     /**
      * The type of the parameter
      */
@@ -363,7 +310,8 @@ export class Parameter {
         | "date_time"
         | "image"
         | "document"
-        | "video";
+        | "video"
+        | "location";
     /**
      * The text of the parameter
      */
@@ -388,30 +336,139 @@ export class Parameter {
      * The video of the parameter
      */
     readonly video?: Video;
+    /**
+     * The location of the parameter
+     */
+    readonly location?: Location;
 
     /**
-     * Builds a parameter object for a HeaderComponent or BodyComponent.
-     * For Text parameter, the header component character limit is 60, and the body component character limit is 1024.
+     * Builds a parameter object for a HeaderComponent.
+     * For Text parameter, the character limit is 60.
      * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
+     * For Location parameter, the location must have a name and address.
      *
-     * @param parameter - The parameter to be used in the template
-     * @param whoami - The parent component, used to check if a Text object is too long
-     * @throws If parameter is a Text and the parent component (whoami) is "header" and the text over 60 characters
-     * @throws If parameter is a Text and the parent component (whoami) is "body" and the text over 1024 characters
+     * @param parameter - The parameter to be used in the template's header
+     * @throws If parameter is a Text and it's over 60 characters
+     * @throws If parameter is a Location and it doesn't have a name and address
      */
     constructor(
-        parameter: Text | Currency | DateTime | Image | Document | Video,
-        whoami?: "header" | "body"
+        parameter:
+            | Text
+            | Currency
+            | DateTime
+            | Image
+            | Document
+            | Video
+            | Location
     ) {
         this.type = parameter._type;
 
         // Text type can go to hell
         if (parameter._type === "text") {
-            if (whoami === "header" && parameter.body.length > 60)
+            if (parameter.body.length > 60)
                 throw new Error("Header text must be 60 characters or less");
 
-            if (whoami === "body" && parameter.body.length > 1024)
-                throw new Error("Body text must be 1024 characters or less");
+            Object.defineProperty(this, this.type, {
+                value: parameter.body
+            });
+        } else {
+            if (
+                parameter._type === "location" &&
+                !(parameter.name && parameter.address)
+            ) {
+                throw new Error("Header location must have a name and address");
+            }
+
+            Object.defineProperty(this, this.type, {
+                value: parameter
+            });
+        }
+    }
+}
+
+/**
+ * Components API object
+ *
+ * @group Template
+ */
+export class BodyComponent {
+    /**
+     * The type of the component
+     */
+    readonly type: "body";
+    /**
+     * The parameters of the component
+     */
+    readonly parameters: BodyParameter[];
+
+    /**
+     * Builds a body component for a Template message
+     *
+     * @param parameters - Parameters of the body component
+     */
+    constructor(...parameters: AtLeastOne<BodyParameter>) {
+        this.type = "body";
+        this.parameters = parameters;
+    }
+
+    _build(theres_only_body: boolean) {
+        // If there are parameters and need to check for the shorter max text length
+        if (this.parameters && !theres_only_body) {
+            for (const param of this.parameters) {
+                if (param.text && param.text?.length > 1024) {
+                    throw new Error(
+                        "Body text must be 1024 characters or less"
+                    );
+                }
+            }
+        }
+
+        return this;
+    }
+}
+
+/**
+ * Parameter API object
+ *
+ * @group Template
+ */
+export class BodyParameter {
+    /**
+     * The type of the parameter
+     */
+    readonly type: "text" | "currency" | "date_time";
+    /**
+     * The text of the parameter
+     */
+    readonly text?: string;
+    /**
+     * The currency of the parameter
+     */
+    readonly currency?: Currency;
+    /**
+     * The datetime of the parameter
+     */
+    readonly date_time?: DateTime;
+
+    /**
+     * Builds a parameter object for a BodyComponent.
+     * For Text parameter, the character limit is 32768 if only one BodyComponent is used for the Template, else it's 1024.
+     *
+     * @param parameter - The parameter to be used in the template
+     * @throws If parameter is a Text and it's over 32768 characters
+     * @throws If parameter is a Text, there are other components in the Template and it's over 1024 characters
+     * @see BodyComponent._build The method that checks the 1024 character limit
+     */
+    constructor(parameter: Text | Currency | DateTime) {
+        this.type = parameter._type;
+
+        // Text type can go to hell
+        if (parameter._type === "text") {
+            // We check the upper limit of the text length here
+            // And if a shorter string is needed,
+            // Check and throw an error on the build method of BodyComponent
+            if (parameter.body.length > 32_768)
+                throw new Error("Body text must be 32768 characters or less");
 
             Object.defineProperty(this, this.type, {
                 value: parameter.body
