@@ -6,7 +6,6 @@ import type {
 import type { AtLeastOne } from "../utils.js";
 
 import type Text from "./text.js";
-import type Location from "./location.js";
 import type { Document, Image, Video } from "./media.js";
 
 /**
@@ -151,7 +150,7 @@ export class Header {
     /**
      * The type of the header
      */
-    readonly type: "text" | "video" | "image" | "document" | "location";
+    readonly type: "text" | "video" | "image" | "document";
     /**
      * The text of the parameter
      */
@@ -168,10 +167,6 @@ export class Header {
      * The video of the parameter
      */
     readonly video?: Video;
-    /**
-     * The location of the parameter
-     */
-    readonly location?: Location;
 
     /**
      * Builds a header component for an Interactive message
@@ -179,10 +174,9 @@ export class Header {
      * @param object - The message object for the header
      * @throws If object is not a Document, Image, Text, or Video
      * @throws If object is a Text and is over 60 characters
-     * @throws If object is a Location and does not have an address and a name
      * @throws If object is a Media and has a caption
      */
-    constructor(object: Document | Image | Text | Video | Location) {
+    constructor(object: Document | Image | Text | Video) {
         this.type = object._type;
 
         // All interactive's header can go to hell with its "exceptions"
@@ -191,13 +185,6 @@ export class Header {
                 throw new Error("Header text must be 60 characters or less");
 
             this[object._type] = object.body;
-        } else if (object._type === "location") {
-            if (!("name" in object && "address" in object))
-                throw new Error(
-                    "Header location must have an address and name properties"
-                );
-
-            this[object._type] = object;
         } else {
             if ("caption" in object)
                 throw new Error(`Header ${this.type} must not have a caption`);
