@@ -407,6 +407,11 @@ export class Row {
     }
 }
 
+// TS knowledge intensifies
+function isSections(obj: unknown[]): obj is ProductSection[] {
+    return obj[0] instanceof ProductSection;
+}
+
 /**
  * Action API object
  *
@@ -442,7 +447,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
         catalog_id: string,
         ...products: [Product] | AtLeastOne<ProductSection>
     ) {
-        const is_sections = this.isSections(products);
+        const is_sections = isSections(products);
 
         if (is_sections) {
             if (products.length > 1) {
@@ -464,11 +469,6 @@ export class ActionCatalog implements ClientTypedMessageComponent {
 
         if (is_sections) this.sections = products;
         else this.product_retailer_id = products[0].product_retailer_id;
-    }
-
-    // Java knowledge intensifies
-    private isSections(obj: unknown[]): obj is ProductSection[] {
-        return obj[0] instanceof ProductSection;
     }
 }
 
