@@ -155,7 +155,7 @@ export default class WhatsAppAPI {
              */
             fetch?: typeof FetchType;
             /**
-             * The subtle ponyfill to use for the signatures. If not specified, it defaults to subtle from node:crypto
+             * The subtle ponyfill to use for the signatures. If not specified, it defaults to crypto.subtle from the enviroment.
              */
             subtle?: typeof CryptoSubtle;
         };
@@ -172,25 +172,24 @@ export default class WhatsAppAPI {
 
             this.appSecret = appSecret;
 
-            if (!ponyfill.subtle) {
-                // Fun fact, constructors cannot be async, so the best we can do is warn the user
-                // and later, if needed, throw a real error on post()
-                import("node:crypto")
-                    .then((m) => {
-                        if (!m.subtle) {
-                            console.warn(
-                                "Failed to import subtle from node:crypto and secure is set to true, Whatsapp.post() method will throw 501.",
-                                "Please provide a valid ponyfill with the parameter 'ponyfill.verify' or set secure to false (Not recommended)."
-                            );
-                        } else this.subtle = m.subtle;
-                    })
-                    .catch(() => {
-                        console.warn(
-                            "Failed to import node:crypto and secure is set to true, Whatsapp.post() method will throw 501.",
-                            "Please provide a valid ponyfill with the parameter 'ponyfill.createHmac' or set secure to false (Not recommended)."
-                        );
-                    });
-            } else this.subtle = ponyfill.subtle;
+            if (
+                typeof ponyfill.subtle !== "object" &&
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore - crypto.subtle might not be defined in the enviroment
+                typeof crypto?.subtle !== "object"
+            ) {
+                throw new Error(
+                    "subtle is not defined in the enviroment, please provide a valid ponyfill object with the parameter 'ponyfill.subtle'."
+                );
+            }
+
+            // Let's hope the user is using a valid ponyfill
+            this.subtle =
+                ponyfill.subtle ||
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore - crypto.subtle might not be defined in the enviroment
+                // Splitted in two lines to reduce the impact of the ts-ignore
+                crypto.subtle;
         }
 
         if (webhookVerifyToken) this.webhookVerifyToken = webhookVerifyToken;
@@ -651,7 +650,7 @@ export default class WhatsAppAPI {
      * @param signature - The X-Hub-Signature-256 header signature sent by Whatsapp
      * @returns 200, it's the expected http/s response code
      * @throws 500 if secure and the appSecret isn't specified
-     * @throws 501 if secure and node:crypto verify method or ponyfill isn't available
+     * @throws 501 if secure and crypto.subtle verify method or ponyfill isn't available
      * @throws 400 if secure and the rawBody is missing
      * @throws 401 if secure and the signature is missing
      * @throws 401 if secure and the signature doesn't match the hash
