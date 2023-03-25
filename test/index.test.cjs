@@ -144,8 +144,12 @@ describe("WhatsAppAPI", function () {
 
                 const Whatsapp = new WhatsAppAPI({
                     token,
-                    appSecret
+                    appSecret,
+                    ponyfill: {
+                        subtle
+                    }
                 });
+
                 equal(typeof Whatsapp.fetch, "function");
             });
 
@@ -183,7 +187,7 @@ describe("WhatsAppAPI", function () {
             });
 
             it("should work with any specified ponyfill", function () {
-                const spy = { test: true };
+                const spy = subtle;
                 const Whatsapp = new WhatsAppAPI({
                     token,
                     appSecret,
