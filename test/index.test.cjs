@@ -170,8 +170,11 @@ describe("WhatsAppAPI", function () {
 
         describe("CryptoSubtle", function () {
             it("should default to the enviroment crypto.subtle (skip if not defined)", function () {
-                // eslint-disable-next-line no-undef
-                if (typeof crypto === "undefined" || typeof crypto.subtle === "undefined") {
+                if (
+                    typeof crypto === "undefined" ||
+                    // eslint-disable-next-line no-undef
+                    typeof crypto.subtle === "undefined"
+                ) {
                     this.skip();
                 }
 
