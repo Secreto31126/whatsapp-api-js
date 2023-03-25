@@ -165,7 +165,12 @@ describe("WhatsAppAPI", function () {
         });
 
         describe("CryptoSubtle", function () {
-            it("should default to node:crypto.subtle", async function () {
+            it("should default to the enviroment crypto.subtle (skip if not defined)", function () {
+                // eslint-disable-next-line no-undef
+                if (typeof crypto === "undefined" || typeof crypto.subtle === "undefined") {
+                    this.skip();
+                }
+
                 const Whatsapp = new WhatsAppAPI({
                     token,
                     appSecret,
@@ -174,13 +179,10 @@ describe("WhatsAppAPI", function () {
                     }
                 });
 
-                // Sleep to wait for the cryptoSubtle to be set
-                await new Promise((resolve) => setTimeout(resolve, 100));
-
                 deepEqual(Whatsapp.subtle, subtle);
             });
 
-            it("should work with any specified ponyfill", async function () {
+            it("should work with any specified ponyfill", function () {
                 const spy = { test: true };
                 const Whatsapp = new WhatsAppAPI({
                     token,
@@ -190,9 +192,6 @@ describe("WhatsAppAPI", function () {
                         subtle: spy
                     }
                 });
-
-                // Sleep to wait for the cryptoSubtle to be set
-                await new Promise((resolve) => setTimeout(resolve, 100));
 
                 equal(Whatsapp.subtle, spy);
             });
