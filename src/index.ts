@@ -122,15 +122,15 @@ export default class WhatsAppAPI {
         /**
          * The version of the API, defaults to v16.0
          */
-        v: string;
+        v?: string;
         /**
          * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
          */
-        parsed: boolean;
+        parsed?: boolean;
         /**
          * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
          */
-        secure: boolean;
+        secure?: boolean;
         /**
          * The ponyfills to use
          *
@@ -149,7 +149,7 @@ export default class WhatsAppAPI {
          * });
          * ```
          */
-        ponyfill: {
+        ponyfill?: {
             /**
              * The fetch ponyfill to use for the requests. If not specified, it defaults to the fetch function from the enviroment.
              */
