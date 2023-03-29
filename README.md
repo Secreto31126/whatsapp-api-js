@@ -1,4 +1,4 @@
-# whatsapp-api-js
+# whatsapp-api-js v1
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
