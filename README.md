@@ -2,6 +2,8 @@
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
+#### Hey, I'm not interested in your "v1" "beta" thing! Take me to the [v0 README.md](https://github.com/Secreto31126/whatsapp-api-js/tree/0.8.2#readme)
+
 A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
