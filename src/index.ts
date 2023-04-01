@@ -115,13 +115,13 @@ export default class WhatsAppAPI {
          * It can either be a temporal or permanent one.
          */
         token: string;
-/**
-               * The app secret, given at setup.
-               * The secret is used to validate payload's authenticity.
-               *
-               * If you want to skip the verification and remove the need to provide the secret,
-               * set `secure` to `false`.
-               */
+        /**
+         * The app secret, given at setup.
+         * The secret is used to validate payload's authenticity.
+         *
+         * If you want to skip the verification and remove the need to provide the secret,
+         * set `secure` to `false`.
+         */
         appSecret?: string | never;
         /**
          * The webhook verify token, configured at setup.
