@@ -75,8 +75,8 @@
   },
   "devDependencies": {
     "@types/node": "18.15.11",
-    "@typescript-eslint/eslint-plugin": "5.57.0",
-    "@typescript-eslint/parser": "5.57.0",
+    "@typescript-eslint/eslint-plugin": "5.57.1",
+    "@typescript-eslint/parser": "5.57.1",
     "c8": "7.13.0",
     "eslint": "8.37.0",
     "eslint-config-prettier": "8.8.0",
@@ -85,7 +85,7 @@
     "prettier": "2.8.7",
     "sinon": "15.0.3",
     "typedoc": "0.23.28",
-    "typescript": "5.0.2",
+    "typescript": "5.0.3",
     "undici": "5.21.0"
   }
 }
