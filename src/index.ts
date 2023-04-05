@@ -14,7 +14,8 @@ import type {
     ServerDeleteQRResponse,
     ServerMediaRetrieveResponse,
     ServerMediaUploadResponse,
-    ServerMediaDeleteResponse
+    ServerMediaDeleteResponse,
+    SecureLightSwitch
 } from "./types.js";
 import type {
     OnMessage,
@@ -175,16 +176,7 @@ export default class WhatsAppAPI {
              */
             subtle?: typeof CryptoSubtle;
         };
-    } & (
-        | {
-              secure?: true;
-              appSecret: string;
-          }
-        | {
-              secure: false;
-              appSecret?: never;
-          }
-    )) {
+    } & SecureLightSwitch) {
         this.token = token;
         this.secure = !!secure;
 

@@ -12,6 +12,16 @@ import type {
     Reaction
 } from "./messages";
 
+export type SecureLightSwitch =
+    | {
+          secure: true;
+          appSecret: string;
+      }
+    | {
+          secure: false;
+          appSecret?: never;
+      };
+
 export interface ClientMessage {
     /**
      * The message type
