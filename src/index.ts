@@ -310,7 +310,7 @@ export default class WhatsAppAPI {
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
                     status: "read",
-                    messageId
+                    message_id: messageId
                 })
             }
         );
