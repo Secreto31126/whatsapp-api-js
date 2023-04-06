@@ -10,7 +10,7 @@ import type {
     Interactive,
     Template,
     Reaction
-} from "./messages.js";
+} from "./messages/index.js";
 
 export interface ClientMessage {
     /**
