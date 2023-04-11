@@ -257,14 +257,14 @@ export default class WhatsAppAPI {
             to
         } as ClientMessageRequest;
 
-        if (context) request.context = { message_id: context };
-
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - TS dumb, the _type will always match the type
         request[type] =
             // Prettier will probably kill me, but this comment has a purpose.
             // It prevents ts-ignore from ignoring more than intended.
             message._build();
+
+        if (context) request.context = { message_id: context };
 
         // Make the post request
         const promise = this.fetch(

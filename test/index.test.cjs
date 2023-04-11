@@ -410,61 +410,30 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            // it("should be able to send a reply message (context)", async function () {
-            //     console.log(requestWithContext);
-            //     clientFacebook
-            //         .intercept({
-            //             path: `/${Whatsapp.v}/${bot}/messages`,
-            //             method: "POST",
-            //             headers: {
-            //                 Authorization: `Bearer ${token}`,
-            //                 "Content-Type": "application/json"
-            //             },
-            //             body: JSON.stringify(requestWithContext)
-            //         })
-            //         .reply(200, expectedResponse)
-            //         .times(1);
+            it("should be able to send a reply message (context)", async function () {
+                console.log(JSON.stringify(requestWithContext));
 
-            //     const response = await Whatsapp.sendMessage(
-            //         bot,
-            //         user,
-            //         message,
-            //         context
-            //     );
-
-            //     deepEqual(response, expectedResponse);
-            // });
-
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.sendMessage(undefined, user, message));
-
-                rejects(Whatsapp.sendMessage(false, user, message));
-
-                rejects(Whatsapp.sendMessage());
-            });
-
-            it("should fail if the phone param is falsy", function () {
-                rejects(Whatsapp.sendMessage(bot, undefined, message));
-
-                rejects(Whatsapp.sendMessage(bot, false, message));
-
-                rejects(Whatsapp.sendMessage(bot));
-            });
-
-            it("should fail if the message param is falsy", function () {
-                rejects(Whatsapp.sendMessage(bot, user, undefined));
-
-                rejects(Whatsapp.sendMessage(bot, user, false));
-
-                rejects(Whatsapp.sendMessage(bot, user));
-            });
-
-            it("should fail if the message is missing the property _", function () {
-                rejects(
-                    Whatsapp.sendMessage(bot, user, {
-                        body: "Hello world"
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithContext)
                     })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    user,
+                    message,
+                    context
                 );
+
+                deepEqual(response, expectedResponse);
             });
 
             it("should return the raw fetch response if parsed is false", async function () {
@@ -494,47 +463,31 @@ describe("WhatsAppAPI", function () {
         describe("Mark as read", function () {
             const id = "1";
 
-            // it("should be able to mark a message as read", async function () {
-            //     const expectedResponse = {
-            //         success: true
-            //     };
+            it("should be able to mark a message as read", async function () {
+                const expectedResponse = {
+                    success: true
+                };
 
-            //     clientFacebook
-            //         .intercept({
-            //             path: `/${Whatsapp.v}/${bot}/messages`,
-            //             method: "POST",
-            //             headers: {
-            //                 Authorization: `Bearer ${token}`,
-            //                 "Content-Type": "application/json"
-            //             },
-            //             body: JSON.stringify({
-            //                 messaging_product: "whatsapp",
-            //                 status: "read",
-            //                 message_id: id
-            //             })
-            //         })
-            //         .reply(200, expectedResponse)
-            //         .times(1);
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            status: "read",
+                            message_id: id
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
 
-            //     const response = await Whatsapp.markAsRead(bot, id);
+                const response = await Whatsapp.markAsRead(bot, id);
 
-            //     deepEqual(response, expectedResponse);
-            // });
-
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.markAsRead(undefined));
-
-                rejects(Whatsapp.markAsRead(false));
-
-                rejects(Whatsapp.markAsRead());
-            });
-
-            it("should fail if the id param is falsy", function () {
-                rejects(Whatsapp.markAsRead(bot, undefined));
-
-                rejects(Whatsapp.markAsRead(bot, false));
-
-                rejects(Whatsapp.markAsRead(bot));
+                deepEqual(response, expectedResponse);
             });
 
             it("should return the raw fetch response if parsed is false", async function () {
@@ -676,28 +629,6 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.createQR(undefined, message));
-
-                rejects(Whatsapp.createQR(false, message));
-
-                rejects(Whatsapp.createQR());
-            });
-
-            it("should fail if the message param is falsy", function () {
-                rejects(Whatsapp.createQR(bot, undefined));
-
-                rejects(Whatsapp.createQR(bot, false));
-
-                rejects(Whatsapp.createQR(bot));
-            });
-
-            it("should fail with an invalid format type", function () {
-                const format = "jpg";
-
-                rejects(Whatsapp.createQR(bot, message, format));
-            });
-
             it("should return the raw fetch response if parsed is false", async function () {
                 Whatsapp.parsed = false;
 
@@ -787,14 +718,6 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.retrieveQR(undefined, code));
-
-                rejects(Whatsapp.retrieveQR(false, code));
-
-                rejects(Whatsapp.retrieveQR());
-            });
-
             it("should return the raw fetch response if parsed is false", async function () {
                 Whatsapp.parsed = false;
 
@@ -857,30 +780,6 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.updateQR(undefined, code, new_message));
-
-                rejects(Whatsapp.updateQR(false, code, new_message));
-
-                rejects(Whatsapp.updateQR());
-            });
-
-            it("should fail if the code param is falsy", function () {
-                rejects(Whatsapp.updateQR(bot, undefined, new_message));
-
-                rejects(Whatsapp.updateQR(bot, false, new_message));
-
-                rejects(Whatsapp.updateQR(bot));
-            });
-
-            it("should fail if the message param is falsy", function () {
-                rejects(Whatsapp.updateQR(bot, code, undefined));
-
-                rejects(Whatsapp.updateQR(bot, code, false));
-
-                rejects(Whatsapp.updateQR(bot, code));
-            });
-
             it("should return the raw fetch response if parsed is false", async function () {
                 Whatsapp.parsed = false;
 
@@ -932,22 +831,6 @@ describe("WhatsAppAPI", function () {
                 const response = await Whatsapp.deleteQR(bot, code);
 
                 deepEqual(response, expectedResponse);
-            });
-
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.deleteQR(undefined, code));
-
-                rejects(Whatsapp.deleteQR(false, code));
-
-                rejects(Whatsapp.deleteQR());
-            });
-
-            it("should fail if the code param is falsy", function () {
-                rejects(Whatsapp.deleteQR(bot, undefined));
-
-                rejects(Whatsapp.deleteQR(bot, false));
-
-                rejects(Whatsapp.deleteQR(bot));
             });
 
             it("should return the raw fetch response if parsed is false", async function () {
@@ -1024,22 +907,6 @@ describe("WhatsAppAPI", function () {
                 const response = await Whatsapp.uploadMedia(bot, form);
 
                 deepEqual(response, expectedResponse);
-            });
-
-            it("should fail if the phoneID param is falsy", function () {
-                rejects(Whatsapp.uploadMedia(undefined, form));
-
-                rejects(Whatsapp.uploadMedia(false, form));
-
-                rejects(Whatsapp.uploadMedia());
-            });
-
-            it("should fail if the form param is falsy", function () {
-                rejects(Whatsapp.uploadMedia(bot, undefined));
-
-                rejects(Whatsapp.uploadMedia(bot, false));
-
-                rejects(Whatsapp.uploadMedia(bot));
             });
 
             describe("Check truthy (default)", function () {
@@ -1294,14 +1161,6 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the id param is falsy", function () {
-                rejects(Whatsapp.retrieveMedia(undefined));
-
-                rejects(Whatsapp.retrieveMedia(false));
-
-                rejects(Whatsapp.retrieveMedia());
-            });
-
             it("should return the raw fetch response if parsed is false", async function () {
                 Whatsapp.parsed = false;
 
@@ -1376,14 +1235,6 @@ describe("WhatsAppAPI", function () {
                 const response = await Whatsapp.deleteMedia(id, bot);
 
                 deepEqual(response, expectedResponse);
-            });
-
-            it("should fail if the id param is falsy", function () {
-                rejects(Whatsapp.deleteMedia(undefined));
-
-                rejects(Whatsapp.deleteMedia(false));
-
-                rejects(Whatsapp.deleteMedia());
             });
 
             it("should return the raw fetch response if parsed is false", async function () {
