@@ -12,6 +12,132 @@ import type {
     Reaction
 } from "./messages/index.js";
 
+/**
+ * The main constructor arguments for the API
+ */
+export type TheBasicConstructorArguments = {
+    /**
+     * The API token, given at setup.
+     * You must provide an API token to use the framework.
+     *
+     * It can either be a temporal or permanent one.
+     *
+     * In order to create a permanent token, first make sure you have
+     * linked your WhatsApp account to a Meta Commercial Account in
+     * [Meta for Developers Dashboard](https://developers.facebook.com/apps).
+     *
+     * After that, head to [Bussiness Settings](https://business.facebook.com/settings/system-users),
+     * select your app, create a new system user with `admin role`.
+     * Then click "Add Actives", select Apps -\> Your App -\> App Administrator.
+     * After that, this was the point were Meta decided I was too sus to keep my account
+     * because I created a second bussiness to follow my own tutorial,
+     * so I have no clue what comes next.
+     *
+     * If you read until here, you probably will figure it out.
+     * It's not that hard after getting in the right place.
+     *
+     * Really wish WhatsApp gets away from Meta soon...
+     *
+     * (Sorry for the rant)
+     */
+    token: string;
+    /**
+     * The app secret, given at setup.
+     *
+     * The secret is used as a signature to validate payload's authenticity.
+     *
+     * To get your app secret, head to
+     * [Meta for Developers Dashboard](https://developers.facebook.com/apps),
+     * select your app and open Settings -\> Basic -\> App Secret -\> Show.
+     *
+     * If you want to skip the verification and remove the need to provide the secret,
+     * set `secure` to `false`.
+     */
+    appSecret?: string | never;
+    /**
+     * The webhook verify token, configured at setup.
+     * Used exclusively to verify the server against WhatsApp's servers via the GET method.
+     *
+     * Not required by default, but calling this.get() without it will result in an error.
+     */
+    webhookVerifyToken?: string;
+    /**
+     * The version of the API, defaults to v16.0
+     */
+    v?: string;
+    /**
+     * Whether to return a pre-processed response from the API or the raw fetch response.
+     * Intended for low level debugging.
+     */
+    parsed?: boolean;
+    /**
+     * If set to false, none of the API checks will be performed, and it will be used in a less secure way.
+     *
+     * Defaults to true.
+     */
+    secure?: boolean;
+    /**
+     * The ponyfills to use.
+     *
+     * This are meant to provide standard APIs implementations
+     * on enviroments that don't have them.
+     *
+     * For example, if using Node 16, you will need to ponyfill
+     * the fetch method with any spec complient fetch method.
+     *
+     * @example
+     * ```ts
+     * import { fetch } from "undici";
+     * import { subtle } from "node:crypto";
+     *
+     * const api = new WhatsAppAPI({
+     *     token: "my-token",
+     *     appSecret: "my-app-secret",
+     *     ponyfill: {
+     *         fetch,
+     *         subtle
+     *     }
+     * });
+     * ```
+     */
+    ponyfill?: {
+        /**
+         * The fetch ponyfill to use for the requests. If not specified, it defaults to the fetch function from the enviroment.
+         */
+        fetch?: typeof FetchType;
+        /**
+         * The subtle ponyfill to use for the signatures. If not specified, it defaults to crypto.subtle from the enviroment.
+         */
+        subtle?: typeof CryptoSubtle;
+    };
+};
+
+/**
+ * This switch allows TypeScript to cry if appSecret is not provided when secure is true.
+ */
+export type SecureLightSwitch =
+    | {
+          secure?: true;
+          appSecret: string;
+      }
+    | {
+          secure: false;
+          appSecret?: never;
+      };
+
+/**
+ * Created this type if in the future the constructor needs more complex types.
+ */
+export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
+
+/**
+ * Monkey patching TypeDoc inability to handle complex types.
+ *
+ * You should absolutely read {@link TheBasicConstructorArguments} in order to use the framework.
+ */
+export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
+    ExtraTypesThatMakeTypescriptWork;
+
 export interface ClientMessage {
     /**
      * The message type

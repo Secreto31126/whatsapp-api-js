@@ -57,40 +57,6 @@ describe("WhatsAppAPI", function () {
             });
             equal(Whatsapp.appSecret, appSecret);
         });
-
-        it("should fail if no app secret is provided and secure is true (default)", function () {
-            throws(function () {
-                new WhatsAppAPI({
-                    token,
-                    ponyfill: {
-                        fetch: undici_fetch,
-                        subtle
-                    }
-                });
-            });
-
-            throws(function () {
-                new WhatsAppAPI({
-                    token,
-                    secure: true,
-                    ponyfill: {
-                        fetch: undici_fetch,
-                        subtle
-                    }
-                });
-            });
-        });
-
-        it("should work if no app secret is provided and secure is false", function () {
-            new WhatsAppAPI({
-                token,
-                secure: false,
-                ponyfill: {
-                    fetch: undici_fetch,
-                    subtle
-                }
-            });
-        });
     });
 
     describe("Webhook verify token", function () {

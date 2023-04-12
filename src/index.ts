@@ -1,6 +1,7 @@
 /** @module WhatsAppAPI */
 
 import type {
+    WhatsAppAPIConstructorArguments,
     PostData,
     GetParams,
     ClientMessage,
@@ -91,12 +92,19 @@ export default class WhatsAppAPI {
     //#endregion
 
     /**
-     * Initiate the Whatsapp API app
+     * Main entry point for the API.
      *
-     * @throws If token is not defined
-     * @throws If appSecret is not defined and secure is true
+     * It's highly recommended reading the named parameters docs at
+     * {@link types.TheBasicConstructorArguments},
+     * at least for `token`, `appSecret` and `webhookVerifyToken` properties,
+     * which are the most common in normal usage.
+     *
+     * The other parameters are used for fine tunning the framework,
+     * such as `ponyfill`, which allows the code to execute on platforms
+     * that are missing standard APIs such as fetch and crypto.
+     *
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
-     * @throws If v is not a string
+     * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
      */
     constructor({
         token,
@@ -106,74 +114,18 @@ export default class WhatsAppAPI {
         parsed = true,
         secure = true,
         ponyfill = {}
-    }: {
-        /**
-         * The API token, given at setup. It can be either a temporal token or a permanent one.
-         */
-        token: string;
-        /**
-         * The app secret, given at setup
-         */
-        appSecret?: string;
-        /**
-         * The webhook verify token, configured at setup
-         */
-        webhookVerifyToken?: string;
-        /**
-         * The version of the API, defaults to v16.0
-         */
-        v?: string;
-        /**
-         * Whether to return a pre-processed response from the API or the raw fetch response. Intended for low level debugging.
-         */
-        parsed?: boolean;
-        /**
-         * If set to false, none of the API checks will be performed, and the API will be used in a less secure way. Defaults to true.
-         */
-        secure?: boolean;
-        /**
-         * The ponyfills to use
-         *
-         * @example
-         * ```ts
-         * import { fetch } from "undici";
-         * import { subtle } from "node:crypto";
-         *
-         * const api = new WhatsAppAPI({
-         *     token: "my-token",
-         *     appSecret: "my-app-secret",
-         *     ponyfill: {
-         *         fetch,
-         *         subtle
-         *     }
-         * });
-         * ```
-         */
-        ponyfill?: {
-            /**
-             * The fetch ponyfill to use for the requests. If not specified, it defaults to the fetch function from the enviroment.
-             */
-            fetch?: typeof FetchType;
-            /**
-             * The subtle ponyfill to use for the signatures. If not specified, it defaults to crypto.subtle from the enviroment.
-             */
-            subtle?: typeof CryptoSubtle;
-        };
-    }) {
+    }: WhatsAppAPIConstructorArguments) {
         this.token = token;
         this.secure = !!secure;
 
         if (this.secure) {
-            if (!appSecret) {
-                throw new Error(
-                    "App secret must be defined if secure is true. To ignore this parameter, set secure to false (Not recommended)."
-                );
-            }
-
             this.appSecret = appSecret;
 
             if (
                 typeof ponyfill.subtle !== "object" &&
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore - crypto might not be defined in the enviroment
+                typeof crypto !== "object" &&
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore - crypto.subtle might not be defined in the enviroment
                 typeof crypto?.subtle !== "object"
