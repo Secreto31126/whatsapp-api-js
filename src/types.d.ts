@@ -12,6 +12,9 @@ import type {
     Reaction
 } from "./messages/index.js";
 
+import type { fetch as FetchType } from "undici";
+import type { subtle as CryptoSubtle } from "node:crypto";
+
 /**
  * The main constructor arguments for the API
  */
