@@ -15,8 +15,7 @@
     "node": ">10.10"
   },
   "exports": {
-    ".": {
-      "types": "./lib/types/index.d.ts",
+    ".": {                                                    "types": "./lib/types/index.d.ts",
       "import": "./lib/module/index.js",
       "require": "./lib/common/index.js"
     },
@@ -24,6 +23,20 @@
       "types": "./lib/types/messages/index.d.ts",
       "import": "./lib/module/messages/index.js",
       "require": "./lib/common/messages/index.js"
+    },
+    "./*": {
+      "types": "./lib/types/*.d.ts",
+      "import": "./lib/module/*.js",
+      "require": "./lib/common/*.js"
+    }
+  },
+  "//": "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
+  "types": "index.d.ts",
+  "typesVersions": {
+    "*": {
+        "messages": "lib/types/messages/index.d.ts",
+        "messages/*": "lib/types/messages/*.d.ts",
+        "*": "lib/types/*"
     }
   },
   "scripts": {
