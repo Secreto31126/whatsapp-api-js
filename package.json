@@ -15,7 +15,8 @@
     "node": ">10.10"
   },
   "exports": {
-    ".": {                                                    "types": "./lib/types/index.d.ts",
+    ".": {
+      "types": "./lib/types/index.d.ts",
       "import": "./lib/module/index.js",
       "require": "./lib/common/index.js"
     },
