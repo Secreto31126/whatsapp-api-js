@@ -117,7 +117,7 @@ export type TheBasicConstructorArguments = {
  */
 export type SecureLightSwitch =
     | {
-          secure: true;
+          secure?: true;
           appSecret: string;
       }
     | {
