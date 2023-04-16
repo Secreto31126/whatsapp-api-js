@@ -15,8 +15,8 @@ A TypeScript server agnostic Whatsapp's Official API framework.
     -   [Deno](#deno)
     -   [Bun](#bun)
     -   [Websites](#websites)
--   [Breaking changes](#breaking-changes)
 -   [Documentation](#documentation)
+-   [Breaking changes](#breaking-changes)
 -   [Beta Releases](#beta-releases)
 -   [Comments](#comments)
 
@@ -177,78 +177,14 @@ HTML module example:
 </script>
 ```
 
-## Breaking changes
-
-### 1.0.0
-
-The module was rewritten in TypeScript, and most of the import syntax changed.
-CommonJS is still supported.
-
-Examples:
-
-```js
-// ESM
-import WhatsAppAPI from "whatsapp-api-js";
-import { Text, Image, Document } from "whatsapp-api-js/messages";
-import Location from "whatsapp-api-js/messages/location";
-```
-
-```js
-// CommonJS
-const WhatsAppAPI = require("whatsapp-api-js");
-const { Text, Image, Document } = require("whatsapp-api-js/messages");
-const Location = require("whatsapp-api-js/messages/location");
-```
-
-The default undici fallback was also removed, and the module now uses the enviroment fetch implementation.
-Ponyfilling is still possible via the new parameter at the WhatsAppAPI() constructor:
-
-```js
-import WhatsAppAPI from "whatsapp-api-js";
-import { fetch } from "undici";
-
-const Whatsapp = new WhatsAppAPI({
-    token: "YOUR_TOKEN_HERE",
-    appSecret: "YOUR_SECRET_HERE",
-    ponyfill: {
-        fetch
-    }
-});
-```
-
-This change also restores the compatibility with previous Node.js versions, making the module more server agnostic.
-
-### 0.8.0
-
-The module changed from using "cross-fetch" to "undici" as the fallback fetch implementation in order
-to use FormData for the Media upload support, which is not (easily) available in "cross-fetch".
-
-Although this change doesn't affect existing code, it forces the Node.js version to be at least 16.
-If the module is downloaded using a lower version, npm will throw an error.
-
-### 0.7.0
-
-With the release of cart support for Cloud API, some naming changes where made within the interactive's classes.
-The Section class, which was a component of the ActionList, was renamed to ListSection, to avoid confusion with
-the new ProductSection.
-
-### 0.6.0
-
-Since 0.6.0, the module will no longer return the raw fetch request, now it's internally parsed and returned.
-This change was made in order to improve the logSentMessages function, as it can now log the server response too.
-To get the raw request as before, you can use the `parsed` property of the main object as follows.
-
-```js
-const parsed = false;
-const Whatsapp = new WhatsAppAPI("YOUR_TOKEN", undefined, parsed);
-// All the API operations, like sendMessage, will now return the raw request.
-// Keep in mind, now when using logSentMessage the id and response parameters will be undefined.
-```
-
 ## Documentation
 
 The lateset package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
+
+## Breaking changes
+
+You can get a full list of breaking changes in the [BREAKING.md file](./BREAKING.md).
 
 ## Beta releases
 
