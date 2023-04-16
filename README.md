@@ -184,7 +184,7 @@ and previous versions are available in [secreto31126.github.io/whatsapp-api-js](
 
 ## Breaking changes
 
-You can get a full list of breaking changes in the [BREAKING.md file](./BREAKING.md).
+You can get a full list of breaking changes in the [BREAKING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/BREAKING.md).
 
 ## Beta releases
 
