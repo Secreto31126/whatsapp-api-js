@@ -267,9 +267,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerMarkAsReadResponse)
-            : promise;
+        return this.getBody<ServerMarkAsReadResponse>(promise);
     }
 
     //#endregion
@@ -299,9 +297,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerCreateQRResponse)
-            : promise;
+        return this.getBody<ServerCreateQRResponse>(promise);
     }
 
     /**
@@ -326,9 +322,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerRetrieveQRResponse)
-            : promise;
+        return this.getBody<ServerRetrieveQRResponse>(promise);
     }
 
     /**
@@ -354,9 +348,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerUpdateQRResponse)
-            : promise;
+        return this.getBody<ServerUpdateQRResponse>(promise);
     }
 
     /**
@@ -380,9 +372,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerDeleteQRResponse)
-            : promise;
+        return this.getBody<ServerDeleteQRResponse>(promise);
     }
 
     //#endregion
@@ -410,11 +400,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (
-                  await promise
-              ).json()) as Promise<ServerMediaRetrieveResponse>)
-            : promise;
+        return this.getBody<ServerMediaRetrieveResponse>(promise);
     }
 
     /**
@@ -531,9 +517,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerMediaUploadResponse)
-            : promise;
+        return this.getBody<ServerMediaUploadResponse>(promise);
     }
 
     /**
@@ -584,9 +568,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        return this.parsed
-            ? ((await (await promise).json()) as ServerMediaDeleteResponse)
-            : promise;
+        return this.getBody<ServerMediaDeleteResponse>(promise);
     }
 
     // #endregion
@@ -755,5 +737,11 @@ export default class WhatsAppAPI {
                 Authorization: `Bearer ${this.token}`
             }
         });
+    }
+
+    private async getBody<T>(
+        promise: Promise<Response>
+    ): Promise<T | Response> {
+        return this.parsed ? ((await (await promise).json()) as T) : promise;
     }
 }
