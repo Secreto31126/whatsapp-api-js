@@ -232,7 +232,7 @@ export default class WhatsAppAPI {
                     ? response.messages[0].id
                     : undefined
                 : undefined,
-            response: response ? response : undefined
+            response
         };
 
         this.on.sent?.(args);
