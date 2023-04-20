@@ -217,9 +217,7 @@ export default class WhatsAppAPI {
             }
         );
 
-        const response = this.parsed
-            ? ((await (await promise).json()) as ServerMessageResponse)
-            : undefined;
+        const response = await this.getBody<ServerMessageResponse>(promise);
 
         const args: OnSentArgs = {
             phoneID,
@@ -232,12 +230,14 @@ export default class WhatsAppAPI {
                     ? response.messages[0].id
                     : undefined
                 : undefined,
-            response: response ? response : undefined
+            response: this.parsed
+                ? (response as ServerMessageResponse)
+                : undefined
         };
 
         this.on.sent?.(args);
 
-        return response ?? promise;
+        return response;
     }
 
     /**
