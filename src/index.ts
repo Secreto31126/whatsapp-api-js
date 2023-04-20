@@ -227,7 +227,7 @@ export default class WhatsAppAPI {
             type,
             message,
             request,
-            id: this.parsed
+            id: response
                 ? "messages" in response
                     ? response.messages[0].id
                     : undefined
