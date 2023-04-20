@@ -32,12 +32,17 @@
     }
   },
   "//": "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
-  "types": "index.d.ts",
   "typesVersions": {
     "*": {
-        "messages": "lib/types/messages/index.d.ts",
-        "messages/*": "lib/types/messages/*.d.ts",
-        "*": "lib/types/*"
+      "messages": [
+        "lib/types/messages/index.d.ts"
+      ],
+      "messages/*": [
+        "lib/types/messages/*.d.ts"
+      ],
+      "*": [
+        "lib/types/*"
+      ]
     }
   },
   "scripts": {
@@ -51,6 +56,7 @@
     "build:types": "tsc -p tsconfig.types.json && cp ./src/*.d.ts ./lib/types/",
     "build:standalone": "tsc -p tsconfig.standalone.json",
     "test": "mocha",
+    "test:build": "npm run build && npm run test",
     "test:watch": "mocha --reporter min --watch",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
