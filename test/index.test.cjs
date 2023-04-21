@@ -411,8 +411,6 @@ describe("WhatsAppAPI", function () {
             });
 
             it("should be able to send a reply message (context)", async function () {
-                console.log(JSON.stringify(requestWithContext));
-
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
