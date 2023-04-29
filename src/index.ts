@@ -125,10 +125,10 @@ export default class WhatsAppAPI {
                 typeof ponyfill.subtle !== "object" &&
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore - crypto might not be defined in the enviroment
-                typeof crypto !== "object" &&
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore - crypto.subtle might not be defined in the enviroment
-                typeof crypto?.subtle !== "object"
+                (typeof crypto !== "object" ||
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore - crypto.subtle might not be defined in the enviroment
+                    typeof crypto?.subtle !== "object")
             ) {
                 throw new Error(
                     "subtle is not defined in the enviroment, please provide a valid ponyfill object with the parameter 'ponyfill.subtle'."
