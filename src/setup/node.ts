@@ -11,7 +11,7 @@ import { subtle } from "node:crypto";
  * @remarks This method will return the same object as the one passed in
  *
  * @param settings - The WhatsAppAPI arguments
- * @returns A WhatsAppAPI arguments object for Deno
+ * @returns A WhatsAppAPI arguments object for Node\@^19
  */
 export function NodeNext(
     settings: WhatsAppAPIConstructorArguments
@@ -25,7 +25,7 @@ export function NodeNext(
  * @remarks Assumes that the fetch function is available globally
  *
  * @param settings - The WhatsAppAPI arguments
- * @returns A WhatsAppAPI arguments object for Node\@^17
+ * @returns A WhatsAppAPI arguments object for Node\@^18
  */
 export function Node18(
     settings: WhatsAppAPIConstructorArguments
@@ -44,7 +44,7 @@ export function Node18(
  *
  * @param settings - The WhatsAppAPI arguments
  * @param fetch - The fetch ponyfill function to use (e.g. node-fetch or undici)
- * @returns A WhatsAppAPI arguments object for Node\@^17
+ * @returns A WhatsAppAPI arguments object for Node 12 to 17
  */
 export function Node12(
     settings: WhatsAppAPIConstructorArguments,

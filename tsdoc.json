@@ -8,6 +8,10 @@
         {
             "tagName": "@group",
             "syntaxKind": "block"
+        },
+        {
+            "tagName": "@description",
+            "syntaxKind": "block"
         }
     ]
 }
