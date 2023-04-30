@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import type {
     Text,
     Audio,
@@ -87,6 +89,10 @@ export type TheBasicConstructorArguments = {
      *
      * For example, if using Node 16, you will need to ponyfill
      * the fetch method with any spec complient fetch method.
+     *
+     * @remarks
+     * With the additions of {@link setup} for the most common enviroments,
+     * this parameter should no longer be configured manually.
      *
      * @example
      * ```ts
