@@ -579,13 +579,52 @@ export default class WhatsAppAPI {
      * POST helper, must be called inside the post function of your code.
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
      *
+     * @example
+     * ```ts
+     * // Simple http example implementation with Whatsapp.post() on Node@^19
+     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { NodeNext } from "whatsapp-api-js/setup/node";
+     * import { createServer } from "http";
+     *
+     * const token = "token";
+     * const appSecret = "appSecret";
+     * const Whatsapp = new WhatsAppAPI(NodeNext({ token, appSecret }));
+     *
+     * function handler(req, res) {
+     *     if (req.method == "POST") {
+     *         const chunks = [];
+     *         req.on("data", (chunk) => chunks.push(chunk));
+     *
+     *         req.on("end", async () => {
+     *             const body = Buffer.concat(chunks).toString();
+     *
+     *             try {
+     *                 const response = await Whatsapp.post(JSON.parse(body), body, req.headers["x-hub-signature-256"]);
+     *                 res.writeHead(response);
+     *             } catch (err) {
+     *                 res.writeHead(err);
+     *             }
+     *
+     *             res.end();
+     *         });
+     *     } else res.writeHead(501).end();
+     * };
+     *
+     * Whatsapp.on.message = ({ phoneID, from, message, name }) => {
+     *     console.log(`User ${name} (${from}) sent to bot ${phoneID} a(n) ${message.type}`);
+     * };
+     *
+     * const server = createServer(handler);
+     * server.listen(3000);
+     * ```
+     *
      * @param data - The POSTed data object sent by Whatsapp
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
      * @returns 200, it's the expected http/s response code
      * @throws 500 if secure and the appSecret isn't specified
-     * @throws 501 if secure and crypto.subtle verify method or ponyfill isn't available
-     * @throws 400 if secure and the rawBody is missing
+     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
+     * @throws 400 if secure and the raw body is missing
      * @throws 401 if secure and the signature is missing
      * @throws 401 if secure and the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
