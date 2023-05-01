@@ -1,6 +1,5 @@
 import type {
     ClientMessage,
-    ClientMessageComponent,
     ClientBuildableMessageComponent,
     ClientTypedMessageComponent
 } from "../types.js";
@@ -29,7 +28,7 @@ export class Template implements ClientMessage {
     /**
      * The language of the template
      */
-    readonly language: Language | ClientMessageComponent;
+    readonly language: Language;
     /**
      * The components of the template
      */
@@ -37,7 +36,6 @@ export class Template implements ClientMessage {
         | HeaderComponent
         | BodyComponent
         | BuiltButtonComponent
-        | ClientMessageComponent
     )[];
 
     get _type(): "template" {
@@ -55,13 +53,8 @@ export class Template implements ClientMessage {
      */
     constructor(
         name: string,
-        language: string | Language | ClientMessageComponent,
-        ...components: (
-            | HeaderComponent
-            | BodyComponent
-            | ButtonComponent
-            | ClientBuildableMessageComponent
-        )[]
+        language: string | Language,
+        ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]
     ) {
         this.name = name;
         this.language =
@@ -387,7 +380,7 @@ export class HeaderParameter {
  *
  * @group Template
  */
-export class BodyComponent {
+export class BodyComponent implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
