@@ -41,7 +41,8 @@ jobs:
 
       - name: Clear old build
         run: |
-          find . -not -name '.git' -delete
+          ls -a
+          find . -not -name '.git' -print -delete
 
       - uses: actions/download-artifact@v3
         with:
