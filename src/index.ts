@@ -581,7 +581,7 @@ export default class WhatsAppAPI {
      *
      * @param data - The POSTed data object sent by Whatsapp
      * @param raw_body - The raw body of the POST request
-     * @param signature - The X-Hub-Signature-256 header signature sent by Whatsapp
+     * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
      * @returns 200, it's the expected http/s response code
      * @throws 500 if secure and the appSecret isn't specified
      * @throws 501 if secure and crypto.subtle verify method or ponyfill isn't available
