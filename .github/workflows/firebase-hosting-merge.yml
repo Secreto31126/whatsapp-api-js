@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - 'src/*.ts'
+      - 'src/setup/*.ts'
       - 'src/messages/*.ts'
       - 'README.md'
       - 'docs_statics/*.html'
