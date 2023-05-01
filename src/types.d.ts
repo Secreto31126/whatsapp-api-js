@@ -34,16 +34,17 @@ export type TheBasicConstructorArguments = {
      * After that, head to [Bussiness Settings](https://business.facebook.com/settings/system-users),
      * select your app, create a new system user with `admin role`.
      * Then click "Add Actives", select Apps -\> Your App -\> App Administrator.
-     * After that, this was the point were Meta decided I was too sus to keep my account
-     * because I created a second bussiness to follow my own tutorial,
-     * so I have no clue what comes next.
+     *
+     * And this was the point were Meta decided I was too sus because
+     * I created a second bussiness to follow my own tutorial,
+     * and as I didn't want to give them my ID, they banned my account.
      *
      * If you read until here, you probably will figure it out.
      * It's not that hard after getting in the right place.
      *
      * Really wish WhatsApp gets away from Meta soon...
      *
-     * (Sorry for the rant)
+     * (Sorry for the rant, here's the [actual documentation](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started))
      */
     token: string;
     /**
