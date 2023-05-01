@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'src/*.ts'
+      - 'src/setup/*.ts'
       - 'src/messages/*.ts'
 
 jobs:
