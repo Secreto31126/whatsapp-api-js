@@ -40,9 +40,7 @@ jobs:
           ref: alpha
 
       - name: Clear old build
-        run: |
-          ls -a
-          find . -not -name '.git' -print -delete
+        run: find . -not -wholename './.git*' -delete
 
       - uses: actions/download-artifact@v3
         with:
