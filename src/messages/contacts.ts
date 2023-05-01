@@ -9,9 +9,6 @@ export type BuiltContact = {
     phones?: Phone[];
     emails?: Email[];
     urls?: Url[];
-    // Allow the user create custom components
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
 };
 
 /**
@@ -55,17 +52,12 @@ export class Contacts implements ClientMessage {
             const contact = {} as BuiltContact;
 
             for (const component of components) {
-                const name = component._type;
+                const name = component._type as keyof typeof contact;
 
                 if (component._many) {
                     if (!(name in contact)) {
                         Object.defineProperty(contact, name, {
-                            value: [] as
-                                | Address[]
-                                | Email[]
-                                | Phone[]
-                                | Url[]
-                                | ContactComponent[]
+                            value: [] as Address[] | Email[] | Phone[] | Url[]
                         });
                     }
 

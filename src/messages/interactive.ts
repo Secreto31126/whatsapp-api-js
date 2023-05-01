@@ -1,8 +1,4 @@
-import type {
-    ClientMessage,
-    ClientMessageComponent,
-    ClientTypedMessageComponent
-} from "../types.js";
+import type { ClientMessage, ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils.js";
 
 import type { Document, Image, Video } from "./media.js";
@@ -28,15 +24,15 @@ export class Interactive implements ClientMessage {
     /**
      * The body component of the interactive message
      */
-    readonly body?: Body | ClientMessageComponent;
+    readonly body?: Body;
     /**
      * The header component of the interactive message
      */
-    readonly header?: Header | ClientMessageComponent;
+    readonly header?: Header;
     /**
      * The footer component of the interactive message
      */
-    readonly footer?: Footer | ClientMessageComponent;
+    readonly footer?: Footer;
 
     get _type(): "interactive" {
         return "interactive";
