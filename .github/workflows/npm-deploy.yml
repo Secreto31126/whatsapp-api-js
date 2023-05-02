@@ -81,12 +81,10 @@ jobs:
           path: lib
 
       - name: Set package version to prerelease tag
-        run: |
-          npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
-          cat package.json
+        run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
 
       - name: Beta Release
-        run: # npm publish --tag beta
+        run: cat package.json # npm publish --tag beta
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
