@@ -241,7 +241,10 @@ export default class WhatsAppAPI {
   }
 
   /**
-   * Send the same Whatsapp message to multiple phone numbers
+   * Send the same Whatsapp message to multiple phone numbers.
+   *
+   * Keep in mind sending multiple messages in a short period might trigger the
+   * [API rate limit](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#rate-limits).
    *
    * @example
    * ```ts
