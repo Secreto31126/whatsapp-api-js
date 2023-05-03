@@ -459,7 +459,7 @@ describe("WhatsAppAPI", function () {
         });
 
         describe("Broadcast", function () {
-            it("should be able to send multiple messages", async function () {
+            it("should be able to send multiple messages (parsed false)", async function () {
                 const expectedArrayResponse = [
                     expectedResponse,
                     expectedResponse,
