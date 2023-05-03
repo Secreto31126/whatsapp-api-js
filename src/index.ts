@@ -274,7 +274,7 @@ export default class WhatsAppAPI {
     message: ClientMessage,
     context?: string
   ): Array<ReturnType<typeof this.sendMessage>> {
-    const responses = ([] as ReturnType<typeof this.sendMessage>) > [];
+    const responses = [] as ReturnType<typeof this.sendMessage>[];
     for (const t of to) {
       responses.push(this.sendMessage(phoneID, t, message, context));
     }
