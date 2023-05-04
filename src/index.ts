@@ -5,7 +5,6 @@ import type {
     PostData,
     GetParams,
     ClientMessage,
-    ClientMessageBuiltin,
     ClientMessageRequest,
     ServerMessageResponse,
     ServerMarkAsReadResponse,
@@ -184,7 +183,7 @@ export default class WhatsAppAPI {
     async sendMessage(
         phoneID: string,
         to: string,
-        message: ClientMessage | ClientMessageBuiltin,
+        message: ClientMessage,
         context?: string
     ): Promise<ServerMessageResponse | Response> {
         const type = message._type;

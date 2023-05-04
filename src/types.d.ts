@@ -1,19 +1,5 @@
 /// <reference types="node" />
 
-import type {
-    Text,
-    Audio,
-    Document,
-    Image,
-    Sticker,
-    Video,
-    Location,
-    Contacts,
-    Interactive,
-    Template,
-    Reaction
-} from "./messages/index.js";
-
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
 
@@ -190,19 +176,6 @@ export interface ContactComponent
      */
     get _many(): boolean;
 }
-
-export type ClientMessageBuiltin =
-    | Text
-    | Audio
-    | Document
-    | Image
-    | Sticker
-    | Video
-    | Location
-    | Contacts
-    | Interactive
-    | Template
-    | Reaction;
 
 export type ClientMessageNames =
     | "text"
