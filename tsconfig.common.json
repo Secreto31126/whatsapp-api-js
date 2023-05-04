@@ -1,7 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "module": "CommonJS",                                /* Specify what module code is generated. */
-    "outDir": "./lib/common"                             /* Specify an output folder for all emitted files. */
-  }
-}

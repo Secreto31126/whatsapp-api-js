@@ -1,5 +1,5 @@
-import type { ClientMessage, ContactComponent } from "../types.js";
-import { AtLeastOne } from "../utils.js";
+import type { ClientMessage, ContactComponent } from "../types";
+import { AtLeastOne } from "../utils";
 
 export type BuiltContact = {
     name: Name;

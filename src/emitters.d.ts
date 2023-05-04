@@ -7,7 +7,7 @@ import type {
     ServerPricing,
     ServerError,
     PostData
-} from "./types.js";
+} from "./types";
 
 /**
  * Callback for "sent" event

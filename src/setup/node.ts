@@ -1,4 +1,4 @@
-import type { WhatsAppAPIConstructorArguments } from "../types.js";
+import type { WhatsAppAPIConstructorArguments } from "../types";
 import type { fetch as FetchType } from "undici";
 
 // If this line of code didn't exist,

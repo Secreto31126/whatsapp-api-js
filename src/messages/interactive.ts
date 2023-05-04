@@ -1,7 +1,7 @@
-import type { ClientMessage, ClientTypedMessageComponent } from "../types.js";
-import type { AtLeastOne } from "../utils.js";
+import type { ClientMessage, ClientTypedMessageComponent } from "../types";
+import type { AtLeastOne } from "../utils";
 
-import type { Document, Image, Video } from "./media.js";
+import type { Document, Image, Video } from "./media";
 
 /**
  * Interactive API object

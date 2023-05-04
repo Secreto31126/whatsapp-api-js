@@ -7,8 +7,8 @@ const { equal, throws, rejects, deepEqual } = require("assert");
 const { spy: sinon_spy, assert: sinon_assert } = require("sinon");
 
 // Import the module
-const WhatsAppAPI = require("../lib/common/index.js").default;
-const { Text } = require("../lib/common/messages/index.js");
+const WhatsAppAPI = require("../lib/index.cjs").default;
+const { Text } = require("../lib/messages/index.cjs");
 
 // Mock the https requests
 const { agent, clientFacebook, clientExample } = require("./server.mocks.cjs");

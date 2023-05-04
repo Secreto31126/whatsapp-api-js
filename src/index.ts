@@ -15,7 +15,7 @@ import type {
     ServerMediaRetrieveResponse,
     ServerMediaUploadResponse,
     ServerMediaDeleteResponse
-} from "./types.js";
+} from "./types";
 import type {
     OnMessage,
     OnMessageArgs,
@@ -23,7 +23,7 @@ import type {
     OnSentArgs,
     OnStatus,
     OnStatusArgs
-} from "./emitters.js";
+} from "./emitters";
 
 import type { fetch as FetchType, Request, Response, FormData } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
