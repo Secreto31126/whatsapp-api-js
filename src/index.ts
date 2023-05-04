@@ -174,9 +174,26 @@ export default class WhatsAppAPI {
     /**
      * Send a Whatsapp message
      *
+     * @example
+     * ```ts
+     * import WhatsAppAPI from "whatsapp-api-js";
+     * import Text from "whatsapp-api-js/messages/text";
+     *
+     * const Whatsapp = new WhatsAppAPI({
+     *     token: "YOUR_TOKEN",
+     *     appSecret: "YOUR_APP_SECRET"
+     * });
+     *
+     * Whatsapp.sendMessage(
+     *     "BOT_PHONE_ID",
+     *     "USER_PHONE",
+     *     new Text("Hello World")
+     * ).then(console.log);
+     * ```
+     *
      * @param phoneID - The bot's phone ID
      * @param to - The user's phone number
-     * @param message - A Whatsapp component, built using the corresponding module for each type of message.
+     * @param message - A Whatsapp message, built using the corresponding module for each type of message.
      * @param context - The message ID of the message to reply to
      * @returns The server response
      */
