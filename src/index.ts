@@ -243,8 +243,13 @@ export default class WhatsAppAPI {
     /**
      * Send the same Whatsapp message to multiple phone numbers.
      *
-     * Keep in mind sending multiple messages in a short period might trigger the
-     * [API rate limit](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#rate-limits).
+     * In order to avoid reaching the
+     * [API rate limit](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#throughput),
+     * this method will send the messages in batches of 50 per second by default,
+     * but this can be changed using the `batch_size` and `delay` parameters.
+     *
+     * The API rate limit can be increased by contacting Facebook as explained
+     * [here](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#throughput).
      *
      * @example
      * ```ts
@@ -268,18 +273,38 @@ export default class WhatsAppAPI {
      * @param phoneID - The bot's phone ID
      * @param to - The users' phone numbers
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
-     * @param context - The message ID of the message to reply to
+     * @param batch_size - The number of messages to send per second
+     * @param delay - The delay between each batch of messages in milliseconds
      * @returns The server response
+     * @throws if batch_size is lower than 1
+     * @throws if delay is lower than 0
+     *
      */
-    broadcastMessage(
+    async broadcastMessage(
         phoneID: string,
         to: string[],
         message: ClientMessage,
-        context?: string
-    ): Array<ReturnType<typeof this.sendMessage>> {
+        batch_size = 50,
+        delay = 1000
+    ): Promise<Array<ReturnType<typeof this.sendMessage>>> {
         const responses = [] as ReturnType<typeof this.sendMessage>[];
-        for (const t of to) {
-            responses.push(this.sendMessage(phoneID, t, message, context));
+
+        if (batch_size < 1) {
+            throw new RangeError("batch_size must be greater than 0");
+        }
+
+        if (delay < 0) {
+            throw new RangeError("delay must be greater or equal to 0");
+        }
+
+        for (let i = 0; i < to.length; i += batch_size) {
+            if (i !== 0) {
+                await new Promise((resolve) => setTimeout(resolve, delay));
+            }
+
+            for (const u of to.slice(i, i + batch_size)) {
+                responses.push(this.sendMessage(phoneID, u, message));
+            }
         }
 
         return responses;

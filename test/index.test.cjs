@@ -479,7 +479,9 @@ describe("WhatsAppAPI", function () {
                     .reply(200, expectedResponse)
                     .times(3);
 
-                const response = await Promise.all(Whatsapp.broadcastMessage(bot, [user, user, user], message));
+                const response = await Promise.all(
+                    await Whatsapp.broadcastMessage(bot, [user, user, user], message)
+                );
 
                 deepEqual(response, expectedArrayResponse);
             });
@@ -500,9 +502,11 @@ describe("WhatsAppAPI", function () {
                     .reply(200, expectedResponse)
                     .times(3);
 
-                const response = await Promise.all((
-                    await Promise.all(Whatsapp.broadcastMessage(bot, [user, user, user], message))
-                ).map(e => e.json()));
+                const response = await Promise.all(
+                    (await Promise.all(
+                        await Whatsapp.broadcastMessage(bot, [user, user, user], message)
+                    )).map(e => e.json())
+                );
 
                 deepEqual(response, expectedArrayResponse);
             });
