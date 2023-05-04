@@ -376,7 +376,6 @@ describe("WhatsAppAPI", function () {
             ]
         };
 
-
         const Whatsapp = new WhatsAppAPI({
             token,
             appSecret,
@@ -480,7 +479,11 @@ describe("WhatsAppAPI", function () {
                     .times(3);
 
                 const response = await Promise.all(
-                    await Whatsapp.broadcastMessage(bot, [user, user, user], message)
+                    await Whatsapp.broadcastMessage(
+                        bot,
+                        [user, user, user],
+                        message
+                    )
                 );
 
                 deepEqual(response, expectedArrayResponse);
@@ -503,9 +506,15 @@ describe("WhatsAppAPI", function () {
                     .times(3);
 
                 const response = await Promise.all(
-                    (await Promise.all(
-                        await Whatsapp.broadcastMessage(bot, [user, user, user], message)
-                    )).map(e => e.json())
+                    (
+                        await Promise.all(
+                            await Whatsapp.broadcastMessage(
+                                bot,
+                                [user, user, user],
+                                message
+                            )
+                        )
+                    ).map((e) => e.json())
                 );
 
                 deepEqual(response, expectedArrayResponse);
