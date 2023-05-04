@@ -88,6 +88,47 @@ export default class WhatsAppAPI {
      */
     sendMessage(phoneID: string, to: string, message: ClientMessage | ClientMessageBuiltin, context?: string): Promise<ServerMessageResponse | Response>;
     /**
+     * Send the same Whatsapp message to multiple phone numbers.
+     *
+     * In order to avoid reaching the
+     * [API rate limit](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#throughput),
+     * this method will send the messages in batches of 50 per second by default,
+     * but this can be changed using the `batch_size` and `delay` parameters.
+     *
+     * The API rate limit can be increased by contacting Facebook as explained
+     * [here](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#throughput).
+     *
+     * @example
+     * ```ts
+     * import WhatsAppAPI from "whatsapp-api-js";
+     * import Text from "whatsapp-api-js/messages/text";
+     *
+     * const Whatsapp = new WhatsAppAPI({
+     *     token: "YOUR_TOKEN",
+     *     appSecret: "YOUR_APP_SECRET"
+     * });
+     *
+     * const phoneID = "YOUR_BOT_NUMBER";
+     * const users = ["YOUR_USER1_NUMBER", "YOUR_USER2_NUMBER"];
+     * const message = new Text("Hello World");
+     *
+     * const responses = Whatsapp.broadcastMessage(phoneID, users, message);
+     *
+     * Promise.all(responses).then(console.log);
+     * ```
+     *
+     * @param phoneID - The bot's phone ID
+     * @param to - The users' phone numbers
+     * @param message - A Whatsapp message, built using the corresponding module for each type of message.
+     * @param batch_size - The number of messages to send per second
+     * @param delay - The delay between each batch of messages in milliseconds
+     * @returns The server response
+     * @throws if batch_size is lower than 1
+     * @throws if delay is lower than 0
+     *
+     */
+    broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size?: number, delay?: number): Promise<Array<ReturnType<typeof this.sendMessage>>>;
+    /**
      * Mark a message as read
      *
      * @param phoneID - The bot's phone ID
