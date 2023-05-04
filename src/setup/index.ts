@@ -19,8 +19,7 @@
  * ```
  */
 
-import Bun from "./bun.js";
-import Deno from "./deno.js";
-import Web from "./web.js";
-export { Bun, Deno, Web };
+export { default as Bun } from "./bun.js";
+export { default as Deno } from "./deno.js";
+export { default as Web } from "./web.js";
 export * from "./node.js";
