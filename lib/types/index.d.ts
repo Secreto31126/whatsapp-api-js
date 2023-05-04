@@ -1,6 +1,6 @@
 /** @module WhatsAppAPI */
 /// <reference types="node" resolution-mode="require"/>
-import type { WhatsAppAPIConstructorArguments, PostData, GetParams, ClientMessage, ClientMessageBuiltin, ServerMessageResponse, ServerMarkAsReadResponse, ServerCreateQRResponse, ServerRetrieveQRResponse, ServerUpdateQRResponse, ServerDeleteQRResponse, ServerMediaRetrieveResponse, ServerMediaUploadResponse, ServerMediaDeleteResponse } from "./types.js";
+import type { WhatsAppAPIConstructorArguments, PostData, GetParams, ClientMessage, ServerMessageResponse, ServerMarkAsReadResponse, ServerCreateQRResponse, ServerRetrieveQRResponse, ServerUpdateQRResponse, ServerDeleteQRResponse, ServerMediaRetrieveResponse, ServerMediaUploadResponse, ServerMediaDeleteResponse } from "./types.js";
 import type { OnMessage, OnSent, OnStatus } from "./emitters.js";
 import type { Request, Response } from "undici";
 /**
@@ -86,7 +86,7 @@ export default class WhatsAppAPI {
      * @param context - The message ID of the message to reply to
      * @returns The server response
      */
-    sendMessage(phoneID: string, to: string, message: ClientMessage | ClientMessageBuiltin, context?: string): Promise<ServerMessageResponse | Response>;
+    sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string): Promise<ServerMessageResponse | Response>;
     /**
      * Send the same Whatsapp message to multiple phone numbers.
      *
