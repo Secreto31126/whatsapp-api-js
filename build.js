@@ -14,13 +14,13 @@ build({
     ...sharedConfig,
     format: "cjs",
     outExtension: { ".js": ".cjs" },
-    outdir: "lib",
+    outdir: "lib/cjs",
     platform: "node"
 });
 
 // ESM
 build({
     ...sharedConfig,
-    outdir: "lib/esm",
+    outdir: "lib",
     platform: "node"
 });
