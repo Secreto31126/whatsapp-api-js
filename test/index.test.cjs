@@ -341,6 +341,40 @@ describe("WhatsAppAPI", function () {
     describe("Message", function () {
         const bot = "2";
         const user = "3";
+        const id = "something_random";
+        const context = "another_random_id";
+
+        const type = "text";
+        const message = new Text("Hello world");
+
+        const request = {
+            messaging_product: "whatsapp",
+            type,
+            to: user,
+            text: JSON.stringify(message)
+        };
+
+        const requestWithContext = {
+            ...request,
+            context: {
+                message_id: context
+            }
+        };
+
+        const expectedResponse = {
+            messaging_product: "whatsapp",
+            contacts: [
+                {
+                    input: user,
+                    wa_id: user
+                }
+            ],
+            messages: [
+                {
+                    id
+                }
+            ]
+        };
 
         const Whatsapp = new WhatsAppAPI({
             token,
@@ -356,41 +390,6 @@ describe("WhatsAppAPI", function () {
         });
 
         describe("Send", function () {
-            const id = "something_random";
-            const context = "another_random_id";
-
-            const type = "text";
-            const message = new Text("Hello world");
-
-            const request = {
-                messaging_product: "whatsapp",
-                type,
-                to: user,
-                text: JSON.stringify(message)
-            };
-
-            const requestWithContext = {
-                ...request,
-                context: {
-                    message_id: context
-                }
-            };
-
-            const expectedResponse = {
-                messaging_product: "whatsapp",
-                contacts: [
-                    {
-                        input: user,
-                        wa_id: user
-                    }
-                ],
-                messages: [
-                    {
-                        id
-                    }
-                ]
-            };
-
             it("should be able to send a basic message", async function () {
                 clientFacebook
                     .intercept({
@@ -458,9 +457,71 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Mark as read", function () {
-            const id = "1";
+        describe("Broadcast", function () {
+            const expectedArrayResponse = [
+                expectedResponse,
+                expectedResponse,
+                expectedResponse
+            ];
 
+            it("should be able to broadcast a message to many users", async function () {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(request)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(3);
+
+                const response = await Promise.all(
+                    await Whatsapp.broadcastMessage(
+                        bot,
+                        [user, user, user],
+                        message
+                    )
+                );
+
+                deepEqual(response, expectedArrayResponse);
+            });
+
+            it("should return the raw fetch responses if parsed is false", async function () {
+                Whatsapp.parsed = false;
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(request)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(3);
+
+                const response = await Promise.all(
+                    (
+                        await Promise.all(
+                            await Whatsapp.broadcastMessage(
+                                bot,
+                                [user, user, user],
+                                message
+                            )
+                        )
+                    ).map((e) => e.json())
+                );
+
+                deepEqual(response, expectedArrayResponse);
+            });
+        });
+
+        describe("Mark as read", function () {
             it("should be able to mark a message as read", async function () {
                 const expectedResponse = {
                     success: true
