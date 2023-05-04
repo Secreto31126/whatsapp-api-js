@@ -12,23 +12,23 @@
     "lib/**/*"
   ],
   "types": "lib/index.d.ts",
-  "module": "lib/esm/index.js",
-  "main": "lib/index.cjs",
+  "module": "lib/index.js",
+  "main": "lib/cjs/index.cjs",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.cjs"
+      "import": "./lib/index.js",
+      "require": "./lib/cjs/index.cjs"
     },
     "./messages": {
       "types": "./lib/messages/index.d.ts",
-      "import": "./lib/esm/messages/index.js",
-      "require": "./lib/messages/index.cjs"
+      "import": "./lib/messages/index.js",
+      "require": "./lib/cjs/messages/index.cjs"
     },
     "./*": {
       "types": "./lib/*.d.ts",
-      "import": "./lib/esm/*.js",
-      "require": "./lib/*.cjs"
+      "import": "./lib/*.js",
+      "require": "./lib/cjs/*.cjs"
     }
   },
   "scripts": {
