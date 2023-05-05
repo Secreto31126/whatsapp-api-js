@@ -1,5 +1,6 @@
 import { build } from "esbuild";
 import { glob } from "glob";
+// import { writeFile } from "fs/promises";
 
 const production = process.env.NODE_ENV !== "development";
 
@@ -13,10 +14,11 @@ const sharedConfig = {
 build({
     ...sharedConfig,
     format: "cjs",
-    outExtension: { ".js": ".cjs" },
     outdir: "lib/cjs",
     platform: "node"
 });
+
+// writeFile("./lib/cjs", '{"type":"common"}');
 
 // ESM
 build({
