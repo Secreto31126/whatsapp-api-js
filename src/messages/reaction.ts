@@ -1,4 +1,4 @@
-import type { ClientMessage } from "../types.js";
+import type { ClientMessage } from "../types";
 
 /**
  * Reaction API object

@@ -138,10 +138,11 @@ If using ESM, you can import the module like this:
 import WhatsAppAPI from "whatsapp-api-js";
 ```
 
-If using CommonJS, you can require the package:
+If using CommonJS, you can require the package,
+although you will need to use the default export:
 
 ```js
-const WhatsAppAPI = require("whatsapp-api-js");
+const WhatsAppAPI = require("whatsapp-api-js").default;
 ```
 
 ### Deno

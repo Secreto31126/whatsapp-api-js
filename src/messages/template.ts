@@ -2,11 +2,11 @@ import type {
     ClientMessage,
     ClientBuildableMessageComponent,
     ClientTypedMessageComponent
-} from "../types.js";
-import { AtLeastOne } from "../utils.js";
+} from "../types";
+import { AtLeastOne } from "../utils";
 
-import type Location from "./location.js";
-import type { Document, Image, Video } from "./media.js";
+import type Location from "./location";
+import type { Document, Image, Video } from "./media";
 
 export type BuiltButtonComponent = {
     type: "button";
