@@ -11,28 +11,29 @@
   "files": [
     "lib/**/*"
   ],
-  "types": "lib/index.d.ts",
-  "module": "lib/index.js",
+  "types": "lib/esm/index.d.ts",
+  "module": "lib/esm/index.js",
   "main": "lib/cjs/index.cjs",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/index.js",
+      "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.cjs"
     },
     "./messages": {
-      "types": "./lib/messages/index.d.ts",
-      "import": "./lib/messages/index.js",
+      "import": "./lib/esm/messages/index.js",
       "require": "./lib/cjs/messages/index.cjs"
     },
     "./*": {
-      "types": "./lib/*.d.ts",
       "import": "./lib/*.js",
       "require": "./lib/cjs/*.cjs"
     }
   },
   "scripts": {
-    "build": "node -r dotenv/config build.js && tsc -p tsconfig.types.json && cp ./src/*.d.ts ./lib",
+    "build": "npm run build:code && npm run build:types",
+    "build:code": "node -r dotenv/config build.js",
+    "build:types": "npm run build:types:esm && npm run build:types:cjs",
+    "build:types:esm": "tsc --outDir ./lib/esm && cp ./src/*.d.ts ./lib/esm",
+    "build:types:cjs": "tsc --outDir ./lib/cjs && cp ./src/*.d.ts ./lib/cjs",
     "test": "mocha",
     "test:build": "npm run build && npm run test",
     "test:watch": "mocha --reporter min --watch",

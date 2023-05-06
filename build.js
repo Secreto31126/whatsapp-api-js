@@ -1,28 +1,32 @@
+/* eslint-disable tsdoc/syntax */
+
 import { build } from "esbuild";
 import { glob } from "glob";
-// import { writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 
 const production = process.env.NODE_ENV !== "development";
 
+/**
+ * @type {import("esbuild").BuildOptions}
+ */
 const sharedConfig = {
     entryPoints: await glob("src/**/*.ts", { ignore: ["src/**/*.d.ts"] }),
     bundle: production,
-    minify: production
+    minify: production,
+    platform: "node",
 };
 
+// ESM
+await build({
+    ...sharedConfig,
+    outdir: "lib/esm"
+});
+
 // CJS
-build({
+await build({
     ...sharedConfig,
     format: "cjs",
-    outdir: "lib/cjs",
-    platform: "node"
+    outdir: "lib/cjs"
 });
 
-// writeFile("./lib/cjs", '{"type":"common"}');
-
-// ESM
-build({
-    ...sharedConfig,
-    outdir: "lib",
-    platform: "node"
-});
+await writeFile("./lib/cjs/package.json", '{"type":"commonjs"}');
