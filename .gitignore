@@ -107,9 +107,8 @@ dist
 .vscode/
 
 # Test code
-playground.js
-playground.mjs
-playground.ts
+playground.[tj]s
+playground.[cm][tj]s
 
 # Documentation
 docs_temp/
