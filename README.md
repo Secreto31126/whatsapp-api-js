@@ -10,11 +10,6 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 -   [Set up](#set-up)
 -   [Changelog](#changelog)
--   [Examples](#examples)
-    -   [Node.js](#nodejs)
-    -   [Deno](#deno)
-    -   [Bun](#bun)
-    -   [Websites](#websites)
 -   [Documentation](#documentation)
 -   [Breaking changes](#breaking-changes)
 -   [Beta Releases](#beta-releases)
@@ -48,7 +43,7 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The handlers work with any middleware, as long as you pass the correct data
-    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["X-Hub-Signature-256"]);
+    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 
 Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
@@ -121,62 +116,12 @@ Once you are done, click administrate, and set the webhook to subscribe to messa
 There might be a future update to support the other types of subscriptions.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
+For more information on the setup process for specific enviroments, check out the
+[Enviroments.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/ENVIROMENTS.md).
 
 ## Changelog
 
 To know what changed between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
-
-## Examples
-
-The code is server agnostic, which allows it to work on most environments.
-
-### Node.js
-
-If using ESM, you can import the module like this:
-
-```js
-import WhatsAppAPI from "whatsapp-api-js";
-```
-
-If using CommonJS, you can require the package,
-although you will need to use the default export:
-
-```js
-const WhatsAppAPI = require("whatsapp-api-js").default;
-```
-
-### Deno
-
-With the release of Deno 1.25.0, now you can import npm modules directly to Deno. It's really simple to use:
-
-```js
-import WhatsAppAPI from "npm:whatsapp-api-js";
-```
-
-If you want to use prior versions of Deno, use [https://esm.sh/whatsapp-api-js](https://esm.sh/whatsapp-api-js) to import the code.
-
-### Bun
-
-Bun _should_ also work by running:
-
-```sh
-bun install whatsapp-api-js
-```
-
-```js
-import WhatsAppAPI from "whatsapp-api-js";
-```
-
-### Websites
-
-HTML module example:
-
-```html
-<script type="module">
-    import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
-    <!-- Please, never use your API tokens in a website, use this method wisely -->
-</script>
-```
 
 ## Documentation
 
@@ -192,10 +137,3 @@ You can get a full list of breaking changes in the [BREAKING.md file](https://gi
 Install the latest beta realease with `npm install whatsapp-api-js@beta`.
 As any beta, it is 110% likely to break. I also use this tag to test npm releases.
 Use it at your own risk.
-
-## Comments
-
-Even though the code already supports all the message types, there's still a long way to go.
-I will keep updating it until I like how it works.
-
-Also, if you are interested in Google App Script support, check out Secreto31126/whatsapp-api-google-app-script.
