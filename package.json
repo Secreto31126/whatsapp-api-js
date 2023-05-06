@@ -13,19 +13,19 @@
   ],
   "types": "lib/esm/index.d.ts",
   "module": "lib/esm/index.js",
-  "main": "lib/cjs/index.cjs",
+  "main": "lib/cjs/index.js",
   "exports": {
     ".": {
       "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.cjs"
+      "require": "./lib/cjs/index.js"
     },
     "./messages": {
       "import": "./lib/esm/messages/index.js",
-      "require": "./lib/cjs/messages/index.cjs"
+      "require": "./lib/cjs/messages/index.js"
     },
     "./*": {
-      "import": "./lib/*.js",
-      "require": "./lib/cjs/*.cjs"
+      "import": "./lib/esm/*.js",
+      "require": "./lib/cjs/*.js"
     }
   },
   "scripts": {
