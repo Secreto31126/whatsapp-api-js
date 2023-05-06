@@ -10,7 +10,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 -   [Set up](#set-up)
 -   [Changelog](#changelog)
--   [Examples](#examples)
+-   [Enviroments](#enviroments)
     -   [Node.js](#nodejs)
     -   [Deno](#deno)
     -   [Bun](#bun)
@@ -48,7 +48,7 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 // Assuming post is called on a POST request to your server
 function post(e) {
     // The handlers work with any middleware, as long as you pass the correct data
-    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["X-Hub-Signature-256"]);
+    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 
 Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
@@ -126,9 +126,10 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 
 To know what changed between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
 
-## Examples
+## Enviroments
 
 The code is server agnostic, which allows it to work on most environments.
+It also counts with setup helpers for the most popular ones.
 
 ### Node.js
 
@@ -138,11 +139,57 @@ If using ESM, you can import the module like this:
 import WhatsAppAPI from "whatsapp-api-js";
 ```
 
-If using CommonJS, you can require the package,
-although you will need to use the default export:
+If using CommonJS, you can require the package, although you will need to use the default export:
 
 ```js
 const WhatsAppAPI = require("whatsapp-api-js").default;
+```
+
+For each version of Node, you can use the `setup` function to simplify the process.
+
+ - Node 19 and above:
+
+```js
+import WhatsAppAPI from "whatsapp-api-js";
+import { NodeNext } from "whatsapp-api-js/setup";
+
+const Whatsapp = new WhatsAppAPI(
+    NodeNext({
+        token: "123",
+        appSecret: "123"
+    })
+);
+```
+
+ - Node 18:
+
+```js
+import WhatsAppAPI from "whatsapp-api-js";
+import { Node18 } from "whatsapp-api-js/setup";
+
+const Whatsapp = new WhatsAppAPI(
+    Node18({
+        token: "123",
+        appSecret: "123"
+    })
+);
+```
+
+ - Node 12 to 17:
+
+```js
+import WhatsAppAPI from "whatsapp-api-js";
+import { Node12 } from "whatsapp-api-js/setup";
+
+// As fetch isn't available until Node 18, you will need to pass a ponyfill as a parameter
+import fetch from "node-fetch"; // or any other fetch implementation
+
+const Whatsapp = new WhatsAppAPI(
+    Node12({
+        token: "123",
+        appSecret: "123",
+    }, fetch)
+);
 ```
 
 ### Deno
@@ -155,6 +202,20 @@ import WhatsAppAPI from "npm:whatsapp-api-js";
 
 If you want to use prior versions of Deno, use [https://esm.sh/whatsapp-api-js](https://esm.sh/whatsapp-api-js) to import the code.
 
+Deno also counts with a setup helper:
+
+```js
+import WhatsAppAPI from "npm:whatsapp-api-js";
+import { Deno } from "whatsapp-api-js/setup";
+
+const Whatsapp = new WhatsAppAPI(
+    Deno({
+        token: "123",
+        appSecret: "123"
+    })
+);
+```
+
 ### Bun
 
 Bun _should_ also work by running:
@@ -165,6 +226,14 @@ bun install whatsapp-api-js
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
+import { Bun } from "whatsapp-api-js/setup";
+
+const Whatsapp = new WhatsAppAPI(
+    Bun({
+        token: "123",
+        appSecret: "123"
+    })
+);
 ```
 
 ### Websites
