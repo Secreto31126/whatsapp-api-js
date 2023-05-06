@@ -17,7 +17,7 @@ jobs:
       - name: Install
         run: npm ci --only=dev
       - name: Compile
-        run: npm run build
+        run: npm run build:code
       - name: Tests
         run: npm run test
       - name: Linted
