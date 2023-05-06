@@ -19,9 +19,10 @@ import Location from "whatsapp-api-js/messages/location";
 
 ```js
 // CommonJS
-const WhatsAppAPI = require("whatsapp-api-js");
-const { Text, Image, Document } = require("whatsapp-api-js/messages");
-const Location = require("whatsapp-api-js/messages/location");
+const WhatsAppAPI = require("whatsapp-api-js").default;
+const { Image, Document } = require("whatsapp-api-js/messages");
+const Text = require("whatsapp-api-js/messages/text").default;
+const Location = require("whatsapp-api-js/messages/location").default;
 ```
 
 The main contructor now takes named arguments instead of positional arguments.
@@ -63,7 +64,7 @@ const Whatsapp = new WhatsAppAPI({ token: "123", appSecret: "456" });
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["X-Hub-Signature-256"]);
+    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 ```
 
@@ -101,7 +102,7 @@ Whatsapp.on.sent = ({ id, to }) => {
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["X-Hub-Signature-256"]);
+    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 ```
 
