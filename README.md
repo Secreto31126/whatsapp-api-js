@@ -147,11 +147,11 @@ const WhatsAppAPI = require("whatsapp-api-js").default;
 
 For each version of Node, you can use the `setup` function to simplify the process.
 
- - Node 19 and above:
+- Node 19 and above:
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
-import { NodeNext } from "whatsapp-api-js/setup";
+import { NodeNext } from "whatsapp-api-js/setup/node";
 
 const Whatsapp = new WhatsAppAPI(
     NodeNext({
@@ -161,11 +161,11 @@ const Whatsapp = new WhatsAppAPI(
 );
 ```
 
- - Node 18:
+- Node 18:
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
-import { Node18 } from "whatsapp-api-js/setup";
+import { Node18 } from "whatsapp-api-js/setup/node";
 
 const Whatsapp = new WhatsAppAPI(
     Node18({
@@ -175,11 +175,11 @@ const Whatsapp = new WhatsAppAPI(
 );
 ```
 
- - Node 12 to 17:
+- Node 12 to 17:
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
-import { Node12 } from "whatsapp-api-js/setup";
+import { Node12 } from "whatsapp-api-js/setup/node";
 
 // As fetch isn't available until Node 18, you will need to pass a ponyfill as a parameter
 import fetch from "node-fetch"; // or any other fetch implementation
@@ -206,7 +206,7 @@ Deno also counts with a setup helper:
 
 ```js
 import WhatsAppAPI from "npm:whatsapp-api-js";
-import { Deno } from "whatsapp-api-js/setup";
+import { Deno } from "whatsapp-api-js/setup/deno";
 
 const Whatsapp = new WhatsAppAPI(
     Deno({
@@ -226,7 +226,7 @@ bun install whatsapp-api-js
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
-import { Bun } from "whatsapp-api-js/setup";
+import { Bun } from "whatsapp-api-js/setup/bun";
 
 const Whatsapp = new WhatsAppAPI(
     Bun({
