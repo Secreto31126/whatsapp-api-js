@@ -1,4 +1,4 @@
-import { ClientMessage, type ClientMessageNames } from "../types";
+import { ClientMessage, type ClientMessageNames } from "../types.js";
 
 /**
  * Abstract class for all the media types
