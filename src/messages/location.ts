@@ -1,11 +1,11 @@
-import type { ClientMessage } from "../types";
+import { ClientMessage } from "../types.js";
 
 /**
  * Location API component
  *
  * @group Location
  */
-export default class Location implements ClientMessage {
+export default class Location extends ClientMessage {
     /**
      * The latitude of the location
      */
@@ -23,6 +23,9 @@ export default class Location implements ClientMessage {
      */
     readonly address?: string;
 
+    /**
+     * @override
+     */
     get _type(): "location" {
         return "location";
     }
@@ -41,13 +44,10 @@ export default class Location implements ClientMessage {
         name?: string,
         address?: string
     ) {
+        super();
         this.longitude = longitude;
         this.latitude = latitude;
         if (name) this.name = name;
         if (address) this.address = address;
-    }
-
-    _build() {
-        return JSON.stringify(this);
     }
 }
