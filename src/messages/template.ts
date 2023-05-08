@@ -1,13 +1,16 @@
-import type {
+import {
     ClientMessage,
-    ClientBuildableMessageComponent,
-    ClientTypedMessageComponent
-} from "../types";
+    type ClientBuildableMessageComponent,
+    type ClientTypedMessageComponent
+} from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
 
+/**
+ * @group Template
+ */
 export type BuiltButtonComponent = {
     type: "button";
     sub_type: "url" | "quick_reply";
@@ -20,7 +23,7 @@ export type BuiltButtonComponent = {
  *
  * @group Template
  */
-export class Template implements ClientMessage {
+export class Template extends ClientMessage {
     /**
      * The name of the template
      */
@@ -38,6 +41,9 @@ export class Template implements ClientMessage {
         | BuiltButtonComponent
     )[];
 
+    /**
+     * @override
+     */
     get _type(): "template" {
         return "template";
     }
@@ -56,6 +62,7 @@ export class Template implements ClientMessage {
         language: string | Language,
         ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]
     ) {
+        super();
         this.name = name;
         this.language =
             typeof language === "string" ? new Language(language) : language;
@@ -67,10 +74,6 @@ export class Template implements ClientMessage {
                 .map((cmpt) => cmpt._build(theres_only_body))
                 .flat();
         }
-    }
-
-    _build() {
-        return JSON.stringify(this);
     }
 }
 
@@ -120,6 +123,9 @@ export class Currency implements ClientTypedMessageComponent {
      */
     readonly fallback_value: string;
 
+    /**
+     * @override
+     */
     get _type(): "currency" {
         return "currency";
     }
@@ -153,6 +159,9 @@ export class DateTime implements ClientTypedMessageComponent {
      */
     readonly fallback_value: string;
 
+    /**
+     * @override
+     */
     get _type(): "date_time" {
         return "date_time";
     }
@@ -214,6 +223,9 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
         this.parameters = processed;
     }
 
+    /**
+     * @override
+     */
     _build(): Array<BuiltButtonComponent> {
         return this.parameters.map((p, i) => {
             return {
@@ -282,6 +294,9 @@ export class HeaderComponent implements ClientBuildableMessageComponent {
         this.parameters = parameters;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
@@ -400,6 +415,9 @@ export class BodyComponent implements ClientBuildableMessageComponent {
         this.parameters = parameters;
     }
 
+    /**
+     * @override
+     */
     _build(theres_only_body: boolean) {
         // If there are parameters and need to check for the shorter max text length
         if (this.parameters && !theres_only_body) {
