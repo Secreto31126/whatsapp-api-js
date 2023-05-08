@@ -1,4 +1,4 @@
-import type { ClientMessage, ClientTypedMessageComponent } from "../types";
+import { ClientMessage, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 import type { Document, Image, Video } from "./media";
@@ -8,7 +8,7 @@ import type { Document, Image, Video } from "./media";
  *
  * @group Interactive
  */
-export class Interactive implements ClientMessage {
+export class Interactive extends ClientMessage {
     /**
      * The action component of the interactive message
      */
@@ -34,6 +34,9 @@ export class Interactive implements ClientMessage {
      */
     readonly footer?: Footer;
 
+    /**
+     * @override
+     */
     get _type(): "interactive" {
         return "interactive";
     }
@@ -60,6 +63,8 @@ export class Interactive implements ClientMessage {
         header?: Header,
         footer?: Footer
     ) {
+        super();
+
         if (action._type !== "product" && !body)
             throw new Error("Interactive must have a body component");
         if (action._type === "product" && header)
@@ -79,10 +84,6 @@ export class Interactive implements ClientMessage {
         if (body) this.body = body;
         if (header) this.header = header;
         if (footer) this.footer = footer;
-    }
-
-    _build() {
-        return JSON.stringify(this);
     }
 }
 
@@ -200,6 +201,9 @@ export class ActionButtons implements ClientTypedMessageComponent {
      */
     readonly buttons: Button[];
 
+    /**
+     * @override
+     */
     get _type(): "button" {
         return "button";
     }
@@ -294,6 +298,9 @@ export class ActionList implements ClientTypedMessageComponent {
      */
     readonly sections: ListSection[];
 
+    /**
+     * @override
+     */
     get _type(): "list" {
         return "list";
     }
@@ -424,6 +431,9 @@ export class ActionCatalog implements ClientTypedMessageComponent {
      */
     readonly sections?: ProductSection[];
 
+    /**
+     * @override
+     */
     get _type(): "product" | "product_list" {
         return this.product_retailer_id ? "product" : "product_list";
     }
