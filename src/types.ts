@@ -134,19 +134,21 @@ export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
 export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
     ExtraTypesThatMakeTypescriptWork;
 
-export interface ClientMessage {
+export abstract class ClientMessage {
     /**
      * The message type
      *
      * @internal
      */
-    get _type(): ClientMessageNames;
+    abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
      *
      * @internal
      */
-    _build(): string;
+    _build(): string {
+        return JSON.stringify(this);
+    }
 }
 
 export interface ClientTypedMessageComponent {
@@ -164,17 +166,41 @@ export interface ClientBuildableMessageComponent {
      *
      * @internal
      */
-    _build(...data);
+    _build(...data: unknown[]): unknown;
+}
+
+export abstract class ClientLimitedComponent {
+    /**
+     * Throws an error if the array length is greater than the specified number.
+     *
+     * @param p - The parent component name
+     * @param c - The component name
+     * @param a - The array to check the length of
+     * @param n - The maximum length
+     */
+    _limit<T>(p: string, c: string, a: Array<T>, n: number) {
+        if (a.length > n) {
+            throw new Error(`${p} must have less than ${n} ${c}`);
+        }
+    }
 }
 
 // Somehow, Contacts still manages to be annoying
-export interface ContactComponent
-    extends ClientTypedMessageComponent,
-        ClientBuildableMessageComponent {
+export abstract class ContactComponent
+    implements ClientTypedMessageComponent, ClientBuildableMessageComponent
+{
     /**
-     * Whether the component can be repeated multiple times in a contact
+     * Whether the component can be repeated multiple times in a contact.
+     * Defaults to false.
+     *
+     * @internal
      */
-    get _many(): boolean;
+    get _many(): boolean {
+        return false;
+    }
+
+    abstract get _type(): string;
+    abstract _build(): unknown;
 }
 
 export type ClientMessageNames =
