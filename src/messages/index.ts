@@ -1,7 +1,7 @@
-export { default as Text } from "./text";
-export { default as Location } from "./location";
-export { default as Reaction } from "./reaction";
-export * from "./contacts";
-export * from "./interactive";
-export * from "./media";
-export * from "./template";
+export { default as Text } from "./text.js";
+export { default as Location } from "./location.js";
+export { default as Reaction } from "./reaction.js";
+export * from "./contacts.js";
+export * from "./interactive.js";
+export * from "./media.js";
+export * from "./template.js";
