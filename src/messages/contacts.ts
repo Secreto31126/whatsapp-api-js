@@ -90,6 +90,9 @@ export class Contacts extends ClientMessage {
         }
     }
 
+    /**
+     * @override
+     */
     _build() {
         return JSON.stringify(this.component);
     }
@@ -130,10 +133,16 @@ export class Address extends ContactComponent {
      */
     readonly type?: string;
 
+    /**
+     * @override
+     */
     get _many() {
         return true;
     }
 
+    /**
+     * @override
+     */
     get _type(): "addresses" {
         return "addresses";
     }
@@ -169,6 +178,9 @@ export class Address extends ContactComponent {
         if (type) this.type = type;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
@@ -185,6 +197,9 @@ export class Birthday extends ContactComponent {
      */
     readonly birthday: string;
 
+    /**
+     * @override
+     */
     get _type(): "birthday" {
         return "birthday";
     }
@@ -205,6 +220,9 @@ export class Birthday extends ContactComponent {
         this.birthday = `${year}-${month}-${day}`;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this.birthday;
     }
@@ -232,6 +250,9 @@ export class Email extends ContactComponent {
         return true;
     }
 
+    /**
+     * @override
+     */
     get _type(): "emails" {
         return "emails";
     }
@@ -249,6 +270,9 @@ export class Email extends ContactComponent {
         if (type) this.type = type;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
@@ -285,6 +309,9 @@ export class Name extends ContactComponent {
      */
     readonly prefix?: string;
 
+    /**
+     * @override
+     */
     get _type(): "name" {
         return "name";
     }
@@ -325,6 +352,9 @@ export class Name extends ContactComponent {
         }
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
@@ -349,6 +379,9 @@ export class Organization extends ContactComponent {
      */
     readonly title?: string;
 
+    /**
+     * @override
+     */
     get _type(): "org" {
         return "org";
     }
@@ -367,6 +400,9 @@ export class Organization extends ContactComponent {
         if (title) this.title = title;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
@@ -398,6 +434,9 @@ export class Phone extends ContactComponent {
         return true;
     }
 
+    /**
+     * @override
+     */
     get _type(): "phones" {
         return "phones";
     }
@@ -417,6 +456,9 @@ export class Phone extends ContactComponent {
         if (wa_id) this.wa_id = wa_id;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
@@ -444,6 +486,9 @@ export class Url extends ContactComponent {
         return true;
     }
 
+    /**
+     * @override
+     */
     get _type(): "urls" {
         return "urls";
     }
@@ -461,6 +506,9 @@ export class Url extends ContactComponent {
         if (type) this.type = type;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this;
     }
