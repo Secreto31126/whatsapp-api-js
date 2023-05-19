@@ -11,9 +11,9 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 -   [Set up](#set-up)
 -   [Changelog](#changelog)
 -   [Documentation](#documentation)
+-   [Contributions](#contributions)
 -   [Breaking changes](#breaking-changes)
 -   [Beta Releases](#beta-releases)
--   [Comments](#comments)
 
 ## Set up
 
@@ -127,6 +127,10 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 The lateset package documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
+
+## Contributions
+
+If you have some free time and really want to improve the library of fix dumb bugs, feel free to read [CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
 
 ## Breaking changes
 
