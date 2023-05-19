@@ -130,7 +130,7 @@ and previous versions are available in [secreto31126.github.io/whatsapp-api-js](
 
 ## Contributions
 
-If you have some free time and really want to improve the library of fix dumb bugs, feel free to read [CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
+If you have some free time and really want to improve the library or fix dumb bugs, feel free to read [CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
 
 ## Breaking changes
 
