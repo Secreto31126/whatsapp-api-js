@@ -1,4 +1,4 @@
-import { WhatsAppAPIConstructorArguments } from "../types";
+import type { WhatsAppAPIConstructorArguments } from "../types";
 /**
  * A Deno quick setup for the WhatsAppAPI
  *

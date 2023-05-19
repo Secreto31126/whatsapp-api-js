@@ -1,4 +1,4 @@
-import { WhatsAppAPIConstructorArguments } from "../types";
+import type { WhatsAppAPIConstructorArguments } from "../types";
 /**
  * A Web quick setup for the WhatsAppAPI
  *

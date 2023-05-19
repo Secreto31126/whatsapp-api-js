@@ -1,5 +1,5 @@
 import type { ClientMessage, ClientBuildableMessageComponent, ClientTypedMessageComponent } from "../types";
-import { AtLeastOne } from "../utils";
+import type { AtLeastOne } from "../utils";
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
 export type BuiltButtonComponent = {

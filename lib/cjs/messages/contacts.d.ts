@@ -1,5 +1,5 @@
 import type { ClientMessage, ContactComponent } from "../types";
-import { AtLeastOne } from "../utils";
+import type { AtLeastOne } from "../utils";
 export type BuiltContact = {
     name: Name;
     birthday?: string;
