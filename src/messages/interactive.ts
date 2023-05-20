@@ -1,4 +1,8 @@
-import { ClientMessage, type ClientTypedMessageComponent } from "../types.js";
+import {
+    ClientLimitedComponent,
+    ClientMessage,
+    type ClientTypedMessageComponent
+} from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 import type { Document, Image, Video } from "./media";
@@ -288,7 +292,10 @@ export class Button {
  *
  * @group Interactive
  */
-export class ActionList implements ClientTypedMessageComponent {
+export class ActionList
+    extends ClientLimitedComponent<ListSection, 10>
+    implements ClientTypedMessageComponent
+{
     /**
      * The button text
      */
@@ -316,10 +323,10 @@ export class ActionList implements ClientTypedMessageComponent {
      * @throws If more than 1 section is provided and at least one doesn't have a title
      */
     constructor(button: string, ...sections: AtLeastOne<ListSection>) {
+        super("Action", "sections", sections, 10);
+
         if (button.length > 20)
             throw new Error("Button content must be 20 characters or less");
-        if (sections.length > 10)
-            throw new Error("Action must have between 1 and 10 sections");
         if (sections.length > 1 && !sections.every((obj) => "title" in obj))
             throw new Error(
                 "All sections must have a title if more than 1 section is provided"
@@ -335,7 +342,7 @@ export class ActionList implements ClientTypedMessageComponent {
  *
  * @group Interactive
  */
-export class ListSection {
+export class ListSection extends ClientLimitedComponent<Row, 10> {
     /**
      * The rows of the section
      */
@@ -354,10 +361,10 @@ export class ListSection {
      * @throws If more than 10 rows are provided
      */
     constructor(title: string, ...rows: AtLeastOne<Row>) {
+        super("Section", "rows", rows, 10);
+
         if (title && title.length > 24)
             throw new Error("Section title must be 24 characters or less");
-        if (!rows.length || rows.length > 10)
-            throw new Error("Section must have between 1 and 10 rows");
 
         if (title) this.title = title;
         this.rows = rows;
@@ -480,7 +487,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
  *
  * @group Interactive
  */
-export class ProductSection {
+export class ProductSection extends ClientLimitedComponent<Product, 30> {
     /**
      * The title of the section
      */
@@ -499,10 +506,10 @@ export class ProductSection {
      * @throws If more than 30 products are provided
      */
     constructor(title: string, ...products: AtLeastOne<Product>) {
+        super("Section", "products", products, 30);
+
         if (title && title.length > 24)
             throw new Error("Section title must be 24 characters or less");
-        if (products.length > 30)
-            throw new Error("Section must have between 1 and 30 products");
 
         if (title) this.title = title;
         this.product_items = products;

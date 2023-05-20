@@ -172,7 +172,7 @@ export abstract class ClientBuildableMessageComponent {
     }
 }
 
-export abstract class ClientLimitedComponent {
+export abstract class ClientLimitedComponent<T, N extends number> {
     /**
      * Throws an error if the array length is greater than the specified number.
      *
@@ -180,11 +180,10 @@ export abstract class ClientLimitedComponent {
      * @param c - The component name
      * @param a - The array to check the length of
      * @param n - The maximum length
-     * @internal
      */
-    _limit<T>(p: string, c: string, a: Array<T>, n: number) {
+    constructor(p: string, c: string, a: Array<T>, n: N) {
         if (a.length > n) {
-            throw new Error(`${p} must have less than ${n} ${c}`);
+            throw new Error(`${p} can't have more than ${n} ${c}`);
         }
     }
 }
