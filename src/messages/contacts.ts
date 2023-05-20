@@ -1,6 +1,9 @@
 import { ClientMessage, ContactComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 
+/**
+ * @group Contacts
+ */
 export type BuiltContact = {
     name: Name;
 } & Partial<{

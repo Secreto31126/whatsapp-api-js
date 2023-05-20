@@ -2,7 +2,7 @@
     // Comments are supported, like tsconfig.json
     "entryPoints": [
         "src/index.ts",
-        "src/types.d.ts",
+        "src/types.ts",
         "src/utils.d.ts",
         "src/emitters.d.ts",
         "src/messages/index.ts",
