@@ -160,13 +160,16 @@ export interface ClientTypedMessageComponent {
     get _type(): string;
 }
 
-export interface ClientBuildableMessageComponent {
+export abstract class ClientBuildableMessageComponent {
     /**
      * The message's component builder method
      *
      * @internal
      */
-    _build(...data: unknown[]): unknown;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _build(..._: unknown[]): unknown {
+        return this;
+    }
 }
 
 export abstract class ClientLimitedComponent {
@@ -177,6 +180,7 @@ export abstract class ClientLimitedComponent {
      * @param c - The component name
      * @param a - The array to check the length of
      * @param n - The maximum length
+     * @internal
      */
     _limit<T>(p: string, c: string, a: Array<T>, n: number) {
         if (a.length > n) {
