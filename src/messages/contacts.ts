@@ -213,7 +213,7 @@ export class Birthday extends ContactComponent {
      * @param year - Year of birth (YYYY)
      * @param month - Month of birth (MM)
      * @param day - Day of birth (DD)
-     * @throws If the year, month, or day don't have a valid length
+     * @throws If the year, month, or day doesn't have a valid length
      */
     constructor(year: string, month: string, day: string) {
         super();
