@@ -199,7 +199,10 @@ export class Header {
  *
  * @group Interactive
  */
-export class ActionButtons implements ClientTypedMessageComponent {
+export class ActionButtons
+    extends ClientLimitedComponent<Button, 3>
+    implements ClientTypedMessageComponent
+{
     /**
      * The buttons of the action
      */
@@ -221,8 +224,7 @@ export class ActionButtons implements ClientTypedMessageComponent {
      * @throws If two or more buttons have the same title
      */
     constructor(...button: AtLeastOne<Button>) {
-        if (button.length > 3)
-            throw new Error("Reply buttons must have between 1 and 3 buttons");
+        super("Reply buttons", "button", button, 3);
 
         // Find if there are duplicates in button.id
         const ids = button.map((b) => b[b.type].id);

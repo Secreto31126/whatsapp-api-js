@@ -1,5 +1,6 @@
 import {
     ClientMessage,
+    ClientLimitedComponent,
     type ClientBuildableMessageComponent,
     type ClientTypedMessageComponent
 } from "../types.js";
@@ -181,7 +182,10 @@ export class DateTime implements ClientTypedMessageComponent {
  *
  * @group Template
  */
-export class ButtonComponent implements ClientBuildableMessageComponent {
+export class ButtonComponent
+    extends ClientLimitedComponent<string, 3>
+    implements ClientBuildableMessageComponent
+{
     /**
      * The type of the component
      */
@@ -208,10 +212,7 @@ export class ButtonComponent implements ClientBuildableMessageComponent {
         sub_type: "url" | "quick_reply",
         ...parameters: AtLeastOne<string>
     ) {
-        if (parameters.length > 3)
-            throw new Error(
-                "ButtonComponent must have between 1 and 3 parameters"
-            );
+        super("ButtonComponent", "parameters", parameters, 3);
 
         const buttonType = sub_type === "url" ? "text" : "payload";
         const processed = parameters.map(
