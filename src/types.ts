@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
 
