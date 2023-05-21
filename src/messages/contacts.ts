@@ -1,4 +1,9 @@
-import { ClientMessage, ContactComponent } from "../types.js";
+import {
+    ClientMessage,
+    type ContactComponent,
+    ContactUniqueComponent,
+    ContactMultipleComponent
+} from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 /**
@@ -106,7 +111,7 @@ export class Contacts extends ClientMessage {
  *
  * @group Contacts
  */
-export class Address extends ContactComponent {
+export class Address extends ContactMultipleComponent {
     /**
      * The country of the address
      */
@@ -135,13 +140,6 @@ export class Address extends ContactComponent {
      * The type of the address
      */
     readonly type?: string;
-
-    /**
-     * @override
-     */
-    get _many() {
-        return true;
-    }
 
     /**
      * @override
@@ -180,13 +178,6 @@ export class Address extends ContactComponent {
         if (zip) this.zip = zip;
         if (type) this.type = type;
     }
-
-    /**
-     * @override
-     */
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -194,7 +185,7 @@ export class Address extends ContactComponent {
  *
  * @group Contacts
  */
-export class Birthday extends ContactComponent {
+export class Birthday extends ContactUniqueComponent {
     /**
      * The birthday of the contact
      */
@@ -236,7 +227,7 @@ export class Birthday extends ContactComponent {
  *
  * @group Contacts
  */
-export class Email extends ContactComponent {
+export class Email extends ContactMultipleComponent {
     /**
      * The email of the contact
      */
@@ -245,13 +236,6 @@ export class Email extends ContactComponent {
      * The type of the email
      */
     readonly type?: string;
-
-    /**
-     * @override
-     */
-    get _many() {
-        return true;
-    }
 
     /**
      * @override
@@ -272,13 +256,6 @@ export class Email extends ContactComponent {
         if (email) this.email = email;
         if (type) this.type = type;
     }
-
-    /**
-     * @override
-     */
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -286,7 +263,7 @@ export class Email extends ContactComponent {
  *
  * @group Contacts
  */
-export class Name extends ContactComponent {
+export class Name extends ContactUniqueComponent {
     /**
      * The formatted name of the contact
      */
@@ -354,13 +331,6 @@ export class Name extends ContactComponent {
             );
         }
     }
-
-    /**
-     * @override
-     */
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -368,7 +338,7 @@ export class Name extends ContactComponent {
  *
  * @group Contacts
  */
-export class Organization extends ContactComponent {
+export class Organization extends ContactUniqueComponent {
     /**
      * The company of the contact
      */
@@ -402,13 +372,6 @@ export class Organization extends ContactComponent {
         if (department) this.department = department;
         if (title) this.title = title;
     }
-
-    /**
-     * @override
-     */
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -416,7 +379,7 @@ export class Organization extends ContactComponent {
  *
  * @group Contacts
  */
-export class Phone extends ContactComponent {
+export class Phone extends ContactMultipleComponent {
     /**
      * The phone number of the contact
      */
@@ -429,13 +392,6 @@ export class Phone extends ContactComponent {
      * The WhatsApp ID of the contact
      */
     readonly wa_id?: string;
-
-    /**
-     * @override
-     */
-    get _many() {
-        return true;
-    }
 
     /**
      * @override
@@ -458,13 +414,6 @@ export class Phone extends ContactComponent {
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
     }
-
-    /**
-     * @override
-     */
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -472,7 +421,7 @@ export class Phone extends ContactComponent {
  *
  * @group Contacts
  */
-export class Url extends ContactComponent {
+export class Url extends ContactMultipleComponent {
     /**
      * The URL of the contact
      */
@@ -481,13 +430,6 @@ export class Url extends ContactComponent {
      * The type of the URL
      */
     readonly type?: string;
-
-    /**
-     * @override
-     */
-    get _many() {
-        return true;
-    }
 
     /**
      * @override
@@ -507,12 +449,5 @@ export class Url extends ContactComponent {
         super();
         if (url) this.url = url;
         if (type) this.type = type;
-    }
-
-    /**
-     * @override
-     */
-    _build() {
-        return this;
     }
 }

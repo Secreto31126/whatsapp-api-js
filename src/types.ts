@@ -191,17 +191,51 @@ export abstract class ContactComponent
     implements ClientTypedMessageComponent, ClientBuildableMessageComponent
 {
     /**
+     * @override
+     */
+    _build(): unknown {
+        return this;
+    }
+
+    /**
      * Whether the component can be repeated multiple times in a contact.
-     * Defaults to false.
      *
      * @internal
      */
-    get _many(): boolean {
+    abstract get _many(): boolean;
+    abstract get _type(): string;
+}
+
+/**
+ * A contact multiple component can be repeated multiple times in a contact.
+ *
+ * @internal
+ */
+export abstract class ContactMultipleComponent extends ContactComponent {
+    /**
+     * @override
+     */
+    get _many(): true {
+        return true;
+    }
+
+    abstract get _type(): string;
+}
+
+/**
+ * A contact unique component can only be used once in a contact.
+ *
+ * @internal
+ */
+export abstract class ContactUniqueComponent extends ContactComponent {
+    /**
+     * @override
+     */
+    get _many(): false {
         return false;
     }
 
     abstract get _type(): string;
-    abstract _build(): unknown;
 }
 
 export type ClientMessageNames =
