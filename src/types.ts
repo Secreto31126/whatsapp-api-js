@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
 
@@ -134,19 +132,21 @@ export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
 export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
     ExtraTypesThatMakeTypescriptWork;
 
-export interface ClientMessage {
+export abstract class ClientMessage {
     /**
      * The message type
      *
      * @internal
      */
-    get _type(): ClientMessageNames;
+    abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
      *
      * @internal
      */
-    _build(): string;
+    _build(): string {
+        return JSON.stringify(this);
+    }
 }
 
 export interface ClientTypedMessageComponent {
@@ -158,23 +158,84 @@ export interface ClientTypedMessageComponent {
     get _type(): string;
 }
 
-export interface ClientBuildableMessageComponent {
+export abstract class ClientBuildableMessageComponent {
     /**
      * The message's component builder method
      *
      * @internal
      */
-    _build(...data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _build(..._: unknown[]): unknown {
+        return this;
+    }
+}
+
+export abstract class ClientLimitedMessageComponent<T, N extends number> {
+    /**
+     * Throws an error if the array length is greater than the specified number.
+     *
+     * @param p - The parent component name
+     * @param c - The component name
+     * @param a - The array to check the length of
+     * @param n - The maximum length
+     */
+    constructor(p: string, c: string, a: Array<T>, n: N) {
+        if (a.length > n) {
+            throw new Error(`${p} can't have more than ${n} ${c}`);
+        }
+    }
 }
 
 // Somehow, Contacts still manages to be annoying
-export interface ContactComponent
-    extends ClientTypedMessageComponent,
-        ClientBuildableMessageComponent {
+export abstract class ContactComponent
+    implements ClientTypedMessageComponent, ClientBuildableMessageComponent
+{
     /**
-     * Whether the component can be repeated multiple times in a contact
+     * @override
      */
-    get _many(): boolean;
+    _build(): unknown {
+        return this;
+    }
+
+    /**
+     * Whether the component can be repeated multiple times in a contact.
+     *
+     * @internal
+     */
+    abstract get _many(): boolean;
+    abstract get _type(): string;
+}
+
+/**
+ * A contact multiple component can be repeated multiple times in a contact.
+ *
+ * @internal
+ */
+export abstract class ContactMultipleComponent extends ContactComponent {
+    /**
+     * @override
+     */
+    get _many(): true {
+        return true;
+    }
+
+    abstract get _type(): string;
+}
+
+/**
+ * A contact unique component can only be used once in a contact.
+ *
+ * @internal
+ */
+export abstract class ContactUniqueComponent extends ContactComponent {
+    /**
+     * @override
+     */
+    get _many(): false {
+        return false;
+    }
+
+    abstract get _type(): string;
 }
 
 export type ClientMessageNames =

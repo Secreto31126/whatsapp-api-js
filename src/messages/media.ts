@@ -1,11 +1,11 @@
-import type { ClientMessage, ClientMessageNames } from "../types";
+import { ClientMessage, type ClientMessageNames } from "../types.js";
 
 /**
  * Abstract class for all the media types
  *
  * @group Media
  */
-export abstract class Media implements ClientMessage {
+export abstract class Media extends ClientMessage {
     /**
      * The id of the media
      */
@@ -15,6 +15,9 @@ export abstract class Media implements ClientMessage {
      */
     readonly link?: string;
 
+    /**
+     * @override
+     */
     abstract get _type(): ClientMessageNames;
 
     /**
@@ -22,11 +25,8 @@ export abstract class Media implements ClientMessage {
      * @param isItAnID - If the file is an ID (true) or an URL (false)
      */
     constructor(file: string, isItAnID = false) {
+        super();
         this[isItAnID ? "id" : "link"] = file;
-    }
-
-    _build() {
-        return JSON.stringify(this);
     }
 }
 
@@ -36,6 +36,9 @@ export abstract class Media implements ClientMessage {
  * @group Media
  */
 export class Audio extends Media {
+    /**
+     * @override
+     */
     get _type(): "audio" {
         return "audio";
     }
@@ -66,6 +69,9 @@ export class Document extends Media {
      */
     readonly filename?: string;
 
+    /**
+     * @override
+     */
     get _type(): "document" {
         return "document";
     }
@@ -101,6 +107,9 @@ export class Image extends Media {
      */
     readonly caption?: string;
 
+    /**
+     * @override
+     */
     get _type(): "image" {
         return "image";
     }
@@ -124,6 +133,9 @@ export class Image extends Media {
  * @group Media
  */
 export class Sticker extends Media {
+    /**
+     * @override
+     */
     get _type(): "sticker" {
         return "sticker";
     }
@@ -150,6 +162,9 @@ export class Video extends Media {
      */
     readonly caption?: string;
 
+    /**
+     * @override
+     */
     get _type(): "video" {
         return "video";
     }

@@ -1,22 +1,31 @@
-import type { ClientMessage, ContactComponent } from "../types";
+import {
+    ClientMessage,
+    type ContactComponent,
+    ContactUniqueComponent,
+    ContactMultipleComponent
+} from "../types.js";
 import type { AtLeastOne } from "../utils";
 
+/**
+ * @group Contacts
+ */
 export type BuiltContact = {
     name: Name;
-    birthday?: string;
-    org?: Organization;
-    addresses?: Address[];
-    phones?: Phone[];
-    emails?: Email[];
-    urls?: Url[];
-};
+} & Partial<{
+    birthday: string;
+    org: Organization;
+    addresses: Address[];
+    phones: Phone[];
+    emails: Email[];
+    urls: Url[];
+}>;
 
 /**
  * Contacts API object
  *
  * @group Contacts
  */
-export class Contacts implements ClientMessage {
+export class Contacts extends ClientMessage {
     /**
      * The contacts of the message
      */
@@ -46,6 +55,8 @@ export class Contacts implements ClientMessage {
             >
         >
     ) {
+        super();
+
         this.component = [];
 
         for (const components of contact) {
@@ -61,16 +72,22 @@ export class Contacts implements ClientMessage {
                         });
                     }
 
-                    // TypeScript doesn't know that contact[name] is an array
                     const pointer = contact[name] as (typeof component)[];
-                    pointer.push(component._build());
+                    pointer.push(component._build() as ContactComponent);
                 } else {
                     if (name in contact)
                         throw new Error(
                             `Contact already has a ${name} component and _many is set to false`
                         );
 
-                    contact[name] = component._build();
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore - TS doesn't know that contact[name] will match the type of the built component
+                    contact[name] =
+                        // reduce ts-ignore impact
+                        component._build() as Exclude<
+                            (typeof contact)[keyof typeof contact],
+                            undefined
+                        >;
                 }
             }
 
@@ -81,6 +98,9 @@ export class Contacts implements ClientMessage {
         }
     }
 
+    /**
+     * @override
+     */
     _build() {
         return JSON.stringify(this.component);
     }
@@ -91,7 +111,7 @@ export class Contacts implements ClientMessage {
  *
  * @group Contacts
  */
-export class Address implements ContactComponent {
+export class Address extends ContactMultipleComponent {
     /**
      * The country of the address
      */
@@ -121,10 +141,9 @@ export class Address implements ContactComponent {
      */
     readonly type?: string;
 
-    get _many() {
-        return true;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "addresses" {
         return "addresses";
     }
@@ -150,6 +169,7 @@ export class Address implements ContactComponent {
         zip?: string,
         type?: string
     ) {
+        super();
         if (country) this.country = country;
         if (country_code) this.country_code = country_code;
         if (state) this.state = state;
@@ -158,10 +178,6 @@ export class Address implements ContactComponent {
         if (zip) this.zip = zip;
         if (type) this.type = type;
     }
-
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -169,16 +185,15 @@ export class Address implements ContactComponent {
  *
  * @group Contacts
  */
-export class Birthday implements ContactComponent {
+export class Birthday extends ContactUniqueComponent {
     /**
      * The birthday of the contact
      */
     readonly birthday: string;
 
-    get _many() {
-        return false;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "birthday" {
         return "birthday";
     }
@@ -189,15 +204,19 @@ export class Birthday implements ContactComponent {
      * @param year - Year of birth (YYYY)
      * @param month - Month of birth (MM)
      * @param day - Day of birth (DD)
-     * @throws If the year, month, or day don't have a valid length
+     * @throws If the year, month, or day doesn't have a valid length
      */
     constructor(year: string, month: string, day: string) {
+        super();
         if (year.length !== 4) throw new Error("Year must be 4 digits");
         if (month.length !== 2) throw new Error("Month must be 2 digits");
         if (day.length !== 2) throw new Error("Day must be 2 digits");
         this.birthday = `${year}-${month}-${day}`;
     }
 
+    /**
+     * @override
+     */
     _build() {
         return this.birthday;
     }
@@ -208,7 +227,7 @@ export class Birthday implements ContactComponent {
  *
  * @group Contacts
  */
-export class Email implements ContactComponent {
+export class Email extends ContactMultipleComponent {
     /**
      * The email of the contact
      */
@@ -218,10 +237,9 @@ export class Email implements ContactComponent {
      */
     readonly type?: string;
 
-    get _many() {
-        return true;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "emails" {
         return "emails";
     }
@@ -234,12 +252,9 @@ export class Email implements ContactComponent {
      * @param type - Email type. Standard Values: HOME, WORK
      */
     constructor(email?: string, type?: string) {
+        super();
         if (email) this.email = email;
         if (type) this.type = type;
-    }
-
-    _build() {
-        return this;
     }
 }
 
@@ -248,7 +263,7 @@ export class Email implements ContactComponent {
  *
  * @group Contacts
  */
-export class Name implements ContactComponent {
+export class Name extends ContactUniqueComponent {
     /**
      * The formatted name of the contact
      */
@@ -274,10 +289,9 @@ export class Name implements ContactComponent {
      */
     readonly prefix?: string;
 
-    get _many() {
-        return false;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "name" {
         return "name";
     }
@@ -302,6 +316,8 @@ export class Name implements ContactComponent {
         suffix?: string,
         prefix?: string
     ) {
+        super();
+
         this.formatted_name = formatted_name;
         if (first_name) this.first_name = first_name;
         if (last_name) this.last_name = last_name;
@@ -315,10 +331,6 @@ export class Name implements ContactComponent {
             );
         }
     }
-
-    _build() {
-        return this;
-    }
 }
 
 /**
@@ -326,7 +338,7 @@ export class Name implements ContactComponent {
  *
  * @group Contacts
  */
-export class Organization implements ContactComponent {
+export class Organization extends ContactUniqueComponent {
     /**
      * The company of the contact
      */
@@ -340,10 +352,9 @@ export class Organization implements ContactComponent {
      */
     readonly title?: string;
 
-    get _many() {
-        return false;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "org" {
         return "org";
     }
@@ -356,13 +367,10 @@ export class Organization implements ContactComponent {
      * @param title - Contact's business title
      */
     constructor(company?: string, department?: string, title?: string) {
+        super();
         if (company) this.company = company;
         if (department) this.department = department;
         if (title) this.title = title;
-    }
-
-    _build() {
-        return this;
     }
 }
 
@@ -371,7 +379,7 @@ export class Organization implements ContactComponent {
  *
  * @group Contacts
  */
-export class Phone implements ContactComponent {
+export class Phone extends ContactMultipleComponent {
     /**
      * The phone number of the contact
      */
@@ -385,10 +393,9 @@ export class Phone implements ContactComponent {
      */
     readonly wa_id?: string;
 
-    get _many() {
-        return true;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "phones" {
         return "phones";
     }
@@ -402,13 +409,10 @@ export class Phone implements ContactComponent {
      * @param wa_id - WhatsApp ID
      */
     constructor(phone?: string, type?: string, wa_id?: string) {
+        super();
         if (phone) this.phone = phone;
         if (type) this.type = type;
         if (wa_id) this.wa_id = wa_id;
-    }
-
-    _build() {
-        return this;
     }
 }
 
@@ -417,7 +421,7 @@ export class Phone implements ContactComponent {
  *
  * @group Contacts
  */
-export class Url implements ContactComponent {
+export class Url extends ContactMultipleComponent {
     /**
      * The URL of the contact
      */
@@ -427,10 +431,9 @@ export class Url implements ContactComponent {
      */
     readonly type?: string;
 
-    get _many() {
-        return true;
-    }
-
+    /**
+     * @override
+     */
     get _type(): "urls" {
         return "urls";
     }
@@ -443,11 +446,8 @@ export class Url implements ContactComponent {
      * @param type - URL type. Standard Values: HOME, WORK
      */
     constructor(url?: string, type?: string) {
+        super();
         if (url) this.url = url;
         if (type) this.type = type;
-    }
-
-    _build() {
-        return this;
     }
 }

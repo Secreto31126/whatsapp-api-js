@@ -1,11 +1,11 @@
-import type { ClientMessage } from "../types";
+import { ClientMessage } from "../types.js";
 
 /**
  * Text API object
  *
  * @group Text
  */
-export default class Text implements ClientMessage {
+export default class Text extends ClientMessage {
     /**
      * Body of the message. Maximum length: 4096 characters.
      */
@@ -27,13 +27,10 @@ export default class Text implements ClientMessage {
      * @throws If body is over 4096 characters
      */
     constructor(body: string, preview_url?: boolean) {
+        super();
         if (body.length > 4096)
             throw new Error("Text body must be less than 4096 characters");
         this.body = body;
         if (preview_url) this.preview_url = preview_url;
-    }
-
-    _build() {
-        return JSON.stringify(this);
     }
 }

@@ -1,4 +1,8 @@
-import type { ClientMessage, ClientTypedMessageComponent } from "../types";
+import {
+    ClientMessage,
+    ClientLimitedMessageComponent,
+    type ClientTypedMessageComponent
+} from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 import type { Document, Image, Video } from "./media";
@@ -8,7 +12,7 @@ import type { Document, Image, Video } from "./media";
  *
  * @group Interactive
  */
-export class Interactive implements ClientMessage {
+export class Interactive extends ClientMessage {
     /**
      * The action component of the interactive message
      */
@@ -34,6 +38,9 @@ export class Interactive implements ClientMessage {
      */
     readonly footer?: Footer;
 
+    /**
+     * @override
+     */
     get _type(): "interactive" {
         return "interactive";
     }
@@ -60,6 +67,8 @@ export class Interactive implements ClientMessage {
         header?: Header,
         footer?: Footer
     ) {
+        super();
+
         if (action._type !== "product" && !body)
             throw new Error("Interactive must have a body component");
         if (action._type === "product" && header)
@@ -79,10 +88,6 @@ export class Interactive implements ClientMessage {
         if (body) this.body = body;
         if (header) this.header = header;
         if (footer) this.footer = footer;
-    }
-
-    _build() {
-        return JSON.stringify(this);
     }
 }
 
@@ -194,12 +199,18 @@ export class Header {
  *
  * @group Interactive
  */
-export class ActionButtons implements ClientTypedMessageComponent {
+export class ActionButtons
+    extends ClientLimitedMessageComponent<Button, 3>
+    implements ClientTypedMessageComponent
+{
     /**
      * The buttons of the action
      */
     readonly buttons: Button[];
 
+    /**
+     * @override
+     */
     get _type(): "button" {
         return "button";
     }
@@ -213,8 +224,7 @@ export class ActionButtons implements ClientTypedMessageComponent {
      * @throws If two or more buttons have the same title
      */
     constructor(...button: AtLeastOne<Button>) {
-        if (button.length > 3)
-            throw new Error("Reply buttons must have between 1 and 3 buttons");
+        super("Reply buttons", "button", button, 3);
 
         // Find if there are duplicates in button.id
         const ids = button.map((b) => b[b.type].id);
@@ -284,7 +294,10 @@ export class Button {
  *
  * @group Interactive
  */
-export class ActionList implements ClientTypedMessageComponent {
+export class ActionList
+    extends ClientLimitedMessageComponent<ListSection, 10>
+    implements ClientTypedMessageComponent
+{
     /**
      * The button text
      */
@@ -294,6 +307,9 @@ export class ActionList implements ClientTypedMessageComponent {
      */
     readonly sections: ListSection[];
 
+    /**
+     * @override
+     */
     get _type(): "list" {
         return "list";
     }
@@ -309,10 +325,10 @@ export class ActionList implements ClientTypedMessageComponent {
      * @throws If more than 1 section is provided and at least one doesn't have a title
      */
     constructor(button: string, ...sections: AtLeastOne<ListSection>) {
+        super("Action", "sections", sections, 10);
+
         if (button.length > 20)
             throw new Error("Button content must be 20 characters or less");
-        if (sections.length > 10)
-            throw new Error("Action must have between 1 and 10 sections");
         if (sections.length > 1 && !sections.every((obj) => "title" in obj))
             throw new Error(
                 "All sections must have a title if more than 1 section is provided"
@@ -324,35 +340,79 @@ export class ActionList implements ClientTypedMessageComponent {
 }
 
 /**
- * Section API object
+ * Section API abstract object
  *
+ * All sections are structured the same way, so this abstract class is used to reduce code duplication
+ *
+ * @remarks
+ * - All sections must have between 1 and N elements
+ * - All sections must have a title if more than 1 section is provided
+ *
+ * @internal
  * @group Interactive
+ *
+ * @typeParam T - The type of the components of the section
+ * @typeParam N - The maximum number of elements in the section
  */
-export class ListSection {
-    /**
-     * The rows of the section
-     */
-    readonly rows: Row[];
+export abstract class Section<
+    T,
+    N extends number
+> extends ClientLimitedMessageComponent<T, N> {
     /**
      * The title of the section
      */
     readonly title?: string;
 
     /**
-     * Builds a section component for ActionList
+     * Builds a section component
+     *
+     * @param name - The name of the section's type
+     * @param keys_name - The name of the section's keys
+     * @param elements - The elements of the section
+     * @param max - The maximum number of elements in the section
+     * @param title - The title of the section
+     * @param title_length - The maximum length of the title
+     */
+    constructor(
+        name: string,
+        keys_name: string,
+        elements: AtLeastOne<T>,
+        max: N,
+        title?: string,
+        title_length = 24
+    ) {
+        super(name, keys_name, elements, max);
+
+        if (title && title.length > title_length)
+            throw new Error(
+                `${name} title must be ${title_length} characters or less`
+            );
+
+        if (title) this.title = title;
+    }
+}
+
+/**
+ * Section API object
+ *
+ * @group Interactive
+ */
+export class ListSection extends Section<Row, 10> {
+    /**
+     * The rows of the section
+     */
+    readonly rows: Row[];
+
+    /**
+     * Builds a list section component for ActionList
      *
      * @param title - Title of the section, only required if there are more than one section
-     * @param rows - Rows of the section
+     * @param rows - Rows of the list section
      * @throws If title is over 24 characters if provided
      * @throws If more than 10 rows are provided
      */
-    constructor(title: string, ...rows: AtLeastOne<Row>) {
-        if (title && title.length > 24)
-            throw new Error("Section title must be 24 characters or less");
-        if (!rows.length || rows.length > 10)
-            throw new Error("Section must have between 1 and 10 rows");
-
-        if (title) this.title = title;
+    constructor(title: string | undefined, ...rows: AtLeastOne<Row>) {
+        super("ListSection", "rows", rows, 10, title);
         this.rows = rows;
     }
 }
@@ -377,7 +437,7 @@ export class Row {
     readonly description?: string;
 
     /**
-     * Builds a row component for a Section
+     * Builds a row component for a ListSection
      *
      * @param id - The id of the row. Maximum length: 200 characters.
      * @param title - The title of the row. Maximum length: 24 characters.
@@ -401,7 +461,7 @@ export class Row {
 }
 
 // TS knowledge intensifies
-function isSections(obj: unknown[]): obj is ProductSection[] {
+function isProductSections(obj: unknown[]): obj is ProductSection[] {
     return obj[0] instanceof ProductSection;
 }
 
@@ -424,6 +484,9 @@ export class ActionCatalog implements ClientTypedMessageComponent {
      */
     readonly sections?: ProductSection[];
 
+    /**
+     * @override
+     */
     get _type(): "product" | "product_list" {
         return this.product_retailer_id ? "product" : "product_list";
     }
@@ -440,7 +503,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
         catalog_id: string,
         ...products: [Product] | AtLeastOne<ProductSection>
     ) {
-        const is_sections = isSections(products);
+        const is_sections = isProductSections(products);
 
         if (is_sections) {
             if (products.length > 1) {
@@ -470,11 +533,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
  *
  * @group Interactive
  */
-export class ProductSection {
-    /**
-     * The title of the section
-     */
-    readonly title?: string;
+export class ProductSection extends Section<Product, 30> {
     /**
      * The products of the section
      */
@@ -488,13 +547,8 @@ export class ProductSection {
      * @throws If title is over 24 characters if provided
      * @throws If more than 30 products are provided
      */
-    constructor(title: string, ...products: AtLeastOne<Product>) {
-        if (title && title.length > 24)
-            throw new Error("Section title must be 24 characters or less");
-        if (products.length > 30)
-            throw new Error("Section must have between 1 and 30 products");
-
-        if (title) this.title = title;
+    constructor(title: string | undefined, ...products: AtLeastOne<Product>) {
+        super("ProductSection", "products", products, 30, title);
         this.product_items = products;
     }
 }
