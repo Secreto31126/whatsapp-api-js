@@ -1,10 +1,10 @@
-import type { ClientMessage } from "../types";
+import { ClientMessage } from "../types.js";
 /**
  * Location API component
  *
  * @group Location
  */
-export default class Location implements ClientMessage {
+export default class Location extends ClientMessage {
     /**
      * The latitude of the location
      */
@@ -21,6 +21,9 @@ export default class Location implements ClientMessage {
      * The address of the location
      */
     readonly address?: string;
+    /**
+     * @override
+     */
     get _type(): "location";
     /**
      * Create a Location object for the API
@@ -31,6 +34,5 @@ export default class Location implements ClientMessage {
      * @param address - Address of the location, only displayed if name is present
      */
     constructor(longitude: number, latitude: number, name?: string, address?: string);
-    _build(): string;
 }
 //# sourceMappingURL=location.d.ts.map

@@ -1,20 +1,24 @@
-import type { ClientMessage, ContactComponent } from "../types";
+import { ClientMessage, type ContactComponent, ContactUniqueComponent, ContactMultipleComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
+/**
+ * @group Contacts
+ */
 export type BuiltContact = {
     name: Name;
-    birthday?: string;
-    org?: Organization;
-    addresses?: Address[];
-    phones?: Phone[];
-    emails?: Email[];
-    urls?: Url[];
-};
+} & Partial<{
+    birthday: string;
+    org: Organization;
+    addresses: Address[];
+    phones: Phone[];
+    emails: Email[];
+    urls: Url[];
+}>;
 /**
  * Contacts API object
  *
  * @group Contacts
  */
-export declare class Contacts implements ClientMessage {
+export declare class Contacts extends ClientMessage {
     /**
      * The contacts of the message
      */
@@ -27,6 +31,9 @@ export declare class Contacts implements ClientMessage {
      * @throws If contact contains multiple of the same components and _many is set to false (for example, Name, Birthday and Organization)
      */
     constructor(...contact: AtLeastOne<Array<Address | Birthday | Email | Name | Organization | Phone | Url | ContactComponent>>);
+    /**
+     * @override
+     */
     _build(): string;
 }
 /**
@@ -34,7 +41,7 @@ export declare class Contacts implements ClientMessage {
  *
  * @group Contacts
  */
-export declare class Address implements ContactComponent {
+export declare class Address extends ContactMultipleComponent {
     /**
      * The country of the address
      */
@@ -63,7 +70,9 @@ export declare class Address implements ContactComponent {
      * The type of the address
      */
     readonly type?: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "addresses";
     /**
      * Builds an address object for a contact.
@@ -78,19 +87,20 @@ export declare class Address implements ContactComponent {
      * @param type - Address type. Standard Values: HOME, WORK
      */
     constructor(country?: string, country_code?: string, state?: string, city?: string, street?: string, zip?: string, type?: string);
-    _build(): this;
 }
 /**
  * Birthday API object
  *
  * @group Contacts
  */
-export declare class Birthday implements ContactComponent {
+export declare class Birthday extends ContactUniqueComponent {
     /**
      * The birthday of the contact
      */
     readonly birthday: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "birthday";
     /**
      * Builds a birthday object for a contact
@@ -98,9 +108,12 @@ export declare class Birthday implements ContactComponent {
      * @param year - Year of birth (YYYY)
      * @param month - Month of birth (MM)
      * @param day - Day of birth (DD)
-     * @throws If the year, month, or day don't have a valid length
+     * @throws If the year, month, or day doesn't have a valid length
      */
     constructor(year: string, month: string, day: string);
+    /**
+     * @override
+     */
     _build(): string;
 }
 /**
@@ -108,7 +121,7 @@ export declare class Birthday implements ContactComponent {
  *
  * @group Contacts
  */
-export declare class Email implements ContactComponent {
+export declare class Email extends ContactMultipleComponent {
     /**
      * The email of the contact
      */
@@ -117,7 +130,9 @@ export declare class Email implements ContactComponent {
      * The type of the email
      */
     readonly type?: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "emails";
     /**
      * Builds an email object for a contact.
@@ -127,14 +142,13 @@ export declare class Email implements ContactComponent {
      * @param type - Email type. Standard Values: HOME, WORK
      */
     constructor(email?: string, type?: string);
-    _build(): this;
 }
 /**
  * Name API object
  *
  * @group Contacts
  */
-export declare class Name implements ContactComponent {
+export declare class Name extends ContactUniqueComponent {
     /**
      * The formatted name of the contact
      */
@@ -159,7 +173,9 @@ export declare class Name implements ContactComponent {
      * The prefix of the contact
      */
     readonly prefix?: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "name";
     /**
      * Builds a name object for a contact, required for contacts.
@@ -174,14 +190,13 @@ export declare class Name implements ContactComponent {
      * @throws If no other component apart from formatted_name is defined
      */
     constructor(formatted_name: string, first_name?: string, last_name?: string, middle_name?: string, suffix?: string, prefix?: string);
-    _build(): this;
 }
 /**
  * Organization API object
  *
  * @group Contacts
  */
-export declare class Organization implements ContactComponent {
+export declare class Organization extends ContactUniqueComponent {
     /**
      * The company of the contact
      */
@@ -194,7 +209,9 @@ export declare class Organization implements ContactComponent {
      * The title of the contact
      */
     readonly title?: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "org";
     /**
      * Builds an organization object for a contact
@@ -204,14 +221,13 @@ export declare class Organization implements ContactComponent {
      * @param title - Contact's business title
      */
     constructor(company?: string, department?: string, title?: string);
-    _build(): this;
 }
 /**
  * Phone API object
  *
  * @group Contacts
  */
-export declare class Phone implements ContactComponent {
+export declare class Phone extends ContactMultipleComponent {
     /**
      * The phone number of the contact
      */
@@ -224,7 +240,9 @@ export declare class Phone implements ContactComponent {
      * The WhatsApp ID of the contact
      */
     readonly wa_id?: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "phones";
     /**
      * Builds a phone object for a contact.
@@ -235,14 +253,13 @@ export declare class Phone implements ContactComponent {
      * @param wa_id - WhatsApp ID
      */
     constructor(phone?: string, type?: string, wa_id?: string);
-    _build(): this;
 }
 /**
  * Url API object
  *
  * @group Contacts
  */
-export declare class Url implements ContactComponent {
+export declare class Url extends ContactMultipleComponent {
     /**
      * The URL of the contact
      */
@@ -251,7 +268,9 @@ export declare class Url implements ContactComponent {
      * The type of the URL
      */
     readonly type?: string;
-    get _many(): boolean;
+    /**
+     * @override
+     */
     get _type(): "urls";
     /**
      * Builds an url object for a contact.
@@ -261,6 +280,5 @@ export declare class Url implements ContactComponent {
      * @param type - URL type. Standard Values: HOME, WORK
      */
     constructor(url?: string, type?: string);
-    _build(): this;
 }
 //# sourceMappingURL=contacts.d.ts.map

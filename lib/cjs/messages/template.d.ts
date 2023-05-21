@@ -1,7 +1,10 @@
-import type { ClientMessage, ClientBuildableMessageComponent, ClientTypedMessageComponent } from "../types";
+import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
+/**
+ * @group Template
+ */
 export type BuiltButtonComponent = {
     type: "button";
     sub_type: "url" | "quick_reply";
@@ -13,7 +16,7 @@ export type BuiltButtonComponent = {
  *
  * @group Template
  */
-export declare class Template implements ClientMessage {
+export declare class Template extends ClientMessage {
     /**
      * The name of the template
      */
@@ -26,6 +29,9 @@ export declare class Template implements ClientMessage {
      * The components of the template
      */
     readonly components?: (HeaderComponent | BodyComponent | BuiltButtonComponent)[];
+    /**
+     * @override
+     */
     get _type(): "template";
     /** @todo Find out if more than one of each component is allowed */
     /**
@@ -36,7 +42,6 @@ export declare class Template implements ClientMessage {
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
      */
     constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]);
-    _build(): string;
 }
 /**
  * Language API object
@@ -78,6 +83,9 @@ export declare class Currency implements ClientTypedMessageComponent {
      * The fallback value
      */
     readonly fallback_value: string;
+    /**
+     * @override
+     */
     get _type(): "currency";
     /**
      * Builds a currency object for a Parameter
@@ -99,6 +107,9 @@ export declare class DateTime implements ClientTypedMessageComponent {
      * The fallback value
      */
     readonly fallback_value: string;
+    /**
+     * @override
+     */
     get _type(): "date_time";
     /**
      * Builds a date_time object for a Parameter
@@ -112,7 +123,7 @@ export declare class DateTime implements ClientTypedMessageComponent {
  *
  * @group Template
  */
-export declare class ButtonComponent implements ClientBuildableMessageComponent {
+export declare class ButtonComponent extends ClientLimitedMessageComponent<string, 3> implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
@@ -135,6 +146,9 @@ export declare class ButtonComponent implements ClientBuildableMessageComponent 
      * @throws If parameters is over 3 elements
      */
     constructor(sub_type: "url" | "quick_reply", ...parameters: AtLeastOne<string>);
+    /**
+     * @override
+     */
     _build(): Array<BuiltButtonComponent>;
 }
 /**
@@ -183,6 +197,9 @@ export declare class HeaderComponent implements ClientBuildableMessageComponent 
      * @param parameters - Parameters of the body component
      */
     constructor(...parameters: AtLeastOne<HeaderParameter>);
+    /**
+     * @override
+     */
     _build(): this;
 }
 /**
@@ -255,6 +272,9 @@ export declare class BodyComponent implements ClientBuildableMessageComponent {
      * @param parameters - Parameters of the body component
      */
     constructor(...parameters: AtLeastOne<BodyParameter>);
+    /**
+     * @override
+     */
     _build(theres_only_body: boolean): this;
 }
 /**

@@ -1,8 +1,6 @@
 /// <reference types="node" />
-
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
-
 /**
  * The main constructor arguments for the API
  */
@@ -107,40 +105,33 @@ export type TheBasicConstructorArguments = {
         subtle?: typeof CryptoSubtle;
     };
 };
-
 /**
  * This switch allows TypeScript to cry if appSecret is not provided when secure is true.
  */
-export type SecureLightSwitch =
-    | {
-          secure?: true;
-          appSecret: string;
-      }
-    | {
-          secure: false;
-          appSecret?: never;
-      };
-
+export type SecureLightSwitch = {
+    secure?: true;
+    appSecret: string;
+} | {
+    secure: false;
+    appSecret?: never;
+};
 /**
  * Created this type if in the future the constructor needs more complex types.
  */
 export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
-
 /**
  * Monkey patching TypeDoc inability to handle complex types.
  *
  * You should absolutely read {@link TheBasicConstructorArguments} in order to use the framework.
  */
-export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
-    ExtraTypesThatMakeTypescriptWork;
-
-export interface ClientMessage {
+export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments & ExtraTypesThatMakeTypescriptWork;
+export declare abstract class ClientMessage {
     /**
      * The message type
      *
      * @internal
      */
-    get _type(): ClientMessageNames;
+    abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
      *
@@ -148,7 +139,6 @@ export interface ClientMessage {
      */
     _build(): string;
 }
-
 export interface ClientTypedMessageComponent {
     /**
      * The message's component type
@@ -157,120 +147,125 @@ export interface ClientTypedMessageComponent {
      */
     get _type(): string;
 }
-
-export interface ClientBuildableMessageComponent {
+export declare abstract class ClientBuildableMessageComponent {
     /**
      * The message's component builder method
      *
      * @internal
      */
-    _build(...data);
+    _build(..._: unknown[]): unknown;
 }
-
-// Somehow, Contacts still manages to be annoying
-export interface ContactComponent
-    extends ClientTypedMessageComponent,
-        ClientBuildableMessageComponent {
+export declare abstract class ClientLimitedMessageComponent<T, N extends number> {
     /**
-     * Whether the component can be repeated multiple times in a contact
+     * Throws an error if the array length is greater than the specified number.
+     *
+     * @param p - The parent component name
+     * @param c - The component name
+     * @param a - The array to check the length of
+     * @param n - The maximum length
      */
-    get _many(): boolean;
+    constructor(p: string, c: string, a: Array<T>, n: N);
 }
-
-export type ClientMessageNames =
-    | "text"
-    | "audio"
-    | "document"
-    | "image"
-    | "sticker"
-    | "video"
-    | "location"
-    | "contacts"
-    | "interactive"
-    | "template"
-    | "reaction";
-
-// #region Client Message Request
-
-export type ClientMessageRequest =
-    | {
-          /**
-           * The messaging product
-           */
-          messaging_product: "whatsapp";
-          /**
-           * The user's phone number
-           */
-          to: string;
-          /**
-           * Undocumented, optional (the framework doesn't use it)
-           */
-          recipient_type?: "individual";
-          /**
-           * The message to reply to
-           */
-          context?: {
-              /**
-               * The message id to reply to
-               */
-              message_id: string;
-          };
-      } & (
-          | {
-                type: "text";
-                text?: string;
-            }
-          | {
-                type: "audio";
-                audio?: string;
-            }
-          | {
-                type: "document";
-                document?: string;
-            }
-          | {
-                type: "image";
-                image?: string;
-            }
-          | {
-                type: "sticker";
-                sticker?: string;
-            }
-          | {
-                type: "video";
-                video?: string;
-            }
-          | {
-                type: "location";
-                location?: string;
-            }
-          | {
-                type: "contacts";
-                contacts?: string;
-            }
-          | {
-                type: "interactive";
-                interactive?: string;
-            }
-          | {
-                type: "template";
-                template?: string;
-            }
-          | {
-                type: "reaction";
-                reaction?: string;
-            }
-      );
-
-// #endregion
-
+export declare abstract class ContactComponent implements ClientTypedMessageComponent, ClientBuildableMessageComponent {
+    /**
+     * @override
+     */
+    _build(): unknown;
+    /**
+     * Whether the component can be repeated multiple times in a contact.
+     *
+     * @internal
+     */
+    abstract get _many(): boolean;
+    abstract get _type(): string;
+}
+/**
+ * A contact multiple component can be repeated multiple times in a contact.
+ *
+ * @internal
+ */
+export declare abstract class ContactMultipleComponent extends ContactComponent {
+    /**
+     * @override
+     */
+    get _many(): true;
+    abstract get _type(): string;
+}
+/**
+ * A contact unique component can only be used once in a contact.
+ *
+ * @internal
+ */
+export declare abstract class ContactUniqueComponent extends ContactComponent {
+    /**
+     * @override
+     */
+    get _many(): false;
+    abstract get _type(): string;
+}
+export type ClientMessageNames = "text" | "audio" | "document" | "image" | "sticker" | "video" | "location" | "contacts" | "interactive" | "template" | "reaction";
+export type ClientMessageRequest = {
+    /**
+     * The messaging product
+     */
+    messaging_product: "whatsapp";
+    /**
+     * The user's phone number
+     */
+    to: string;
+    /**
+     * Undocumented, optional (the framework doesn't use it)
+     */
+    recipient_type?: "individual";
+    /**
+     * The message to reply to
+     */
+    context?: {
+        /**
+         * The message id to reply to
+         */
+        message_id: string;
+    };
+} & ({
+    type: "text";
+    text?: string;
+} | {
+    type: "audio";
+    audio?: string;
+} | {
+    type: "document";
+    document?: string;
+} | {
+    type: "image";
+    image?: string;
+} | {
+    type: "sticker";
+    sticker?: string;
+} | {
+    type: "video";
+    video?: string;
+} | {
+    type: "location";
+    location?: string;
+} | {
+    type: "contacts";
+    contacts?: string;
+} | {
+    type: "interactive";
+    interactive?: string;
+} | {
+    type: "template";
+    template?: string;
+} | {
+    type: "reaction";
+    reaction?: string;
+});
 export type ServerTextMessage = {
     type: "text";
     text: {
         body: string;
     };
 };
-
 export type ServerAudioMessage = {
     type: "audio";
     audio: {
@@ -279,7 +274,6 @@ export type ServerAudioMessage = {
         id: string;
     };
 };
-
 export type ServerDocumentMessage = {
     type: "document";
     document: {
@@ -290,7 +284,6 @@ export type ServerDocumentMessage = {
         id: string;
     };
 };
-
 export type ServerImageMessage = {
     type: "image";
     image: {
@@ -300,7 +293,6 @@ export type ServerImageMessage = {
         id: string;
     };
 };
-
 export type ServerStickerMessage = {
     type: "sticker";
     sticker: {
@@ -310,7 +302,6 @@ export type ServerStickerMessage = {
         sha256: string;
     };
 };
-
 export type ServerVideoMessage = {
     type: "video";
     video: {
@@ -319,7 +310,6 @@ export type ServerVideoMessage = {
         id: string;
     };
 };
-
 export type ServerLocationMessage = {
     type: "location";
     location: {
@@ -329,7 +319,6 @@ export type ServerLocationMessage = {
         address?: string;
     };
 };
-
 export type ServerContactsMessage = {
     type: "contacts";
     contacts: [
@@ -381,29 +370,25 @@ export type ServerContactsMessage = {
         }
     ];
 };
-
 export type ServerInteractiveMessage = {
     type: "interactive";
-    interactive:
-        | {
-              type: "button_reply";
-              button_reply: {
-                  id: string;
-                  title: string;
-              };
-              list_reply: never;
-          }
-        | {
-              type: "list_reply";
-              list_reply: {
-                  id: string;
-                  title: string;
-                  description: string;
-              };
-              button_reply: never;
-          };
+    interactive: {
+        type: "button_reply";
+        button_reply: {
+            id: string;
+            title: string;
+        };
+        list_reply: never;
+    } | {
+        type: "list_reply";
+        list_reply: {
+            id: string;
+            title: string;
+            description: string;
+        };
+        button_reply: never;
+    };
 };
-
 export type ServerButtonMessage = {
     type: "button";
     button: {
@@ -411,7 +396,6 @@ export type ServerButtonMessage = {
         payload: string;
     };
 };
-
 export type ServerReactionMessage = {
     type: "reaction";
     reaction: {
@@ -419,7 +403,6 @@ export type ServerReactionMessage = {
         messsage_id: string;
     };
 };
-
 export type ServerOrderMessage = {
     type: "order";
     order: {
@@ -435,16 +418,14 @@ export type ServerOrderMessage = {
         text?: string;
     };
 };
-
 export type ServerSystemMessage = {
     type: "system";
     system: {
         body: string;
-        new_wa_id: number | string; // TODO: check if this is always a number
+        new_wa_id: number | string;
         type: string | "user_changed_number";
     };
 };
-
 export type ServerUnknownMessage = {
     type: "unknown";
     errors: [
@@ -455,22 +436,7 @@ export type ServerUnknownMessage = {
         }
     ];
 };
-
-export type ServerMessageTypes =
-    | ServerTextMessage
-    | ServerAudioMessage
-    | ServerDocumentMessage
-    | ServerImageMessage
-    | ServerStickerMessage
-    | ServerVideoMessage
-    | ServerLocationMessage
-    | ServerContactsMessage
-    | ServerInteractiveMessage
-    | ServerButtonMessage
-    | ServerReactionMessage
-    | ServerOrderMessage
-    | ServerUnknownMessage;
-
+export type ServerMessageTypes = ServerTextMessage | ServerAudioMessage | ServerDocumentMessage | ServerImageMessage | ServerStickerMessage | ServerVideoMessage | ServerLocationMessage | ServerContactsMessage | ServerInteractiveMessage | ServerButtonMessage | ServerReactionMessage | ServerOrderMessage | ServerUnknownMessage;
 export type ServerMessage = {
     from: string;
     id: string;
@@ -502,27 +468,19 @@ export type ServerMessage = {
         thumbnail_url: string;
     };
 } & ServerMessageTypes;
-
 export type ServerContacts = {
     profile: {
         name?: string;
     };
     wa_id: string;
 };
-
-export type ServerInitiation =
-    | "user_initiated"
-    | "business_initated"
-    | "referral_conversion";
-
+export type ServerInitiation = "user_initiated" | "business_initated" | "referral_conversion";
 export type ServerStatus = "sent" | "delivered" | "read" | "failed" | "deleted";
-
 export type ServerPricing = {
     pricing_model: "CBP";
     billable: boolean;
     category: ServerInitiation;
 };
-
 export type ServerConversation = {
     id: string;
     expiration_timestamp: number;
@@ -530,62 +488,51 @@ export type ServerConversation = {
         type: ServerInitiation;
     };
 };
-
 export type ServerError = {
     code: string;
     title: string;
 };
-
 export type GetParams = {
     "hub.mode": "subscribe";
     "hub.verify_token": string;
     "hub.challenge": string;
 };
-
 export type PostData = {
     object: "whatsapp_business_account";
     entry: {
         id: string;
         changes: {
-            value:
-                | {
-                      messaging_product: "whatsapp";
-                      metadata: {
-                          display_phone_number: string;
-                          phone_number_id: string;
-                      };
-                  } & (
-                      | {
-                            contacts: [ServerContacts];
-                            messages: [ServerMessage];
-                        }
-                      | {
-                            statuses: [
-                                {
-                                    id: string;
-                                    status: ServerStatus;
-                                    timestamp: string;
-                                    recipient_id: string;
-                                } & (
-                                    | {
-                                          conversation: ServerConversation;
-                                          pricing: ServerPricing;
-                                          errors: undefined;
-                                      }
-                                    | {
-                                          conversation: undefined;
-                                          pricing: undefined;
-                                          errors: [ServerError];
-                                      }
-                                )
-                            ];
-                        }
-                  );
+            value: {
+                messaging_product: "whatsapp";
+                metadata: {
+                    display_phone_number: string;
+                    phone_number_id: string;
+                };
+            } & ({
+                contacts: [ServerContacts];
+                messages: [ServerMessage];
+            } | {
+                statuses: [
+                    {
+                        id: string;
+                        status: ServerStatus;
+                        timestamp: string;
+                        recipient_id: string;
+                    } & ({
+                        conversation: ServerConversation;
+                        pricing: ServerPricing;
+                        errors: undefined;
+                    } | {
+                        conversation: undefined;
+                        pricing: undefined;
+                        errors: [ServerError];
+                    })
+                ];
+            });
             field: "messages";
         }[];
     }[];
 };
-
 /**
  * @see https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes
  */
@@ -602,11 +549,9 @@ export type ServerErrorResponse = {
         fbtrace_id: string;
     };
 };
-
 export type ServerSuccessResponse = {
     success: true;
 };
-
 export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
     contacts: [
@@ -621,72 +566,31 @@ export type ServerSentMessageResponse = {
         }
     ];
 };
-
-export type ServerMessageResponse =
-    | ServerSentMessageResponse
-    | ServerErrorResponse;
-
-export type ServerMarkAsReadResponse =
-    | ServerSuccessResponse
-    | ServerErrorResponse;
-
+export type ServerMessageResponse = ServerSentMessageResponse | ServerErrorResponse;
+export type ServerMarkAsReadResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerQR = {
     code: string;
     prefilled_message: string;
     deep_link_url: string;
     qr_image_url?: string;
 };
-
 export type ServerCreateQRResponse = ServerQR | ServerErrorResponse;
-
-export type ServerRetrieveQRResponse =
-    | {
-          data: ServerQR[];
-      }
-    | ServerErrorResponse;
-
+export type ServerRetrieveQRResponse = {
+    data: ServerQR[];
+} | ServerErrorResponse;
 export type ServerUpdateQRResponse = ServerQR | ServerErrorResponse;
-
-export type ServerDeleteQRResponse =
-    | ServerSuccessResponse
-    | ServerErrorResponse;
-
+export type ServerDeleteQRResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerMedia = {
     id: string;
 };
-
 export type ServerMediaUploadResponse = ServerMedia | ServerErrorResponse;
-
-export type ValidMimeTypes =
-    | "audio/aac"
-    | "audio/mp4"
-    | "audio/mpeg"
-    | "audio/amr"
-    | "audio/ogg"
-    | "text/plain"
-    | "application/pdf"
-    | "application/vnd.ms-powerpoint"
-    | "application/msword"
-    | "application/vnd.ms-excel"
-    | "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    | "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-    | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    | "image/jpeg"
-    | "image/png"
-    | "video/mp4"
-    | "video/3gp"
-    | "image/webp";
-
-export type ServerMediaRetrieveResponse =
-    | ({
-          messaging_product: "whatsapp";
-          url: string;
-          mime_type: ValidMimeTypes;
-          sha256: string;
-          file_size: string;
-      } & ServerMedia)
-    | ServerErrorResponse;
-
-export type ServerMediaDeleteResponse =
-    | ServerSuccessResponse
-    | ServerErrorResponse;
+export type ValidMimeTypes = "audio/aac" | "audio/mp4" | "audio/mpeg" | "audio/amr" | "audio/ogg" | "text/plain" | "application/pdf" | "application/vnd.ms-powerpoint" | "application/msword" | "application/vnd.ms-excel" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/vnd.openxmlformats-officedocument.presentationml.presentation" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" | "image/jpeg" | "image/png" | "video/mp4" | "video/3gp" | "image/webp";
+export type ServerMediaRetrieveResponse = ({
+    messaging_product: "whatsapp";
+    url: string;
+    mime_type: ValidMimeTypes;
+    sha256: string;
+    file_size: string;
+} & ServerMedia) | ServerErrorResponse;
+export type ServerMediaDeleteResponse = ServerSuccessResponse | ServerErrorResponse;
+//# sourceMappingURL=types.d.ts.map

@@ -1,10 +1,10 @@
-import type { ClientMessage, ClientMessageNames } from "../types";
+import { ClientMessage, type ClientMessageNames } from "../types.js";
 /**
  * Abstract class for all the media types
  *
  * @group Media
  */
-export declare abstract class Media implements ClientMessage {
+export declare abstract class Media extends ClientMessage {
     /**
      * The id of the media
      */
@@ -13,13 +13,15 @@ export declare abstract class Media implements ClientMessage {
      * The link of the media
      */
     readonly link?: string;
+    /**
+     * @override
+     */
     abstract get _type(): ClientMessageNames;
     /**
      * @param file - File to be sent
      * @param isItAnID - If the file is an ID (true) or an URL (false)
      */
     constructor(file: string, isItAnID?: boolean);
-    _build(): string;
 }
 /**
  * Audio API component
@@ -27,6 +29,9 @@ export declare abstract class Media implements ClientMessage {
  * @group Media
  */
 export declare class Audio extends Media {
+    /**
+     * @override
+     */
     get _type(): "audio";
     /**
      * Create an Audio object for the API
@@ -50,6 +55,9 @@ export declare class Document extends Media {
      * The file's filename
      */
     readonly filename?: string;
+    /**
+     * @override
+     */
     get _type(): "document";
     /**
      * Create a Document object for the API
@@ -71,6 +79,9 @@ export declare class Image extends Media {
      * The file's caption
      */
     readonly caption?: string;
+    /**
+     * @override
+     */
     get _type(): "image";
     /**
      * Create a Image object for the API
@@ -87,6 +98,9 @@ export declare class Image extends Media {
  * @group Media
  */
 export declare class Sticker extends Media {
+    /**
+     * @override
+     */
     get _type(): "sticker";
     /**
      * Create a Sticker object for the API
@@ -106,6 +120,9 @@ export declare class Video extends Media {
      * The file's caption
      */
     readonly caption?: string;
+    /**
+     * @override
+     */
     get _type(): "video";
     /**
      * Create a Video object for the API

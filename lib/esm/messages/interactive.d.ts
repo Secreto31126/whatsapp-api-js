@@ -1,4 +1,4 @@
-import type { ClientMessage, ClientTypedMessageComponent } from "../types";
+import { ClientMessage, ClientLimitedMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 import type { Document, Image, Video } from "./media";
 /**
@@ -6,7 +6,7 @@ import type { Document, Image, Video } from "./media";
  *
  * @group Interactive
  */
-export declare class Interactive implements ClientMessage {
+export declare class Interactive extends ClientMessage {
     /**
      * The action component of the interactive message
      */
@@ -27,6 +27,9 @@ export declare class Interactive implements ClientMessage {
      * The footer component of the interactive message
      */
     readonly footer?: Footer;
+    /**
+     * @override
+     */
     get _type(): "interactive";
     /**
      * Create an Interactive object for the API
@@ -41,7 +44,6 @@ export declare class Interactive implements ClientMessage {
      * @throws If header is not of type text, unless action is an ActionButtons
      */
     constructor(action: ActionList | ActionButtons | ActionCatalog | ClientTypedMessageComponent, body?: Body, header?: Header, footer?: Footer);
-    _build(): string;
 }
 /**
  * Body API object
@@ -119,11 +121,14 @@ export declare class Header {
  *
  * @group Interactive
  */
-export declare class ActionButtons implements ClientTypedMessageComponent {
+export declare class ActionButtons extends ClientLimitedMessageComponent<Button, 3> implements ClientTypedMessageComponent {
     /**
      * The buttons of the action
      */
     readonly buttons: Button[];
+    /**
+     * @override
+     */
     get _type(): "button";
     /**
      * Builds a reply buttons component for an Interactive message
@@ -174,7 +179,7 @@ export declare class Button {
  *
  * @group Interactive
  */
-export declare class ActionList implements ClientTypedMessageComponent {
+export declare class ActionList extends ClientLimitedMessageComponent<ListSection, 10> implements ClientTypedMessageComponent {
     /**
      * The button text
      */
@@ -183,6 +188,9 @@ export declare class ActionList implements ClientTypedMessageComponent {
      * The sections of the action
      */
     readonly sections: ListSection[];
+    /**
+     * @override
+     */
     get _type(): "list";
     /**
      * Builds an action component for an Interactive message
@@ -197,28 +205,56 @@ export declare class ActionList implements ClientTypedMessageComponent {
     constructor(button: string, ...sections: AtLeastOne<ListSection>);
 }
 /**
- * Section API object
+ * Section API abstract object
  *
+ * All sections are structured the same way, so this abstract class is used to reduce code duplication
+ *
+ * @remarks
+ * - All sections must have between 1 and N elements
+ * - All sections must have a title if more than 1 section is provided
+ *
+ * @internal
  * @group Interactive
+ *
+ * @typeParam T - The type of the components of the section
+ * @typeParam N - The maximum number of elements in the section
  */
-export declare class ListSection {
-    /**
-     * The rows of the section
-     */
-    readonly rows: Row[];
+export declare abstract class Section<T, N extends number> extends ClientLimitedMessageComponent<T, N> {
     /**
      * The title of the section
      */
     readonly title?: string;
     /**
-     * Builds a section component for ActionList
+     * Builds a section component
+     *
+     * @param name - The name of the section's type
+     * @param keys_name - The name of the section's keys
+     * @param elements - The elements of the section
+     * @param max - The maximum number of elements in the section
+     * @param title - The title of the section
+     * @param title_length - The maximum length of the title
+     */
+    constructor(name: string, keys_name: string, elements: AtLeastOne<T>, max: N, title?: string, title_length?: number);
+}
+/**
+ * Section API object
+ *
+ * @group Interactive
+ */
+export declare class ListSection extends Section<Row, 10> {
+    /**
+     * The rows of the section
+     */
+    readonly rows: Row[];
+    /**
+     * Builds a list section component for ActionList
      *
      * @param title - Title of the section, only required if there are more than one section
-     * @param rows - Rows of the section
+     * @param rows - Rows of the list section
      * @throws If title is over 24 characters if provided
      * @throws If more than 10 rows are provided
      */
-    constructor(title: string, ...rows: AtLeastOne<Row>);
+    constructor(title: string | undefined, ...rows: AtLeastOne<Row>);
 }
 /**
  * Row API object
@@ -239,7 +275,7 @@ export declare class Row {
      */
     readonly description?: string;
     /**
-     * Builds a row component for a Section
+     * Builds a row component for a ListSection
      *
      * @param id - The id of the row. Maximum length: 200 characters.
      * @param title - The title of the row. Maximum length: 24 characters.
@@ -268,6 +304,9 @@ export declare class ActionCatalog implements ClientTypedMessageComponent {
      * The section to be added to the catalog
      */
     readonly sections?: ProductSection[];
+    /**
+     * @override
+     */
     get _type(): "product" | "product_list";
     /**
      * Builds a catalog component for an Interactive message
@@ -284,11 +323,7 @@ export declare class ActionCatalog implements ClientTypedMessageComponent {
  *
  * @group Interactive
  */
-export declare class ProductSection {
-    /**
-     * The title of the section
-     */
-    readonly title?: string;
+export declare class ProductSection extends Section<Product, 30> {
     /**
      * The products of the section
      */
@@ -301,7 +336,7 @@ export declare class ProductSection {
      * @throws If title is over 24 characters if provided
      * @throws If more than 30 products are provided
      */
-    constructor(title: string, ...products: AtLeastOne<Product>);
+    constructor(title: string | undefined, ...products: AtLeastOne<Product>);
 }
 /**
  * Product API object
