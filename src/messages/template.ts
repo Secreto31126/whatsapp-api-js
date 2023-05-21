@@ -1,6 +1,6 @@
 import {
     ClientMessage,
-    ClientLimitedComponent,
+    ClientLimitedMessageComponent,
     type ClientBuildableMessageComponent,
     type ClientTypedMessageComponent
 } from "../types.js";
@@ -183,7 +183,7 @@ export class DateTime implements ClientTypedMessageComponent {
  * @group Template
  */
 export class ButtonComponent
-    extends ClientLimitedComponent<string, 3>
+    extends ClientLimitedMessageComponent<string, 3>
     implements ClientBuildableMessageComponent
 {
     /**

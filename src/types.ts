@@ -172,7 +172,7 @@ export abstract class ClientBuildableMessageComponent {
     }
 }
 
-export abstract class ClientLimitedComponent<T, N extends number> {
+export abstract class ClientLimitedMessageComponent<T, N extends number> {
     /**
      * Throws an error if the array length is greater than the specified number.
      *

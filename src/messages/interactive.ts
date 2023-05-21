@@ -1,6 +1,6 @@
 import {
-    ClientLimitedComponent,
     ClientMessage,
+    ClientLimitedMessageComponent,
     type ClientTypedMessageComponent
 } from "../types.js";
 import type { AtLeastOne } from "../utils";
@@ -200,7 +200,7 @@ export class Header {
  * @group Interactive
  */
 export class ActionButtons
-    extends ClientLimitedComponent<Button, 3>
+    extends ClientLimitedMessageComponent<Button, 3>
     implements ClientTypedMessageComponent
 {
     /**
@@ -295,7 +295,7 @@ export class Button {
  * @group Interactive
  */
 export class ActionList
-    extends ClientLimitedComponent<ListSection, 10>
+    extends ClientLimitedMessageComponent<ListSection, 10>
     implements ClientTypedMessageComponent
 {
     /**
@@ -357,7 +357,7 @@ export class ActionList
 export abstract class Section<
     T,
     N extends number
-> extends ClientLimitedComponent<T, N> {
+> extends ClientLimitedMessageComponent<T, N> {
     /**
      * The title of the section
      */
