@@ -1,0 +1,41 @@
+# Main
+
+## Simple Whatsapp creation
+
+```ts
+import WhatsAppAPI from "whatsapp-api-js";
+
+const Whatsapp = new WhatsAppAPI({
+    token: "",
+    appSecret: ""
+});
+```
+
+## Using the setup helpers
+
+```ts
+import WhatsAppAPI from "whatsapp-api-js";
+import { Node18 } from "whatsapp-api-js/setup/node";
+
+const Whatsapp = WhatsAppAPI(
+    Node18({
+        token: "",
+        appSecret: ""
+    })
+);
+```
+
+## Sending a message
+
+```ts
+import { Text } from "whatsapp-api-js";
+
+const text_message = new Text("Hello world!");
+
+Whatsapp.sendMessage("from (bot phoneID)", "to (phone number/wa_id)", text_message);
+```
+
+## Documentation
+
+https://whatsappapijs.web.app/classes/WhatsAppAPI.default.html
+https://whatsappapijs.web.app/modules/setup.html
