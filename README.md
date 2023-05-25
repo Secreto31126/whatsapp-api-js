@@ -119,6 +119,13 @@ And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 For more information on the setup process for specific enviroments, check out the
 [Enviroments.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/ENVIROMENTS.md).
 
+## Examples and Tutorials
+
+There are a few examples that cover how to create each type of message,
+and how to use the basic methods of the library.
+
+Check them out in the [examples folder](https://github.com/Secreto31126/whatsapp-api-js/blob/main/EXAMPLES/).
+
 ## Changelog
 
 To know what changed between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
