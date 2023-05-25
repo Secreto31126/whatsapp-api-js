@@ -23,9 +23,17 @@
       "import": "./lib/esm/messages/index.js",
       "require": "./lib/cjs/messages/index.js"
     },
-    "./*": {
-      "import": "./lib/esm/*.js",
-      "require": "./lib/cjs/*.js"
+    "./setup/*": {
+      "import": "./lib/esm/setup/*.js",
+      "require": "./lib/cjs/setup/*.js"
+    },
+    "./emitters": {
+      "import": "./lib/esm/emitters.d.ts",
+      "require": "./lib/cjs/emitters.d.ts"
+    },
+    "./types": {
+      "import": "./lib/esm/types.js",
+      "require": "./lib/cjs/types.js"
     }
   },
   "scripts": {
