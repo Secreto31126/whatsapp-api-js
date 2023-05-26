@@ -271,6 +271,7 @@ export class Button {
      * @param title - Button title. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
      * @throws If id is over 256 characters
      * @throws If id is malformed
+     * @throws If title is an empty string
      * @throws If title is over 20 characters
      */
     constructor(id: string, title: string) {
@@ -278,6 +279,8 @@ export class Button {
             throw new Error("Button id must be 256 characters or less");
         if (/^ | $/.test(id))
             throw new Error("Button id cannot have leading or trailing spaces");
+        if (!title.length)
+            throw new Error("Button title cannot be an empty string");
         if (title.length > 20)
             throw new Error("Button title must be 20 characters or less");
 
@@ -320,6 +323,7 @@ export class ActionList
      *
      * @param button - Button content. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
      * @param sections - Sections of the list
+     * @throws If button is an empty string
      * @throws If button is over 20 characters
      * @throws If more than 10 sections are provided
      * @throws If more than 1 section is provided and at least one doesn't have a title
@@ -327,6 +331,8 @@ export class ActionList
     constructor(button: string, ...sections: AtLeastOne<ListSection>) {
         super("Action", "sections", sections, 10);
 
+        if (!button.length)
+            throw new Error("Button content cannot be an empty string");
         if (button.length > 20)
             throw new Error("Button content must be 20 characters or less");
         if (sections.length > 1 && !sections.every((obj) => "title" in obj))
