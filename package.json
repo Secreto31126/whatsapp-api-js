@@ -25,6 +25,12 @@
       "import": "./lib/esm/messages/index.js",
       "require": "./lib/cjs/messages/index.js"
     },
+    "./messages/*": {
+      "types": "./lib/types/messages/*.d.ts",
+      "import": "./lib/esm/messages/*.js",
+      "require": "./lib/cjs/messages/*.js"
+    },
+    "./setup": null,
     "./setup/*": {
       "types": "./lib/types/setup/*.d.ts",
       "import": "./lib/esm/setup/*.js",
