@@ -1,6 +1,7 @@
 name: Deploy alpha release to GitHub
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -11,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+
       - uses: actions/setup-node@v3
         with:
           node-version: 18
