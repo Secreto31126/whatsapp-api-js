@@ -11,29 +11,71 @@
   "files": [
     "lib/**/*"
   ],
-  "types": "lib/esm/index.d.ts",
+  "types": "lib/types/index.d.ts",
   "module": "lib/esm/index.js",
   "main": "lib/cjs/index.js",
   "exports": {
     ".": {
+      "types": "./lib/types/index.d.ts",
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
     },
     "./messages": {
+      "types": "./lib/types/messages/index.d.ts",
       "import": "./lib/esm/messages/index.js",
       "require": "./lib/cjs/messages/index.js"
     },
-    "./*": {
-      "import": "./lib/esm/*.js",
-      "require": "./lib/cjs/*.js"
+    "./messages/*": {
+      "types": "./lib/types/messages/*.d.ts",
+      "import": "./lib/esm/messages/*.js",
+      "require": "./lib/cjs/messages/*.js"
+    },
+    "./setup": null,
+    "./setup/index": null,
+    "./setup/*": {
+      "types": "./lib/types/setup/*.d.ts",
+      "import": "./lib/esm/setup/*.js",
+      "require": "./lib/cjs/setup/*.js"
+    },
+    "./emitters": {
+      "types": "./lib/types/emitters.d.ts"
+    },
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "import": "./lib/esm/types.js",
+      "require": "./lib/cjs/types.js"
+    }
+  },
+  "//": "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
+  "//": "Without this, IntelliSense will throw an error when importing subpaths ONLY on JS files, although it does run fine with Node.",
+  "//": "Even more stunishing: if included, IntelliSense works even BETTER than with TS.",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "lib/types/index.d.ts"
+      ],
+      "messages": [
+        "lib/types/messages/index.d.ts"
+      ],
+      "messages/*": [
+        "lib/types/messages/*.d.ts"
+      ],
+      "setup/index": [],
+      "setup/*": [
+        "lib/types/setup/*.d.ts"
+      ],
+      "emitters": [
+        "lib/types/emitters.d.ts"
+      ],
+      "types": [
+        "lib/types/types.d.ts"
+      ]
     }
   },
   "scripts": {
     "build": "npm run build:code && npm run build:types",
     "build:code": "node -r dotenv/config build.js",
-    "build:types": "npm run build:types:esm && npm run build:types:cjs",
-    "build:types:esm": "tsc --outDir ./lib/esm && cp ./src/*.d.ts ./lib/esm",
-    "build:types:cjs": "tsc --outDir ./lib/cjs && cp ./src/*.d.ts ./lib/cjs",
+    "build:types": "tsc && cp ./src/*.d.ts ./lib/types",
     "test": "mocha",
     "test:build": "npm run build && npm run test",
     "test:watch": "mocha --reporter min --watch",

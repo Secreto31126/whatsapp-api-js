@@ -19,6 +19,7 @@ const sharedConfig = {
 // ESM
 await build({
     ...sharedConfig,
+    format: "esm",
     outdir: "lib/esm"
 });
 
