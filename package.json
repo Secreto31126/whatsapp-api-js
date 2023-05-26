@@ -11,30 +11,27 @@
   "files": [
     "lib/**/*"
   ],
-  "types": "lib/types/index.d.ts",
+  "types": "lib/esm/index.d.ts",
   "module": "lib/esm/index.js",
   "main": "lib/cjs/index.js",
   "exports": {
     ".": {
-      "types": "./lib/types/index.d.ts",
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
     },
     "./messages": {
-      "types": "./lib/types/messages/index.d.ts",
       "import": "./lib/esm/messages/index.js",
       "require": "./lib/cjs/messages/index.js"
     },
     "./setup/*": {
-      "types": "./lib/types/setup/*.d.ts",
       "import": "./lib/esm/setup/*.js",
       "require": "./lib/cjs/setup/*.js"
     },
     "./emitters": {
-      "types": "./lib/types/emitters.d.ts"
+      "import": "./lib/esm/emitters.d.ts",
+      "require": "./lib/cjs/emitters.d.ts"
     },
     "./types": {
-      "types": "./lib/types/types.d.ts",
       "import": "./lib/esm/types.js",
       "require": "./lib/cjs/types.js"
     }
@@ -42,7 +39,9 @@
   "scripts": {
     "build": "npm run build:code && npm run build:types",
     "build:code": "node -r dotenv/config build.js",
-    "build:types": "tsc && cp ./src/*.d.ts ./lib/types",
+    "build:types": "npm run build:types:esm && npm run build:types:cjs",
+    "build:types:esm": "tsc --outDir ./lib/esm && cp ./src/*.d.ts ./lib/esm",
+    "build:types:cjs": "tsc --outDir ./lib/cjs && cp ./src/*.d.ts ./lib/cjs",
     "test": "mocha",
     "test:build": "npm run build && npm run test",
     "test:watch": "mocha --reporter min --watch",
