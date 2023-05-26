@@ -31,6 +31,7 @@
       "require": "./lib/cjs/messages/*.js"
     },
     "./setup": null,
+    "./setup/index": null,
     "./setup/*": {
       "types": "./lib/types/setup/*.d.ts",
       "import": "./lib/esm/setup/*.js",
@@ -59,6 +60,7 @@
       "messages/*": [
         "lib/types/messages/*.d.ts"
       ],
+      "setup/index": [],
       "setup/*": [
         "lib/types/setup/*.d.ts"
       ],
