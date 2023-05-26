@@ -2,11 +2,6 @@ name: Deploy alpha release to GitHub
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to build'
-        default: 'main'
-        type: string
   push:
     branches:
       - main
@@ -18,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ inputs.branch || 'main' }}
+          ref: ${{ github.ref }}
 
       - uses: actions/setup-node@v3
         with:
