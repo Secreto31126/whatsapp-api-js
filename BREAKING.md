@@ -126,7 +126,7 @@ const Whatsapp = new WhatsAppAPI({
 This change also restores the compatibility with previous Node.js versions, making the module more server agnostic.
 
 There had been some minor changes to the messages classes, although the most noticeable one is the reduction of the
-Text class usage internally, replaced by normal strings.
+Text class usage across classes, replaced by normal strings.
 
 ## 0.8.0
 
