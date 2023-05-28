@@ -48,17 +48,17 @@ const Whatsapp = new WhatsAppAPI(
 );
 ```
 
-- Node 12 to 17:
+- Node 15 to 17:
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
-import { Node12 } from "whatsapp-api-js/setup/node";
+import { Node15 } from "whatsapp-api-js/setup/node";
 
 // As fetch isn't available until Node 18, you will need to pass a ponyfill as a parameter
 import fetch from "node-fetch"; // or any other fetch implementation
 
 const Whatsapp = new WhatsAppAPI(
-    Node12({
+    Node15({
         token: "123",
         appSecret: "123",
     }, fetch)
