@@ -113,6 +113,7 @@ playground.[cm][tj]s
 # Documentation
 docs_temp/
 docs/
+index.html
 
 # Builds
 lib/
