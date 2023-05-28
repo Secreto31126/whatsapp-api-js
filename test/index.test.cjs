@@ -22,7 +22,7 @@ const {
     FormData
 } = require("undici");
 const { Blob } = require("node:buffer");
-const { subtle } = require("node:crypto");
+const { subtle } = require("node:crypto").webcrypto; // Assert available in node 16.0.0
 
 setGlobalDispatcher(agent);
 
