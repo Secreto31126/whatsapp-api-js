@@ -142,7 +142,6 @@ export declare class ButtonComponent extends ClientLimitedMessageComponent<strin
      *
      * @param sub_type - The type of button to create.
      * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
-     * @throws If sub_type is not either 'url' or 'quick_reply'
      * @throws If parameters is over 3 elements
      */
     constructor(sub_type: "url" | "quick_reply", ...parameters: AtLeastOne<string>);

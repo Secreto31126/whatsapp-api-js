@@ -2,8 +2,6 @@
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
-#### Hey, I'm not interested in your "v1" "beta" thing! Take me to the [v0 README.md](https://github.com/Secreto31126/whatsapp-api-js/tree/0.8.2#readme)
-
 A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
@@ -46,7 +44,7 @@ function post(e) {
     return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 
-Whatsapp.on.message = ({ phoneID, from, message, name, raw }) => {
+Whatsapp.on.message = ({ phoneID, from, message, name }) => {
     console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
     let promise;
@@ -89,9 +87,11 @@ Whatsapp.on.sent = ({ phoneID, to, message, raw }) => {
 ```
 
 To recieve the post requests on message, you must setup the webhook at your Facebook app.
-While setting up, you will be asked a Verify Token. This can be any string you want.
 
-The app also has a GET wizard for the webhook authentication:
+Back in the dashboard, click on WhatsApp > Settings, and setup the webhook URL.
+While setting it up, you will be asked for a Verify Token. This can be any string you want.
+
+The package also has a GET wizard for the webhook authentication:
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
@@ -112,8 +112,7 @@ function get(e) {
 }
 ```
 
-Once you are done, click administrate, and set the webhook to subscribe to messages only.
-There might be a future update to support the other types of subscriptions.
+Once you are done, click the administrate button, and subscribe to the messages event.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
 For more information on the setup process for specific enviroments, check out the
@@ -126,6 +125,15 @@ and how to use the basic methods of the library.
 
 Check them out in the [examples folder](https://github.com/Secreto31126/whatsapp-api-js/blob/main/EXAMPLES/).
 
+## Types
+
+The library is fully typed. Most types are available by importing /types or /emitters :
+
+```ts
+import { GetParams, PostData } from "whatsapp-api-js/types";
+import { OnMessage, OnSent, OnStatus } from "whatsapp-api-js/emitters";
+```
+
 ## Changelog
 
 To know what changed between updates, check out the [releases on Github](https://github.com/Secreto31126/whatsapp-api-js/releases).
@@ -137,7 +145,8 @@ and previous versions are available in [secreto31126.github.io/whatsapp-api-js](
 
 ## Contributions
 
-If you have some free time and really want to improve the library or fix dumb bugs, feel free to read [CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
+If you have some free time and really want to improve the library or fix dumb bugs, feel free to read
+[CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
 
 ## Breaking changes
 

@@ -170,6 +170,7 @@ export declare class Button {
      * @param title - Button title. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
      * @throws If id is over 256 characters
      * @throws If id is malformed
+     * @throws If title is an empty string
      * @throws If title is over 20 characters
      */
     constructor(id: string, title: string);
@@ -198,6 +199,7 @@ export declare class ActionList extends ClientLimitedMessageComponent<ListSectio
      *
      * @param button - Button content. It cannot be an empty string and must be unique within the message. Emojis are supported, markdown is not. Maximum length: 20 characters.
      * @param sections - Sections of the list
+     * @throws If button is an empty string
      * @throws If button is over 20 characters
      * @throws If more than 10 sections are provided
      * @throws If more than 1 section is provided and at least one doesn't have a title
