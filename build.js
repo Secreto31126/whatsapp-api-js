@@ -12,8 +12,8 @@ const production = process.env.NODE_ENV !== "development";
 const sharedConfig = {
     entryPoints: await glob("src/**/*.ts", { ignore: ["src/**/*.d.ts"] }),
     bundle: production,
-    minifySyntax: true,
-    minifyWhitespace: true,
+    minifySyntax: production,
+    minifyWhitespace: production,
     minifyIdentifiers: false,
     sourcemap: true,
     platform: "node"
