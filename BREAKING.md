@@ -25,7 +25,7 @@ const Location = require("whatsapp-api-js/messages/location").default;
 ```
 
 The main contructor now takes named arguments instead of positional arguments.
-Also bumped the default API version to v16.0.
+Also bumped the default API version to v17.0.
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
