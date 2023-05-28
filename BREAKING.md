@@ -20,8 +20,7 @@ import Location from "whatsapp-api-js/messages/location";
 ```js
 // CommonJS
 const WhatsAppAPI = require("whatsapp-api-js").default;
-const { Image, Document } = require("whatsapp-api-js/messages");
-const Text = require("whatsapp-api-js/messages/text").default;
+const { Text, Image, Document } = require("whatsapp-api-js/messages");
 const Location = require("whatsapp-api-js/messages/location").default;
 ```
 
