@@ -13,7 +13,9 @@ const sharedConfig = {
     entryPoints: await glob("src/**/*.ts", { ignore: ["src/**/*.d.ts"] }),
     bundle: production,
     minify: production,
-    platform: "node",
+    minifyIdentifiers: false,
+    sourcemap: true,
+    platform: "node"
 };
 
 // ESM
