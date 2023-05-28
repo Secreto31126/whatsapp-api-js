@@ -108,6 +108,9 @@ jobs:
           name: docs
           path: ${GITHUB_REF/refs\/tags\//}
 
+      - name: Add Endpoint to the index
+        run: bash build.sh
+
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
