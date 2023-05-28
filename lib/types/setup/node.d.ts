@@ -19,11 +19,11 @@ export declare function NodeNext(settings: WhatsAppAPIConstructorArguments): Wha
  */
 export declare function Node18(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
 /**
- * A Node 12 to 17 quick setup for the WhatsAppAPI
+ * A Node 15 to 17 quick setup for the WhatsAppAPI
  *
  * @param settings - The WhatsAppAPI arguments
  * @param fetch - The fetch ponyfill function to use (e.g. node-fetch or undici)
- * @returns A WhatsAppAPI arguments object for Node 12 to 17
+ * @returns A WhatsAppAPI arguments object for Node 15 to 17
  */
-export declare function Node12(settings: WhatsAppAPIConstructorArguments, fetch: typeof FetchType): WhatsAppAPIConstructorArguments;
+export declare function Node15(settings: WhatsAppAPIConstructorArguments, fetch: typeof FetchType): WhatsAppAPIConstructorArguments;
 //# sourceMappingURL=node.d.ts.map
