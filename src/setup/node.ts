@@ -3,7 +3,7 @@ import type { fetch as FetchType } from "undici";
 
 // If this line of code didn't exist,
 // setup would be a single file rather than a folder
-import { subtle } from "node:crypto";
+import { webcrypto } from "node:crypto";
 
 /**
  * A Node\@^19 quick setup for the WhatsAppAPI
@@ -33,20 +33,20 @@ export function Node18(
     return {
         ...settings,
         ponyfill: {
-            subtle,
+            subtle: webcrypto.subtle,
             ...settings.ponyfill
         }
     };
 }
 
 /**
- * A Node 12 to 17 quick setup for the WhatsAppAPI
+ * A Node 15 to 17 quick setup for the WhatsAppAPI
  *
  * @param settings - The WhatsAppAPI arguments
  * @param fetch - The fetch ponyfill function to use (e.g. node-fetch or undici)
- * @returns A WhatsAppAPI arguments object for Node 12 to 17
+ * @returns A WhatsAppAPI arguments object for Node 15 to 17
  */
-export function Node12(
+export function Node15(
     settings: WhatsAppAPIConstructorArguments,
     fetch: typeof FetchType
 ): WhatsAppAPIConstructorArguments {
@@ -54,7 +54,7 @@ export function Node12(
         ...settings,
         ponyfill: {
             fetch,
-            subtle,
+            subtle: webcrypto.subtle,
             ...settings.ponyfill
         }
     };
