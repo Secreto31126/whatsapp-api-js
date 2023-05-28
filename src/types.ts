@@ -52,7 +52,7 @@ export type TheBasicConstructorArguments = {
      */
     webhookVerifyToken?: string;
     /**
-     * The version of the API, defaults to v16.0
+     * The version of the API, defaults to v17.0
      */
     v?: string;
     /**

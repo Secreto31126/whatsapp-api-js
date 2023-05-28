@@ -46,9 +46,11 @@
       "require": "./lib/cjs/types.js"
     }
   },
-  "//": "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
-  "//": "Without this, IntelliSense will throw an error when importing subpaths ONLY on JS files, although it does run fine with Node.",
-  "//": "Even more stunishing: if included, IntelliSense works even BETTER than with TS.",
+  "//": [
+    "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
+    "Without this, IntelliSense will throw an error when importing subpaths ONLY on JS files, although it does run fine with Node.",
+    "Even more stunishing: if included, IntelliSense works even BETTER than with TS."
+  ],
   "typesVersions": {
     "*": {
       ".": [
@@ -76,6 +78,7 @@
     "build": "npm run build:code && npm run build:types",
     "build:code": "node -r dotenv/config build.js",
     "build:types": "tsc && cp ./src/*.d.ts ./lib/types",
+    "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs && cp ./src/*.d.ts ./lib/esm && cp ./src/*.d.ts ./lib/cjs",
     "test": "mocha",
     "test:build": "npm run build && npm run test",
     "test:watch": "mocha --reporter min --watch",

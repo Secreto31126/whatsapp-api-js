@@ -20,13 +20,12 @@ import Location from "whatsapp-api-js/messages/location";
 ```js
 // CommonJS
 const WhatsAppAPI = require("whatsapp-api-js").default;
-const { Image, Document } = require("whatsapp-api-js/messages");
-const Text = require("whatsapp-api-js/messages/text").default;
+const { Text, Image, Document } = require("whatsapp-api-js/messages");
 const Location = require("whatsapp-api-js/messages/location").default;
 ```
 
 The main contructor now takes named arguments instead of positional arguments.
-Also bumped the default API version to v16.0.
+Also bumped the default API version to v17.0.
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
@@ -127,7 +126,7 @@ const Whatsapp = new WhatsAppAPI({
 This change also restores the compatibility with previous Node.js versions, making the module more server agnostic.
 
 There had been some minor changes to the messages classes, although the most noticeable one is the reduction of the
-Text class usage internally, replaced by normal strings.
+Text class usage across classes, replaced by normal strings.
 
 ## 0.8.0
 
