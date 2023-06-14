@@ -19,12 +19,20 @@ export class Interactive extends ClientMessage {
     readonly action:
         | ActionList
         | ActionButtons
+        | ActionProduct
         | ActionCatalog
+        | ActionCatalogMonkeyPatch
         | ClientTypedMessageComponent;
     /**
      * The type of the interactive message
      */
-    readonly type: "list" | "button" | "product" | "product_list" | string;
+    readonly type:
+        | "list"
+        | "button"
+        | "catalog_message"
+        | "product"
+        | "product_list"
+        | string;
     /**
      * The body component of the interactive message
      */
@@ -480,6 +488,160 @@ export class ActionCatalog implements ClientTypedMessageComponent {
     /**
      * The id of the catalog from where to get the products
      */
+    readonly catalog_id?: string;
+    /**
+     * The product to be added to the catalog
+     */
+    readonly product_retailer_id?: string;
+    /**
+     * The section to be added to the catalog
+     */
+    readonly sections?: ProductSection[];
+    /**
+     * The name of the component if it's used as a catalog message
+     */
+    readonly name?: "catalog_message";
+    readonly parameters?: {
+        thumbnail_product_retailer_id?: string;
+    };
+
+    /**
+     * @override
+     */
+    get _type(): "catalog_message" | "product" | "product_list" {
+        return (
+            this.name ?? (this.product_retailer_id ? "product" : "product_list")
+        );
+    }
+
+    /**
+     * Builds a catalog component for an Interactive message
+     *
+     * @remarks
+     * This class should be used exclusively for
+     * [Catalog Messages](https://developers.facebook.com/docs/whatsapp/api/messages/catalog)
+     * (Although for those cases it's also recommended to use the
+     * {@link ActionCatalogMonkeyPatch} class).
+     *
+     * If you are looking for Single and Multi Product components, prefer using
+     * {@link ActionProduct} instead. Product support is kept here for backwards
+     * compatibility and will be removed in 2.0.0
+     *
+     * @privateRemarks
+     * Multi and single product components used to be called catalogs,
+     * bug WhatsApp decided to rename the message name, so here we are,
+     * monkey patching it with sticks...
+     *
+     * @param catalog_id - The catalog id
+     * @param products - The products to add to the catalog. It can be a _single_ Product object, or a list of ProductSections.
+     * @throws If catalog_id is provided but no product or product sections are provided
+     * @throws If product sections are provided but no catalog_id is provided
+     */
+    constructor(
+        catalog_id?: string,
+        ...products: [] | [Product] | AtLeastOne<ProductSection>
+    ) {
+        // TODO: Remove this trash in 2.0.0
+        let monkey_patch: ActionCatalogMonkeyPatch | ActionProduct;
+
+        if (catalog_id) {
+            console.warn(
+                "Deprecation warning: ActionCatalog support for Product messages will be removed in 2.0.0, prefer using ActionProduct instead"
+            );
+
+            if (products.length === 0) {
+                throw new Error(
+                    "ActionCatalog requires one product or at least one section if meant to be used as a multi or single product message, prefer using ActionProduct instead as this feature will be removed in 2.0.0"
+                );
+            }
+
+            monkey_patch = new ActionProduct(
+                catalog_id,
+                ...(products as [Product] | AtLeastOne<ProductSection>)
+            );
+        } else {
+            if (isProductSections(products)) {
+                throw new Error(
+                    "ActionCatalog products can't be a ProductSection if meant to be used as a catalog message. The function signature will be updated in 2.0.0 to reflect this change"
+                );
+            }
+
+            monkey_patch = new ActionCatalogMonkeyPatch(products[0]);
+        }
+
+        Object.assign(this, monkey_patch);
+    }
+}
+
+/**
+ * Action API object
+ *
+ * @remarks
+ * This class will be renamed as ActionCatalog in 2.0.0
+ *
+ * Calling {@link ActionCatalog} without a catalog_id will result in
+ * the same as invoking this class.
+ *
+ * Future-proof recommendation: Use this class instead of
+ * {@link ActionCatalog} as it has a better signature, which reduces
+ * the number of runtime checks, and future refactoring to upgrade
+ * to 2.0.0 will be easier as only the name class will change.
+ *
+ * Sorry if the name is too informal, I couldn't come up with a better
+ * one for this situation :)
+ *
+ * @example
+ * ```ts
+ * new ActionCatalog(undefined, new Product("product_retailer_id"));
+ * // Generates the same result as
+ * new ActionCatalogMonkeyPatch(new Product("product_retailer_id"));
+ * ```
+ *
+ * @group Interactive
+ */
+export class ActionCatalogMonkeyPatch implements ClientTypedMessageComponent {
+    /**
+     * The name of the component
+     */
+    readonly name: "catalog_message";
+    /**
+     * The thumbnail product to be shown in the catalog
+     */
+    readonly parameters?: {
+        thumbnail_product_retailer_id?: string;
+    };
+
+    /**
+     * @override
+     */
+    get _type(): typeof this.name {
+        return this.name;
+    }
+
+    /**
+     * Builds a catalog component for an Interactive message
+     *
+     * @param thumbnail - The thumbnail product to be shown in the catalog, if not provided, the first product will be used
+     */
+    constructor(thumbnail?: Product) {
+        this.name = "catalog_message";
+        if (thumbnail) {
+            this.parameters = {
+                thumbnail_product_retailer_id: thumbnail.product_retailer_id
+            };
+        }
+    }
+}
+
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export class ActionProduct implements ClientTypedMessageComponent {
+    /**
+     * The id of the catalog from where to get the products
+     */
     readonly catalog_id: string;
     /**
      * The product to be added to the catalog
@@ -498,7 +660,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
     }
 
     /**
-     * Builds a catalog component for an Interactive message
+     * Builds a Multi or Single Product component for an Interactive message
      *
      * @param catalog_id - The catalog id
      * @param products - The products to add to the catalog. It can be a _single_ Product object, or a list of ProductSections.
