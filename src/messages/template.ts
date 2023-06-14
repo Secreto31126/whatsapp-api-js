@@ -385,7 +385,8 @@ export class HeaderParameter {
         }
 
         Object.defineProperty(this, this.type, {
-            value: parameter
+            value: parameter,
+            enumerable: true
         });
     }
 }
@@ -480,7 +481,8 @@ export class BodyParameter {
         }
 
         Object.defineProperty(this, this.type, {
-            value: parameter
+            value: parameter,
+            enumerable: true
         });
     }
 }
