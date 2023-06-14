@@ -68,7 +68,8 @@ export class Contacts extends ClientMessage {
                 if (component._many) {
                     if (!(name in contact)) {
                         Object.defineProperty(contact, name, {
-                            value: [] as Address[] | Email[] | Phone[] | Url[]
+                            value: [] as Address[] | Email[] | Phone[] | Url[],
+                            enumerable: true
                         });
                     }
 
