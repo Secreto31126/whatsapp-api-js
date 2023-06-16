@@ -621,7 +621,13 @@ export class ActionCatalogMonkeyPatch implements ClientTypedMessageComponent {
     /**
      * Builds a catalog component for an Interactive message
      *
-     * @param thumbnail - The thumbnail product to be shown in the catalog, if not provided, the first product will be used
+     * @remarks
+     * Seems like the API throws an error if you try to send a catalog
+     * message without a thumbnail, but the signature will keep the
+     * optional parameter in case WhatsApp decides to make their API
+     * work as expected :)
+     *
+     * @param thumbnail - The thumbnail product to be shown in the catalog. If not provided, the first product will be used (or so says the docs, but it doesn't work).
      */
     constructor(thumbnail?: Product) {
         this.name = "catalog_message";
@@ -708,7 +714,7 @@ export class ProductSection extends Section<Product, 30> {
     readonly product_items: Product[];
 
     /**
-     * Builds a product section component for an ActionCatalog
+     * Builds a product section component for an {@link ActionProduct}
      *
      * @param title - The title of the product section, only required if more than 1 section will be used
      * @param products - The products to add to the product section
@@ -733,7 +739,7 @@ export class Product {
     readonly product_retailer_id: string;
 
     /**
-     * Builds a product component for ActionCart and ProductSection
+     * Builds a product component for {@link ActionProduct}, {@link ActionCatalog} and {@link ProductSection}
      *
      * @param product_retailer_id - The id of the product
      */
