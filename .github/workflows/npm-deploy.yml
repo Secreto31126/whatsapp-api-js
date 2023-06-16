@@ -131,13 +131,13 @@ jobs:
       - name: Create Endpoint
         # The endpoint shouldn't exists
         # The code is only executed on releases
-        run: mkdir ${GITHUB_REF/refs\/tags\//}
+        run: mkdir $GITHUB_REF_NAME
 
       - name: Copy docs into Endpoint
         uses: actions/download-artifact@v3
         with:
           name: docs
-          path: ${GITHUB_REF/refs\/tags\//}
+          path: $GITHUB_REF_NAME
 
       - name: Add Endpoint to the index
         run: bash build.sh
@@ -146,4 +146,4 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actor
-          message: Added ${GITHUB_REF/refs\/tags\//} docs
+          message: Added $GITHUB_REF_NAME docs
