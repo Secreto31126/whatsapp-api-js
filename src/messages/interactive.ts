@@ -614,8 +614,8 @@ export class ActionCatalogMonkeyPatch implements ClientTypedMessageComponent {
     /**
      * @override
      */
-    get _type(): typeof this.name {
-        return this.name;
+    get _type(): "catalog_message" {
+        return "catalog_message";
     }
 
     /**
