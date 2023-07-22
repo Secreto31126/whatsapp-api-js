@@ -107,7 +107,6 @@ const template_media_message = new Template(
     new ButtonComponent(
         "url",
         "?user_id=123",
-        "?user_id=123&&product_id=456"
     )
 );
 ```
