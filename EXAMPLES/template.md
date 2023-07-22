@@ -3,6 +3,8 @@
 ## Simple template with no variables
 
 ```ts
+import { Template, Language } from "whatsapp-api-js/messages";
+
 const template_message = new Template(
     "template_name",
     new Language("en")
@@ -12,6 +14,17 @@ const template_message = new Template(
 ## Simple template with simple variables in header and body
 
 ```ts
+import {
+    Template,
+    Language,
+    HeaderComponent,
+    HeaderParameter,
+    BodyComponent,
+    BodyParameter,
+    Currency,
+    DateTime
+} from "whatsapp-api-js/messages";
+
 const template_variables_message = new Template(
     "template_name",
     new Language("en"),
@@ -39,6 +52,14 @@ const template_variables_message = new Template(
 ## Simple template with header media
 
 ```ts
+import {
+    Template,
+    Language,
+    HeaderComponent,
+    HeaderParameter,
+    Video
+} from "whatsapp-api-js/messages";
+
 const template_media_message = new Template(
     "template_name",
     new Language("en"),
@@ -54,6 +75,12 @@ const template_media_message = new Template(
 ## Complex template with reply buttons
 
 ```ts
+import {
+    Template,
+    Language,
+    ButtonComponent
+} from "whatsapp-api-js/messages";
+
 const template_media_message = new Template(
     "template_name",
     new Language("en"),
@@ -68,6 +95,12 @@ const template_media_message = new Template(
 ## Complex template with call to action url
 
 ```ts
+import {
+    Template,
+    Language,
+    ButtonComponent
+} from "whatsapp-api-js/messages";
+
 const template_media_message = new Template(
     "template_name",
     new Language("en"),
