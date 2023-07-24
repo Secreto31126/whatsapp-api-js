@@ -111,6 +111,18 @@ const template_call_to_action_message = new Template(
 );
 ```
 
+## OTP template
+
+```ts
+import { Template } from "whatsapp-api-js/messages";
+
+const template_otp_message = Template.OTP(
+    "template_name",
+    new Language("en"),
+    "123456"
+);
+```
+
 ## Documentation
 
 https://whatsappapijs.web.app/classes/messages.Template.html
