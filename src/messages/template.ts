@@ -76,6 +76,15 @@ export class Template extends ClientMessage {
                 .flat();
         }
     }
+
+    static OTP(name: string, language: string | Language, code: string) {
+        return new Template(
+            name,
+            language,
+            new BodyComponent(new BodyParameter(code)),
+            new ButtonComponent("url", code)
+        );
+    }
 }
 
 /**
