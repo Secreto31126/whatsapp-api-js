@@ -111,7 +111,7 @@ const template_call_to_action_message = new Template(
 );
 ```
 
-## OTP template
+## OTP prefab template
 
 ```ts
 import { Template } from "whatsapp-api-js/messages";
