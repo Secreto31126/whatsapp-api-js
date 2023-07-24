@@ -262,8 +262,13 @@ export class ButtonParameter {
      *
      * @param param - Developer-provided data that is used to fill in the template.
      * @param type - The type of the button
+     * @throws If param is an empty string
      */
     constructor(param: string, type: "text" | "payload") {
+        if (!param.length) {
+            throw new Error("Button parameter can't be an empty string");
+        }
+
         this.type = type;
         this[type] = param;
     }
