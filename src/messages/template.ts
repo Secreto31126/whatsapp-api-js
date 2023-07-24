@@ -76,6 +76,23 @@ export class Template extends ClientMessage {
                 .flat();
         }
     }
+
+    /**
+     * OTP Template generator
+     *
+     * @param name - Name of the template
+     * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
+     * @param code - The one time password to be sent
+     * @returns A Template object for the API
+     */
+    static OTP(name: string, language: string | Language, code: string) {
+        return new Template(
+            name,
+            language,
+            new BodyComponent(new BodyParameter(code)),
+            new ButtonComponent("url", code)
+        );
+    }
 }
 
 /**

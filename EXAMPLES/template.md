@@ -81,7 +81,7 @@ import {
     ButtonComponent
 } from "whatsapp-api-js/messages";
 
-const template_media_message = new Template(
+const template_reply_buttons_message = new Template(
     "template_name",
     new Language("en"),
     new ButtonComponent(
@@ -101,13 +101,25 @@ import {
     ButtonComponent
 } from "whatsapp-api-js/messages";
 
-const template_media_message = new Template(
+const template_call_to_action_message = new Template(
     "template_name",
     new Language("en"),
     new ButtonComponent(
         "url",
         "?user_id=123",
     )
+);
+```
+
+## OTP prefab template
+
+```ts
+import { Template } from "whatsapp-api-js/messages";
+
+const template_otp_message = Template.OTP(
+    "template_name",
+    new Language("en"),
+    "123456"
 );
 ```
 
