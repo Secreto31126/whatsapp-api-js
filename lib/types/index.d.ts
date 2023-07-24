@@ -1,6 +1,5 @@
 /** @module WhatsAppAPI */
 /// <reference types="node" />
-/// <reference types="ts4.8" />
 import type { WhatsAppAPIConstructorArguments, PostData, GetParams, ClientMessage, ServerMessageResponse, ServerMarkAsReadResponse, ServerCreateQRResponse, ServerRetrieveQRResponse, ServerUpdateQRResponse, ServerDeleteQRResponse, ServerMediaRetrieveResponse, ServerMediaUploadResponse, ServerMediaDeleteResponse } from "./types";
 import type { OnMessage, OnSent, OnStatus } from "./emitters";
 import type { Request, Response } from "undici";
