@@ -1,8 +1,17 @@
 name: Deploy website archive update
 
 on:
-  - workflow_dispatch
-  - workflow_call
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag to deploy'
+        required: true
+  workflow_call:
+    inputs:
+      tag_name:
+        description: 'Tag to deploy'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -36,16 +45,23 @@ jobs:
         with:
           ref: gh-pages
 
+      - name: Check if tag exists
+        run: |
+          if [ $(git tag -l "${{ inputs.tag_name }}") ]; then
+            echo "Tag doesn't exists"
+            exit 1
+          fi
+
       - name: Create Endpoint
         # The endpoint shouldn't exists
         # The code is only executed on releases
-        run: mkdir ${{ github.event.release.tag_name }}
+        run: mkdir ${{ inputs.tag_name }}
 
       - name: Copy docs into Endpoint
         uses: actions/download-artifact@v3
         with:
           name: docs
-          path: ${{ github.event.release.tag_name }}
+          path: ${{ inputs.tag_name }}
 
       - name: Add Endpoint to the index
         run: bash build.sh
@@ -54,4 +70,4 @@ jobs:
         uses: EndBug/add-and-commit@v9
         with:
           default_author: github_actor
-          message: Added ${{ github.event.release.tag_name }} docs
+          message: Added ${{ inputs.tag_name }} docs

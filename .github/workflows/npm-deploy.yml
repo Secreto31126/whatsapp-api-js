@@ -114,3 +114,5 @@ jobs:
 
     uses: ./.github/workflows/web-release.yml
     secrets: inherit
+    with:
+      tag_name: ${{ github.event.release.tag_name }}
