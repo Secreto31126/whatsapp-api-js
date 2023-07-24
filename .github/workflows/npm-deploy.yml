@@ -131,9 +131,7 @@ jobs:
       - name: Create Endpoint
         # The endpoint shouldn't exists
         # The code is only executed on releases
-        run: mkdir "$docs"
-        env:
-          docs: ${{ github.event.release.tag_name }}
+        run: mkdir ${{ github.event.release.tag_name }}
 
       - name: Copy docs into Endpoint
         uses: actions/download-artifact@v3
