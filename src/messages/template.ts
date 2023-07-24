@@ -197,11 +197,34 @@ export class ButtonComponent
     /**
      * The ButtonParameters to be used in the build function
      */
-    readonly parameters: ButtonParameter[];
+    readonly parameters: (ButtonParameter | null)[];
 
     /**
      * Builds a button component for a Template message.
      * The index of the buttons is defined by the order in which you add them to the Template parameters.
+     *
+     * @remarks
+     * Empty strings are not allowed in the API. However, rather than being ignored or throwing an
+     * error, the constructor will use them as dummies for fake variables.
+     *
+     * You might want to know _why_. So do I. It's a really dumb catch to fix an issue on the API
+     * side. If you have a template with 2 buttons, the first one a phone number (which can't take
+     * variables), and an url button (which can have variables), the API will throw an error because
+     * the first button can't take variables, even though it DOESN'T need a variable.
+     *
+     * For such cases, the expected code would be:
+     *
+     * ```ts
+     * const template = new Template(
+     *     "name",
+     *     "en_US",
+     *     new ButtonComponent(
+     *         "url",
+     *         "", // As the first button is a phone, skip assigning it a variable
+     *         "?user=123"
+     *     )
+     * );
+     * ```
      *
      * @param sub_type - The type of button to create.
      * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
@@ -214,8 +237,8 @@ export class ButtonComponent
         super("ButtonComponent", "parameters", parameters, 3);
 
         const buttonType = sub_type === "url" ? "text" : "payload";
-        const processed = parameters.map(
-            (e) => new ButtonParameter(e, buttonType)
+        const processed = parameters.map((e) =>
+            e.length ? new ButtonParameter(e, buttonType) : null
         );
 
         this.type = "button";
@@ -227,14 +250,18 @@ export class ButtonComponent
      * @override
      */
     _build(): Array<BuiltButtonComponent> {
-        return this.parameters.map((p, i) => {
-            return {
-                type: this.type,
-                sub_type: this.sub_type,
-                index: i.toString(),
-                parameters: [p]
-            };
-        });
+        return this.parameters
+            .map((p, i) => {
+                if (!p) return null;
+
+                return {
+                    type: this.type,
+                    sub_type: this.sub_type,
+                    index: i.toString(),
+                    parameters: [p]
+                };
+            })
+            .filter((e) => !!e) as Array<BuiltButtonComponent>;
     }
 }
 
@@ -262,8 +289,13 @@ export class ButtonParameter {
      *
      * @param param - Developer-provided data that is used to fill in the template.
      * @param type - The type of the button
+     * @throws If param is an empty string
      */
     constructor(param: string, type: "text" | "payload") {
+        if (!param.length) {
+            throw new Error("Button parameter can't be an empty string");
+        }
+
         this.type = type;
         this[type] = param;
     }
