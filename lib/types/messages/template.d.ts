@@ -42,6 +42,15 @@ export declare class Template extends ClientMessage {
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
      */
     constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]);
+    /**
+     * OTP Template generator
+     *
+     * @param name - Name of the template
+     * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
+     * @param code - The one time password to be sent
+     * @returns A Template object for the API
+     */
+    static OTP(name: string, language: string | Language, code: string): Template;
 }
 /**
  * Language API object
