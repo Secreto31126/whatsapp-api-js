@@ -22,20 +22,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Document
-        run: npm run document
-
       - name: Store builds
         uses: actions/upload-artifact@v3
         with:
           name: build
           path: lib
-
-      - name: Store docs
-        uses: actions/upload-artifact@v3
-        with:
-          name: docs
-          path: docs
 
   test:
     name: Test
@@ -121,29 +112,7 @@ jobs:
     name: Deploy website
     needs: publish-npm
 
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: gh-pages
-
-      - name: Create Endpoint
-        # The endpoint shouldn't exists
-        # The code is only executed on releases
-        run: mkdir ${{ github.event.release.tag_name }}
-
-      - name: Copy docs into Endpoint
-        uses: actions/download-artifact@v3
-        with:
-          name: docs
-          path: ${{ github.event.release.tag_name }}
-
-      - name: Add Endpoint to the index
-        run: bash build.sh
-
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actor
-          message: Added ${{ github.event.release.tag_name }} docs
+    uses: ./.github/workflows/web-release.yml
+    secrets: inherit
+    with:
+      tag_name: ${{ github.event.release.tag_name }}

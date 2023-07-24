@@ -1,0 +1,73 @@
+name: Deploy website archive update
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag to deploy'
+        required: true
+  workflow_call:
+    inputs:
+      tag_name:
+        description: 'Tag to deploy'
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+
+      - name: Setup
+        run: npm ci
+
+      - name: Document
+        run: npm run document
+
+      - name: Store docs
+        uses: actions/upload-artifact@v3
+        with:
+          name: docs
+          path: docs
+
+  release:
+    name: Deploy website
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+
+      - name: Check if tag exists
+        run: |
+          if [ $(git tag -l "${{ inputs.tag_name }}") ]; then
+            echo "Tag doesn't exists"
+            exit 1
+          fi
+
+      - name: Create Endpoint
+        # The endpoint shouldn't exists
+        # The code is only executed on releases
+        run: mkdir ${{ inputs.tag_name }}
+
+      - name: Copy docs into Endpoint
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+          path: ${{ inputs.tag_name }}
+
+      - name: Add Endpoint to the index
+        run: bash build.sh
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actor
+          message: Added ${{ inputs.tag_name }} docs
