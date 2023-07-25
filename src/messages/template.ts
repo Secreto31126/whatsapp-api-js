@@ -12,10 +12,41 @@ import type { Document, Image, Video } from "./media";
 /**
  * @group Template
  */
+export type ButtonParameter = {
+    /**
+     * The type of the button
+     */
+    readonly type: "text" | "payload" | "action";
+    /**
+     * The text of the button
+     */
+    readonly text?: string;
+    /**
+     * The payload of the button
+     */
+    readonly payload?: string;
+    /**
+     * The action of the button
+     */
+    readonly action?: {
+        // TODO: Code duplication?
+        thumbnail_product_retailer_id: string;
+        sections?: {
+            title: string;
+            product_items: {
+                product_retailer_id: string;
+            }[];
+        }[];
+    };
+};
+
+/**
+ * @group Template
+ */
 export type BuiltButtonComponent = {
     type: "button";
-    sub_type: "url" | "quick_reply";
-    index: string;
+    sub_type: "url" | "quick_reply" | "catalog";
+    index: number;
     parameters: Array<ButtonParameter>;
 };
 
@@ -61,7 +92,11 @@ export class Template extends ClientMessage {
     constructor(
         name: string,
         language: string | Language,
-        ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]
+        ...components: (
+            | HeaderComponent
+            | BodyComponent
+            | ButtonComponent<number, unknown>
+        )[]
     ) {
         super();
         this.name = name;
@@ -90,7 +125,7 @@ export class Template extends ClientMessage {
             name,
             language,
             new BodyComponent(new BodyParameter(code)),
-            new ButtonComponent("url", code)
+            new URLComponent(code)
         );
     }
 }
@@ -197,32 +232,76 @@ export class DateTime implements ClientTypedMessageComponent {
 /**
  * Components API object
  *
+ * @see {@link URLComponent}
+ * @see {@link PayloadComponent}
+ *
  * @group Template
  */
-export class ButtonComponent
-    extends ClientLimitedMessageComponent<string, 3>
+abstract class ButtonComponent<Limit extends number, Params = ButtonParameter>
+    extends ClientLimitedMessageComponent<Params, Limit>
     implements ClientBuildableMessageComponent
 {
     /**
      * The type of the component
      */
-    readonly type: "button";
+    readonly type = "button";
     /**
      * The subtype of the component
      */
-    readonly sub_type: "url" | "quick_reply";
+    readonly sub_type: "url" | "quick_reply" | "catalog";
     /**
-     * The ButtonParameters to be used in the build function
+     * The parameters of the component
      */
-    readonly parameters: (ButtonParameter | null)[];
+    readonly parameters: Params[];
 
     /**
      * Builds a button component for a Template message.
-     * The index of the buttons is defined by the order in which you add them to the Template parameters.
+     * The index of each parameter is defined by the order they are sent to the constructor.
+     *
+     * @internal
+     * @param sub_type - The type of button component to create.
+     * @param p - The parent's pretty print name
+     * @param c - The child's pretty print name
+     * @param l - The parameters' limit
+     * @param parameters - The parameter for the component. The index of each parameter is defined by the order they are sent to the constructor.
+     */
+    constructor(
+        sub_type: "url" | "quick_reply" | "catalog",
+        p: string,
+        c: string,
+        l: Limit,
+        parameters: Params[]
+    ) {
+        super(p, c, parameters, l);
+        this.sub_type = sub_type;
+        this.parameters = parameters;
+    }
+
+    /**
+     * @override
+     */
+    _build(): Array<NonNullable<BuiltButtonComponent>> {
+        return this.parameters.map((p, i) => ({
+            type: this.type,
+            sub_type: this.sub_type,
+            index: i,
+            parameters: [p]
+        })) as Array<NonNullable<BuiltButtonComponent>>;
+    }
+}
+
+/**
+ * Button Component API object for call to action buttons
+ *
+ * @group Template
+ */
+export class URLComponent extends ButtonComponent<2, ButtonParameter | null> {
+    /**
+     * Creates a button component for a Template message with call to action buttons.
      *
      * @remarks
-     * Empty strings are not allowed in the API. However, rather than being ignored or throwing an
-     * error, the constructor will use them as dummies for fake variables.
+     * Empty strings are not allowed URL variables in the API. However, rather than being ignored
+     * or throwing an error, the constructor will use them as dummies for *fake* variables.
      *
      * You might want to know _why_. So do I. It's a really dumb catch to fix an issue on the API
      * side. If you have a template with 2 buttons, the first one a phone number (which can't take
@@ -235,38 +314,51 @@ export class ButtonComponent
      * const template = new Template(
      *     "name",
      *     "en_US",
-     *     new ButtonComponent(
-     *         "url",
+     *     new URLComponent(
      *         "", // As the first button is a phone, skip assigning it a variable
      *         "?user=123"
      *     )
      * );
      * ```
      *
-     * @param sub_type - The type of button to create.
-     * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
-     * @throws If parameters is over 3 elements
+     * @param parameters - The variable for each url button. The index of each parameter is defined by the arguments' order.
      */
-    constructor(
-        sub_type: "url" | "quick_reply",
-        ...parameters: AtLeastOne<string>
-    ) {
-        super("ButtonComponent", "parameters", parameters, 3);
-
-        const buttonType = sub_type === "url" ? "text" : "payload";
-        const processed = parameters.map((e) =>
-            e.length ? new ButtonParameter(e, buttonType) : null
+    constructor(...parameters: AtLeastOne<string>) {
+        super(
+            "url",
+            "ButtonComponent.URL",
+            "parameters",
+            2,
+            parameters.map((p) => (p ? new URLComponent.Button(p) : null))
         );
-
-        this.type = "button";
-        this.sub_type = sub_type;
-        this.parameters = processed;
     }
+
+    /**
+     * @internal
+     */
+    private static Button = class implements ButtonParameter {
+        readonly type = "text";
+        readonly text: string;
+
+        /**
+         * Creates a parameter for a Template message with call to action buttons.
+         *
+         * @param text - The text of the button
+         * @throws If text is an empty string
+         */
+        constructor(text: string) {
+            if (!text.length) {
+                throw new Error("Button parameter can't be an empty string");
+            }
+
+            this.text = text;
+        }
+    };
 
     /**
      * @override
      */
-    _build(): Array<BuiltButtonComponent> {
+    _build(): Array<NonNullable<BuiltButtonComponent>> {
         return this.parameters
             .map((p, i) => {
                 if (!p) return null;
@@ -274,48 +366,56 @@ export class ButtonComponent
                 return {
                     type: this.type,
                     sub_type: this.sub_type,
-                    index: i.toString(),
+                    index: i,
                     parameters: [p]
                 };
             })
-            .filter((e) => !!e) as Array<BuiltButtonComponent>;
+            .filter((e) => !!e) as Array<NonNullable<BuiltButtonComponent>>;
     }
 }
 
 /**
- * Button Parameter API object
+ * Button Component API object for quick reply buttons
  *
  * @group Template
  */
-export class ButtonParameter {
+export class PayloadComponent extends ButtonComponent<3> {
     /**
-     * The type of the button
-     */
-    readonly type: "text" | "payload";
-    /**
-     * The text of the button
-     */
-    readonly text?: string;
-    /**
-     * The payload of the button
-     */
-    readonly payload?: string;
-
-    /**
-     * Builds a button parameter for a ButtonComponent
+     * Creates a button component for a Template message with quick reply buttons.
      *
-     * @param param - Developer-provided data that is used to fill in the template.
-     * @param type - The type of the button
-     * @throws If param is an empty string
+     * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
      */
-    constructor(param: string, type: "text" | "payload") {
-        if (!param.length) {
-            throw new Error("Button parameter can't be an empty string");
-        }
-
-        this.type = type;
-        this[type] = param;
+    constructor(...parameters: AtLeastOne<string>) {
+        super(
+            "quick_reply",
+            "ButtonComponent.Payload",
+            "parameters",
+            3,
+            parameters.map((p) => new PayloadComponent.Button(p))
+        );
     }
+
+    /**
+     * @internal
+     */
+    private static Button = class implements ButtonParameter {
+        readonly type = "payload";
+        readonly payload: string;
+
+        /**
+         * Creates a parameter for a Template message with quick reply buttons.
+         *
+         * @param payload - The id of the button
+         * @throws If payload is an empty string
+         */
+        constructor(payload: string) {
+            if (!payload.length) {
+                throw new Error("Button parameter can't be an empty string");
+            }
+
+            this.payload = payload;
+        }
+    };
 }
 
 /**
