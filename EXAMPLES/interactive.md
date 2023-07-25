@@ -67,8 +67,7 @@ const interactive_multi_product_message = new Interactive(
 
 ```ts
 const interactive_catalog_message = new Interactive(
-    // Will be renamed to ActionCatalog in 2.0.0
-    new ActionCatalogMonkeyPatch(
+    new ActionCatalog(
         new Product("hello")
     ),
     new Body("Hello World")
