@@ -1,10 +1,15 @@
 import {
     ClientMessage,
     ClientLimitedMessageComponent,
-    type ClientTypedMessageComponent,
-    Section
+    type ClientTypedMessageComponent
 } from "../types.js";
 import type { AtLeastOne } from "../utils";
+import {
+    Product,
+    ProductSection,
+    Section,
+    isProductSections
+} from "./index.js";
 
 import type { Document, Image, Video } from "./media";
 
@@ -421,11 +426,6 @@ export class Row {
     }
 }
 
-// TS knowledge intensifies
-function isProductSections(obj: unknown[]): obj is ProductSection[] {
-    return obj[0] instanceof ProductSection;
-}
-
 /**
  * Action API object
  *
@@ -531,51 +531,5 @@ export class ActionProduct implements ClientTypedMessageComponent {
 
         if (is_sections) this.sections = products;
         else this.product_retailer_id = products[0].product_retailer_id;
-    }
-}
-
-/**
- * Section API object
- *
- * @group Interactive
- */
-export class ProductSection extends Section<Product, 30> {
-    /**
-     * The products of the section
-     */
-    readonly product_items: Product[];
-
-    /**
-     * Builds a product section component for an {@link ActionProduct}
-     *
-     * @param title - The title of the product section, only required if more than 1 section will be used
-     * @param products - The products to add to the product section
-     * @throws If title is over 24 characters if provided
-     * @throws If more than 30 products are provided
-     */
-    constructor(title: string | undefined, ...products: AtLeastOne<Product>) {
-        super("ProductSection", "products", products, 30, title);
-        this.product_items = products;
-    }
-}
-
-/**
- * Product API object
- *
- * @group Interactive
- */
-export class Product {
-    /**
-     * The id of the product
-     */
-    readonly product_retailer_id: string;
-
-    /**
-     * Builds a product component for {@link ActionProduct}, {@link ActionCatalog} and {@link ProductSection}
-     *
-     * @param product_retailer_id - The id of the product
-     */
-    constructor(product_retailer_id: string) {
-        this.product_retailer_id = product_retailer_id;
     }
 }
