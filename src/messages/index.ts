@@ -50,6 +50,8 @@ export abstract class Section<
      * @param max - The maximum number of elements in the section
      * @param title - The title of the section
      * @param title_length - The maximum length of the title
+     * @throws If more than N elements are provided
+     * @throws If title is over 24 characters if provided
      */
     constructor(
         name: string,
@@ -87,9 +89,9 @@ export class ProductSection extends Section<Product, 30> {
     readonly product_items: Product[];
 
     /**
-     * Builds a product section component for an {@link ActionProduct}
+     * Builds a product section component
      *
-     * @param title - The title of the product section, only required if more than 1 section will be used
+     * @param title - The title of the product section
      * @param products - The products to add to the product section
      * @throws If title is over 24 characters if provided
      * @throws If more than 30 products are provided
@@ -112,7 +114,7 @@ export class Product {
     readonly product_retailer_id: string;
 
     /**
-     * Builds a product component for {@link ActionProduct}, {@link ActionCatalog} and {@link ProductSection}
+     * Builds a product component
      *
      * @param product_retailer_id - The id of the product
      */
