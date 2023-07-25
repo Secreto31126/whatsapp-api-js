@@ -4,14 +4,15 @@ import {
     type ClientTypedMessageComponent
 } from "../types.js";
 import type { AtLeastOne } from "../utils";
+
+import type { Document, Image, Video } from "./media";
+
 import {
     Product,
     ProductSection,
     Section,
     isProductSections
-} from "./index.js";
-
-import type { Document, Image, Video } from "./media";
+} from "./globals.js";
 
 /**
  * Interactive API object

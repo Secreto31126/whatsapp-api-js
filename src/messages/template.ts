@@ -9,6 +9,8 @@ import type { AtLeastOne } from "../utils";
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
 
+import { Product, ProductSection } from "./globals.js";
+
 /**
  * @group Template
  */
