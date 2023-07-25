@@ -529,7 +529,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
      *
      * @privateRemarks
      * Multi and single product components used to be called catalogs,
-     * bug WhatsApp decided to rename the message name, so here we are,
+     * but WhatsApp decided to rename the message name, so here we are,
      * monkey patching it with sticks...
      *
      * @param catalog_id - The catalog id
