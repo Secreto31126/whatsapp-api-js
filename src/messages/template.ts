@@ -419,6 +419,50 @@ export class PayloadComponent extends ButtonComponent<3> {
 }
 
 /**
+ * Button Component API object for catalog button
+ *
+ * @group Template
+ */
+export class CatalogComponent extends ButtonComponent<1> {
+    /**
+     * Creates a button component for a Template catalog button.
+     *
+     * @param thumbnail - The id of the product to use as thumbnail.
+     */
+    constructor(thumbnail: string) {
+        super("catalog", "ButtonComponent.Catalog", "undefined", 1, [
+            new CatalogComponent.Action(thumbnail)
+        ]);
+    }
+
+    /**
+     * @internal
+     */
+    static Action = class implements ButtonParameter {
+        readonly type = "action";
+        readonly action: {
+            thumbnail_product_retailer_id: string;
+        };
+
+        /**
+         * Creates a parameter for a Template message with a catalog button.
+         *
+         * @param thumbnail - The id of the product to use as thumbnail
+         * @throws If product is an empty string
+         */
+        constructor(thumbnail: string) {
+            if (!thumbnail.length) {
+                throw new Error("Button parameter can't be an empty string");
+            }
+
+            this.action = {
+                thumbnail_product_retailer_id: thumbnail
+            };
+        }
+    };
+}
+
+/**
  * Components API object
  *
  * @group Template
