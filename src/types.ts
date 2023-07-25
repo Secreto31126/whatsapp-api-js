@@ -249,7 +249,6 @@ export abstract class ContactUniqueComponent extends ContactComponent {
  * - All sections must have a title if more than 1 section is provided
  *
  * @internal
- * @group Interactive
  *
  * @typeParam T - The type of the components of the section
  * @typeParam N - The maximum number of elements in the section
