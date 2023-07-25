@@ -63,17 +63,15 @@ export abstract class Section<
     ) {
         super(name, keys_name, elements, max);
 
-        if (title && title.length > title_length) {
-            throw new Error(
-                `${name} title must be ${title_length} characters or less`
-            );
-        }
+        if (title) {
+            if (title.length > title_length) {
+                throw new Error(
+                    `${name} title must be ${title_length} characters or less`
+                );
+            }
 
-        if (elements.length > 1 && !title) {
-            throw new Error(`${name} must have a title`);
+            this.title = title;
         }
-
-        if (title) this.title = title;
     }
 }
 
