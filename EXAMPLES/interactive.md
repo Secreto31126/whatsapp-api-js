@@ -66,6 +66,8 @@ const interactive_multi_product_message = new Interactive(
 ## Catalog
 
 ```ts
+import { Interactive, ActionCatalog, Product, Body } from "whatsapp-api-js/messages";
+
 const interactive_catalog_message = new Interactive(
     new ActionCatalog(
         new Product("hello")
