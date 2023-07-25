@@ -1,5 +1,6 @@
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
+import type { AtLeastOne } from "./utils";
 
 /**
  * The main constructor arguments for the API
@@ -236,6 +237,64 @@ export abstract class ContactUniqueComponent extends ContactComponent {
     }
 
     abstract get _type(): string;
+}
+
+/**
+ * Section API abstract object
+ *
+ * All sections are structured the same way, so this abstract class is used to reduce code duplication
+ *
+ * @remarks
+ * - All sections must have between 1 and N elements
+ * - All sections must have a title if more than 1 section is provided
+ *
+ * @internal
+ * @group Interactive
+ *
+ * @typeParam T - The type of the components of the section
+ * @typeParam N - The maximum number of elements in the section
+ */
+export abstract class Section<
+    T,
+    N extends number
+> extends ClientLimitedMessageComponent<T, N> {
+    /**
+     * The title of the section
+     */
+    readonly title?: string;
+
+    /**
+     * Builds a section component
+     *
+     * @param name - The name of the section's type
+     * @param keys_name - The name of the section's keys
+     * @param elements - The elements of the section
+     * @param max - The maximum number of elements in the section
+     * @param title - The title of the section
+     * @param title_length - The maximum length of the title
+     */
+    constructor(
+        name: string,
+        keys_name: string,
+        elements: AtLeastOne<T>,
+        max: N,
+        title?: string,
+        title_length = 24
+    ) {
+        super(name, keys_name, elements, max);
+
+        if (title && title.length > title_length) {
+            throw new Error(
+                `${name} title must be ${title_length} characters or less`
+            );
+        }
+
+        if (elements.length > 1 && !title) {
+            throw new Error(`${name} must have a title`);
+        }
+
+        if (title) this.title = title;
+    }
 }
 
 export type ClientMessageNames =
