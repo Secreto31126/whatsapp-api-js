@@ -3,6 +3,8 @@
 ## Reply Buttons
 
 ```ts
+import { Interactive, ActionButtons, Button, Body } from "whatsapp-api-js/messages";
+
 const interactive_button_message = new Interactive(
     new ActionButtons(
         new Button("reply_1", "Hello"),
@@ -15,6 +17,8 @@ const interactive_button_message = new Interactive(
 ## Options list
 
 ```ts
+import { Interactive, ActionList, Row, Body } from "whatsapp-api-js/messages";
+
 const interactive_list_message = new Interactive(
     new ActionList(
         "Button text",
@@ -30,6 +34,8 @@ const interactive_list_message = new Interactive(
 ## Single Product
 
 ```ts
+import { Interactive, ActionProduct, Product } from "whatsapp-api-js/messages";
+
 const interactive_single_product_message = new Interactive(
     new ActionProduct(
         "catalog_id",
@@ -41,6 +47,8 @@ const interactive_single_product_message = new Interactive(
 ## Multi Product
 
 ```ts
+import { Interactive, ActionProduct, ProductSection, Product } from "whatsapp-api-js/messages";
+
 const interactive_multi_product_message = new Interactive(
     new ActionProduct(
         "catalog_id",

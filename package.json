@@ -76,7 +76,9 @@
   },
   "scripts": {
     "build": "npm run build:code && npm run build:types",
+    "build:dev": "npm run build:code:dev && npm run build:types:dev",
     "build:code": "node -r dotenv/config build.js",
+    "build:code:dev": "npm run build:code",
     "build:types": "tsc && cp ./src/*.d.ts ./lib/types",
     "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs && cp ./src/*.d.ts ./lib/esm && cp ./src/*.d.ts ./lib/cjs",
     "test": "mocha",
@@ -118,9 +120,9 @@
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
   "devDependencies": {
-    "@types/node": "18.16.19",
-    "@typescript-eslint/eslint-plugin": "5.62.0",
-    "@typescript-eslint/parser": "5.62.0",
+    "@types/node": "18.17.0",
+    "@typescript-eslint/eslint-plugin": "6.1.0",
+    "@typescript-eslint/parser": "6.1.0",
     "c8": "8.0.0",
     "dotenv": "^16.0.3",
     "esbuild": "^0.18.0",

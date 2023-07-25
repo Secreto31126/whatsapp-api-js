@@ -28,7 +28,7 @@ const Whatsapp = WhatsAppAPI(
 ## Sending a message
 
 ```ts
-import { Text } from "whatsapp-api-js";
+import { Text } from "whatsapp-api-js/messages";
 
 const text_message = new Text("Hello world!");
 

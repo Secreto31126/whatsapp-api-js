@@ -3,6 +3,8 @@
 ## Simple template with no variables
 
 ```ts
+import { Template, Language } from "whatsapp-api-js/messages";
+
 const template_message = new Template(
     "template_name",
     new Language("en")
@@ -12,6 +14,17 @@ const template_message = new Template(
 ## Simple template with simple variables in header and body
 
 ```ts
+import {
+    Template,
+    Language,
+    HeaderComponent,
+    HeaderParameter,
+    BodyComponent,
+    BodyParameter,
+    Currency,
+    DateTime
+} from "whatsapp-api-js/messages";
+
 const template_variables_message = new Template(
     "template_name",
     new Language("en"),
@@ -39,6 +52,14 @@ const template_variables_message = new Template(
 ## Simple template with header media
 
 ```ts
+import {
+    Template,
+    Language,
+    HeaderComponent,
+    HeaderParameter,
+    Video
+} from "whatsapp-api-js/messages";
+
 const template_media_message = new Template(
     "template_name",
     new Language("en"),
@@ -54,7 +75,13 @@ const template_media_message = new Template(
 ## Complex template with reply buttons
 
 ```ts
-const template_media_message = new Template(
+import {
+    Template,
+    Language,
+    ButtonComponent
+} from "whatsapp-api-js/messages";
+
+const template_reply_buttons_message = new Template(
     "template_name",
     new Language("en"),
     new ButtonComponent(
@@ -68,14 +95,31 @@ const template_media_message = new Template(
 ## Complex template with call to action url
 
 ```ts
-const template_media_message = new Template(
+import {
+    Template,
+    Language,
+    ButtonComponent
+} from "whatsapp-api-js/messages";
+
+const template_call_to_action_message = new Template(
     "template_name",
     new Language("en"),
     new ButtonComponent(
         "url",
         "?user_id=123",
-        "?user_id=123&&product_id=456"
     )
+);
+```
+
+## OTP prefab template
+
+```ts
+import { Template } from "whatsapp-api-js/messages";
+
+const template_otp_message = Template.OTP(
+    "template_name",
+    new Language("en"),
+    "123456"
 );
 ```
 
