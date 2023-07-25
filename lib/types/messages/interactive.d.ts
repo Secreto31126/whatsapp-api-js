@@ -1,5 +1,6 @@
 import { ClientMessage, ClientLimitedMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
+import { Product, ProductSection, Section } from "./index.js";
 import type { Document, Image, Video } from "./media";
 /**
  * Interactive API object
@@ -10,11 +11,11 @@ export declare class Interactive extends ClientMessage {
     /**
      * The action component of the interactive message
      */
-    readonly action: ActionList | ActionButtons | ActionCatalog | ClientTypedMessageComponent;
+    readonly action: ActionList | ActionButtons | ActionProduct | ActionCatalog | ClientTypedMessageComponent;
     /**
      * The type of the interactive message
      */
-    readonly type: "list" | "button" | "product" | "product_list" | string;
+    readonly type: "list" | "button" | "catalog_message" | "product" | "product_list" | string;
     /**
      * The body component of the interactive message
      */
@@ -207,38 +208,6 @@ export declare class ActionList extends ClientLimitedMessageComponent<ListSectio
     constructor(button: string, ...sections: AtLeastOne<ListSection>);
 }
 /**
- * Section API abstract object
- *
- * All sections are structured the same way, so this abstract class is used to reduce code duplication
- *
- * @remarks
- * - All sections must have between 1 and N elements
- * - All sections must have a title if more than 1 section is provided
- *
- * @internal
- * @group Interactive
- *
- * @typeParam T - The type of the components of the section
- * @typeParam N - The maximum number of elements in the section
- */
-export declare abstract class Section<T, N extends number> extends ClientLimitedMessageComponent<T, N> {
-    /**
-     * The title of the section
-     */
-    readonly title?: string;
-    /**
-     * Builds a section component
-     *
-     * @param name - The name of the section's type
-     * @param keys_name - The name of the section's keys
-     * @param elements - The elements of the section
-     * @param max - The maximum number of elements in the section
-     * @param title - The title of the section
-     * @param title_length - The maximum length of the title
-     */
-    constructor(name: string, keys_name: string, elements: AtLeastOne<T>, max: N, title?: string, title_length?: number);
-}
-/**
  * Section API object
  *
  * @group Interactive
@@ -295,6 +264,39 @@ export declare class Row {
  */
 export declare class ActionCatalog implements ClientTypedMessageComponent {
     /**
+     * The name of the component
+     */
+    readonly name: "catalog_message";
+    /**
+     * The thumbnail product to be shown in the catalog
+     */
+    readonly parameters?: {
+        thumbnail_product_retailer_id?: string;
+    };
+    /**
+     * @override
+     */
+    get _type(): "catalog_message";
+    /**
+     * Builds a catalog component for an Interactive message
+     *
+     * @remarks
+     * Seems like the API throws an error if you try to send a catalog
+     * message without a thumbnail, but the signature will keep the
+     * optional parameter in case WhatsApp decides to make their API
+     * work as expected :)
+     *
+     * @param thumbnail - The thumbnail product to be shown in the catalog. If not provided, the first product will be used (or so says the docs, but it doesn't work).
+     */
+    constructor(thumbnail?: Product);
+}
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export declare class ActionProduct implements ClientTypedMessageComponent {
+    /**
      * The id of the catalog from where to get the products
      */
     readonly catalog_id: string;
@@ -311,7 +313,7 @@ export declare class ActionCatalog implements ClientTypedMessageComponent {
      */
     get _type(): "product" | "product_list";
     /**
-     * Builds a catalog component for an Interactive message
+     * Builds a Multi or Single Product component for an Interactive message
      *
      * @param catalog_id - The catalog id
      * @param products - The products to add to the catalog. It can be a _single_ Product object, or a list of ProductSections.
@@ -319,42 +321,5 @@ export declare class ActionCatalog implements ClientTypedMessageComponent {
      * @throws If products is a product list with more than 1 section and at least one section is missing a title
      */
     constructor(catalog_id: string, ...products: [Product] | AtLeastOne<ProductSection>);
-}
-/**
- * Section API object
- *
- * @group Interactive
- */
-export declare class ProductSection extends Section<Product, 30> {
-    /**
-     * The products of the section
-     */
-    readonly product_items: Product[];
-    /**
-     * Builds a product section component for an ActionCatalog
-     *
-     * @param title - The title of the product section, only required if more than 1 section will be used
-     * @param products - The products to add to the product section
-     * @throws If title is over 24 characters if provided
-     * @throws If more than 30 products are provided
-     */
-    constructor(title: string | undefined, ...products: AtLeastOne<Product>);
-}
-/**
- * Product API object
- *
- * @group Interactive
- */
-export declare class Product {
-    /**
-     * The id of the product
-     */
-    readonly product_retailer_id: string;
-    /**
-     * Builds a product component for ActionCart and ProductSection
-     *
-     * @param product_retailer_id - The id of the product
-     */
-    constructor(product_retailer_id: string);
 }
 //# sourceMappingURL=interactive.d.ts.map
