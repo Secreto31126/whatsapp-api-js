@@ -31,14 +31,8 @@ export type ButtonParameter = {
      * The action of the button
      */
     readonly action?: {
-        // TODO: Code duplication?
         thumbnail_product_retailer_id: string;
-        sections?: {
-            title: string;
-            product_items: {
-                product_retailer_id: string;
-            }[];
-        }[];
+        sections?: AtLeastOne<ProductSection>;
     };
 };
 
@@ -250,7 +244,7 @@ abstract class ButtonComponent<Limit extends number, Params = ButtonParameter>
     /**
      * The subtype of the component
      */
-    readonly sub_type: "url" | "quick_reply" | "catalog";
+    readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm";
     /**
      * The parameters of the component
      */
@@ -266,9 +260,10 @@ abstract class ButtonComponent<Limit extends number, Params = ButtonParameter>
      * @param c - The child's pretty print name
      * @param l - The parameters' limit
      * @param parameters - The parameter for the component. The index of each parameter is defined by the order they are sent to the constructor.
+     * @throws If parameters' lenght is over the limit
      */
     constructor(
-        sub_type: "url" | "quick_reply" | "catalog",
+        sub_type: "url" | "quick_reply" | "catalog" | "mpm",
         p: string,
         c: string,
         l: Limit,
@@ -328,7 +323,7 @@ export class URLComponent extends ButtonComponent<2, ButtonParameter | null> {
     constructor(...parameters: AtLeastOne<string>) {
         super(
             "url",
-            "ButtonComponent.URL",
+            "URLComponent",
             "parameters",
             2,
             parameters.map((p) => (p ? new URLComponent.Button(p) : null))
@@ -386,11 +381,12 @@ export class PayloadComponent extends ButtonComponent<3> {
      * Creates a button component for a Template message with quick reply buttons.
      *
      * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
+     * @throws If parameters' lenght is over 3
      */
     constructor(...parameters: AtLeastOne<string>) {
         super(
             "quick_reply",
-            "ButtonComponent.Payload",
+            "PayloadComponent",
             "parameters",
             3,
             parameters.map((p) => new PayloadComponent.Button(p))
@@ -429,10 +425,10 @@ export class CatalogComponent extends ButtonComponent<1> {
     /**
      * Creates a button component for a Template catalog button.
      *
-     * @param thumbnail - The id of the product to use as thumbnail.
+     * @param thumbnail - The product to use as thumbnail.
      */
-    constructor(thumbnail: string) {
-        super("catalog", "ButtonComponent.Catalog", "undefined", 1, [
+    constructor(thumbnail: Product) {
+        super("catalog", "CatalogComponent", "undefined", 1, [
             new CatalogComponent.Action(thumbnail)
         ]);
     }
@@ -449,16 +445,72 @@ export class CatalogComponent extends ButtonComponent<1> {
         /**
          * Creates a parameter for a Template message with a catalog button.
          *
-         * @param thumbnail - The id of the product to use as thumbnail
-         * @throws If product is an empty string
+         * @param thumbnail - The product to use as thumbnail.
          */
-        constructor(thumbnail: string) {
-            if (!thumbnail.length) {
-                throw new Error("Button parameter can't be an empty string");
+        constructor(thumbnail: Product) {
+            this.action = {
+                thumbnail_product_retailer_id: thumbnail.product_retailer_id
+            };
+        }
+    };
+}
+
+/**
+ * Button Component API object for Multi-Product Message
+ *
+ * @group Template
+ */
+export class MPMComponent extends ButtonComponent<1> {
+    /**
+     * Creates a button component for a MPM Template.
+     *
+     * @param thumbnail - The product to use as thumbnail.
+     * @param sections - The sections of the MPM. Must have between 1 and 10 sections. Must have less than 30 products *across* all sections.
+     * @throws If sections is over 10 elements.
+     * @throws If sections is over 1 element and one of the sections doesn't have a title.
+     */
+    constructor(thumbnail: Product, ...sections: AtLeastOne<ProductSection>) {
+        super("mpm", "MPMComponent", "undefined", 1, [
+            new MPMComponent.Action(thumbnail, sections)
+        ]);
+    }
+
+    /**
+     * @internal
+     */
+    private static Action = class
+        extends ClientLimitedMessageComponent<ProductSection, 10>
+        implements ButtonParameter
+    {
+        readonly type = "action";
+        readonly action: {
+            thumbnail_product_retailer_id: string;
+            sections: AtLeastOne<ProductSection>;
+        };
+
+        /**
+         * Creates a parameter for a MPM Template.
+         *
+         * @param thumbnail - The product to use as thumbnail.
+         * @param sections - The sections of the MPM. Must have between 1 and 10 sections.
+         * @throws If sections is over 10 elements.
+         * @throws If sections is over 1 element and one of the sections doesn't have a title.
+         */
+        constructor(thumbnail: Product, sections: AtLeastOne<ProductSection>) {
+            super("MPMComponent", "sections", sections, 10);
+
+            // TODO: Idk if this rule applies here.
+            if (sections.length > 1) {
+                if (!sections.every((s) => "title" in s)) {
+                    throw new Error(
+                        "All sections must have a title if more than 1 section is provided"
+                    );
+                }
             }
 
             this.action = {
-                thumbnail_product_retailer_id: thumbnail
+                thumbnail_product_retailer_id: thumbnail.product_retailer_id,
+                sections
             };
         }
     };
