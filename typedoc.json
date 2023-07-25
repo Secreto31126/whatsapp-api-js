@@ -12,5 +12,6 @@
         "**/node_modules/**"
     ],
     "out": "docs",
-    "includeVersion": true
+    "includeVersion": true,
+    "excludeInternal": true
 }
