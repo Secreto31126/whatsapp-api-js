@@ -230,6 +230,8 @@ export class DateTime implements ClientTypedMessageComponent {
  *
  * @see {@link URLComponent}
  * @see {@link PayloadComponent}
+ * @see {@link CatalogComponent}
+ * @see {@link MPMComponent}
  *
  * @group Template
  */
