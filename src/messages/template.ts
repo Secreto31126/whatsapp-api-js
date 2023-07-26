@@ -235,7 +235,10 @@ export class DateTime implements ClientTypedMessageComponent {
  *
  * @group Template
  */
-abstract class ButtonComponent<Limit extends number, Params = ButtonParameter>
+export abstract class ButtonComponent<
+        Limit extends number,
+        Params = ButtonParameter
+    >
     extends ClientLimitedMessageComponent<Params, Limit>
     implements ClientBuildableMessageComponent
 {
