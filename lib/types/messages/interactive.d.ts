@@ -1,7 +1,7 @@
 import { ClientMessage, ClientLimitedMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
-import { Product, ProductSection, Section } from "./index.js";
 import type { Document, Image, Video } from "./media";
+import { Product, ProductSection, Section } from "./globals.js";
 /**
  * Interactive API object
  *
