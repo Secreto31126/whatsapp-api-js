@@ -142,7 +142,6 @@ export default class WhatsAppAPI {
      * @returns The server response
      * @throws if batch_size is lower than 1
      * @throws if delay is lower than 0
-     *
      */
     broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size?: number, delay?: number): Promise<Array<ReturnType<typeof this.sendMessage>>>;
     /**
