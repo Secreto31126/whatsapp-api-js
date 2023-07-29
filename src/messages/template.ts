@@ -441,7 +441,7 @@ export class CatalogComponent extends ButtonComponent<1> {
     /**
      * @internal
      */
-    static Action = class implements ButtonParameter {
+    private static Action = class implements ButtonParameter {
         readonly type = "action";
         readonly action: {
             thumbnail_product_retailer_id: string;
