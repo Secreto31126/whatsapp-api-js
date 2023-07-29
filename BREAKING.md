@@ -1,5 +1,43 @@
 # Breaking changes
 
+## 2.0.0
+
+### Classes renamed
+
+With the release of **"full catalog"** support for Cloud API, the
+library needed some files and classes renaming to avoid confusion
+between the new features and the original catalog messages.
+
+Among the affected classes and files are:
+
+ - `interactive.ts`
+    - `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used
+    for the Catalog messages. The original class was renamed as
+    `ActionProduct`.
+    - `Section`, `Product` and `ProductSection`: These classes were
+    moved from the file `messages/interactive.ts` to
+    `messages/globals.ts`, as they are also used in templates now.
+    `Product` and `ProductSection` are still exposed, but `Section` was
+    marked as internal (it's still exported, but the fact you can
+    access it doesn't mean you should do it. The lack of
+    package-private is quite annoying to deal with).
+
+ - `template.ts`
+    - `ButtonComponent` -> `URLComponent`, `PayloadComponent`,
+    `CatalogComponent`, `MPMComponent`: Due to the added complexity in
+    order to support the new Catalog and MPM templates, the
+    `ButtonComponent` was split into 4 different classes, each one
+    representing the different button types. For example, an URL
+    component was updated from `new ButtonComponent("url", "example")`
+    to `new URLComponent("example")`.
+    - `ButtonComponent`: The class was replaced with an abstract class
+    and marked as internal (still exported).
+    - `URLComponent`: The class now has a runtime limit of 2 buttons
+    per message, as the WhatsApp API only supports 2 url buttons per
+    template.
+    - `ButtonParameter`: The class was replaced with a type and marked
+    as internal (still exported).
+
 ## 1.0.0
 
 The module was rewritten in TypeScript, which allows for better type support and documentation,
