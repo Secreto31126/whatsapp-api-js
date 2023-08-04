@@ -108,7 +108,7 @@ const Whatsapp = new WhatsAppAPI({
 
 // Assuming get is called on a GET request to your server
 function get(e) {
-    return Whatsapp.get(JSON.parse(e.params));
+    return Whatsapp.get(JSON.parse(e.query));
 }
 ```
 
