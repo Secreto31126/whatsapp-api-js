@@ -6,12 +6,16 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
--   [Set up](#set-up)
--   [Changelog](#changelog)
--   [Documentation](#documentation)
--   [Contributions](#contributions)
--   [Breaking changes](#breaking-changes)
--   [Beta Releases](#beta-releases)
+- [whatsapp-api-js v1](#whatsapp-api-js-v1)
+  - [List of contents](#list-of-contents)
+  - [Set up](#set-up)
+  - [Examples and Tutorials](#examples-and-tutorials)
+  - [Types](#types)
+  - [Changelog](#changelog)
+  - [Documentation](#documentation)
+  - [Contributions](#contributions)
+  - [Breaking changes](#breaking-changes)
+  - [Beta releases](#beta-releases)
 
 ## Set up
 
@@ -76,17 +80,17 @@ Whatsapp.on.message = ({ phoneID, from, message, name }) => {
         ));
     }
 
-    console.log(await promise ?? "There are more types of messages, such as locations, templates, interactives, reactions and all the other media types.");
+    console.log(await promise ?? "There are more types of messages, such as locations, templates, interactive, reactions and all the other media types.");
 
     Whatsapp.markAsRead(phoneID, message.id);
 };
 
-Whatsapp.on.sent = ({ phoneID, to, message, raw }) => {
-    console.log(`Bot ${phoneID} sent to user ${to} ${message}\n\n${JSON.stringify(raw)}`);
+Whatsapp.on.sent = ({ phoneID, to, message }) => {
+    console.log(`Bot ${phoneID} sent to user ${to} ${message}`);
 };
 ```
 
-To recieve the post requests on message, you must setup the webhook at your Facebook app.
+To receive the post requests on message, you must setup the webhook at your Facebook app.
 
 Back in the dashboard, click on WhatsApp > Settings, and setup the webhook URL.
 While setting it up, you will be asked for a Verify Token. This can be any string you want.
@@ -108,15 +112,15 @@ const Whatsapp = new WhatsAppAPI({
 
 // Assuming get is called on a GET request to your server
 function get(e) {
-    return Whatsapp.get(JSON.parse(e.query));
+    return Whatsapp.get(e.query);
 }
 ```
 
 Once you are done, click the administrate button, and subscribe to the messages event.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
-For more information on the setup process for specific enviroments, check out the
-[Enviroments.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/ENVIROMENTS.md).
+For more information on the setup process for specific environments, check out the
+[Environments.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/ENVIRONMENTS.md).
 
 ## Examples and Tutorials
 
@@ -140,7 +144,7 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 ## Documentation
 
-The lateset package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
+The latest package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Contributions
@@ -154,6 +158,6 @@ You can get a full list of breaking changes in the [BREAKING.md file](https://gi
 
 ## Beta releases
 
-Install the latest beta realease with `npm install whatsapp-api-js@beta`.
+Install the latest beta release with `npm install whatsapp-api-js@beta`.
 As any beta, it is 110% likely to break. I also use this tag to test npm releases.
 Use it at your own risk.
