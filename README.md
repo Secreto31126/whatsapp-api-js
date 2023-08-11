@@ -48,7 +48,7 @@ function post(e) {
     return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 
-Whatsapp.on.message = ({ phoneID, from, message, name }) => {
+Whatsapp.on.message = async ({ phoneID, from, message, name }) => {
     console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
 
     let promise;

@@ -15,7 +15,7 @@ import type {
  * @public
  * @param args - The arguments object
  */
-export type OnSent = (args: OnSentArgs) => void;
+export type OnSent = (args: OnSentArgs) => unknown;
 
 /**
  * @public
@@ -57,7 +57,7 @@ export type OnSentArgs = {
  * @public
  * @param args - The arguments object
  */
-export type OnMessage = (args: OnMessageArgs) => void;
+export type OnMessage = (args: OnMessageArgs) => unknown;
 
 /**
  * @public
@@ -91,7 +91,7 @@ export type OnMessageArgs = {
  * @public
  * @param args - The arguments object
  */
-export type OnStatus = (args: OnStatusArgs) => void;
+export type OnStatus = (args: OnStatusArgs) => unknown;
 
 /**
  * @public
