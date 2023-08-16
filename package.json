@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">14.21"
+    "node": ">=18"
   },
   "files": [
     "lib/**/*"
