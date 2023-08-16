@@ -34,8 +34,26 @@ jobs:
           name: docs
           path: docs
 
-  release:
-    name: Deploy website
+  firebase:
+    name: Deploy website to Firebase
+    needs: build
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy docs
+        uses: actions/download-artifact@v3
+        with:
+          name: docs
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WHATSAPPAPIJS }}'
+          channelId: live
+          projectId: whatsappapijs
+
+  archive:
+    name: Deploy website to Github Pages
     needs: build
 
     runs-on: ubuntu-latest
