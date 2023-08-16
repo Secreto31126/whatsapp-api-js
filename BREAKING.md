@@ -38,6 +38,11 @@ Among the affected classes and files are:
     - `ButtonParameter`: The class was replaced with a type and marked
     as internal (still exported).
 
+### Node min version bumped
+
+Node 14 and 16 support was dropped as they reached EoL. The engine
+requirement is now `>=18`.
+
 ## 1.0.0
 
 The module was rewritten in TypeScript, which allows for better type support and documentation,
