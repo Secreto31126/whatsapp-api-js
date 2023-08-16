@@ -13,6 +13,7 @@ import { Product, ProductSection } from "./globals.js";
 
 /**
  * @group Template
+ * @internal
  */
 export type ButtonParameter = {
     /**
