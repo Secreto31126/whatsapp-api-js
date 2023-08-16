@@ -90,7 +90,7 @@
     "prettier:write": "prettier --write src test",
     "coverage": "c8 mocha --reporter min",
     "document": "typedoc && cp -r docs_statics/* docs/",
-    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output/"
+    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/"
   },
   "keywords": [
     "whatsapp",
