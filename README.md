@@ -144,7 +144,7 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 ## Documentation
 
-The latest package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
+The latest release documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Contributions
