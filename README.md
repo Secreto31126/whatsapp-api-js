@@ -1,4 +1,4 @@
-# whatsapp-api-js v1
+# whatsapp-api-js v2
 
 [![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
 
@@ -131,7 +131,7 @@ Check them out in the [examples folder](https://github.com/Secreto31126/whatsapp
 
 ## Types
 
-The library is fully typed. Most types are available by importing /types or /emitters :
+The library is fully typed. Most types are available by importing `/types` or `/emitters` :
 
 ```ts
 import { GetParams, PostData } from "whatsapp-api-js/types";
