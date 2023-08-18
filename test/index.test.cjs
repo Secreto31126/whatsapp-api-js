@@ -242,6 +242,7 @@ describe("WhatsAppAPI", function () {
         const apiValidMessage = { ...message };
 
         let Whatsapp;
+        let spy_on_sent;
         this.beforeEach(function () {
             Whatsapp = new WhatsAppAPI({
                 token,
@@ -251,13 +252,12 @@ describe("WhatsAppAPI", function () {
                     subtle
                 }
             });
+
+            spy_on_sent = sinon_spy();
+            Whatsapp.on.sent = spy_on_sent;
         });
 
         it("should run the logger after sending a message", async function () {
-            const spy = sinon_spy();
-
-            Whatsapp.on.sent = spy;
-
             clientFacebook
                 .intercept({
                     path: `/${Whatsapp.v}/${bot}/messages`,
@@ -271,7 +271,7 @@ describe("WhatsAppAPI", function () {
 
             await Whatsapp.sendMessage(bot, user, message);
 
-            sinon_assert.calledOnceWithMatch(spy, {
+            sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
                 type,
@@ -283,10 +283,6 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should handle failed deliveries responses", async function () {
-            const spy = sinon_spy();
-
-            Whatsapp.on.sent = spy;
-
             const unexpectedResponse = {
                 error: {
                     message:
@@ -310,7 +306,7 @@ describe("WhatsAppAPI", function () {
 
             await Whatsapp.sendMessage(bot, user, message);
 
-            sinon_assert.calledOnceWithMatch(spy, {
+            sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
                 message: apiValidMessage,
@@ -323,13 +319,20 @@ describe("WhatsAppAPI", function () {
         it("should run the logger with id and response as undefined if parsed is set to false", function () {
             Whatsapp.parsed = false;
 
-            const spy = sinon_spy();
-
-            Whatsapp.on.sent = spy;
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, expectedResponse)
+                .times(1);
 
             Whatsapp.sendMessage(bot, user, message);
 
-            sinon_assert.calledOnceWithMatch(spy, {
+            sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
                 message: apiValidMessage,
