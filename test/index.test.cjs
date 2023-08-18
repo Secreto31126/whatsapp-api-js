@@ -1685,7 +1685,9 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.notCalled(spy_on_message);
 
                     // Now give the user's function time to finish
-                    await new Promise((resolve) => setTimeout(resolve, longer_delay));
+                    await new Promise((resolve) =>
+                        setTimeout(resolve, longer_delay)
+                    );
 
                     sinon_assert.calledOnce(spy_on_message);
                 });
@@ -1759,7 +1761,9 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.notCalled(spy_on_status);
 
                     // Now give the user's function time to finish
-                    await new Promise((resolve) => setTimeout(resolve, longer_delay));
+                    await new Promise((resolve) =>
+                        setTimeout(resolve, longer_delay)
+                    );
 
                     sinon_assert.calledOnce(spy_on_status);
                 });
