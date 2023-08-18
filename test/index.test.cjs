@@ -1614,6 +1614,34 @@ describe("WhatsAppAPI", function () {
                     });
                 });
 
+                it("should not block the main thread with the user's callback", async function () {
+                    // Emulates a blocking function
+                    function block(delay) {
+                        const start = Date.now();
+                        while (Date.now() - start < delay);
+                    }
+
+                    const shorter_delay = 5;
+                    const longer_delay = 10;
+
+                    Whatsapp.on.message = () => {
+                        block(longer_delay);
+                        spy_on_message();
+                    };
+
+                    Whatsapp.post(valid_message_mock);
+
+                    // Do critical operations for less time than the user's function
+                    block(shorter_delay);
+
+                    sinon_assert.notCalled(spy_on_message);
+
+                    // Now give the user's function time to finish
+                    await new Promise((resolve) => setTimeout(resolve, longer_delay));
+
+                    sinon_assert.calledOnce(spy_on_message);
+                });
+
                 it("should throw TypeError if the request is missing any data", function () {
                     let moddedMock;
 
@@ -1655,6 +1683,34 @@ describe("WhatsAppAPI", function () {
                         pricing,
                         raw: valid_status_mock
                     });
+                });
+
+                it("should not block the main thread with the user's callback", async function () {
+                    // Emulates a blocking function
+                    function block(delay) {
+                        const start = Date.now();
+                        while (Date.now() - start < delay);
+                    }
+
+                    const shorter_delay = 5;
+                    const longer_delay = 10;
+
+                    Whatsapp.on.status = () => {
+                        block(longer_delay);
+                        spy_on_status();
+                    };
+
+                    Whatsapp.post(valid_status_mock);
+
+                    // Do critical operations for less time than the user's function
+                    block(shorter_delay);
+
+                    sinon_assert.notCalled(spy_on_status);
+
+                    // Now give the user's function time to finish
+                    await new Promise((resolve) => setTimeout(resolve, longer_delay));
+
+                    sinon_assert.calledOnce(spy_on_status);
                 });
 
                 it("should throw TypeError if the request is missing any data", function () {
