@@ -339,6 +339,45 @@ describe("WhatsAppAPI", function () {
                 request
             });
         });
+
+        it("should not block the main thread with the user's callback", async function () {
+            // Emulates a blocking function
+            function block(delay) {
+                const start = Date.now();
+                while (Date.now() - start < delay);
+            }
+
+            const shorter_delay = 5;
+            const longer_delay = 10;
+
+            Whatsapp.on.sent = () => {
+                block(longer_delay);
+                spy_on_sent();
+            };
+
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, expectedResponse)
+                .times(1);
+
+            Whatsapp.sendMessage(bot, user, message);
+
+            // Do critical operations for less time than the user's function
+            block(shorter_delay);
+
+            sinon_assert.notCalled(spy_on_sent);
+
+            // Now give the blocking function time to finish
+            await new Promise((resolve) => setTimeout(resolve, longer_delay));
+
+            sinon_assert.calledOnce(spy_on_sent);
+        });
     });
 
     describe("Message", function () {
