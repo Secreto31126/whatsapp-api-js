@@ -316,7 +316,7 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        it("should run the logger with id and response as undefined if parsed is set to false", function () {
+        it("should run the logger with id and response as undefined if parsed is set to false", async function () {
             Whatsapp.parsed = false;
 
             clientFacebook
@@ -331,6 +331,9 @@ describe("WhatsAppAPI", function () {
                 .times(1);
 
             Whatsapp.sendMessage(bot, user, message);
+
+            // Callbacks are executed in the next tick
+            await new Promise((resolve) => setTimeout(resolve, 0));
 
             sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
@@ -1644,8 +1647,11 @@ describe("WhatsAppAPI", function () {
                     Whatsapp.secure = false;
                 });
 
-                it("should parse the post request and call back with the right parameters", function () {
+                it("should parse the post request and call back with the right parameters", async function () {
                     Whatsapp.post(valid_message_mock);
+
+                    // Callbacks are executed in the next tick
+                    await new Promise((resolve) => setTimeout(resolve, 0));
 
                     sinon_assert.calledOnceWithMatch(spy_on_message, {
                         phoneID,
@@ -1713,8 +1719,11 @@ describe("WhatsAppAPI", function () {
                     Whatsapp.secure = false;
                 });
 
-                it("should parse the post request and call back with the right parameters", function () {
+                it("should parse the post request and call back with the right parameters", async function () {
                     Whatsapp.post(valid_status_mock);
+
+                    // Callbacks are executed in the next tick
+                    await new Promise((resolve) => setTimeout(resolve, 0));
 
                     sinon_assert.calledOnceWithMatch(spy_on_status, {
                         phoneID,
