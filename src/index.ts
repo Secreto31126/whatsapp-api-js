@@ -871,11 +871,19 @@ export default class WhatsAppAPI {
         return this.parsed ? ((await (await promise).json()) as T) : promise;
     }
 
+    /**
+     * Offload a function to the next tick of the event loop
+     *
+     * @internal
+     * @param f - The function to offload from the main thread
+     * @param a - The arguments to pass to the function
+     */
     private promisify<A, F extends ((...a: A[]) => unknown) | undefined>(
         f: F,
         ...a: A[]
     ) {
         if (f) {
+            // Thanks @RahulLanjewar93
             Promise.resolve().then(() => f(...a));
         }
     }
