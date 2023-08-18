@@ -871,12 +871,12 @@ export default class WhatsAppAPI {
         return this.parsed ? ((await (await promise).json()) as T) : promise;
     }
 
-    private async promisify<A, F extends ((...a: A[]) => unknown) | undefined>(
+    private promisify<A, F extends ((...a: A[]) => unknown) | undefined>(
         f: F,
         ...a: A[]
     ) {
         if (f) {
-            return f(...a);
+            Promise.resolve().then(() => f(...a));
         }
     }
 }
