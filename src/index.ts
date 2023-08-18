@@ -251,7 +251,7 @@ export default class WhatsAppAPI {
             response
         };
 
-        this.on.sent?.(args);
+        this.offload(this.on?.sent, args);
 
         return response ?? promise;
     }
@@ -777,7 +777,7 @@ export default class WhatsAppAPI {
                 raw: data
             };
 
-            this.on.message?.(args);
+            this.offload(this.on?.message, args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -799,7 +799,7 @@ export default class WhatsAppAPI {
                 raw: data
             };
 
-            this.on.status?.(args);
+            this.offload(this.on?.status, args);
         }
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
@@ -869,5 +869,22 @@ export default class WhatsAppAPI {
         promise: Promise<Response>
     ): Promise<T | Response> {
         return this.parsed ? ((await (await promise).json()) as T) : promise;
+    }
+
+    /**
+     * Offload a function to the next tick of the event loop
+     *
+     * @internal
+     * @param f - The function to offload from the main thread
+     * @param a - The arguments to pass to the function
+     */
+    private offload<A, F extends ((...a: A[]) => unknown) | undefined>(
+        f: F,
+        ...a: A[]
+    ) {
+        if (f) {
+            // Thanks @RahulLanjewar93
+            Promise.resolve().then(() => f(...a));
+        }
     }
 }
