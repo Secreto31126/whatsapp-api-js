@@ -76,7 +76,7 @@ export class Contacts extends ClientMessage {
                     const pointer = contact[name] as (typeof component)[];
                     pointer.push(component._build() as ContactComponent);
                 } else {
-                    if (contact.name)
+                    if (contact[name])
                         throw new Error(
                             `Contact already has a ${name} component and _many is set to false`
                         );
