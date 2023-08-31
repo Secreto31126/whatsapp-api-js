@@ -198,7 +198,7 @@ export class Header {
             this.type = "text";
         } else {
             this.type = object._type;
-            if ("caption" in object)
+            if (object.caption)
                 throw new Error(`Header ${this.type} must not have a caption`);
         }
 
@@ -349,7 +349,7 @@ export class ActionList
             throw new Error("Button content cannot be an empty string");
         if (button.length > 20)
             throw new Error("Button content must be 20 characters or less");
-        if (sections.length > 1 && !sections.every((obj) => "title" in obj))
+        if (sections.length > 1 && !sections.every((obj) => !!obj.title))
             throw new Error(
                 "All sections must have a title if more than 1 section is provided"
             );
@@ -519,7 +519,7 @@ export class ActionProduct implements ClientTypedMessageComponent {
                         "Catalog must have between 1 and 10 product sections"
                     );
                 for (const obj of products) {
-                    if (!("title" in obj)) {
+                    if (!obj.title) {
                         throw new Error(
                             "All sections must have a title if more than 1 section is provided"
                         );
