@@ -20,7 +20,7 @@
       "packageNames": [
         "esbuild"
       ],
-      "versioning": "regex:^(?<major>\\d+)\\.(?<major>\\d+)\\.(?<patch>\\d+)$"
+      "versioning": "regex:^(<major>\\d+)\\.(<major>\\d+)\\.(<patch>\\d+)$"
     }
   ]
 }
