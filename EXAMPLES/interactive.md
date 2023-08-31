@@ -31,26 +31,26 @@ const interactive_list_message = new Interactive(
 );
 ```
 
-## Product
+## Single Product
 
 ```ts
-import { Interactive, ActionCatalog, Product } from "whatsapp-api-js/messages";
+import { Interactive, ActionProduct, Product } from "whatsapp-api-js/messages";
 
-const interactive_product_message = new Interactive(
-    new ActionCatalog(
+const interactive_single_product_message = new Interactive(
+    new ActionProduct(
         "catalog_id",
         new Product("product_id")
     )
 );
 ```
 
-## Product list
+## Multi Product
 
 ```ts
-import { Interactive, ActionCatalog, ProductSection, Product } from "whatsapp-api-js/messages";
+import { Interactive, ActionProduct, ProductSection, Product } from "whatsapp-api-js/messages";
 
-const interactive_catalog_message = new Interactive(
-    new ActionCatalog(
+const interactive_multi_product_message = new Interactive(
+    new ActionProduct(
         "catalog_id",
         new ProductSection(
             "Product section title",
@@ -60,6 +60,19 @@ const interactive_catalog_message = new Interactive(
     ),
     new Body("Hello World"),
     new Header("Hello World Header")
+);
+```
+
+## Catalog
+
+```ts
+import { Interactive, ActionCatalog, Product, Body } from "whatsapp-api-js/messages";
+
+const interactive_catalog_message = new Interactive(
+    new ActionCatalog(
+        new Product("hello")
+    ),
+    new Body("Hello World")
 );
 ```
 

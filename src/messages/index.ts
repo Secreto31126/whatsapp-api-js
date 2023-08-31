@@ -5,3 +5,4 @@ export * from "./contacts.js";
 export * from "./interactive.js";
 export * from "./media.js";
 export * from "./template.js";
+export * from "./globals.js";
