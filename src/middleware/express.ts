@@ -1,9 +1,10 @@
-import { default as ParentWhatsAppAPI } from "..";
+import WhatsAppAPIMiddleware from ".";
 import { isInteger } from "../utils";
 
+import type { Request } from "express";
 import type { GetParams } from "../types";
 
-export default class WhatsAppAPI extends ParentWhatsAppAPI {
+export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for Express.js
      *
@@ -33,30 +34,21 @@ export default class WhatsAppAPI extends ParentWhatsAppAPI {
      * });
      * ```
      *
+     * @override
      * @param req - The request object from Express.js
      * @returns The status code to be sent to the client
      */
-    async handle_post(req: {
-        body?: string;
-        headers: unknown;
-    }): Promise<number> {
-        let code;
+    async handle_post(req: Request): Promise<number> {
         try {
-            code = await this.post(
+            return this.post(
                 JSON.parse(req.body ?? "{}"),
                 req.body,
-                (
-                    req.headers as {
-                        "x-hub-signature-256"?: string;
-                    }
-                )["x-hub-signature-256"]
+                req.header("x-hub-signature-256")
             );
         } catch (e) {
             // In case the JSON.parse fails ¯\_(ツ)_/¯
-            code = isInteger(e) ? e : 500;
+            return isInteger(e) ? e : 500;
         }
-
-        return code;
     }
 
     /**
@@ -75,19 +67,25 @@ export default class WhatsAppAPI extends ParentWhatsAppAPI {
      * });
      *
      * app.get("/message", async (req, res) => {
-     *     res.sendStatus(await Whatsapp.handle_get(req));
+     *     try {
+     *         res.send(await Whatsapp.handle_get(req));
+     *     } catch (e) {
+     *         res.sendStatus(e as number);
+     *     }
      * });
      * ```
      *
+     * @override
      * @param req - The request object from Express.js
      * @returns The status code to be sent to the client
+     * @throws The error code
      */
-    async handle_get(req: { query: unknown }) {
+    async handle_get(req: Request) {
         try {
             return this.get(req.query as GetParams);
         } catch (e) {
             // In case who knows what fails ¯\_(ツ)_/¯
-            return isInteger(e) ? e : 500;
+            throw isInteger(e) ? e : 500;
         }
     }
 }
