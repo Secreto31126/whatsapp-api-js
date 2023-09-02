@@ -17,12 +17,31 @@ const Whatsapp = new WhatsAppAPI({
 import WhatsAppAPI from "whatsapp-api-js";
 import { Node18 } from "whatsapp-api-js/setup/node";
 
-const Whatsapp = WhatsAppAPI(
+const Whatsapp = new WhatsAppAPI(
     Node18({
         token: "",
         appSecret: ""
     })
 );
+```
+
+## Using the middlewares
+
+```ts
+import express from "express";
+import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+
+const Whatsapp = new WhatsAppAPI({
+    token: "",
+    appSecret: "",
+    webhookVerifyToken: ""
+});
+
+const app = express();
+
+app.post("/webhook", async (req, res) => {
+    res.sendStatus(await Whatsapp.handle_post(req));
+});
 ```
 
 ## Sending a message
@@ -39,3 +58,4 @@ Whatsapp.sendMessage("from (bot phoneID)", "to (phone number/wa_id)", text_messa
 
 https://whatsappapijs.web.app/classes/WhatsAppAPI.default.html
 https://whatsappapijs.web.app/modules/setup.html
+https://whatsappapijs.web.app/modules/middleware.html

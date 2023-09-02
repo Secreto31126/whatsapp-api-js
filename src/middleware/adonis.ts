@@ -1,9 +1,12 @@
-import WhatsAppAPIMiddleware from ".";
+import { WhatsAppAPIMiddleware } from ".";
 import { isInteger } from "../utils";
 
 import type { Request } from "@adonisjs/http-server/build/standalone";
 import type { GetParams, PostData } from "../types";
 
+/**
+ * AdonisJS middleware for WhatsAppAPI
+ */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for AdonisJS

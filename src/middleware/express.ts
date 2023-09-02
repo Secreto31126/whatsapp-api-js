@@ -1,9 +1,12 @@
-import WhatsAppAPIMiddleware from ".";
+import { WhatsAppAPIMiddleware } from ".";
 import { isInteger } from "../utils";
 
 import type { Request } from "express";
 import type { GetParams } from "../types";
 
+/**
+ * Express.js middleware for WhatsAppAPI
+ */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for Express.js

@@ -1,9 +1,12 @@
-import WhatsAppAPIMiddleware from ".";
+import { WhatsAppAPIMiddleware } from ".";
 import { isInteger } from "../utils";
 
 import type { IncomingMessage } from "node:http";
 import type { GetParams } from "../types";
 
+/**
+ * Core JS http server middleware for WhatsAppAPI
+ */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for core JS http server

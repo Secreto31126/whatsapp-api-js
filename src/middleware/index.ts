@@ -1,6 +1,10 @@
 import WhatsAppAPI from "..";
 
-export default abstract class WhatsAppAPIMiddleware extends WhatsAppAPI {
+/**
+ * The abstract class for the middlewares, it extends the WhatsAppAPI class
+ * and defines the handle_post and handle_get methods for its childs.
+ */
+export abstract class WhatsAppAPIMiddleware extends WhatsAppAPI {
     /**
      * @returns The status code to be sent to the client
      */
