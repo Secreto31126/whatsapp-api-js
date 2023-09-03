@@ -291,7 +291,7 @@ export abstract class ButtonComponent
         return this.parameters.map((p) => ({
             type: this.type,
             sub_type: this.sub_type,
-            index: ++pointers.button_counter,
+            index: pointers.button_counter++,
             parameters: [p]
         })) as Array<NonNullable<BuiltButtonComponent>>;
     }
@@ -515,13 +515,22 @@ export class CopyComponent extends ButtonComponent {
  *
  * @group Template
  */
-export abstract class SkipButtonComponent extends ButtonComponent {
+export class SkipButtonComponent extends ButtonComponent {
+    /**
+     * Skips a button component index for a Template message.
+     */
+    constructor() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - This is a fake button component, no need to pass parameters
+        super();
+    }
+
     /**
      * @override
      */
-    static _build(pointers: BuildingPointers) {
-        ++pointers.button_counter;
-        return null;
+    _build(pointers: BuildingPointers) {
+        pointers.button_counter++;
+        return null as unknown as BuiltButtonComponent[];
     }
 }
 
