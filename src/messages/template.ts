@@ -241,6 +241,7 @@ export class DateTime implements ClientTypedMessageComponent {
  * @see {@link PayloadComponent}
  * @see {@link CatalogComponent}
  * @see {@link MPMComponent}
+ * @see {@link SkipButtonComponent}
  *
  * @group Template
  */
@@ -463,6 +464,21 @@ export class MPMComponent extends ButtonComponent {
             };
         }
     };
+}
+
+/**
+ * Button Component API object for Multi-Product Message
+ *
+ * @group Template
+ */
+export abstract class SkipButtonComponent extends ButtonComponent {
+    /**
+     * @override
+     */
+    static _build(pointers: BuildingPointers) {
+        ++pointers.button_counter;
+        return null;
+    }
 }
 
 /**
