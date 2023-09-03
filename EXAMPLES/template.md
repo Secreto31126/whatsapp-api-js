@@ -79,13 +79,15 @@ const template_reply_buttons_message = new Template(
     "template_name",
     "en",
     new PayloadComponent(
-        "reply_1",
+        "reply_1"
+    ),
+    new PayloadComponent(
         "reply_2"
     )
 );
 ```
 
-## Complex template with call to action url
+## Complex template with call to action urls
 
 ```ts
 import { Template, URLComponent } from "whatsapp-api-js/messages";
@@ -95,6 +97,48 @@ const template_call_to_action_message = new Template(
     "en",
     new URLComponent(
         "?user_id=123"
+    ),
+    new URLComponent(
+        "?user_id=456"
+    )
+);
+```
+
+## Complex template with copy coupon button
+
+```ts
+import { Template, CopyComponent } from "whatsapp-api-js/messages";
+
+const template_call_to_action_message = new Template(
+    "template_name",
+    "en",
+    new CopyComponent(
+        "PROMO10"
+    )
+);
+```
+
+## Complex template with combination of buttons
+
+```ts
+import {
+    Template,
+    CopyComponent,
+    URLComponent,
+    PayloadComponent
+} from "whatsapp-api-js/messages";
+
+const template_call_to_action_message = new Template(
+    "template_name",
+    "en",
+    new CopyComponent(
+        "PROMO10"
+    ),
+    new URLComponent(
+        "?code=PROMO10"
+    ),
+    new PayloadComponent(
+        "send_catalog"
     )
 );
 ```
@@ -161,5 +205,6 @@ https://whatsappapijs.web.app/classes/messages.HeaderComponent.html
 https://whatsappapijs.web.app/classes/messages.BodyComponent.html
 https://whatsappapijs.web.app/classes/messages.URLComponent.html
 https://whatsappapijs.web.app/classes/messages.PayloadComponent.html
+https://whatsappapijs.web.app/classes/messages.CopyComponent.html
 https://whatsappapijs.web.app/classes/messages.CatalogComponent.html
 https://whatsappapijs.web.app/classes/messages.MPMComponent.html
