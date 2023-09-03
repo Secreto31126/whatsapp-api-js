@@ -1,5 +1,5 @@
-import { WhatsAppAPIMiddleware } from ".";
-import { isInteger } from "../utils";
+import { WhatsAppAPIMiddleware } from "./index.js";
+import { isInteger } from "../utils.js";
 
 import type { Request } from "express";
 import type { GetParams } from "../types";

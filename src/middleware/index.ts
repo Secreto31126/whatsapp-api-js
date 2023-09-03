@@ -1,4 +1,4 @@
-import WhatsAppAPI from "..";
+import WhatsAppAPI from "../index.js";
 
 /**
  * The abstract class for the middlewares, it extends the WhatsAppAPI class
@@ -17,6 +17,6 @@ export abstract class WhatsAppAPIMiddleware extends WhatsAppAPI {
     abstract handle_get(...a: unknown[]): Promise<string>;
 }
 
-export { default as ExpressMiddleware } from "./express";
-export { default as AdonisMiddleware } from "./adonis";
-export { default as CoreMiddleware } from "./core";
+export { default as ExpressMiddleware } from "./express.js";
+export { default as AdonisMiddleware } from "./adonis.js";
+export { default as CoreMiddleware } from "./core.js";
