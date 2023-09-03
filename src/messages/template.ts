@@ -29,6 +29,10 @@ export type ButtonParameter = {
      */
     readonly payload?: string;
     /**
+     * The coupon's code of the button
+     */
+    readonly coupon_code?: string;
+    /**
      * The action of the button
      */
     readonly action?: {
@@ -241,6 +245,7 @@ export class DateTime implements ClientTypedMessageComponent {
  * @see {@link PayloadComponent}
  * @see {@link CatalogComponent}
  * @see {@link MPMComponent}
+ * @see {@link CopyComponent}
  * @see {@link SkipButtonComponent}
  *
  * @group Template
@@ -467,7 +472,46 @@ export class MPMComponent extends ButtonComponent {
 }
 
 /**
- * Button Component API object for Multi-Product Message
+ * Button Component API object for copy coupon button
+ *
+ * @group Template
+ */
+export class CopyComponent extends ButtonComponent {
+    /**
+     * Creates a button component for a Template message with copy coupon button.
+     *
+     * @param parameters - The variable for each url button.
+     * @throws If parameter is an empty string.
+     */
+    constructor(parameter: string) {
+        super("copy_code", new CopyComponent.Action(parameter));
+    }
+
+    /**
+     * @internal
+     */
+    private static Action = class implements ButtonParameter {
+        readonly type = "coupon_code";
+        readonly coupon_code: string;
+
+        /**
+         * Creates a parameter for a Template message with copy coupon button.
+         *
+         * @param coupon_code - The coupon's code of the button.
+         * @throws If coupon_code is an empty string.
+         */
+        constructor(coupon_code: string) {
+            if (!coupon_code.length) {
+                throw new Error("Action coupon_code can't be an empty string");
+            }
+
+            this.coupon_code = coupon_code;
+        }
+    };
+}
+
+/**
+ * (Fake) Button Component API object for skipping buttons that don't require a parameter (such as phone number buttons)
  *
  * @group Template
  */
