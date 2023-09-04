@@ -109,7 +109,7 @@ const template_call_to_action_message = new Template(
 ```ts
 import { Template, CopyComponent } from "whatsapp-api-js/messages";
 
-const template_call_to_action_message = new Template(
+const template_copy_coupon_message = new Template(
     "template_name",
     "en",
     new CopyComponent(
@@ -128,7 +128,7 @@ import {
     PayloadComponent
 } from "whatsapp-api-js/messages";
 
-const template_call_to_action_message = new Template(
+const template_mixed_buttons_message = new Template(
     "template_name",
     "en",
     new CopyComponent(
@@ -167,7 +167,7 @@ import {
     ProductSection
 } from "whatsapp-api-js/messages";
 
-const template_call_to_action_message = new Template(
+const template_multi_product_message = new Template(
     "template_name",
     "en",
     new MPMComponent(
