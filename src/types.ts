@@ -245,7 +245,7 @@ export abstract class ContactUniqueComponent extends ContactComponent {
  */
 export interface InteractiveAction extends ClientTypedMessageComponent {
     /**
-     * @override
+     * @overload
      */
     get _type():
         | "list"
