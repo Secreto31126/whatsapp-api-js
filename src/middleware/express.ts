@@ -80,7 +80,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      *
      * @override
      * @param req - The request object from Express.js
-     * @returns The status code to be sent to the client
+     * @returns The challenge string to be sent to the client
      * @throws The error code
      */
     async handle_get(req: Request) {
