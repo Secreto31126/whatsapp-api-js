@@ -7,7 +7,8 @@
         "src/emitters.ts",
         "src/messages/index.ts",
         "src/setup/index.ts",
-        "src/middleware/index.ts"
+        "src/middleware/index.ts",
+        "src/middleware/globals.ts"
     ],
     "exclude": [
         "**/node_modules/**"
