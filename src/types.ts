@@ -238,6 +238,23 @@ export abstract class ContactUniqueComponent extends ContactComponent {
     abstract get _type(): string;
 }
 
+/**
+ * Isomorphism intensifies. Also helps with the _type typings :)
+ *
+ * @internal
+ */
+export interface InteractiveAction extends ClientTypedMessageComponent {
+    /**
+     * @override
+     */
+    get _type():
+        | "list"
+        | "button"
+        | "catalog_message"
+        | "product"
+        | "product_list";
+}
+
 export type ClientMessageNames =
     | "text"
     | "audio"
