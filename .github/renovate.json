@@ -14,5 +14,13 @@
   "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{controls}}}{{{footer}}}",
   "prHeader": "",
   "prFooter": "",
-  "semanticCommits": "enabled"
+  "semanticCommits": "enabled",
+  "packageRules": [
+    {
+      "packageNames": [
+        "esbuild"
+      ],
+      "versioning": "regex:^(<major>\\d+)\\.(<major>\\d+)\\.(<patch>\\d+)$"
+    }
+  ]
 }
