@@ -42,16 +42,8 @@ export type ButtonParameter = {
 };
 
 /**
- * @group Template
- */
-export type BuiltButtonComponent = {
-    type: "button";
-    sub_type: "url" | "quick_reply" | "catalog" | "copy_code";
-    index: number;
-    parameters: Array<ButtonParameter>;
-};
-
-/**
+ * This type is used as a C struct pointer for the _build method
+ *
  * @internal
  */
 type BuildingPointers = {
@@ -76,11 +68,9 @@ export class Template extends ClientMessage {
     /**
      * The components of the template
      */
-    readonly components?: (
-        | HeaderComponent
-        | BodyComponent
-        | BuiltButtonComponent
-    )[];
+    readonly components?: Array<
+        NonNullable<HeaderComponent | BodyComponent | ButtonComponent>
+    >;
 
     /**
      * @override
@@ -114,8 +104,7 @@ export class Template extends ClientMessage {
             };
             this.components = components
                 .map((cmpt) => cmpt._build(pointers))
-                .filter((e) => !!e)
-                .flat() as typeof this.components;
+                .filter((e) => !!e);
         }
     }
 
@@ -260,38 +249,36 @@ export abstract class ButtonComponent
      */
     readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code";
     /**
-     * The parameters of the component
+     * The parameter of the component
      */
-    readonly parameters: ButtonParameter[];
+    readonly parameters: [ButtonParameter];
+    /**
+     * The index of the component (assigned after calling _build)
+     */
+    protected index = NaN;
 
     /**
      * Builds a button component for a Template message.
-     * The index of each parameter is defined by the order they are sent to the Template's constructor.
+     * The index of each component is defined by the order they are sent to the Template's constructor.
      *
      * @internal
      * @param sub_type - The type of button component to create.
-     * @param parameters - The parameter for the component. The index of each parameter is defined by the order they are sent to the Template's constructor.
+     * @param parameter - The parameter for the component. The index of each component is defined by the order they are sent to the Template's constructor.
      */
     constructor(
         sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code",
-        parameters: ButtonParameter
+        parameter: ButtonParameter
     ) {
         this.sub_type = sub_type;
-        this.parameters = [parameters];
+        this.parameters = [parameter];
     }
 
     /**
      * @override
      */
-    _build(
-        pointers: BuildingPointers
-    ): Array<NonNullable<BuiltButtonComponent>> {
-        return this.parameters.map((p) => ({
-            type: this.type,
-            sub_type: this.sub_type,
-            index: pointers.button_counter++,
-            parameters: [p]
-        })) as Array<NonNullable<BuiltButtonComponent>>;
+    _build(pointers: BuildingPointers) {
+        this.index = pointers.button_counter++;
+        return this;
     }
 }
 
@@ -528,7 +515,7 @@ export class SkipButtonComponent extends ButtonComponent {
      */
     _build(pointers: BuildingPointers) {
         pointers.button_counter++;
-        return null as unknown as BuiltButtonComponent[];
+        return null as unknown as this;
     }
 }
 
