@@ -1,4 +1,4 @@
-import { WhatsAppAPIMiddleware } from "./index.js";
+import { WhatsAppAPIMiddleware } from "./globals.js";
 import { isInteger } from "../utils.js";
 
 import type { Request } from "express";
