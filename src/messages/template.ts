@@ -89,8 +89,6 @@ export class Template extends ClientMessage {
         return "template";
     }
 
-    // eslint-disable-next-line tsdoc/syntax
-    /** @todo Find out if more than one of each component is allowed */
     /**
      * Create a Template object for the API
      *
