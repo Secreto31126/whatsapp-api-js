@@ -762,12 +762,12 @@ export default class WhatsAppAPI {
 
         // Check if the message is a message or a status update
         if ("messages" in value) {
-            const contact = value.contacts[0];
-
-            const from = contact.wa_id;
-            const name = contact.profile.name;
-
             const message = value.messages[0];
+
+            const contact = value.contacts?.[0];
+
+            const from = contact?.wa_id ?? message.from;
+            const name = contact?.profile.name;
 
             const args: OnMessageArgs = {
                 phoneID,

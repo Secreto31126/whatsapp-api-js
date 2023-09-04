@@ -617,7 +617,7 @@ export type PostData = {
                       };
                   } & (
                       | {
-                            contacts: [ServerContacts];
+                            contacts?: [ServerContacts];
                             messages: [ServerMessage];
                         }
                       | {
