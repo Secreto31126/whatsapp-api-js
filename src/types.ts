@@ -240,8 +240,6 @@ export abstract class ContactUniqueComponent extends ContactComponent {
 
 /**
  * Isomorphism intensifies. Also helps with the _type typings :)
- *
- * @internal
  */
 export interface InteractiveAction extends ClientTypedMessageComponent {
     /**
