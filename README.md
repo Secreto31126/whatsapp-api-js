@@ -1,7 +1,7 @@
 # whatsapp-api-js v1
 
-[![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
-[![All Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js?color=ee8449)](#contributors)
+[![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
+[![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
 
 A TypeScript server agnostic Whatsapp's Official API framework.
 
