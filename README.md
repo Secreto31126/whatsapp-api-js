@@ -14,6 +14,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
   - [Changelog](#changelog)
   - [Documentation](#documentation)
   - [Contributions](#contributions)
+  - [Contributions](#contributors)
   - [Breaking changes](#breaking-changes)
   - [Beta releases](#beta-releases)
 
@@ -147,11 +148,6 @@ To know what changed between updates, check out the [releases on Github](https:/
 The latest package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
-## Contributions
-
-If you have some free time and really want to improve the library or fix dumb bugs, feel free to read
-[CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
-
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
@@ -162,6 +158,11 @@ If you have some free time and really want to improve the library or fix dumb bu
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Contributions
+
+If you have some free time and really want to improve the library or fix dumb bugs, feel free to read
+[CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md).
 
 ## Breaking changes
 
