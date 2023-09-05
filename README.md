@@ -1,6 +1,7 @@
 # whatsapp-api-js v1
 
-[![npm version](https://badge.fury.io/js/whatsapp-api-js.svg)](https://badge.fury.io/js/whatsapp-api-js)
+[![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
+[![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
 
 A TypeScript server agnostic Whatsapp's Official API framework.
 
@@ -13,6 +14,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
   - [Types](#types)
   - [Changelog](#changelog)
   - [Documentation](#documentation)
+  - [Contributors](#contributors)
   - [Contributions](#contributions)
   - [Breaking changes](#breaking-changes)
   - [Beta releases](#beta-releases)
@@ -147,10 +149,32 @@ To know what changed between updates, check out the [releases on Github](https:/
 The latest package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
+## Contributors
+
+[Emoji key ✨](https://allcontributors.org/docs/en/emoji-key)
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/DiegoCarrillogt"><img src="https://avatars.githubusercontent.com/u/29462621?v=4?s=100" width="100px;" alt="Diego Carrillo"/><br /><sub><b>Diego Carrillo</b></sub></a><br /><a href="#financial-DiegoCarrillogt" title="Financial">💵</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/HysMX"><img src="https://avatars.githubusercontent.com/u/50180189?v=4?s=100" width="100px;" alt="Omar"/><br /><sub><b>Omar</b></sub></a><br /><a href="https://github.com/Secreto31126/whatsapp-api-js/issues?q=author%3AHysMX" title="Bug reports">🐛</a> <a href="#financial-HysMX" title="Financial">💵</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/RahulLanjewar93"><img src="https://avatars.githubusercontent.com/u/63550998?v=4?s=100" width="100px;" alt="Rahul Lanjewar"/><br /><sub><b>Rahul Lanjewar</b></sub></a><br /><a href="https://github.com/Secreto31126/whatsapp-api-js/commits?author=RahulLanjewar93" title="Code">💻</a> <a href="https://github.com/Secreto31126/whatsapp-api-js/commits?author=RahulLanjewar93" title="Documentation">📖</a> <a href="#ideas-RahulLanjewar93" title="Ideas, Planning, & Feedback">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 ## Contributions
 
 If you have some free time and really want to improve the library or fix dumb bugs, feel free to read
-[CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md)
+[CONTRIBUTING.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/CONTRIBUTING.md).
 
 ## Breaking changes
 
