@@ -5,7 +5,10 @@ import type { Request } from "undici";
 import type { GetParams } from "../types";
 
 /**
- * Web Standard API http server adapter for WhatsAppAPI (deno/bun/Hono)
+ * Web Standard API http server adapter for WhatsAppAPI (deno/bun/Hono/SvelteKit)
+ *
+ * Deno is used as the default example, but it should work with any
+ * Web Standard API http server Request object.
  */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
@@ -53,6 +56,12 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import WhatsAppAPI from "whatsapp-api-js/middleware/web-standard";
+     *
+     * const Whatsapp = new WhatsAppAPI({
+     *     token: "YOUR_TOKEN",
+     *     appSecret: "YOUR_APP_SECRET",
+     *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
+     * });
      *
      * Deno.serve(async (req) => {
      *     if (req.url === "/message" && req.method === "GET") {

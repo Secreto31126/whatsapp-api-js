@@ -10,7 +10,7 @@ import type { GetParams } from "../types";
  * node:http server middleware for WhatsAppAPI
  */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
-    protected async parseBody(readable: Readable) {
+    private async parseBody(readable: Readable) {
         const chunks = [];
 
         for await (const chunk of readable) {
