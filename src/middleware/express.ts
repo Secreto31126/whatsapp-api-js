@@ -31,8 +31,8 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * // is called has the request body as a string, not a parsed body.
      * app.use(express.json());
      *
-     * // The `express.text()` is optional if you are NOT using `express.json()`.
-     * app.post("/message", express.text(), async (req, res) => {
+     * // The `express.text({ type: '*\/*' })` is optional if you are NOT using `express.json()`.
+     * app.post("/message", express.text({ type: '*\/*' }), async (req, res) => {
      *     res.sendStatus(await Whatsapp.handle_post(req));
      * });
      * ```
