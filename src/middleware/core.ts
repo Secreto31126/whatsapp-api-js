@@ -38,7 +38,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      */
     async handle_post(req: IncomingMessage) {
         function getBody(req: IncomingMessage): Promise<string> {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 const chunks = [] as Buffer[];
 
                 req.on("data", (chunk) => {
@@ -47,6 +47,10 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
 
                 req.on("end", () => {
                     resolve(Buffer.concat(chunks).toString());
+                });
+
+                req.on("error", () => {
+                    reject(500);
                 });
             });
         }
