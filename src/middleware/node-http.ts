@@ -5,11 +5,11 @@ import type { IncomingMessage } from "node:http";
 import type { GetParams } from "../types";
 
 /**
- * Core JS http server middleware for WhatsAppAPI
+ * node:http server middleware for WhatsAppAPI
  */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
-     * POST request handler for core JS http server
+     * POST request handler for node:http server
      *
      * @example
      * ```ts
@@ -71,7 +71,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     }
 
     /**
-     * GET request handler for core JS http server
+     * GET request handler for node:http server
      *
      * @example
      * ```ts
