@@ -1,4 +1,4 @@
-import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
+import { ClientMessage, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
@@ -10,7 +10,7 @@ export type ButtonParameter = {
     /**
      * The type of the button
      */
-    readonly type: "text" | "payload" | "action";
+    readonly type: "text" | "payload" | "action" | "coupon_code";
     /**
      * The text of the button
      */
@@ -20,6 +20,10 @@ export type ButtonParameter = {
      */
     readonly payload?: string;
     /**
+     * The coupon's code of the button
+     */
+    readonly coupon_code?: string;
+    /**
      * The action of the button
      */
     readonly action?: {
@@ -28,13 +32,13 @@ export type ButtonParameter = {
     };
 };
 /**
- * @group Template
+ * This type is used as a C struct pointer for the _build method
+ *
+ * @internal
  */
-export type BuiltButtonComponent = {
-    type: "button";
-    sub_type: "url" | "quick_reply" | "catalog";
-    index: number;
-    parameters: Array<ButtonParameter>;
+type BuildingPointers = {
+    theres_only_body: boolean;
+    button_counter: number;
 };
 /**
  * Template API object
@@ -53,12 +57,11 @@ export declare class Template extends ClientMessage {
     /**
      * The components of the template
      */
-    readonly components?: (HeaderComponent | BodyComponent | BuiltButtonComponent)[];
+    readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent>>;
     /**
      * @override
      */
     get _type(): "template";
-    /** @todo Find out if more than one of each component is allowed */
     /**
      * Create a Template object for the API
      *
@@ -66,7 +69,7 @@ export declare class Template extends ClientMessage {
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
      */
-    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent<number, unknown>)[]);
+    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]);
     /**
      * OTP Template generator
      *
@@ -159,10 +162,12 @@ export declare class DateTime implements ClientTypedMessageComponent {
  * @see {@link PayloadComponent}
  * @see {@link CatalogComponent}
  * @see {@link MPMComponent}
+ * @see {@link CopyComponent}
+ * @see {@link SkipButtonComponent}
  *
  * @group Template
  */
-export declare abstract class ButtonComponent<Limit extends number, Params = ButtonParameter> extends ClientLimitedMessageComponent<Params, Limit> implements ClientBuildableMessageComponent {
+export declare abstract class ButtonComponent implements ClientBuildableMessageComponent {
     /**
      * The type of the component
      */
@@ -170,85 +175,60 @@ export declare abstract class ButtonComponent<Limit extends number, Params = But
     /**
      * The subtype of the component
      */
-    readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm";
+    readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code";
     /**
-     * The parameters of the component
+     * The parameter of the component
      */
-    readonly parameters: Params[];
+    readonly parameters: [ButtonParameter];
+    /**
+     * The index of the component (assigned after calling _build)
+     */
+    protected index: number;
     /**
      * Builds a button component for a Template message.
-     * The index of each parameter is defined by the order they are sent to the constructor.
+     * The index of each component is defined by the order they are sent to the Template's constructor.
      *
      * @internal
      * @param sub_type - The type of button component to create.
-     * @param p - The parent's pretty print name
-     * @param c - The child's pretty print name
-     * @param l - The parameters' limit
-     * @param parameters - The parameter for the component. The index of each parameter is defined by the order they are sent to the constructor.
-     * @throws If parameters' lenght is over the limit
+     * @param parameter - The parameter for the component. The index of each component is defined by the order they are sent to the Template's constructor.
      */
-    constructor(sub_type: "url" | "quick_reply" | "catalog" | "mpm", p: string, c: string, l: Limit, parameters: Params[]);
+    constructor(sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code", parameter: ButtonParameter);
     /**
      * @override
      */
-    _build(): Array<NonNullable<BuiltButtonComponent>>;
+    _build(pointers: BuildingPointers): this;
 }
 /**
  * Button Component API object for call to action buttons
  *
  * @group Template
  */
-export declare class URLComponent extends ButtonComponent<2, ButtonParameter | null> {
+export declare class URLComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with call to action buttons.
      *
-     * @remarks
-     * Empty strings are not allowed URL variables in the API. However, rather than being ignored
-     * or throwing an error, the constructor will use them as dummies for *fake* variables.
-     *
-     * You might want to know _why_. So do I. It's a really dumb catch to fix an issue on the API
-     * side. If you have a template with 2 buttons, the first one a phone number (which can't take
-     * variables), and an url button (which can have variables), the API will throw an error because
-     * the first button can't take variables, even though it DOESN'T need a variable.
-     *
-     * For such cases, the expected code would be:
-     *
-     * ```ts
-     * const template = new Template(
-     *     "name",
-     *     "en_US",
-     *     new URLComponent(
-     *         "", // As the first button is a phone, skip assigning it a variable
-     *         "?user=123"
-     *     )
-     * );
-     * ```
-     *
-     * @param parameters - The variable for each url button. The index of each parameter is defined by the arguments' order.
+     * @param parameters - The variable for each url button.
+     * @throws If parameter is an empty string.
      */
-    constructor(...parameters: AtLeastOne<string>);
+    constructor(parameter: string);
     /**
      * @internal
      */
     private static Button;
-    /**
-     * @override
-     */
-    _build(): Array<NonNullable<BuiltButtonComponent>>;
 }
 /**
  * Button Component API object for quick reply buttons
  *
  * @group Template
  */
-export declare class PayloadComponent extends ButtonComponent<3> {
+export declare class PayloadComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with quick reply buttons.
      *
-     * @param parameters - Parameter for each button. The index of each parameter is defined by the order they are sent to the constructor.
-     * @throws If parameters' lenght is over 3
+     * @param parameters - Parameter for the component.
+     * @throws If parameter is an empty string.
      */
-    constructor(...parameters: AtLeastOne<string>);
+    constructor(parameter: string);
     /**
      * @internal
      */
@@ -259,7 +239,7 @@ export declare class PayloadComponent extends ButtonComponent<3> {
  *
  * @group Template
  */
-export declare class CatalogComponent extends ButtonComponent<1> {
+export declare class CatalogComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template catalog button.
      *
@@ -269,21 +249,14 @@ export declare class CatalogComponent extends ButtonComponent<1> {
     /**
      * @internal
      */
-    static Action: {
-        new (thumbnail: Product): {
-            readonly type: "action";
-            readonly action: {
-                thumbnail_product_retailer_id: string;
-            };
-        };
-    };
+    private static Action;
 }
 /**
  * Button Component API object for Multi-Product Message
  *
  * @group Template
  */
-export declare class MPMComponent extends ButtonComponent<1> {
+export declare class MPMComponent extends ButtonComponent {
     /**
      * Creates a button component for a MPM Template.
      *
@@ -297,6 +270,39 @@ export declare class MPMComponent extends ButtonComponent<1> {
      * @internal
      */
     private static Action;
+}
+/**
+ * Button Component API object for copy coupon button
+ *
+ * @group Template
+ */
+export declare class CopyComponent extends ButtonComponent {
+    /**
+     * Creates a button component for a Template message with copy coupon button.
+     *
+     * @param parameters - The variable for each url button.
+     * @throws If parameter is an empty string.
+     */
+    constructor(parameter: string);
+    /**
+     * @internal
+     */
+    private static Action;
+}
+/**
+ * (Fake) Button Component API object for skipping buttons that don't require a parameter (such as phone number buttons)
+ *
+ * @group Template
+ */
+export declare class SkipButtonComponent extends ButtonComponent {
+    /**
+     * Skips a button component index for a Template message.
+     */
+    constructor();
+    /**
+     * @override
+     */
+    _build(pointers: BuildingPointers): this;
 }
 /**
  * Components API object
@@ -396,7 +402,7 @@ export declare class BodyComponent implements ClientBuildableMessageComponent {
     /**
      * @override
      */
-    _build(theres_only_body: boolean): this;
+    _build({ theres_only_body }: BuildingPointers): this;
 }
 /**
  * Parameter API object
@@ -431,4 +437,5 @@ export declare class BodyParameter {
      */
     constructor(parameter: string | Currency | DateTime);
 }
+export {};
 //# sourceMappingURL=template.d.ts.map

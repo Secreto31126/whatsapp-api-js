@@ -137,7 +137,7 @@ export default class WhatsAppAPI {
      * @param phoneID - The bot's phone ID
      * @param to - The users' phone numbers
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
-     * @param batch_size - The number of messages to send per second
+     * @param batch_size - The number of messages to send per batch
      * @param delay - The delay between each batch of messages in milliseconds
      * @returns The server response
      * @throws if batch_size is lower than 1
@@ -340,6 +340,20 @@ export default class WhatsAppAPI {
      * @throws If url is not specified
      */
     _authenicatedRequest(url: string | URL | Request): Promise<Response>;
+    /**
+     * Get the body of a fetch response
+     *
+     * @param promise - The fetch response
+     * @returns The json body parsed
+     */
     private getBody;
+    /**
+     * Offload a function to the next tick of the event loop
+     *
+     * @internal
+     * @param f - The function to offload from the main thread
+     * @param a - The arguments to pass to the function
+     */
+    private offload;
 }
 //# sourceMappingURL=index.d.ts.map

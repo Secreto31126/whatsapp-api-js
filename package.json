@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "engines": {
-    "node": ">14.21"
+    "node": ">=18"
   },
   "files": [
     "lib/**/*"
@@ -37,6 +37,13 @@
       "import": "./lib/esm/setup/*.js",
       "require": "./lib/cjs/setup/*.js"
     },
+    "./middleware": null,
+    "./middleware/index": null,
+    "./middleware/*": {
+      "types": "./lib/types/middleware/*.d.ts",
+      "import": "./lib/esm/middleware/*.js",
+      "require": "./lib/cjs/middleware/*.js"
+    },
     "./emitters": {
       "types": "./lib/types/emitters.d.ts"
     },
@@ -66,6 +73,10 @@
       "setup/*": [
         "lib/types/setup/*.d.ts"
       ],
+      "middleware/index": [],
+      "middleware/*": [
+        "lib/types/middleware/*.d.ts"
+      ],
       "emitters": [
         "lib/types/emitters.d.ts"
       ],
@@ -79,8 +90,8 @@
     "build:dev": "npm run build:code:dev && npm run build:types:dev",
     "build:code": "node -r dotenv/config build.js",
     "build:code:dev": "npm run build:code",
-    "build:types": "tsc && cp ./src/*.d.ts ./lib/types",
-    "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs && cp ./src/*.d.ts ./lib/esm && cp ./src/*.d.ts ./lib/cjs",
+    "build:types": "tsc",
+    "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs",
     "test": "mocha",
     "test:build": "npm run build && npm run test",
     "test:watch": "mocha --reporter min --watch",
@@ -90,7 +101,7 @@
     "prettier:write": "prettier --write src test",
     "coverage": "c8 mocha --reporter min",
     "document": "typedoc && cp -r docs_statics/* docs/",
-    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/ .nyc_output/"
+    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/"
   },
   "keywords": [
     "whatsapp",
@@ -120,9 +131,12 @@
     "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
   },
   "devDependencies": {
+    "@adonisjs/http-server": "^5.12.0",
+    "@types/express": "^4.17.17",
     "@types/node": "18.17.14",
     "@typescript-eslint/eslint-plugin": "6.5.0",
     "@typescript-eslint/parser": "6.5.0",
+    "@vercel/node": "^3.0.4",
     "all-contributors-cli": "^6.26.1",
     "c8": "8.0.1",
     "dotenv": "16.0.3",

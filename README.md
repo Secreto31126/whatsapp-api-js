@@ -1,4 +1,4 @@
-# whatsapp-api-js v1
+# whatsapp-api-js v2
 
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
@@ -133,7 +133,7 @@ Check them out in the [examples folder](https://github.com/Secreto31126/whatsapp
 
 ## Types
 
-The library is fully typed. Most types are available by importing /types or /emitters :
+The library is fully typed. Most types are available by importing `/types` or `/emitters` :
 
 ```ts
 import { GetParams, PostData } from "whatsapp-api-js/types";
@@ -146,7 +146,7 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 ## Documentation
 
-The latest package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
+The latest release documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Contributors

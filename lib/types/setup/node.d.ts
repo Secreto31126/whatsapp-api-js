@@ -21,6 +21,7 @@ export declare function Node18(settings: WhatsAppAPIConstructorArguments): Whats
 /**
  * A Node 15 to 17 quick setup for the WhatsAppAPI
  *
+ * @deprecated Node 15 to 17 reached EoL and are no longer supported by the library
  * @param settings - The WhatsAppAPI arguments
  * @param fetch - The fetch ponyfill function to use (e.g. node-fetch or undici)
  * @returns A WhatsAppAPI arguments object for Node 15 to 17

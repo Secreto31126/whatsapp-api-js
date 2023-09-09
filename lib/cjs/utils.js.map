@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/utils.ts"],
+  "sourcesContent": ["export type AtLeastOne<T> = [T, ...T[]];\n\nexport function isInteger(n: unknown): n is number {\n    return Number.isInteger(n);\n}\n"],
+  "mappings": "wpBAAA,kHAEO,SAAS,UAAU,EAAyB,CAC/C,OAAO,OAAO,UAAU,CAAC,CAC7B",
+  "names": []
+}

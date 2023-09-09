@@ -203,6 +203,15 @@ export declare abstract class ContactUniqueComponent extends ContactComponent {
     get _many(): false;
     abstract get _type(): string;
 }
+/**
+ * Polymorphism intensifies. Also helps with the _type typings :)
+ */
+export interface InteractiveAction extends ClientTypedMessageComponent {
+    /**
+     * @overload
+     */
+    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list";
+}
 export type ClientMessageNames = "text" | "audio" | "document" | "image" | "sticker" | "video" | "location" | "contacts" | "interactive" | "template" | "reaction";
 export type ClientMessageRequest = {
     /**
@@ -509,7 +518,7 @@ export type PostData = {
                     phone_number_id: string;
                 };
             } & ({
-                contacts: [ServerContacts];
+                contacts?: [ServerContacts];
                 messages: [ServerMessage];
             } | {
                 statuses: [

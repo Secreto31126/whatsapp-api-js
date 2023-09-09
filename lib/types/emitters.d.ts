@@ -1,14 +1,4 @@
-import type {
-    ClientMessage,
-    ClientMessageRequest,
-    ServerMessage,
-    ServerMessageResponse,
-    ServerConversation,
-    ServerPricing,
-    ServerError,
-    PostData
-} from "./types";
-
+import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types";
 /**
  * Callback for "sent" event
  *
@@ -16,7 +6,6 @@ import type {
  * @param args - The arguments object
  */
 export type OnSent = (args: OnSentArgs) => unknown;
-
 /**
  * @public
  */
@@ -50,7 +39,6 @@ export type OnSentArgs = {
      */
     response?: ServerMessageResponse;
 };
-
 /**
  * Callback for "message" event
  *
@@ -58,7 +46,6 @@ export type OnSentArgs = {
  * @param args - The arguments object
  */
 export type OnMessage = (args: OnMessageArgs) => unknown;
-
 /**
  * @public
  */
@@ -84,7 +71,6 @@ export type OnMessageArgs = {
      */
     raw: PostData;
 };
-
 /**
  * Callback for "status" event
  *
@@ -92,7 +78,6 @@ export type OnMessageArgs = {
  * @param args - The arguments object
  */
 export type OnStatus = (args: OnStatusArgs) => unknown;
-
 /**
  * @public
  */
@@ -130,3 +115,4 @@ export type OnStatusArgs = {
      */
     raw: PostData;
 };
+//# sourceMappingURL=emitters.d.ts.map
