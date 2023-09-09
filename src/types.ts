@@ -268,75 +268,74 @@ export type ClientMessageNames =
 
 // #region Client Message Request
 
-export type ClientMessageRequest =
+export type ClientMessageRequest = {
+    /**
+     * The messaging product
+     */
+    messaging_product: "whatsapp";
+    /**
+     * The user's phone number
+     */
+    to: string;
+    /**
+     * Undocumented, optional (the framework doesn't use it)
+     */
+    recipient_type?: "individual";
+    /**
+     * The message to reply to
+     */
+    context?: {
+        /**
+         * The message id to reply to
+         */
+        message_id: string;
+    };
+} & (
     | {
-          /**
-           * The messaging product
-           */
-          messaging_product: "whatsapp";
-          /**
-           * The user's phone number
-           */
-          to: string;
-          /**
-           * Undocumented, optional (the framework doesn't use it)
-           */
-          recipient_type?: "individual";
-          /**
-           * The message to reply to
-           */
-          context?: {
-              /**
-               * The message id to reply to
-               */
-              message_id: string;
-          };
-      } & (
-          | {
-                type: "text";
-                text?: string;
-            }
-          | {
-                type: "audio";
-                audio?: string;
-            }
-          | {
-                type: "document";
-                document?: string;
-            }
-          | {
-                type: "image";
-                image?: string;
-            }
-          | {
-                type: "sticker";
-                sticker?: string;
-            }
-          | {
-                type: "video";
-                video?: string;
-            }
-          | {
-                type: "location";
-                location?: string;
-            }
-          | {
-                type: "contacts";
-                contacts?: string;
-            }
-          | {
-                type: "interactive";
-                interactive?: string;
-            }
-          | {
-                type: "template";
-                template?: string;
-            }
-          | {
-                type: "reaction";
-                reaction?: string;
-            }
-      );
+          type: "text";
+          text?: string;
+      }
+    | {
+          type: "audio";
+          audio?: string;
+      }
+    | {
+          type: "document";
+          document?: string;
+      }
+    | {
+          type: "image";
+          image?: string;
+      }
+    | {
+          type: "sticker";
+          sticker?: string;
+      }
+    | {
+          type: "video";
+          video?: string;
+      }
+    | {
+          type: "location";
+          location?: string;
+      }
+    | {
+          type: "contacts";
+          contacts?: string;
+      }
+    | {
+          type: "interactive";
+          interactive?: string;
+      }
+    | {
+          type: "template";
+          template?: string;
+      }
+    | {
+          type: "reaction";
+          reaction?: string;
+      }
+);
 
 // #endregion
 
@@ -623,40 +622,39 @@ export type PostData = {
     entry: {
         id: string;
         changes: {
-            value:
+            value: {
+                messaging_product: "whatsapp";
+                metadata: {
+                    display_phone_number: string;
+                    phone_number_id: string;
+                };
+            } & (
                 | {
-                      messaging_product: "whatsapp";
-                      metadata: {
-                          display_phone_number: string;
-                          phone_number_id: string;
-                      };
-                  } & (
-                      | {
-                            contacts?: [ServerContacts];
-                            messages: [ServerMessage];
-                        }
-                      | {
-                            statuses: [
-                                {
-                                    id: string;
-                                    status: ServerStatus;
-                                    timestamp: string;
-                                    recipient_id: string;
-                                } & (
-                                    | {
-                                          conversation: ServerConversation;
-                                          pricing: ServerPricing;
-                                          errors: undefined;
-                                      }
-                                    | {
-                                          conversation: undefined;
-                                          pricing: undefined;
-                                          errors: [ServerError];
-                                      }
-                                )
-                            ];
-                        }
-                  );
+                      contacts?: [ServerContacts];
+                      messages: [ServerMessage];
+                  }
+                | {
+                      statuses: [
+                          {
+                              id: string;
+                              status: ServerStatus;
+                              timestamp: string;
+                              recipient_id: string;
+                          } & (
+                              | {
+                                    conversation: ServerConversation;
+                                    pricing: ServerPricing;
+                                    errors: undefined;
+                                }
+                              | {
+                                    conversation: undefined;
+                                    pricing: undefined;
+                                    errors: [ServerError];
+                                }
+                          )
+                      ];
+                  }
+            );
             field: "messages";
         }[];
     }[];
