@@ -2,19 +2,31 @@ import { WhatsAppAPIMiddleware } from "./globals.js";
 import { isInteger } from "../utils.js";
 
 import type { IncomingMessage } from "node:http";
+import type { Readable } from "node:stream";
+
 import type { GetParams } from "../types";
 
 /**
  * node:http server middleware for WhatsAppAPI
  */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
+    protected async parseBody(readable: Readable) {
+        const chunks = [];
+
+        for await (const chunk of readable) {
+            chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
+        }
+
+        return Buffer.concat(chunks).toString("utf-8");
+    }
+
     /**
      * POST request handler for node:http server
      *
      * @example
      * ```ts
-     * import { createServer, IncomingMessage, ServerResponse } from 'node:http';
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/core";
+     * import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+     * import WhatsAppAPI from "whatsapp-api-js/middleware/node-http";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -37,33 +49,13 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The status code to be sent to the client
      */
     async handle_post(req: IncomingMessage) {
-        function getBody(req: IncomingMessage): Promise<string> {
-            return new Promise((resolve, reject) => {
-                const chunks = [] as Buffer[];
-
-                req.on("data", (chunk) => {
-                    chunks.push(chunk);
-                });
-
-                req.on("end", () => {
-                    resolve(Buffer.concat(chunks).toString());
-                });
-
-                req.on("error", () => {
-                    reject(500);
-                });
-            });
-        }
-
         try {
-            const body = await getBody(req);
-            return this.post(
-                JSON.parse(body ?? "{}"),
-                body,
-                // Edge case: if the header is duplicated, an array
-                // is returned and the code will likely fail
-                (req.headers["x-hub-signature-256"] as string) ?? ""
-            );
+            const body = await this.parseBody(req);
+            const signature = req.headers["x-hub-signature-256"];
+
+            if (typeof signature !== "string") throw 400;
+
+            return this.post(JSON.parse(body || "{}"), body, signature);
         } catch (e) {
             // In case the JSON.parse fails ¯\_(ツ)_/¯
             return isInteger(e) ? e : 500;
@@ -76,7 +68,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import { createServer, IncomingMessage, ServerResponse } from 'node:http';
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/core";
+     * import WhatsAppAPI from "whatsapp-api-js/middleware/node-http";
      *
      * const server = createServer(async (request: IncomingMessage, response: ServerResponse) => {
      *     if (request.url === "/message" && request.method === "GET") {
