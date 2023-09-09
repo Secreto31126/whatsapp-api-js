@@ -4,4 +4,4 @@
 export { WhatsAppAPIMiddleware } from "./globals.js";
 export { default as ExpressMiddleware } from "./express.js";
 export { default as AdonisMiddleware } from "./adonis.js";
-export { default as CoreMiddleware } from "./core.js";
+export { default as CoreMiddleware } from "./node-http.js";
