@@ -5,7 +5,7 @@ import type { VercelRequest } from "@vercel/node";
 import type { GetParams } from "../types.js";
 
 /**
- * Vercel serverless functions adapter for WhatsAppAPI (Node/Next.js)
+ * Vercel serverless functions middleware for WhatsAppAPI (Node/Next.js)
  */
 export default class WhatsAppAPI extends WhatsAppAPIParent {
     /**
@@ -25,7 +25,7 @@ export default class WhatsAppAPI extends WhatsAppAPIParent {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * // The `bodyParser: false` is required for the adapter to work
+     * // The `bodyParser: false` is required for the middleware to work
      * export const config = {
      *     api: {
      *        bodyParser: false

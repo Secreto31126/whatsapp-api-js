@@ -5,7 +5,7 @@ import type { Request } from "undici";
 import type { GetParams } from "../types";
 
 /**
- * Web Standard API http server adapter for WhatsAppAPI (deno/bun/Hono/SvelteKit)
+ * Web Standard API http server middleware for WhatsAppAPI (deno/bun/Hono/SvelteKit)
  *
  * Deno is used as the default example, but it should work with any
  * Web Standard API http server Request object.
