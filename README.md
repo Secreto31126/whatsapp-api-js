@@ -46,7 +46,8 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-    // The handlers work with any middleware, as long as you pass the correct data
+    // The handlers work with any framework, as long as you pass the correct data
+    // You can also use one of the middlewares provided in the package, keep reading
     return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 
@@ -121,7 +122,7 @@ function get(e) {
 Once you are done, click the administrate button, and subscribe to the messages event.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
-For more information on the setup process for specific environments, check out the
+For more information on the setup process for specific runtimes and frameworks, check out the
 [Environments.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/ENVIRONMENTS.md).
 
 ## Examples and Tutorials
