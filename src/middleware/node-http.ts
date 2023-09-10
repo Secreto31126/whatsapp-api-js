@@ -11,23 +11,6 @@ import type { GetParams } from "../types";
  */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
-     * Copy pasted from an issue on Deno's repository :)
-     *
-     * @internal
-     * @param readable - The readable stream
-     * @returns The parsed body
-     */
-    private async parseBody(readable: Readable) {
-        const chunks = [];
-
-        for await (const chunk of readable) {
-            chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-        }
-
-        return Buffer.concat(chunks).toString("utf-8");
-    }
-
-    /**
      * POST request handler for node:http server
      *
      * @example
@@ -56,8 +39,27 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The status code to be sent to the client
      */
     async handle_post(req: IncomingMessage) {
+        /**
+         * Copy pasted from an issue on Deno's repository :)
+         *
+         * @internal
+         * @param readable - The readable stream
+         * @returns The parsed body
+         */
+        async function parseBody(readable: Readable) {
+            const chunks = [];
+
+            for await (const chunk of readable) {
+                chunks.push(
+                    typeof chunk === "string" ? Buffer.from(chunk) : chunk
+                );
+            }
+
+            return Buffer.concat(chunks).toString("utf-8");
+        }
+
         try {
-            const body = await this.parseBody(req);
+            const body = await parseBody(req);
             const signature = req.headers["x-hub-signature-256"];
 
             if (typeof signature !== "string") throw 400;
