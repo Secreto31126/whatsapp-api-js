@@ -79,11 +79,11 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * import { createServer, IncomingMessage, ServerResponse } from 'node:http';
      * import WhatsAppAPI from "whatsapp-api-js/middleware/node-http";
      *
-     * const server = createServer(async (request: IncomingMessage, response: ServerResponse) => {
+     * const server = createServer((request: IncomingMessage, response: ServerResponse) => {
      *     if (request.url === "/message" && request.method === "GET") {
      *         try {
      *             response.statusCode = 200;
-     *             response.end(await Whatsapp.handle_get(request));
+     *             response.end(Whatsapp.handle_get(request));
      *         } catch (e) {
      *             response.statusCode = e as number;
      *             response.end();
@@ -99,7 +99,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    async handle_get(req: IncomingMessage) {
+    handle_get(req: IncomingMessage) {
         try {
             return this.get(
                 Object.fromEntries(

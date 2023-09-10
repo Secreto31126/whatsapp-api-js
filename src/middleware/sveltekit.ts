@@ -54,11 +54,11 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * export const GET: RequestHandler = async ({ request, url }) => {
+     * export const GET: RequestHandler = ({ request, url }) => {
      *     try {
      *         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-     *         // @ts-ignore - Unfortunately, undici Request type and SvelteKit Request type are not fully compatible
-     *         return new Response(await Whatsapp.handle_get(request));
+     *         // @ts-ignore - Unfortunately, undici's Request and SvelteKit's Request types are not fully compatible
+     *         return new Response(Whatsapp.handle_get(request));
      *     } catch (e) {
      *         return new Response(null, { status: e as number });
      *     }
@@ -69,7 +69,7 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    async handle_get(req: Request) {
+    handle_get(req: Request) {
         return super.handle_get(req);
     }
 }
