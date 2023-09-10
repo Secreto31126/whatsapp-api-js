@@ -666,7 +666,7 @@ export default class WhatsAppAPI {
      *
      * @example
      * ```ts
-     * // @author @arivanbastos on issue #114
+     * // author arivanbastos on issue #114
      * // Simple http example implementation with Whatsapp.post() on Node@^19
      * import WhatsAppAPI from "whatsapp-api-js";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
