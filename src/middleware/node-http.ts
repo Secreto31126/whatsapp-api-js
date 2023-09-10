@@ -10,6 +10,13 @@ import type { GetParams } from "../types";
  * node:http server middleware for WhatsAppAPI
  */
 export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
+    /**
+     * Copy pasted from an issue on Deno's repository :)
+     *
+     * @internal
+     * @param readable - The readable stream
+     * @returns The parsed body
+     */
     private async parseBody(readable: Readable) {
         const chunks = [];
 
