@@ -14,5 +14,5 @@ export abstract class WhatsAppAPIMiddleware extends WhatsAppAPI {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    abstract handle_get(...a: unknown[]): Promise<string>;
+    abstract handle_get(...a: unknown[]): string;
 }

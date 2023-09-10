@@ -38,7 +38,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    async handle_get(req: Request) {
+    handle_get(req: Request) {
         try {
             return this.get(
                 Object.fromEntries(new URL(req.url).searchParams) as GetParams

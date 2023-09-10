@@ -43,7 +43,7 @@ export default class WhatsAppAPI extends NodeHTTPMiddleware {
      * @param req - The request object
      * @returns The status code to be sent to the client
      */
-    handle_post(req: VercelRequest): Promise<number> {
+    handle_post(req: VercelRequest) {
         return super.handle_post(req);
     }
 
@@ -61,10 +61,10 @@ export default class WhatsAppAPI extends NodeHTTPMiddleware {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * export default async (req: VercelRequest, res: VercelResponse) => {
+     * export default (req: VercelRequest, res: VercelResponse) => {
      *     if (req.method === "GET") {
      *         try {
-     *             res.end(await Whatsapp.handle_get(req));
+     *             res.end(Whatsapp.handle_get(req));
      *             res.status(200);
      *         } catch (e) {
      *             res.status(e as number).end();
@@ -78,7 +78,7 @@ export default class WhatsAppAPI extends NodeHTTPMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    async handle_get(req: VercelRequest): Promise<string> {
+    handle_get(req: VercelRequest) {
         try {
             return this.get(req.query as GetParams);
         } catch (e) {

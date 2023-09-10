@@ -41,7 +41,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @param req - The request object from Express.js
      * @returns The status code to be sent to the client
      */
-    async handle_post(req: Request): Promise<number> {
+    async handle_post(req: Request) {
         try {
             return this.post(
                 JSON.parse(req.body ?? "{}"),
@@ -69,9 +69,9 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * app.get("/message", async (req, res) => {
+     * app.get("/message", (req, res) => {
      *     try {
-     *         res.send(await Whatsapp.handle_get(req));
+     *         res.send(Whatsapp.handle_get(req));
      *     } catch (e) {
      *         res.sendStatus(e as number);
      *     }
@@ -83,7 +83,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    async handle_get(req: Request) {
+    handle_get(req: Request) {
         try {
             return this.get(req.query as GetParams);
         } catch (e) {

@@ -49,9 +49,9 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      * });
      *
      * Bun.serve({
-     *     fetch: async (req) => {
+     *     fetch: (req) => {
      *         try {
-     *             return new Response(await Whatsapp.handle_get(req));
+     *             return new Response(Whatsapp.handle_get(req));
      *         } catch (e) {
      *             return new Response(null, { status: e as number });
      *         }
@@ -63,7 +63,7 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    async handle_get(req: Request) {
+    handle_get(req: Request) {
         return super.handle_get(req);
     }
 }
