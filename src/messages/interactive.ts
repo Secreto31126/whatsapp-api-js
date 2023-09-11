@@ -1,18 +1,14 @@
 import {
     ClientMessage,
     ClientLimitedMessageComponent,
+    Section,
     type InteractiveAction
 } from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 import type { Document, Image, Video } from "./media";
 
-import {
-    Product,
-    ProductSection,
-    Section,
-    isProductSections
-} from "./globals.js";
+import { Product, ProductSection, isProductSections } from "./globals.js";
 
 /**
  * Interactive API object
