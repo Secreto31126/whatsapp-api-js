@@ -31,6 +31,10 @@ Among the affected classes and files are:
   - `ButtonComponent`: The class was replaced with an abstract class.
   - `ButtonParameter`: The class was replaced with a type.
 
+- `types.ts`
+  - `ClientBuildableMessageComponent`: The class was replaced with an interface.
+  - `PostData`: `PostData.entry[].changes[].value.contacts` may be undefined.
+
 ### Node min version bumped
 
 Node 14 and 16 support was dropped as they reached EoL. The engine requirement
