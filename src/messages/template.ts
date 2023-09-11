@@ -714,7 +714,7 @@ export class BodyParameter {
      * @param parameter - The parameter to be used in the template
      * @throws If parameter is a string and it's over 32768 characters
      * @throws If parameter is a string, there are other components in the Template and it's over 1024 characters
-     * @see BodyComponent._build The method that checks the 1024 character limit
+     * @see {@link BodyComponent._build} The method that checks the 1024 character limit
      */
     constructor(parameter: string | Currency | DateTime) {
         if (typeof parameter === "string") {
