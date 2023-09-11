@@ -1,4 +1,4 @@
-import { ClientMessage, type ClientMessageNames } from "../types.js";
+import { ClientMessage } from "../types.js";
 
 /**
  * Abstract class for all the media types
@@ -14,12 +14,6 @@ export abstract class Media extends ClientMessage {
      * The link of the media
      */
     readonly link?: string;
-
-    /**
-     * @override
-     * @internal
-     */
-    abstract get _type(): ClientMessageNames;
 
     /**
      * @param file - File to be sent
