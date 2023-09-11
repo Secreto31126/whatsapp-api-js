@@ -2,7 +2,7 @@
 
 ## 2.0.0
 
-### Classes renamed
+### Classes renamed, splitted and moved
 
 With the release of **"full catalog"** support for Cloud API, the library needed
 some files and classes renaming to avoid confusion between the new features and
@@ -13,25 +13,23 @@ Among the affected classes and files are:
 - `interactive.ts`
   - `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used for the
     Catalog messages. The original class was renamed as `ActionProduct`.
-  - `Section`, `Product` and `ProductSection`: These classes were moved from the
-    file `messages/interactive.ts` to `messages/globals.ts`, as they are also
-    used in templates now. `Product` and `ProductSection` are still exposed, but
-    `Section` was marked as internal (it's still exported, but the fact you can
-    access it doesn't mean you should do it. The lack of package-private is
-    quite annoying to deal with :)
+  - `Product` and `ProductSection`: These classes were moved from the file
+    `messages/interactive.ts` to `messages/globals.ts`, as they are now also
+    used in templates.
+  - `Section`: The class was moved from the file `messages/interactive.ts` to
+    `types.ts`.
 
 - `template.ts`
   - `ButtonComponent` -> `URLComponent`, `PayloadComponent`, `CatalogComponent`,
-    `MPMComponent`, `CopyComponent`: As the API now supports mixing button
-    types, the `ButtonComponent` was split into different classes, each one
-    representing a button types. For example, an URL component was updated from
-    `new ButtonComponent("url", "example")` to `new URLComponent("example")`.
+    `MPMComponent`, `CopyComponent`, `SkipButtonComponent`: As the API now
+    supports mixing button types, the `ButtonComponent` was splitted into
+    different classes, each one representing a button types. For example, an URL
+    component was updated from `new ButtonComponent("url", "example")` to
+    `new URLComponent("example")`.
   - `Template`: The constructor now receives multiple button components instead
     of a single one.
-  - `ButtonComponent`: The class was replaced with an abstract class and marked
-    as internal (still exported).
-  - `ButtonParameter`: The class was replaced with a type and marked as internal
-    (still exported).
+  - `ButtonComponent`: The class was replaced with an abstract class.
+  - `ButtonParameter`: The class was replaced with a type.
 
 ### Node min version bumped
 
