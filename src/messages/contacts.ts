@@ -101,6 +101,7 @@ export class Contacts extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     _build() {
         return JSON.stringify(this.component);
