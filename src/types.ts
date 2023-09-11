@@ -161,14 +161,11 @@ export interface ClientTypedMessageComponent {
     get _type(): string;
 }
 
-export abstract class ClientBuildableMessageComponent {
+export interface ClientBuildableMessageComponent {
     /**
      * The message's component builder method
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _build(..._: unknown[]): unknown {
-        return this;
-    }
+    _build(..._: unknown[]): unknown;
 }
 
 export abstract class ClientLimitedMessageComponent<T, N extends number> {
