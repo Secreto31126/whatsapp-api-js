@@ -60,6 +60,7 @@ export declare class Template extends ClientMessage {
     readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent>>;
     /**
      * @override
+     * @internal
      */
     get _type(): "template";
     /**
@@ -122,6 +123,7 @@ export declare class Currency implements ClientTypedMessageComponent {
     readonly fallback_value: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "currency";
     /**
@@ -146,6 +148,7 @@ export declare class DateTime implements ClientTypedMessageComponent {
     readonly fallback_value: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "date_time";
     /**
@@ -195,6 +198,7 @@ export declare abstract class ButtonComponent implements ClientBuildableMessageC
     constructor(sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code", parameter: ButtonParameter);
     /**
      * @override
+     * @internal
      */
     _build(pointers: BuildingPointers): this;
 }
@@ -301,6 +305,7 @@ export declare class SkipButtonComponent extends ButtonComponent {
     constructor();
     /**
      * @override
+     * @internal
      */
     _build(pointers: BuildingPointers): this;
 }
@@ -326,6 +331,7 @@ export declare class HeaderComponent implements ClientBuildableMessageComponent 
     constructor(...parameters: AtLeastOne<HeaderParameter>);
     /**
      * @override
+     * @internal
      */
     _build(): this;
 }
@@ -401,6 +407,7 @@ export declare class BodyComponent implements ClientBuildableMessageComponent {
     constructor(...parameters: AtLeastOne<BodyParameter>);
     /**
      * @override
+     * @internal
      */
     _build({ theres_only_body }: BuildingPointers): this;
 }
@@ -433,7 +440,7 @@ export declare class BodyParameter {
      * @param parameter - The parameter to be used in the template
      * @throws If parameter is a string and it's over 32768 characters
      * @throws If parameter is a string, there are other components in the Template and it's over 1024 characters
-     * @see BodyComponent._build The method that checks the 1024 character limit
+     * @see {@link BodyComponent._build} The method that checks the 1024 character limit
      */
     constructor(parameter: string | Currency | DateTime);
 }

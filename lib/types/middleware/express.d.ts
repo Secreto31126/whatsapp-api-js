@@ -53,9 +53,9 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * app.get("/message", async (req, res) => {
+     * app.get("/message", (req, res) => {
      *     try {
-     *         res.send(await Whatsapp.handle_get(req));
+     *         res.send(Whatsapp.handle_get(req));
      *     } catch (e) {
      *         res.sendStatus(e as number);
      *     }
@@ -67,6 +67,6 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: Request): Promise<string>;
+    handle_get(req: Request): string;
 }
 //# sourceMappingURL=express.d.ts.map

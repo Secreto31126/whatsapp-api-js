@@ -42,9 +42,9 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * Route.get('/', async ({ request, response }) => {
+     * Route.get('/', ({ request, response }) => {
      *     try {
-     *         return await Whatsapp.handle_get(request);
+     *         return Whatsapp.handle_get(request);
      *     } catch (e) {
      *         response.status(e as number);
      *     }
@@ -56,6 +56,6 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: Request): Promise<string>;
+    handle_get(req: Request): string;
 }
 //# sourceMappingURL=adonis.d.ts.map

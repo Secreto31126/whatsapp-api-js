@@ -1,9 +1,9 @@
-import { default as WhatsAppAPIParent } from "./node-http.js";
+import NodeHTTPMiddleware from "./node-http.js";
 import type { VercelRequest } from "@vercel/node";
 /**
  * Vercel serverless functions middleware for WhatsAppAPI (Node/Next.js)
  */
-export default class WhatsAppAPI extends WhatsAppAPIParent {
+export default class WhatsAppAPI extends NodeHTTPMiddleware {
     /**
      * POST request handler for Vercel serverless functions
      *
@@ -54,10 +54,10 @@ export default class WhatsAppAPI extends WhatsAppAPIParent {
      *     webhookVerifyToken: "YOUR_WEBHOOK_VERIFY_TOKEN"
      * });
      *
-     * export default async (req: VercelRequest, res: VercelResponse) => {
+     * export default (req: VercelRequest, res: VercelResponse) => {
      *     if (req.method === "GET") {
      *         try {
-     *             res.end(await Whatsapp.handle_get(req));
+     *             res.end(Whatsapp.handle_get(req));
      *             res.status(200);
      *         } catch (e) {
      *             res.status(e as number).end();
@@ -71,6 +71,6 @@ export default class WhatsAppAPI extends WhatsAppAPIParent {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: VercelRequest): Promise<string>;
+    handle_get(req: VercelRequest): string;
 }
 //# sourceMappingURL=vercel.d.ts.map

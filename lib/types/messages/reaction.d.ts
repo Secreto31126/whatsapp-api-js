@@ -15,6 +15,7 @@ export default class Reaction extends ClientMessage {
     readonly emoji: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "reaction";
     /**

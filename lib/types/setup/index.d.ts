@@ -2,14 +2,14 @@
  * @module setup
  *
  * @description
- * Simplify the setup proccess of the WhatsAppAPI for different platforms
+ * Simplify the setup proccess of the WhatsAppAPI for different runtimes.
  *
  * @example
  * ```ts
  * import WhatsAppAPI from "whatsapp-api-js";
  * import { NodeNext } from "whatsapp-api-js/setup/node";
  *
- * const api = new WhatsAppAPI(NodeNext({
+ * const Whatsapp = new WhatsAppAPI(NodeNext({
  *     token: "YOUR_TOKEN",
  *     appSecret: "YOUR_APP_SECRET"
  * }));

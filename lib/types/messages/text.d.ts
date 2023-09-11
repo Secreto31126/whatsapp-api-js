@@ -13,6 +13,10 @@ export default class Text extends ClientMessage {
      * Whether to enable preview for the text message
      */
     readonly preview_url?: boolean;
+    /**
+     * @override
+     * @internal
+     */
     get _type(): "text";
     /**
      * Create a Text object for the API

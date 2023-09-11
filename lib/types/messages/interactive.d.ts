@@ -1,7 +1,7 @@
-import { ClientMessage, ClientLimitedMessageComponent, type InteractiveAction } from "../types.js";
+import { ClientMessage, ClientLimitedMessageComponent, Section, type InteractiveAction } from "../types.js";
 import type { AtLeastOne } from "../utils";
 import type { Document, Image, Video } from "./media";
-import { Product, ProductSection, Section } from "./globals.js";
+import { Product, ProductSection } from "./globals.js";
 /**
  * Interactive API object
  *
@@ -30,6 +30,7 @@ export declare class Interactive extends ClientMessage {
     readonly footer?: Footer;
     /**
      * @override
+     * @internal
      */
     get _type(): "interactive";
     /**
@@ -129,6 +130,7 @@ export declare class ActionButtons extends ClientLimitedMessageComponent<Button,
     readonly buttons: Button[];
     /**
      * @override
+     * @internal
      */
     get _type(): "button";
     /**
@@ -192,6 +194,7 @@ export declare class ActionList extends ClientLimitedMessageComponent<ListSectio
     readonly sections: ListSection[];
     /**
      * @override
+     * @internal
      */
     get _type(): "list";
     /**
@@ -275,6 +278,7 @@ export declare class ActionCatalog implements InteractiveAction {
     };
     /**
      * @override
+     * @internal
      */
     get _type(): "catalog_message";
     /**
@@ -310,6 +314,7 @@ export declare class ActionProduct implements InteractiveAction {
     readonly sections?: ProductSection[];
     /**
      * @override
+     * @internal
      */
     get _type(): "product" | "product_list";
     /**

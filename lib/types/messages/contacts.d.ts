@@ -23,6 +23,10 @@ export declare class Contacts extends ClientMessage {
      * The contacts of the message
      */
     readonly component: BuiltContact[];
+    /**
+     * @override
+     * @internal
+     */
     get _type(): "contacts";
     /**
      * Create a Contacts object for the API
@@ -33,6 +37,7 @@ export declare class Contacts extends ClientMessage {
     constructor(...contact: AtLeastOne<Array<Address | Birthday | Email | Name | Organization | Phone | Url | ContactComponent>>);
     /**
      * @override
+     * @internal
      */
     _build(): string;
 }
@@ -72,6 +77,7 @@ export declare class Address extends ContactMultipleComponent {
     readonly type?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "addresses";
     /**
@@ -100,6 +106,7 @@ export declare class Birthday extends ContactUniqueComponent {
     readonly birthday: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "birthday";
     /**
@@ -113,6 +120,7 @@ export declare class Birthday extends ContactUniqueComponent {
     constructor(year: string, month: string, day: string);
     /**
      * @override
+     * @internal
      */
     _build(): string;
 }
@@ -132,6 +140,7 @@ export declare class Email extends ContactMultipleComponent {
     readonly type?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "emails";
     /**
@@ -175,6 +184,7 @@ export declare class Name extends ContactUniqueComponent {
     readonly prefix?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "name";
     /**
@@ -211,6 +221,7 @@ export declare class Organization extends ContactUniqueComponent {
     readonly title?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "org";
     /**
@@ -242,6 +253,7 @@ export declare class Phone extends ContactMultipleComponent {
     readonly wa_id?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "phones";
     /**
@@ -270,6 +282,7 @@ export declare class Url extends ContactMultipleComponent {
     readonly type?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "urls";
     /**

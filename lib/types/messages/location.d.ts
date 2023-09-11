@@ -23,6 +23,7 @@ export default class Location extends ClientMessage {
     readonly address?: string;
     /**
      * @override
+     * @internal
      */
     get _type(): "location";
     /**
