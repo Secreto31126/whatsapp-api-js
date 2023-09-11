@@ -25,6 +25,7 @@ export default class Location extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "location" {
         return "location";

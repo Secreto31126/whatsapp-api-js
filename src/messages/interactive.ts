@@ -44,6 +44,7 @@ export class Interactive extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "interactive" {
         return "interactive";
@@ -210,6 +211,7 @@ export class ActionButtons
 
     /**
      * @override
+     * @internal
      */
     get _type(): "button" {
         return "button";
@@ -312,6 +314,7 @@ export class ActionList
 
     /**
      * @override
+     * @internal
      */
     get _type(): "list" {
         return "list";
@@ -432,6 +435,7 @@ export class ActionCatalog implements InteractiveAction {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "catalog_message" {
         return "catalog_message";
@@ -479,6 +483,7 @@ export class ActionProduct implements InteractiveAction {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "product" | "product_list" {
         return this.product_retailer_id ? "product" : "product_list";

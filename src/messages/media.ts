@@ -17,6 +17,7 @@ export abstract class Media extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     abstract get _type(): ClientMessageNames;
 
@@ -38,6 +39,7 @@ export abstract class Media extends ClientMessage {
 export class Audio extends Media {
     /**
      * @override
+     * @internal
      */
     get _type(): "audio" {
         return "audio";
@@ -71,6 +73,7 @@ export class Document extends Media {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "document" {
         return "document";
@@ -109,6 +112,7 @@ export class Image extends Media {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "image" {
         return "image";
@@ -135,6 +139,7 @@ export class Image extends Media {
 export class Sticker extends Media {
     /**
      * @override
+     * @internal
      */
     get _type(): "sticker" {
         return "sticker";
@@ -164,6 +169,7 @@ export class Video extends Media {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "video" {
         return "video";
