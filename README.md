@@ -7,7 +7,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
-- [whatsapp-api-js v1](#whatsapp-api-js-v1)
+- [whatsapp-api-js v2](#whatsapp-api-js-v2)
   - [List of contents](#list-of-contents)
   - [Set up](#set-up)
   - [Examples and Tutorials](#examples-and-tutorials)
