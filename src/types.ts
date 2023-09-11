@@ -1,3 +1,12 @@
+/**
+ * @module types
+ *
+ * @description
+ * The types of the library. Mostly for internal use,
+ * but if you want to "understand" the code under the hood,
+ * feel free to read the docs :)
+ */
+
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
 
@@ -135,14 +144,10 @@ export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
 export abstract class ClientMessage {
     /**
      * The message type
-     *
-     * @internal
      */
     abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
-     *
-     * @internal
      */
     _build(): string {
         return JSON.stringify(this);
@@ -152,8 +157,6 @@ export abstract class ClientMessage {
 export interface ClientTypedMessageComponent {
     /**
      * The message's component type
-     *
-     * @internal
      */
     get _type(): string;
 }
@@ -161,8 +164,6 @@ export interface ClientTypedMessageComponent {
 export abstract class ClientBuildableMessageComponent {
     /**
      * The message's component builder method
-     *
-     * @internal
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _build(..._: unknown[]): unknown {
@@ -199,8 +200,6 @@ export abstract class ContactComponent
 
     /**
      * Whether the component can be repeated multiple times in a contact.
-     *
-     * @internal
      */
     abstract get _many(): boolean;
     abstract get _type(): string;
@@ -208,8 +207,6 @@ export abstract class ContactComponent
 
 /**
  * A contact multiple component can be repeated multiple times in a contact.
- *
- * @internal
  */
 export abstract class ContactMultipleComponent extends ContactComponent {
     /**
@@ -224,8 +221,6 @@ export abstract class ContactMultipleComponent extends ContactComponent {
 
 /**
  * A contact unique component can only be used once in a contact.
- *
- * @internal
  */
 export abstract class ContactUniqueComponent extends ContactComponent {
     /**
