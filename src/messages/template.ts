@@ -73,6 +73,7 @@ export class Template extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "template" {
         return "template";
@@ -173,6 +174,7 @@ export class Currency implements ClientTypedMessageComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "currency" {
         return "currency";
@@ -209,6 +211,7 @@ export class DateTime implements ClientTypedMessageComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "date_time" {
         return "date_time";
@@ -274,6 +277,7 @@ export abstract class ButtonComponent
 
     /**
      * @override
+     * @internal
      */
     _build(pointers: BuildingPointers) {
         this.index = pointers.button_counter++;
@@ -511,6 +515,7 @@ export class SkipButtonComponent extends ButtonComponent {
 
     /**
      * @override
+     * @internal
      */
     _build(pointers: BuildingPointers) {
         pointers.button_counter++;
@@ -545,6 +550,7 @@ export class HeaderComponent implements ClientBuildableMessageComponent {
 
     /**
      * @override
+     * @internal
      */
     _build() {
         return this;
@@ -667,6 +673,7 @@ export class BodyComponent implements ClientBuildableMessageComponent {
 
     /**
      * @override
+     * @internal
      */
     _build({ theres_only_body }: BuildingPointers) {
         // If there are parameters and need to check for the shorter max text length
@@ -714,7 +721,7 @@ export class BodyParameter {
      * @param parameter - The parameter to be used in the template
      * @throws If parameter is a string and it's over 32768 characters
      * @throws If parameter is a string, there are other components in the Template and it's over 1024 characters
-     * @see BodyComponent._build The method that checks the 1024 character limit
+     * @see {@link BodyComponent._build} The method that checks the 1024 character limit
      */
     constructor(parameter: string | Currency | DateTime) {
         if (typeof parameter === "string") {

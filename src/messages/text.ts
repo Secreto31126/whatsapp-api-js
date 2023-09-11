@@ -15,6 +15,10 @@ export default class Text extends ClientMessage {
      */
     readonly preview_url?: boolean;
 
+    /**
+     * @override
+     * @internal
+     */
     get _type(): "text" {
         return "text";
     }

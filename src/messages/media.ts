@@ -1,4 +1,4 @@
-import { ClientMessage, type ClientMessageNames } from "../types.js";
+import { ClientMessage } from "../types.js";
 
 /**
  * Abstract class for all the media types
@@ -14,11 +14,6 @@ export abstract class Media extends ClientMessage {
      * The link of the media
      */
     readonly link?: string;
-
-    /**
-     * @override
-     */
-    abstract get _type(): ClientMessageNames;
 
     /**
      * @param file - File to be sent
@@ -38,6 +33,7 @@ export abstract class Media extends ClientMessage {
 export class Audio extends Media {
     /**
      * @override
+     * @internal
      */
     get _type(): "audio" {
         return "audio";
@@ -71,6 +67,7 @@ export class Document extends Media {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "document" {
         return "document";
@@ -109,6 +106,7 @@ export class Image extends Media {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "image" {
         return "image";
@@ -135,6 +133,7 @@ export class Image extends Media {
 export class Sticker extends Media {
     /**
      * @override
+     * @internal
      */
     get _type(): "sticker" {
         return "sticker";
@@ -164,6 +163,7 @@ export class Video extends Media {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "video" {
         return "video";
