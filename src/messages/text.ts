@@ -24,6 +24,11 @@ export default class Text extends ClientMessage {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ClientMessage.prototype._build;
+
+    /**
      * Create a Text object for the API
      *
      * @param body - The content of the text message which can contain formatting and URLs which begin with http:// or https://

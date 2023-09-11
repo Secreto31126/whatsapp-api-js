@@ -32,6 +32,11 @@ export default class Location extends ClientMessage {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ClientMessage.prototype._build;
+
+    /**
      * Create a Location object for the API
      *
      * @param longitude - Longitude of the location

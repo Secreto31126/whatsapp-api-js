@@ -80,6 +80,11 @@ export class Template extends ClientMessage {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ClientMessage.prototype._build;
+
+    /**
      * Create a Template object for the API
      *
      * @param name - Name of the template

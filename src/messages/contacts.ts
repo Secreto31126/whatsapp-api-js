@@ -156,6 +156,11 @@ export class Address extends ContactMultipleComponent {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ContactComponent.prototype._build;
+
+    /**
      * Builds an address object for a contact.
      * A contact can contain multiple addresses objects.
      *
@@ -255,6 +260,11 @@ export class Email extends ContactMultipleComponent {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ContactComponent.prototype._build;
+
+    /**
      * Builds an email object for a contact.
      * A contact can contain multiple emails objects.
      *
@@ -306,6 +316,11 @@ export class Name extends ContactUniqueComponent {
     get _type(): "name" {
         return "name";
     }
+
+    /**
+     * @internal
+     */
+    _build!: typeof ContactComponent.prototype._build;
 
     /**
      * Builds a name object for a contact, required for contacts.
@@ -372,6 +387,11 @@ export class Organization extends ContactUniqueComponent {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ContactComponent.prototype._build;
+
+    /**
      * Builds an organization object for a contact
      *
      * @param company - Name of the contact's company
@@ -414,6 +434,11 @@ export class Phone extends ContactMultipleComponent {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ContactComponent.prototype._build;
+
+    /**
      * Builds a phone object for a contact.
      * A contact can contain multiple phones objects.
      *
@@ -451,6 +476,11 @@ export class Url extends ContactMultipleComponent {
     get _type(): "urls" {
         return "urls";
     }
+
+    /**
+     * @internal
+     */
+    _build!: typeof ContactComponent.prototype._build;
 
     /**
      * Builds an url object for a contact.

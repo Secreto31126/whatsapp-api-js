@@ -47,6 +47,11 @@ export class Interactive extends ClientMessage {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ClientMessage.prototype._build;
+
+    /**
      * Create an Interactive object for the API
      *
      * @param action - The action component of the interactive message

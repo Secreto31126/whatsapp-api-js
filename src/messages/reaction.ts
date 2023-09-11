@@ -24,6 +24,11 @@ export default class Reaction extends ClientMessage {
     }
 
     /**
+     * @internal
+     */
+    _build!: typeof ClientMessage.prototype._build;
+
+    /**
      * Create a Reaction object for the API
      *
      * @param message_id - The message's id (wamid) to react to

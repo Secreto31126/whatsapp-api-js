@@ -16,6 +16,11 @@ export abstract class Media extends ClientMessage {
     readonly link?: string;
 
     /**
+     * @internal
+     */
+    _build!: typeof ClientMessage.prototype._build;
+
+    /**
      * @param file - File to be sent
      * @param isItAnID - If the file is an ID (true) or an URL (false)
      */
