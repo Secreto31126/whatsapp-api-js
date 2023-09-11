@@ -251,7 +251,7 @@ export default class WhatsAppAPI {
             response
         };
 
-        this.on.sent?.(args);
+        this.offload(this.on?.sent, args);
 
         return response ?? promise;
     }
@@ -289,7 +289,7 @@ export default class WhatsAppAPI {
      * @param phoneID - The bot's phone ID
      * @param to - The users' phone numbers
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
-     * @param batch_size - The number of messages to send per second
+     * @param batch_size - The number of messages to send per batch
      * @param delay - The delay between each batch of messages in milliseconds
      * @returns The server response
      * @throws if batch_size is lower than 1
@@ -666,7 +666,7 @@ export default class WhatsAppAPI {
      *
      * @example
      * ```ts
-     * // @author @arivanbastos on issue #114
+     * // author arivanbastos on issue #114
      * // Simple http example implementation with Whatsapp.post() on Node@^19
      * import WhatsAppAPI from "whatsapp-api-js";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
@@ -762,12 +762,12 @@ export default class WhatsAppAPI {
 
         // Check if the message is a message or a status update
         if ("messages" in value) {
-            const contact = value.contacts[0];
-
-            const from = contact.wa_id;
-            const name = contact.profile.name;
-
             const message = value.messages[0];
+
+            const contact = value.contacts?.[0];
+
+            const from = contact?.wa_id ?? message.from;
+            const name = contact?.profile.name;
 
             const args: OnMessageArgs = {
                 phoneID,
@@ -777,7 +777,7 @@ export default class WhatsAppAPI {
                 raw: data
             };
 
-            this.on.message?.(args);
+            this.offload(this.on?.message, args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -799,7 +799,7 @@ export default class WhatsAppAPI {
                 raw: data
             };
 
-            this.on.status?.(args);
+            this.offload(this.on?.status, args);
         }
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
@@ -865,9 +865,32 @@ export default class WhatsAppAPI {
         });
     }
 
+    /**
+     * Get the body of a fetch response
+     *
+     * @param promise - The fetch response
+     * @returns The json body parsed
+     */
     private async getBody<T>(
         promise: Promise<Response>
     ): Promise<T | Response> {
         return this.parsed ? ((await (await promise).json()) as T) : promise;
+    }
+
+    /**
+     * Offload a function to the next tick of the event loop
+     *
+     * @internal
+     * @param f - The function to offload from the main thread
+     * @param a - The arguments to pass to the function
+     */
+    private offload<A, F extends ((...a: A[]) => unknown) | undefined>(
+        f: F,
+        ...a: A[]
+    ) {
+        if (f) {
+            // Thanks @RahulLanjewar93
+            Promise.resolve().then(() => f(...a));
+        }
     }
 }

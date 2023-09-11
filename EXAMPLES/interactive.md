@@ -85,4 +85,5 @@ Check out [#154](https://github.com/Secreto31126/whatsapp-api-js/issues/154) for
 https://whatsappapijs.web.app/classes/messages.Interactive.html
 https://whatsappapijs.web.app/classes/messages.ActionButtons.html
 https://whatsappapijs.web.app/classes/messages.ActionList.html
+https://whatsappapijs.web.app/classes/messages.ActionProduct.html
 https://whatsappapijs.web.app/classes/messages.ActionCatalog.html

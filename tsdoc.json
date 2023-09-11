@@ -12,6 +12,10 @@
         {
             "tagName": "@description",
             "syntaxKind": "block"
+        },
+        {
+            "tagName": "@overload",
+            "syntaxKind": "block"
         }
     ]
 }

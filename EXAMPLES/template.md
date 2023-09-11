@@ -3,11 +3,11 @@
 ## Simple template with no variables
 
 ```ts
-import { Template, Language } from "whatsapp-api-js/messages";
+import { Template } from "whatsapp-api-js/messages";
 
 const template_message = new Template(
     "template_name",
-    new Language("en")
+    "en"
 );
 ```
 
@@ -16,7 +16,6 @@ const template_message = new Template(
 ```ts
 import {
     Template,
-    Language,
     HeaderComponent,
     HeaderParameter,
     BodyComponent,
@@ -27,7 +26,7 @@ import {
 
 const template_variables_message = new Template(
     "template_name",
-    new Language("en"),
+    "en",
     new HeaderComponent(
         new HeaderParameter("Hello"),
         new HeaderParameter(
@@ -54,7 +53,6 @@ const template_variables_message = new Template(
 ```ts
 import {
     Template,
-    Language,
     HeaderComponent,
     HeaderParameter,
     Video
@@ -62,7 +60,7 @@ import {
 
 const template_media_message = new Template(
     "template_name",
-    new Language("en"),
+    "en",
     new HeaderComponent(
         new HeaderParameter(
             // Can also be image, document, or location
@@ -75,38 +73,115 @@ const template_media_message = new Template(
 ## Complex template with reply buttons
 
 ```ts
-import {
-    Template,
-    Language,
-    ButtonComponent
-} from "whatsapp-api-js/messages";
+import { Template, PayloadComponent } from "whatsapp-api-js/messages";
 
 const template_reply_buttons_message = new Template(
     "template_name",
-    new Language("en"),
-    new ButtonComponent(
-        "quick_reply",
-        "reply_1",
+    "en",
+    new PayloadComponent(
+        "reply_1"
+    ),
+    new PayloadComponent(
         "reply_2"
     )
 );
 ```
 
-## Complex template with call to action url
+## Complex template with call to action urls
+
+```ts
+import { Template, URLComponent } from "whatsapp-api-js/messages";
+
+const template_call_to_action_message = new Template(
+    "template_name",
+    "en",
+    new URLComponent(
+        "?user_id=123"
+    ),
+    new URLComponent(
+        "?user_id=456"
+    )
+);
+```
+
+## Complex template with copy coupon button
+
+```ts
+import { Template, CopyComponent } from "whatsapp-api-js/messages";
+
+const template_copy_coupon_message = new Template(
+    "template_name",
+    "en",
+    new CopyComponent(
+        "PROMO10"
+    )
+);
+```
+
+## Complex template with combination of buttons
 
 ```ts
 import {
     Template,
-    Language,
-    ButtonComponent
+    CopyComponent,
+    URLComponent,
+    PayloadComponent
 } from "whatsapp-api-js/messages";
 
-const template_call_to_action_message = new Template(
+const template_mixed_buttons_message = new Template(
     "template_name",
-    new Language("en"),
-    new ButtonComponent(
-        "url",
-        "?user_id=123",
+    "en",
+    new CopyComponent(
+        "PROMO10"
+    ),
+    new URLComponent(
+        "?code=PROMO10"
+    ),
+    new PayloadComponent(
+        "send_catalog"
+    )
+);
+```
+
+## Complex template with catalog
+
+```ts
+import { Template, CatalogComponent, Product } from "whatsapp-api-js/messages";
+
+const template_catalog_message = new Template(
+    "template_name",
+    "en",
+    new CatalogComponent(
+        new Product("thumbnail")
+    )
+);
+```
+
+## Complex template with Multi-Product Message
+
+```ts
+import {
+    Template,
+    MPMComponent,
+    Product,
+    ProductSection
+} from "whatsapp-api-js/messages";
+
+const template_multi_product_message = new Template(
+    "template_name",
+    "en",
+    new MPMComponent(
+        new Product("thumbnail"),
+        new ProductSection(
+            "Section Title",
+            new Product("product_1"),
+            new Product("product_2")
+        ),
+        new ProductSection(
+            "Another Section",
+            new Product("product_3"),
+            new Product("product_4")
+        )
     )
 );
 ```
@@ -118,7 +193,7 @@ import { Template } from "whatsapp-api-js/messages";
 
 const template_otp_message = Template.OTP(
     "template_name",
-    new Language("en"),
+    "en",
     "123456"
 );
 ```
@@ -128,4 +203,8 @@ const template_otp_message = Template.OTP(
 https://whatsappapijs.web.app/classes/messages.Template.html
 https://whatsappapijs.web.app/classes/messages.HeaderComponent.html
 https://whatsappapijs.web.app/classes/messages.BodyComponent.html
-https://whatsappapijs.web.app/classes/messages.ButtonComponent.html
+https://whatsappapijs.web.app/classes/messages.URLComponent.html
+https://whatsappapijs.web.app/classes/messages.PayloadComponent.html
+https://whatsappapijs.web.app/classes/messages.CopyComponent.html
+https://whatsappapijs.web.app/classes/messages.CatalogComponent.html
+https://whatsappapijs.web.app/classes/messages.MPMComponent.html

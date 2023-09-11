@@ -242,6 +242,7 @@ describe("WhatsAppAPI", function () {
         const apiValidMessage = { ...message };
 
         let Whatsapp;
+        let spy_on_sent;
         this.beforeEach(function () {
             Whatsapp = new WhatsAppAPI({
                 token,
@@ -251,13 +252,12 @@ describe("WhatsAppAPI", function () {
                     subtle
                 }
             });
+
+            spy_on_sent = sinon_spy();
+            Whatsapp.on.sent = spy_on_sent;
         });
 
         it("should run the logger after sending a message", async function () {
-            const spy = sinon_spy();
-
-            Whatsapp.on.sent = spy;
-
             clientFacebook
                 .intercept({
                     path: `/${Whatsapp.v}/${bot}/messages`,
@@ -271,7 +271,7 @@ describe("WhatsAppAPI", function () {
 
             await Whatsapp.sendMessage(bot, user, message);
 
-            sinon_assert.calledOnceWithMatch(spy, {
+            sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
                 type,
@@ -283,10 +283,6 @@ describe("WhatsAppAPI", function () {
         });
 
         it("should handle failed deliveries responses", async function () {
-            const spy = sinon_spy();
-
-            Whatsapp.on.sent = spy;
-
             const unexpectedResponse = {
                 error: {
                     message:
@@ -310,7 +306,7 @@ describe("WhatsAppAPI", function () {
 
             await Whatsapp.sendMessage(bot, user, message);
 
-            sinon_assert.calledOnceWithMatch(spy, {
+            sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
                 message: apiValidMessage,
@@ -320,21 +316,70 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        it("should run the logger with id and response as undefined if parsed is set to false", function () {
+        it("should run the logger with id and response as undefined if parsed is set to false", async function () {
             Whatsapp.parsed = false;
 
-            const spy = sinon_spy();
-
-            Whatsapp.on.sent = spy;
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, expectedResponse)
+                .times(1);
 
             Whatsapp.sendMessage(bot, user, message);
 
-            sinon_assert.calledOnceWithMatch(spy, {
+            // Callbacks are executed in the next tick
+            await new Promise((resolve) => setTimeout(resolve, 0));
+
+            sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
                 message: apiValidMessage,
                 request
             });
+        });
+
+        it("should not block the main thread with the user's callback", async function () {
+            // Emulates a blocking function
+            function block(delay) {
+                const start = Date.now();
+                while (Date.now() - start < delay);
+            }
+
+            const shorter_delay = 5;
+            const longer_delay = 10;
+
+            Whatsapp.on.sent = () => {
+                block(longer_delay);
+                spy_on_sent();
+            };
+
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, expectedResponse)
+                .times(1);
+
+            Whatsapp.sendMessage(bot, user, message);
+
+            // Do critical operations for less time than the user's function
+            block(shorter_delay);
+
+            sinon_assert.notCalled(spy_on_sent);
+
+            // Now give the blocking function time to finish
+            await new Promise((resolve) => setTimeout(resolve, longer_delay));
+
+            sinon_assert.calledOnce(spy_on_sent);
         });
     });
 
@@ -1602,8 +1647,11 @@ describe("WhatsAppAPI", function () {
                     Whatsapp.secure = false;
                 });
 
-                it("should parse the post request and call back with the right parameters", function () {
+                it("should parse the post request and call back with the right parameters", async function () {
                     Whatsapp.post(valid_message_mock);
+
+                    // Callbacks are executed in the next tick
+                    await new Promise((resolve) => setTimeout(resolve, 0));
 
                     sinon_assert.calledOnceWithMatch(spy_on_message, {
                         phoneID,
@@ -1612,6 +1660,36 @@ describe("WhatsAppAPI", function () {
                         name,
                         raw: valid_message_mock
                     });
+                });
+
+                it("should not block the main thread with the user's callback", async function () {
+                    // Emulates a blocking function
+                    function block(delay) {
+                        const start = Date.now();
+                        while (Date.now() - start < delay);
+                    }
+
+                    const shorter_delay = 5;
+                    const longer_delay = 10;
+
+                    Whatsapp.on.message = () => {
+                        block(longer_delay);
+                        spy_on_message();
+                    };
+
+                    Whatsapp.post(valid_message_mock);
+
+                    // Do critical operations for less time than the user's function
+                    block(shorter_delay);
+
+                    sinon_assert.notCalled(spy_on_message);
+
+                    // Now give the user's function time to finish
+                    await new Promise((resolve) =>
+                        setTimeout(resolve, longer_delay)
+                    );
+
+                    sinon_assert.calledOnce(spy_on_message);
                 });
 
                 it("should throw TypeError if the request is missing any data", function () {
@@ -1643,8 +1721,11 @@ describe("WhatsAppAPI", function () {
                     Whatsapp.secure = false;
                 });
 
-                it("should parse the post request and call back with the right parameters", function () {
+                it("should parse the post request and call back with the right parameters", async function () {
                     Whatsapp.post(valid_status_mock);
+
+                    // Callbacks are executed in the next tick
+                    await new Promise((resolve) => setTimeout(resolve, 0));
 
                     sinon_assert.calledOnceWithMatch(spy_on_status, {
                         phoneID,
@@ -1655,6 +1736,36 @@ describe("WhatsAppAPI", function () {
                         pricing,
                         raw: valid_status_mock
                     });
+                });
+
+                it("should not block the main thread with the user's callback", async function () {
+                    // Emulates a blocking function
+                    function block(delay) {
+                        const start = Date.now();
+                        while (Date.now() - start < delay);
+                    }
+
+                    const shorter_delay = 5;
+                    const longer_delay = 10;
+
+                    Whatsapp.on.status = () => {
+                        block(longer_delay);
+                        spy_on_status();
+                    };
+
+                    Whatsapp.post(valid_status_mock);
+
+                    // Do critical operations for less time than the user's function
+                    block(shorter_delay);
+
+                    sinon_assert.notCalled(spy_on_status);
+
+                    // Now give the user's function time to finish
+                    await new Promise((resolve) =>
+                        setTimeout(resolve, longer_delay)
+                    );
+
+                    sinon_assert.calledOnce(spy_on_status);
                 });
 
                 it("should throw TypeError if the request is missing any data", function () {

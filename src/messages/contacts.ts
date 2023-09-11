@@ -31,6 +31,10 @@ export class Contacts extends ClientMessage {
      */
     readonly component: BuiltContact[];
 
+    /**
+     * @override
+     * @internal
+     */
     get _type(): "contacts" {
         return "contacts";
     }
@@ -101,6 +105,7 @@ export class Contacts extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     _build() {
         return JSON.stringify(this.component);
@@ -144,6 +149,7 @@ export class Address extends ContactMultipleComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "addresses" {
         return "addresses";
@@ -194,6 +200,7 @@ export class Birthday extends ContactUniqueComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "birthday" {
         return "birthday";
@@ -217,6 +224,7 @@ export class Birthday extends ContactUniqueComponent {
 
     /**
      * @override
+     * @internal
      */
     _build() {
         return this.birthday;
@@ -240,6 +248,7 @@ export class Email extends ContactMultipleComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "emails" {
         return "emails";
@@ -292,6 +301,7 @@ export class Name extends ContactUniqueComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "name" {
         return "name";
@@ -355,6 +365,7 @@ export class Organization extends ContactUniqueComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "org" {
         return "org";
@@ -396,6 +407,7 @@ export class Phone extends ContactMultipleComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "phones" {
         return "phones";
@@ -434,6 +446,7 @@ export class Url extends ContactMultipleComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "urls" {
         return "urls";

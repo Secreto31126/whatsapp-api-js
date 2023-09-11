@@ -8,6 +8,7 @@ the most basic methods or features.
 -   [Main](main.md)
     -   [Simple Whatsapp creation](main.md#simple-whatsapp-creation)
     -   [Using the setup helpers](main.md#using-the-setup-helpers)
+    -   [Using the middlewares](main.md#using-the-middlewares)
     -   [Sending a message](main.md#sending-a-message)
 -   [Text](text.md)
     -   [Simple text](text.md#simple-text)

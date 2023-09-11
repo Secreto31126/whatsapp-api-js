@@ -17,6 +17,7 @@ export default class Reaction extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "reaction" {
         return "reaction";

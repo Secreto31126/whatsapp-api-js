@@ -1,18 +1,14 @@
 import {
     ClientMessage,
     ClientLimitedMessageComponent,
-    type ClientTypedMessageComponent
+    Section,
+    type InteractiveAction
 } from "../types.js";
 import type { AtLeastOne } from "../utils";
 
 import type { Document, Image, Video } from "./media";
 
-import {
-    Product,
-    ProductSection,
-    Section,
-    isProductSections
-} from "./globals.js";
+import { Product, ProductSection, isProductSections } from "./globals.js";
 
 /**
  * Interactive API object
@@ -23,22 +19,12 @@ export class Interactive extends ClientMessage {
     /**
      * The action component of the interactive message
      */
-    readonly action:
-        | ActionList
-        | ActionButtons
-        | ActionProduct
-        | ActionCatalog
-        | ClientTypedMessageComponent;
+    readonly action: InteractiveAction;
     /**
      * The type of the interactive message
      */
-    readonly type:
-        | "list"
-        | "button"
-        | "catalog_message"
-        | "product"
-        | "product_list"
-        | string;
+    readonly type: InteractiveAction["_type"];
+
     /**
      * The body component of the interactive message
      */
@@ -54,6 +40,7 @@ export class Interactive extends ClientMessage {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "interactive" {
         return "interactive";
@@ -66,17 +53,13 @@ export class Interactive extends ClientMessage {
      * @param body - The body component of the interactive message
      * @param header - The header component of the interactive message
      * @param footer - The footer component of the interactive message
-     * @throws If body is not provided, unless action is an ActionCatalog with a single product
-     * @throws If header is provided for an ActionCatalog with a single product
-     * @throws If header of type text is not provided for an ActionCatalog with a product list
-     * @throws If header is not of type text, unless action is an ActionButtons
+     * @throws If body is not provided, unless action is an {@link ActionProduct} with a single product
+     * @throws If header is provided for an {@link ActionProduct} with a single product
+     * @throws If header of type text is not provided for an {@link ActionProduct} with a product list
+     * @throws If header is not of type text, unless action is an {@link ActionButtons}
      */
     constructor(
-        action:
-            | ActionList
-            | ActionButtons
-            | ActionCatalog
-            | ClientTypedMessageComponent,
+        action: InteractiveAction,
         body?: Body,
         header?: Header,
         footer?: Footer
@@ -215,7 +198,7 @@ export class Header {
  */
 export class ActionButtons
     extends ClientLimitedMessageComponent<Button, 3>
-    implements ClientTypedMessageComponent
+    implements InteractiveAction
 {
     /**
      * The buttons of the action
@@ -224,6 +207,7 @@ export class ActionButtons
 
     /**
      * @override
+     * @internal
      */
     get _type(): "button" {
         return "button";
@@ -313,7 +297,7 @@ export class Button {
  */
 export class ActionList
     extends ClientLimitedMessageComponent<ListSection, 10>
-    implements ClientTypedMessageComponent
+    implements InteractiveAction
 {
     /**
      * The button text
@@ -326,6 +310,7 @@ export class ActionList
 
     /**
      * @override
+     * @internal
      */
     get _type(): "list" {
         return "list";
@@ -432,7 +417,7 @@ export class Row {
  *
  * @group Interactive
  */
-export class ActionCatalog implements ClientTypedMessageComponent {
+export class ActionCatalog implements InteractiveAction {
     /**
      * The name of the component
      */
@@ -446,6 +431,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "catalog_message" {
         return "catalog_message";
@@ -477,7 +463,7 @@ export class ActionCatalog implements ClientTypedMessageComponent {
  *
  * @group Interactive
  */
-export class ActionProduct implements ClientTypedMessageComponent {
+export class ActionProduct implements InteractiveAction {
     /**
      * The id of the catalog from where to get the products
      */
@@ -493,6 +479,7 @@ export class ActionProduct implements ClientTypedMessageComponent {
 
     /**
      * @override
+     * @internal
      */
     get _type(): "product" | "product_list" {
         return this.product_retailer_id ? "product" : "product_list";

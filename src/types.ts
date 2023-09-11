@@ -1,5 +1,15 @@
+/**
+ * @module types
+ *
+ * @description
+ * The types of the library. Mostly for internal use,
+ * but if you want to "understand" the code under the hood,
+ * feel free to read the docs :)
+ */
+
 import type { fetch as FetchType } from "undici";
 import type { subtle as CryptoSubtle } from "node:crypto";
+import type { AtLeastOne } from "./utils";
 
 /**
  * The main constructor arguments for the API
@@ -135,14 +145,10 @@ export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
 export abstract class ClientMessage {
     /**
      * The message type
-     *
-     * @internal
      */
     abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
-     *
-     * @internal
      */
     _build(): string {
         return JSON.stringify(this);
@@ -152,22 +158,15 @@ export abstract class ClientMessage {
 export interface ClientTypedMessageComponent {
     /**
      * The message's component type
-     *
-     * @internal
      */
     get _type(): string;
 }
 
-export abstract class ClientBuildableMessageComponent {
+export interface ClientBuildableMessageComponent {
     /**
      * The message's component builder method
-     *
-     * @internal
      */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _build(..._: unknown[]): unknown {
-        return this;
-    }
+    _build(..._: unknown[]): unknown;
 }
 
 export abstract class ClientLimitedMessageComponent<T, N extends number> {
@@ -186,6 +185,59 @@ export abstract class ClientLimitedMessageComponent<T, N extends number> {
     }
 }
 
+/**
+ * All sections are structured the same way, so this abstract class is used to reduce code duplication
+ *
+ * @remarks
+ * - All sections must have between 1 and N elements
+ * - All sections must have a title if more than 1 section is provided
+ *
+ * @typeParam T - The type of the components of the section
+ * @typeParam N - The maximum number of elements in the section
+ */
+export abstract class Section<
+    T,
+    N extends number
+> extends ClientLimitedMessageComponent<T, N> {
+    /**
+     * The title of the section
+     */
+    readonly title?: string;
+
+    /**
+     * Builds a section component
+     *
+     * @param name - The name of the section's type
+     * @param keys_name - The name of the section's keys
+     * @param elements - The elements of the section
+     * @param max - The maximum number of elements in the section
+     * @param title - The title of the section
+     * @param title_length - The maximum length of the title
+     * @throws If more than N elements are provided
+     * @throws If title is over 24 characters if provided
+     */
+    constructor(
+        name: string,
+        keys_name: string,
+        elements: AtLeastOne<T>,
+        max: N,
+        title?: string,
+        title_length = 24
+    ) {
+        super(name, keys_name, elements, max);
+
+        if (title) {
+            if (title.length > title_length) {
+                throw new Error(
+                    `${name} title must be ${title_length} characters or less`
+                );
+            }
+
+            this.title = title;
+        }
+    }
+}
+
 // Somehow, Contacts still manages to be annoying
 export abstract class ContactComponent
     implements ClientTypedMessageComponent, ClientBuildableMessageComponent
@@ -199,8 +251,6 @@ export abstract class ContactComponent
 
     /**
      * Whether the component can be repeated multiple times in a contact.
-     *
-     * @internal
      */
     abstract get _many(): boolean;
     abstract get _type(): string;
@@ -208,8 +258,6 @@ export abstract class ContactComponent
 
 /**
  * A contact multiple component can be repeated multiple times in a contact.
- *
- * @internal
  */
 export abstract class ContactMultipleComponent extends ContactComponent {
     /**
@@ -224,8 +272,6 @@ export abstract class ContactMultipleComponent extends ContactComponent {
 
 /**
  * A contact unique component can only be used once in a contact.
- *
- * @internal
  */
 export abstract class ContactUniqueComponent extends ContactComponent {
     /**
@@ -236,6 +282,21 @@ export abstract class ContactUniqueComponent extends ContactComponent {
     }
 
     abstract get _type(): string;
+}
+
+/**
+ * Polymorphism intensifies. Also helps with the _type typings :)
+ */
+export interface InteractiveAction extends ClientTypedMessageComponent {
+    /**
+     * @overload
+     */
+    get _type():
+        | "list"
+        | "button"
+        | "catalog_message"
+        | "product"
+        | "product_list";
 }
 
 export type ClientMessageNames =
@@ -615,7 +676,7 @@ export type PostData = {
                 };
             } & (
                 | {
-                      contacts: [ServerContacts];
+                      contacts?: [ServerContacts];
                       messages: [ServerMessage];
                   }
                 | {

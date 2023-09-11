@@ -1,4 +1,4 @@
-# whatsapp-api-js v1
+# whatsapp-api-js v2
 
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
@@ -7,7 +7,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
-- [whatsapp-api-js v1](#whatsapp-api-js-v1)
+- [whatsapp-api-js v2](#whatsapp-api-js-v2)
   - [List of contents](#list-of-contents)
   - [Set up](#set-up)
   - [Examples and Tutorials](#examples-and-tutorials)
@@ -46,7 +46,8 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-    // The handlers work with any middleware, as long as you pass the correct data
+    // The handlers work with any framework, as long as you pass the correct data
+    // You can also use one of the middlewares provided in the package, keep reading
     return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
 }
 
@@ -121,7 +122,7 @@ function get(e) {
 Once you are done, click the administrate button, and subscribe to the messages event.
 
 And that's it! Now you have a functioning Whatsapp Bot connected to your server.
-For more information on the setup process for specific environments, check out the
+For more information on the setup process for specific runtimes and frameworks, check out the
 [Environments.md file](https://github.com/Secreto31126/whatsapp-api-js/blob/main/ENVIRONMENTS.md).
 
 ## Examples and Tutorials
@@ -133,7 +134,7 @@ Check them out in the [examples folder](https://github.com/Secreto31126/whatsapp
 
 ## Types
 
-The library is fully typed. Most types are available by importing /types or /emitters :
+The library is fully typed. Most types are available by importing `/types` or `/emitters` :
 
 ```ts
 import { GetParams, PostData } from "whatsapp-api-js/types";
@@ -146,7 +147,7 @@ To know what changed between updates, check out the [releases on Github](https:/
 
 ## Documentation
 
-The latest package documentation (based on main branch) is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
+The latest release documentation is available in [whatsappapijs.web.app](https://whatsappapijs.web.app/),
 and previous versions are available in [secreto31126.github.io/whatsapp-api-js](https://secreto31126.github.io/whatsapp-api-js/).
 
 ## Contributors
