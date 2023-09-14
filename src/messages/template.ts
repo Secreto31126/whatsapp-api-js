@@ -68,7 +68,12 @@ export class Template extends ClientMessage {
      * The components of the template
      */
     readonly components?: Array<
-        NonNullable<HeaderComponent | BodyComponent | ButtonComponent>
+        NonNullable<
+            | HeaderComponent
+            | BodyComponent
+            | ButtonComponent
+            | CarouselComponent
+        >
     >;
 
     /**
@@ -89,7 +94,12 @@ export class Template extends ClientMessage {
     constructor(
         name: string,
         language: string | Language,
-        ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]
+        ...components: (
+            | HeaderComponent
+            | BodyComponent
+            | ButtonComponent
+            | CarouselComponent
+        )[]
     ) {
         super();
         this.name = name;
@@ -740,5 +750,100 @@ export class BodyParameter {
             value: parameter,
             enumerable: true
         });
+    }
+}
+
+/**
+ * Components API object
+ *
+ * @group Template
+ */
+export class CarouselComponent
+    extends ClientLimitedMessageComponent<CarouselCard, 10>
+    implements ClientBuildableMessageComponent
+{
+    /**
+     * The type of the component
+     */
+    readonly type = "carousel";
+    /**
+     * The cards of the component
+     */
+    readonly cards: CarouselCard[];
+
+    /**
+     * Builds a carousel component for a Template message
+     *
+     * @param cards - The cards of the component
+     * @throws If cards is over 10 elements
+     */
+    constructor(...cards: AtLeastOne<CarouselCard>) {
+        super("CarouselComponent", "CarouselCard", cards, 10);
+
+        const pointers = {
+            counter: 0
+        };
+
+        this.cards = cards.map((cmpt) => cmpt._build(pointers));
+    }
+
+    /**
+     * @override
+     * @internal
+     */
+    _build() {
+        return this;
+    }
+}
+
+/**
+ * Card API object
+ *
+ * @group Template
+ */
+export class CarouselCard implements ClientBuildableMessageComponent {
+    /**
+     * The index of the card (assigned after calling _build)
+     */
+    protected card_index = NaN;
+    /**
+     * The components of the card
+     */
+    readonly components: NonNullable<
+        HeaderComponent | BodyComponent | ButtonComponent
+    >[];
+
+    /**
+     * Builds a carousel card for a CarouselComponent.
+     *
+     * @remarks
+     * If this looks odly similar to Template constructor's signature, it's because it is.
+     *
+     * @param header - The header parameter the card
+     * @param components - The other components of the card
+     */
+    constructor(
+        header: Image | Video,
+        ...components: (BodyComponent | ButtonComponent)[]
+    ) {
+        const tmp = new Template(
+            "",
+            "",
+            new HeaderComponent(new HeaderParameter(header)),
+            ...components
+        );
+
+        this.components = tmp.components as NonNullable<
+            HeaderComponent | BodyComponent | ButtonComponent
+        >[];
+    }
+
+    /**
+     * @override
+     * @internal
+     */
+    _build(ptr: { counter: number }) {
+        this.card_index = ptr.counter++;
+        return this;
     }
 }
