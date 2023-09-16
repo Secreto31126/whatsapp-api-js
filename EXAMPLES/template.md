@@ -186,6 +186,37 @@ const template_multi_product_message = new Template(
 );
 ```
 
+## Complex template with Carousel
+
+```ts
+import {
+    Template,
+    BodyComponent,
+    CarouselComponent,
+    CarouselCard,
+    Image,
+    URLComponent
+} from "whatsapp-api-js/messages";
+
+const template_multi_product_message = new Template(
+    "template_name",
+    "en",
+    new BodyComponent(
+        new BodyParameter("PROMO10")
+    ),
+    new CarouselComponent(
+        new CarouselCard(
+            new Image(image),
+            new URLComponent("?code=PROMO10&product=1")
+        ),
+        new CarouselCard(
+            new Image(image),
+            new URLComponent("?code=PROMO10&product=2")
+        )
+    )
+);
+```
+
 ## OTP prefab template
 
 ```ts
@@ -208,3 +239,4 @@ https://whatsappapijs.web.app/classes/messages.PayloadComponent.html
 https://whatsappapijs.web.app/classes/messages.CopyComponent.html
 https://whatsappapijs.web.app/classes/messages.CatalogComponent.html
 https://whatsappapijs.web.app/classes/messages.MPMComponent.html
+https://whatsappapijs.web.app/classes/messages.CarouselComponent.html

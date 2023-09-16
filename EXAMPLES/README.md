@@ -42,4 +42,5 @@ the most basic methods or features.
     -   [Simple template with header media](template.md#simple-template-with-header-media)
     -   [Complex template with reply buttons](template.md#complex-template-with-reply-buttons)
     -   [Complex template with call to action url](template.md#complex-template-with-call-to-action-url)
+    -   [Complex template with Carousel](template.md#complex-template-with-carousel)
     -   [OTP prefab template](template.md#otp-prefab-template)
