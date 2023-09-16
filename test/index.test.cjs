@@ -75,7 +75,7 @@ describe("WhatsAppAPI", function () {
     });
 
     describe("Version", function () {
-        it("should work with v17.0 as default", function () {
+        it("should work with v18.0 as default", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
@@ -84,7 +84,7 @@ describe("WhatsAppAPI", function () {
                     subtle
                 }
             });
-            equal(Whatsapp.v, "v17.0");
+            equal(Whatsapp.v, "v18.0");
         });
 
         it("should work with any specified version", function () {

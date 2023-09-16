@@ -109,7 +109,7 @@ export default class WhatsAppAPI {
         token,
         appSecret,
         webhookVerifyToken,
-        v = "v17.0",
+        v = "v18.0",
         parsed = true,
         secure = true,
         ponyfill = {}
