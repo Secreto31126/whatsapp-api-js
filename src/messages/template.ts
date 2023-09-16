@@ -89,7 +89,8 @@ export class Template extends ClientMessage {
      *
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
+     * @throws If the template isn't text-based (only one {@link BodyComponent} is given) and one of the parameters is a string and it's over 1024 characters.
      */
     constructor(
         name: string,
@@ -684,10 +685,11 @@ export class BodyComponent implements ClientBuildableMessageComponent {
     /**
      * @override
      * @internal
+     * @throws If theres_only_body is false and one of the parameters is a string and it's over 1024 characters
      */
     _build({ theres_only_body }: BuildingPointers) {
-        // If there are parameters and need to check for the shorter max text length
-        if (this.parameters && !theres_only_body) {
+        // If it needs to check for the shorter max text length
+        if (!theres_only_body) {
             for (const param of this.parameters) {
                 if (param.text && param.text?.length > 1024) {
                     throw new Error(
@@ -819,8 +821,8 @@ export class CarouselCard implements ClientBuildableMessageComponent {
      * @remarks
      * If this looks odly similar to Template constructor's signature, it's because it is.
      *
-     * @param header - The header parameter the card
-     * @param components - The other components of the card
+     * @param header - The header parameter for the card
+     * @param components - The other components for the card
      */
     constructor(
         header: Image | Video,
