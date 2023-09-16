@@ -1,4 +1,4 @@
-name: Deploy website archive update
+name: Deploy websites update
 
 on:
   workflow_dispatch:
