@@ -1,4 +1,4 @@
-import { ClientMessage, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
+import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
@@ -57,7 +57,7 @@ export declare class Template extends ClientMessage {
     /**
      * The components of the template
      */
-    readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent>>;
+    readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent>>;
     /**
      * @override
      * @internal
@@ -68,9 +68,10 @@ export declare class Template extends ClientMessage {
      *
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
-     * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is BodyComponent.
+     * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
+     * @throws If the template isn't text-based (only one {@link BodyComponent} is given) and one of the parameters is a string and it's over 1024 characters.
      */
-    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent)[]);
+    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent)[]);
     /**
      * OTP Template generator
      *
@@ -408,6 +409,7 @@ export declare class BodyComponent implements ClientBuildableMessageComponent {
     /**
      * @override
      * @internal
+     * @throws If theres_only_body is false and one of the parameters is a string and it's over 1024 characters
      */
     _build({ theres_only_body }: BuildingPointers): this;
 }
@@ -443,6 +445,65 @@ export declare class BodyParameter {
      * @see {@link BodyComponent._build} The method that checks the 1024 character limit
      */
     constructor(parameter: string | Currency | DateTime);
+}
+/**
+ * Components API object
+ *
+ * @group Template
+ */
+export declare class CarouselComponent extends ClientLimitedMessageComponent<CarouselCard, 10> implements ClientBuildableMessageComponent {
+    /**
+     * The type of the component
+     */
+    readonly type = "carousel";
+    /**
+     * The cards of the component
+     */
+    readonly cards: CarouselCard[];
+    /**
+     * Builds a carousel component for a Template message
+     *
+     * @param cards - The cards of the component
+     * @throws If cards is over 10 elements
+     */
+    constructor(...cards: AtLeastOne<CarouselCard>);
+    /**
+     * @override
+     * @internal
+     */
+    _build(): this;
+}
+/**
+ * Card API object
+ *
+ * @group Template
+ */
+export declare class CarouselCard implements ClientBuildableMessageComponent {
+    /**
+     * The index of the card (assigned after calling _build)
+     */
+    protected card_index: number;
+    /**
+     * The components of the card
+     */
+    readonly components: NonNullable<HeaderComponent | BodyComponent | ButtonComponent>[];
+    /**
+     * Builds a carousel card for a CarouselComponent.
+     *
+     * @remarks
+     * If this looks odly similar to Template constructor's signature, it's because it is.
+     *
+     * @param header - The header parameter for the card
+     * @param components - The other components for the card
+     */
+    constructor(header: Image | Video, ...components: (BodyComponent | ButtonComponent)[]);
+    /**
+     * @override
+     * @internal
+     */
+    _build(ptr: {
+        counter: number;
+    }): this;
 }
 export {};
 //# sourceMappingURL=template.d.ts.map
