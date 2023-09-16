@@ -1,16 +1,10 @@
 name: Run Pull Request Checks
 
-on:
-  pull_request:
-    paths:
-      - 'src/*.ts'
-      - 'src/setup/*.ts'
-      - 'src/messages/*.ts'
-      - 'tests/*.ts'
+on: [pull_request]
 
 jobs:
-  checks:
-    name: Run Checks
+  tests:
+    name: Run Tests
 
     runs-on: ubuntu-latest
     strategy:
@@ -30,6 +24,24 @@ jobs:
         run: npm run build:code
       - name: Tests
         run: npm run test
+
+  lint_and_format:
+    name: Run Lint and Format
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - name: Install
+        run: npm ci
       - name: Linted
         run: npm run lint
       - name: Nice

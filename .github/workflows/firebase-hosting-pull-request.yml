@@ -6,10 +6,9 @@ name: Preview with Firebase Hosting
 on:
   pull_request:
     paths:
-      - 'src/*.ts'
-      - 'src/setup/*.ts'
-      - 'src/messages/*.ts'
+      - 'src/**'
       - 'README.md'
+      - 'package.json'
       - 'docs_statics/*.html'
 
 jobs:
@@ -19,7 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm ci --only=dev && npm run document
+      - run: |
+          npm ci --only=dev
+          npm run document
+
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
