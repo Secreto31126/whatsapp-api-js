@@ -3,7 +3,12 @@
 ## Reply Buttons
 
 ```ts
-import { Interactive, ActionButtons, Button, Body } from "whatsapp-api-js/messages";
+import {
+    Interactive,
+    ActionButtons,
+    Button,
+    Body
+} from "whatsapp-api-js/messages";
 
 const interactive_button_message = new Interactive(
     new ActionButtons(
@@ -22,7 +27,8 @@ import { Interactive, ActionList, Row, Body } from "whatsapp-api-js/messages";
 const interactive_list_message = new Interactive(
     new ActionList(
         "Button text",
-        new ListSection(undefined,
+        new ListSection(
+            undefined,
             new Row("reply_1", "Hello", "Hello description"),
             new Row("reply_2", "World", "World description")
         )
@@ -37,17 +43,19 @@ const interactive_list_message = new Interactive(
 import { Interactive, ActionProduct, Product } from "whatsapp-api-js/messages";
 
 const interactive_single_product_message = new Interactive(
-    new ActionProduct(
-        "catalog_id",
-        new Product("product_id")
-    )
+    new ActionProduct("catalog_id", new Product("product_id"))
 );
 ```
 
 ## Multi Product
 
 ```ts
-import { Interactive, ActionProduct, ProductSection, Product } from "whatsapp-api-js/messages";
+import {
+    Interactive,
+    ActionProduct,
+    ProductSection,
+    Product
+} from "whatsapp-api-js/messages";
 
 const interactive_multi_product_message = new Interactive(
     new ActionProduct(
@@ -66,12 +74,15 @@ const interactive_multi_product_message = new Interactive(
 ## Catalog
 
 ```ts
-import { Interactive, ActionCatalog, Product, Body } from "whatsapp-api-js/messages";
+import {
+    Interactive,
+    ActionCatalog,
+    Product,
+    Body
+} from "whatsapp-api-js/messages";
 
 const interactive_catalog_message = new Interactive(
-    new ActionCatalog(
-        new Product("hello")
-    ),
+    new ActionCatalog(new Product("hello")),
     new Body("Hello World")
 );
 ```

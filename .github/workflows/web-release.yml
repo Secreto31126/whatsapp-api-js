@@ -1,92 +1,92 @@
 name: Deploy websites update
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: 'Tag to deploy'
-        required: true
-  workflow_call:
-    inputs:
-      tag_name:
-        description: 'Tag to deploy'
-        required: true
-        type: string
+    workflow_dispatch:
+        inputs:
+            tag_name:
+                description: "Tag to deploy"
+                required: true
+    workflow_call:
+        inputs:
+            tag_name:
+                description: "Tag to deploy"
+                required: true
+                type: string
 
 jobs:
-  build:
-    name: Build Documentation
-    runs-on: ubuntu-latest
+    build:
+        name: Build Documentation
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v3
 
-      - name: Setup
-        run: npm ci
+            - name: Setup
+              run: npm ci
 
-      - name: Document
-        run: npm run document
+            - name: Document
+              run: npm run document
 
-      - name: Store docs
-        uses: actions/upload-artifact@v3
-        with:
-          name: docs
-          path: docs
+            - name: Store docs
+              uses: actions/upload-artifact@v3
+              with:
+                  name: docs
+                  path: docs
 
-  firebase:
-    name: Deploy website to Firebase
-    needs: build
+    firebase:
+        name: Deploy website to Firebase
+        needs: build
 
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Copy docs
-        uses: actions/download-artifact@v3
-        with:
-          name: docs
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Copy docs
+              uses: actions/download-artifact@v3
+              with:
+                  name: docs
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WHATSAPPAPIJS }}'
-          channelId: live
-          projectId: whatsappapijs
+            - uses: FirebaseExtended/action-hosting-deploy@v0
+              with:
+                  repoToken: "${{ secrets.GITHUB_TOKEN }}"
+                  firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_WHATSAPPAPIJS }}"
+                  channelId: live
+                  projectId: whatsappapijs
 
-  archive:
-    name: Deploy website to Github Pages
-    needs: build
+    archive:
+        name: Deploy website to Github Pages
+        needs: build
 
-    runs-on: ubuntu-latest
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: gh-pages
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: gh-pages
 
-      - name: Check if tag exists
-        run: |
-          if [ $(git tag -l "${{ inputs.tag_name }}") ]; then
-            echo "Tag doesn't exists"
-            exit 1
-          fi
+            - name: Check if tag exists
+              run: |
+                  if [ $(git tag -l "${{ inputs.tag_name }}") ]; then
+                    echo "Tag doesn't exists"
+                    exit 1
+                  fi
 
-      - name: Create Endpoint
-        # The endpoint shouldn't exists
-        # The code is only executed on releases
-        run: mkdir ${{ inputs.tag_name }}
+            - name: Create Endpoint
+              # The endpoint shouldn't exists
+              # The code is only executed on releases
+              run: mkdir ${{ inputs.tag_name }}
 
-      - name: Copy docs into Endpoint
-        uses: actions/download-artifact@v3
-        with:
-          name: docs
-          path: ${{ inputs.tag_name }}
+            - name: Copy docs into Endpoint
+              uses: actions/download-artifact@v3
+              with:
+                  name: docs
+                  path: ${{ inputs.tag_name }}
 
-      - name: Add Endpoint to the index
-        run: bash build.sh
+            - name: Add Endpoint to the index
+              run: bash build.sh
 
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          default_author: github_actor
-          message: Added ${{ inputs.tag_name }} docs
+            - name: Commit changes
+              uses: EndBug/add-and-commit@v9
+              with:
+                  default_author: github_actor
+                  message: Added ${{ inputs.tag_name }} docs

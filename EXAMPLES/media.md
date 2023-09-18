@@ -7,7 +7,11 @@ import { Image } from "whatsapp-api-js/messages";
 
 const image_message = new Image("https://i.imgur.com/4QfKuz1.png");
 const image_id_message = new Image("12345678", true);
-const image_caption_message = new Image("https://i.imgur.com/4QfKuz1.png", false, "Hello world!");
+const image_caption_message = new Image(
+    "https://i.imgur.com/4QfKuz1.png",
+    false,
+    "Hello world!"
+);
 ```
 
 ## Video
@@ -17,7 +21,11 @@ import { Video } from "whatsapp-api-js/messages";
 
 const video_message = new Video("https://www.example.com/video.mp4");
 const video_id_message = new Video("12345678", true);
-const video_caption_message = new Video("https://www.example.com/video.mp4", false, "Hello world!");
+const video_caption_message = new Video(
+    "https://www.example.com/video.mp4",
+    false,
+    "Hello world!"
+);
 ```
 
 ## Audio
@@ -36,8 +44,17 @@ import { Document } from "whatsapp-api-js/messages";
 
 const document_message = new Document("https://www.example.com/document.pdf");
 const document_id_message = new Document("12345678", true);
-const document_caption_message = new Document("https://www.example.com/document.pdf", false, "Hello world!");
-const document_filename_message = new Document("https://www.example.com/document.pdf", false, undefined, "a weird filename.pdf");
+const document_caption_message = new Document(
+    "https://www.example.com/document.pdf",
+    false,
+    "Hello world!"
+);
+const document_filename_message = new Document(
+    "https://www.example.com/document.pdf",
+    false,
+    undefined,
+    "a weird filename.pdf"
+);
 ```
 
 ## Sticker

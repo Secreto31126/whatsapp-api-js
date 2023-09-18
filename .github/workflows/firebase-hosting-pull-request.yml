@@ -4,26 +4,26 @@
 name: Preview with Firebase Hosting
 
 on:
-  pull_request:
-    paths:
-      - 'src/**'
-      - 'README.md'
-      - 'package.json'
-      - 'docs_statics/*.html'
+    pull_request:
+        paths:
+            - "src/**"
+            - "README.md"
+            - "package.json"
+            - "docs_statics/*.html"
 
 jobs:
-  build_and_preview:
-    name: Build documentation and preview
-    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          npm ci --only=dev
-          npm run document
+    build_and_preview:
+        name: Build documentation and preview
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: |
+                  npm ci --only=dev
+                  npm run document
 
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_WHATSAPPAPIJS }}'
-          projectId: whatsappapijs
+            - uses: FirebaseExtended/action-hosting-deploy@v0
+              with:
+                  repoToken: "${{ secrets.GITHUB_TOKEN }}"
+                  firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_WHATSAPPAPIJS }}"
+                  projectId: whatsappapijs

@@ -4,115 +4,115 @@
 name: Deploy to NPM
 
 on:
-  release:
-    types: [created]
+    release:
+        types: [created]
 
 jobs:
-  build:
-    name: Build and Document
-    runs-on: ubuntu-latest
+    build:
+        name: Build and Document
+        runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v3
 
-      - name: Setup
-        run: npm ci
+            - name: Setup
+              run: npm ci
 
-      - name: Build
-        run: npm run build
+            - name: Build
+              run: npm run build
 
-      - name: Store builds
-        uses: actions/upload-artifact@v3
+            - name: Store builds
+              uses: actions/upload-artifact@v3
+              with:
+                  name: build
+                  path: lib
+
+    test:
+        name: Test
+        needs: build
+
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x]
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/download-artifact@v3
+              with:
+                  name: build
+                  path: lib
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: npm
+
+            - name: Setup
+              run: npm ci
+
+            - name: Test
+              run: npm run test
+
+    publish-npm:
+        name: Public Release
+        needs: test
+
+        runs-on: ubuntu-latest
+        if: ${{ !github.event.release.prerelease }}
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  registry-url: https://registry.npmjs.org/
+            - uses: actions/download-artifact@v3
+              with:
+                  name: build
+                  path: lib
+
+            - name: Give me 1 minute to reconsider my life actions
+              run: sleep 60s
+
+            - name: Ok, now publish it
+              run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+    preview-npm:
+        name: Beta Release
+        needs: test
+
+        runs-on: ubuntu-latest
+        if: ${{ github.event.release.prerelease }}
+
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+                  registry-url: https://registry.npmjs.org/
+            - uses: actions/download-artifact@v3
+              with:
+                  name: build
+                  path: lib
+
+            - name: Set package version to prerelease tag
+              run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
+
+            - name: Beta Release
+              run: npm publish --tag beta
+              env:
+                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+    web-release:
+        name: Deploy website
+        needs: publish-npm
+
+        uses: ./.github/workflows/web-release.yml
+        secrets: inherit
         with:
-          name: build
-          path: lib
-
-  test:
-    name: Test
-    needs: build
-    
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: lib
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-
-      - name: Setup
-        run: npm ci
-
-      - name: Test
-        run: npm run test
-
-  publish-npm:
-    name: Public Release
-    needs: test
-
-    runs-on: ubuntu-latest
-    if: '!github.event.release.prerelease'
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: lib
-
-      - name: Give me 1 minute to reconsider my life actions
-        run: sleep 60s
-
-      - name: Ok, now publish it
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-  preview-npm:
-    name: Beta Release
-    needs: test
-
-    runs-on: ubuntu-latest
-    if: 'github.event.release.prerelease'
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org/
-      - uses: actions/download-artifact@v3
-        with:
-          name: build
-          path: lib
-
-      - name: Set package version to prerelease tag
-        run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
-
-      - name: Beta Release
-        run: npm publish --tag beta
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-  web-release:
-    name: Deploy website
-    needs: publish-npm
-
-    uses: ./.github/workflows/web-release.yml
-    secrets: inherit
-    with:
-      tag_name: ${{ github.event.release.tag_name }}
+            tag_name: ${{ github.event.release.tag_name }}

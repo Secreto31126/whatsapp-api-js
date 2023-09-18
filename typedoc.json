@@ -9,9 +9,7 @@
         "src/setup/index.ts",
         "src/middleware/index.ts"
     ],
-    "exclude": [
-        "**/node_modules/**"
-    ],
+    "exclude": ["**/node_modules/**"],
     "out": "docs",
     "includeVersion": true,
     "excludeInternal": true

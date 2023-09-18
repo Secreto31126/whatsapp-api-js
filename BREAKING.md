@@ -10,30 +10,32 @@ the original catalog messages.
 
 Among the affected classes and files are:
 
-- `interactive.ts`
-  - `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used for the
-    Catalog messages. The original class was renamed as `ActionProduct`.
-  - `Product` and `ProductSection`: These classes were moved from the file
-    `messages/interactive.ts` to `messages/globals.ts`, as they are now also
-    used in templates.
-  - `Section`: The class was moved from the file `messages/interactive.ts` to
-    `types.ts`.
+-   `interactive.ts`
 
-- `template.ts`
-  - `ButtonComponent` -> `URLComponent`, `PayloadComponent`, `CatalogComponent`,
-    `MPMComponent`, `CopyComponent`, `SkipButtonComponent`: As the API now
-    supports mixing button types, the `ButtonComponent` was splitted into
-    different classes, each one representing a button types. For example, an URL
-    component was updated from `new ButtonComponent("url", "example")` to
-    `new URLComponent("example")`.
-  - `Template`: The constructor now receives multiple button components instead
-    of a single one.
-  - `ButtonComponent`: The class was replaced with an abstract class.
-  - `ButtonParameter`: The class was replaced with a type.
+    -   `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used for the
+        Catalog messages. The original class was renamed as `ActionProduct`.
+    -   `Product` and `ProductSection`: These classes were moved from the file
+        `messages/interactive.ts` to `messages/globals.ts`, as they are now also
+        used in templates.
+    -   `Section`: The class was moved from the file `messages/interactive.ts` to
+        `types.ts`.
 
-- `types.ts`
-  - `ClientBuildableMessageComponent`: The class was replaced with an interface.
-  - `PostData`: `PostData.entry[].changes[].value.contacts` may be undefined.
+-   `template.ts`
+
+    -   `ButtonComponent` -> `URLComponent`, `PayloadComponent`, `CatalogComponent`,
+        `MPMComponent`, `CopyComponent`, `SkipButtonComponent`: As the API now
+        supports mixing button types, the `ButtonComponent` was splitted into
+        different classes, each one representing a button types. For example, an URL
+        component was updated from `new ButtonComponent("url", "example")` to
+        `new URLComponent("example")`.
+    -   `Template`: The constructor now receives multiple button components instead
+        of a single one.
+    -   `ButtonComponent`: The class was replaced with an abstract class.
+    -   `ButtonParameter`: The class was replaced with a type.
+
+-   `types.ts`
+    -   `ClientBuildableMessageComponent`: The class was replaced with an interface.
+    -   `PostData`: `PostData.entry[].changes[].value.contacts` may be undefined.
 
 ### Node min version bumped
 
@@ -72,11 +74,11 @@ Also bumped the default API version to v17.0.
 import WhatsAppAPI from "whatsapp-api-js";
 
 const Whatsapp = new WhatsAppAPI({
-  token: "123",
-  appSecret: "456",
-  webhookVerifyToken: "789",
-  v: "v16.0",
-  parsed: true,
+    token: "123",
+    appSecret: "456",
+    webhookVerifyToken: "789",
+    v: "v16.0",
+    parsed: true
 });
 ```
 
@@ -90,14 +92,14 @@ the main class.
 import WhatsAppAPI from "whatsapp-api-js";
 
 const Whatsapp = new WhatsAppAPI({
-  token: "123",
-  appSecret: "456",
-  webhookVerifyToken: "789",
+    token: "123",
+    appSecret: "456",
+    webhookVerifyToken: "789"
 });
 
 // Assuming get is called on a GET request to your server
 function get(e) {
-  return Whatsapp.get(JSON.parse(e.params));
+    return Whatsapp.get(JSON.parse(e.params));
 }
 ```
 
@@ -111,11 +113,11 @@ const Whatsapp = new WhatsAppAPI({ token: "123", appSecret: "456" });
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-  return Whatsapp.post(
-    JSON.parse(e.data),
-    e.data,
-    e.headers["x-hub-signature-256"],
-  );
+    return Whatsapp.post(
+        JSON.parse(e.data),
+        e.data,
+        e.headers["x-hub-signature-256"]
+    );
 }
 ```
 
@@ -129,7 +131,7 @@ const Whatsapp = new WhatsAppAPI({ token: "123", secure: false });
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-  return Whatsapp.post(JSON.parse(e.data));
+    return Whatsapp.post(JSON.parse(e.data));
 }
 ```
 
@@ -142,24 +144,24 @@ import WhatsAppAPI from "whatsapp-api-js";
 const Whatsapp = new WhatsAppAPI({ token: "123", appSecret: "456" });
 
 Whatsapp.on.message = ({ name, from }) => {
-  console.log(`Got message from ${name} (${from})`);
+    console.log(`Got message from ${name} (${from})`);
 };
 
 Whatsapp.on.status = ({ id, status }) => {
-  console.log(`Message ${id} status changed to ${status}`);
+    console.log(`Message ${id} status changed to ${status}`);
 };
 
 Whatsapp.on.sent = ({ id, to }) => {
-  console.log(`Message ${id} was sent to ${to}`);
+    console.log(`Message ${id} was sent to ${to}`);
 };
 
 // Assuming post is called on a POST request to your server
 function post(e) {
-  return Whatsapp.post(
-    JSON.parse(e.data),
-    e.data,
-    e.headers["x-hub-signature-256"],
-  );
+    return Whatsapp.post(
+        JSON.parse(e.data),
+        e.data,
+        e.headers["x-hub-signature-256"]
+    );
 }
 ```
 
@@ -175,11 +177,11 @@ import WhatsAppAPI from "whatsapp-api-js";
 import { fetch } from "undici";
 
 const Whatsapp = new WhatsAppAPI({
-  token: "YOUR_TOKEN_HERE",
-  appSecret: "YOUR_SECRET_HERE",
-  ponyfill: {
-    fetch,
-  },
+    token: "YOUR_TOKEN_HERE",
+    appSecret: "YOUR_SECRET_HERE",
+    ponyfill: {
+        fetch
+    }
 });
 ```
 
