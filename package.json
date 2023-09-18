@@ -1,156 +1,156 @@
 {
-  "name": "whatsapp-api-js",
-  "version": "2.1.0",
-  "author": "Secreto31126",
-  "description": "A TypeScript server agnostic Whatsapp's Official API framework",
-  "license": "MIT",
-  "type": "module",
-  "sideEffects": false,
-  "engines": {
-    "node": ">=18"
-  },
-  "files": [
-    "lib/**/*"
-  ],
-  "types": "lib/types/index.d.ts",
-  "module": "lib/esm/index.js",
-  "main": "lib/cjs/index.js",
-  "exports": {
-    ".": {
-      "types": "./lib/types/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
+    "name": "whatsapp-api-js",
+    "version": "2.1.0",
+    "author": "Secreto31126",
+    "description": "A TypeScript server agnostic Whatsapp's Official API framework",
+    "license": "MIT",
+    "type": "module",
+    "sideEffects": false,
+    "engines": {
+        "node": ">=18"
     },
-    "./messages": {
-      "types": "./lib/types/messages/index.d.ts",
-      "import": "./lib/esm/messages/index.js",
-      "require": "./lib/cjs/messages/index.js"
+    "files": [
+        "lib/**/*"
+    ],
+    "types": "lib/types/index.d.ts",
+    "module": "lib/esm/index.js",
+    "main": "lib/cjs/index.js",
+    "exports": {
+        ".": {
+            "types": "./lib/types/index.d.ts",
+            "import": "./lib/esm/index.js",
+            "require": "./lib/cjs/index.js"
+        },
+        "./messages": {
+            "types": "./lib/types/messages/index.d.ts",
+            "import": "./lib/esm/messages/index.js",
+            "require": "./lib/cjs/messages/index.js"
+        },
+        "./messages/*": {
+            "types": "./lib/types/messages/*.d.ts",
+            "import": "./lib/esm/messages/*.js",
+            "require": "./lib/cjs/messages/*.js"
+        },
+        "./setup": null,
+        "./setup/index": null,
+        "./setup/*": {
+            "types": "./lib/types/setup/*.d.ts",
+            "import": "./lib/esm/setup/*.js",
+            "require": "./lib/cjs/setup/*.js"
+        },
+        "./middleware": null,
+        "./middleware/index": null,
+        "./middleware/*": {
+            "types": "./lib/types/middleware/*.d.ts",
+            "import": "./lib/esm/middleware/*.js",
+            "require": "./lib/cjs/middleware/*.js"
+        },
+        "./emitters": {
+            "types": "./lib/types/emitters.d.ts"
+        },
+        "./types": {
+            "types": "./lib/types/types.d.ts",
+            "import": "./lib/esm/types.js",
+            "require": "./lib/cjs/types.js"
+        }
     },
-    "./messages/*": {
-      "types": "./lib/types/messages/*.d.ts",
-      "import": "./lib/esm/messages/*.js",
-      "require": "./lib/cjs/messages/*.js"
+    "//": [
+        "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
+        "Without this, IntelliSense will throw an error when importing subpaths ONLY on JS files, although it does run fine with Node.",
+        "Even more stunishing: if included, IntelliSense works even BETTER than with TS."
+    ],
+    "typesVersions": {
+        "*": {
+            ".": [
+                "lib/types/index.d.ts"
+            ],
+            "messages": [
+                "lib/types/messages/index.d.ts"
+            ],
+            "messages/*": [
+                "lib/types/messages/*.d.ts"
+            ],
+            "setup/index": [],
+            "setup/*": [
+                "lib/types/setup/*.d.ts"
+            ],
+            "middleware/index": [],
+            "middleware/*": [
+                "lib/types/middleware/*.d.ts"
+            ],
+            "emitters": [
+                "lib/types/emitters.d.ts"
+            ],
+            "types": [
+                "lib/types/types.d.ts"
+            ]
+        }
     },
-    "./setup": null,
-    "./setup/index": null,
-    "./setup/*": {
-      "types": "./lib/types/setup/*.d.ts",
-      "import": "./lib/esm/setup/*.js",
-      "require": "./lib/cjs/setup/*.js"
+    "scripts": {
+        "build": "npm run build:code && npm run build:types",
+        "build:dev": "npm run build:code:dev && npm run build:types:dev",
+        "build:code": "node -r dotenv/config build.js",
+        "build:code:dev": "npm run build:code",
+        "build:types": "tsc",
+        "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs",
+        "test": "mocha",
+        "test:build": "npm run build && npm run test",
+        "test:watch": "mocha --reporter min --watch",
+        "lint": "eslint src",
+        "lint:fix": "eslint src --fix",
+        "prettier": "prettier --check .",
+        "prettier:write": "prettier --write .",
+        "coverage": "c8 mocha --reporter min",
+        "document": "typedoc && cp -r docs_statics/* docs/",
+        "clear": "rm -rf docs/ docs_temp/ lib/ coverage/"
     },
-    "./middleware": null,
-    "./middleware/index": null,
-    "./middleware/*": {
-      "types": "./lib/types/middleware/*.d.ts",
-      "import": "./lib/esm/middleware/*.js",
-      "require": "./lib/cjs/middleware/*.js"
+    "keywords": [
+        "whatsapp",
+        "cloud",
+        "api",
+        "framework",
+        "whatsapp-cloud",
+        "cloud-api",
+        "whatsapp-cloud-api",
+        "whatsapp-business",
+        "whatsapp-business-api",
+        "bot",
+        "whatsapp-bot",
+        "chatbot",
+        "bot-framework",
+        "typescript",
+        "server-agnostic",
+        "nodejs",
+        "deno",
+        "bun",
+        "bot-api",
+        "whatsapp-api",
+        "business-api"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
     },
-    "./emitters": {
-      "types": "./lib/types/emitters.d.ts"
-    },
-    "./types": {
-      "types": "./lib/types/types.d.ts",
-      "import": "./lib/esm/types.js",
-      "require": "./lib/cjs/types.js"
+    "devDependencies": {
+        "@adonisjs/http-server": "^5.12.0",
+        "@types/express": "^4.17.17",
+        "@types/node": "18.17.15",
+        "@typescript-eslint/eslint-plugin": "6.6.0",
+        "@typescript-eslint/parser": "6.6.0",
+        "@vercel/node": "^3.0.4",
+        "all-contributors-cli": "^6.26.1",
+        "c8": "8.0.1",
+        "dotenv": "16.3.1",
+        "esbuild": "0.19.0",
+        "eslint": "8.49.0",
+        "eslint-config-prettier": "9.0.0",
+        "eslint-plugin-tsdoc": "0.2.17",
+        "glob": "10.3.4",
+        "mocha": "10.2.0",
+        "prettier": "3.0.3",
+        "sinon": "16.0.0",
+        "typedoc": "0.25.1",
+        "typescript": "5.2.2",
+        "undici": "5.24.0"
     }
-  },
-  "//": [
-    "https://github.com/andrewbranch/example-subpath-exports-ts-compat/blob/main/examples/node_modules/types-versions-wildcards/package.json",
-    "Without this, IntelliSense will throw an error when importing subpaths ONLY on JS files, although it does run fine with Node.",
-    "Even more stunishing: if included, IntelliSense works even BETTER than with TS."
-  ],
-  "typesVersions": {
-    "*": {
-      ".": [
-        "lib/types/index.d.ts"
-      ],
-      "messages": [
-        "lib/types/messages/index.d.ts"
-      ],
-      "messages/*": [
-        "lib/types/messages/*.d.ts"
-      ],
-      "setup/index": [],
-      "setup/*": [
-        "lib/types/setup/*.d.ts"
-      ],
-      "middleware/index": [],
-      "middleware/*": [
-        "lib/types/middleware/*.d.ts"
-      ],
-      "emitters": [
-        "lib/types/emitters.d.ts"
-      ],
-      "types": [
-        "lib/types/types.d.ts"
-      ]
-    }
-  },
-  "scripts": {
-    "build": "npm run build:code && npm run build:types",
-    "build:dev": "npm run build:code:dev && npm run build:types:dev",
-    "build:code": "node -r dotenv/config build.js",
-    "build:code:dev": "npm run build:code",
-    "build:types": "tsc",
-    "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs",
-    "test": "mocha",
-    "test:build": "npm run build && npm run test",
-    "test:watch": "mocha --reporter min --watch",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "prettier": "prettier --check src test",
-    "prettier:write": "prettier --write src test",
-    "coverage": "c8 mocha --reporter min",
-    "document": "typedoc && cp -r docs_statics/* docs/",
-    "clear": "rm -rf docs/ docs_temp/ lib/ coverage/"
-  },
-  "keywords": [
-    "whatsapp",
-    "cloud",
-    "api",
-    "framework",
-    "whatsapp-cloud",
-    "cloud-api",
-    "whatsapp-cloud-api",
-    "whatsapp-business",
-    "whatsapp-business-api",
-    "bot",
-    "whatsapp-bot",
-    "chatbot",
-    "bot-framework",
-    "typescript",
-    "server-agnostic",
-    "nodejs",
-    "deno",
-    "bun",
-    "bot-api",
-    "whatsapp-api",
-    "business-api"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Secreto31126/whatsapp-api-js.git"
-  },
-  "devDependencies": {
-    "@adonisjs/http-server": "^5.12.0",
-    "@types/express": "^4.17.17",
-    "@types/node": "18.17.15",
-    "@typescript-eslint/eslint-plugin": "6.6.0",
-    "@typescript-eslint/parser": "6.6.0",
-    "@vercel/node": "^3.0.4",
-    "all-contributors-cli": "^6.26.1",
-    "c8": "8.0.1",
-    "dotenv": "16.3.1",
-    "esbuild": "0.19.0",
-    "eslint": "8.49.0",
-    "eslint-config-prettier": "9.0.0",
-    "eslint-plugin-tsdoc": "0.2.17",
-    "glob": "10.3.4",
-    "mocha": "10.2.0",
-    "prettier": "3.0.3",
-    "sinon": "16.0.0",
-    "typedoc": "0.25.1",
-    "typescript": "5.2.2",
-    "undici": "5.24.0"
-  }
 }
