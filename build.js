@@ -10,7 +10,7 @@ const production = process.env.NODE_ENV !== "development";
  * @type {import("esbuild").BuildOptions}
  */
 const sharedConfig = {
-    entryPoints: await glob("src/**/*.ts", { ignore: ["src/**/*.d.ts"] }),
+    entryPoints: await glob("src/**/*.ts", { ignore: ["src/standalone.ts"] }),
     bundle: production,
     minifySyntax: production,
     minifyWhitespace: production,
@@ -34,3 +34,12 @@ await build({
 });
 
 await writeFile("./lib/cjs/package.json", '{"type":"commonjs"}');
+
+await build({
+    ...sharedConfig,
+    entryPoints: ["src/standalone.ts"],
+    bundle: true,
+    minify: false,
+    format: "esm",
+    outfile: "lib/standalone.js"
+});
