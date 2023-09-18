@@ -98,8 +98,8 @@
     "test:watch": "mocha --reporter min --watch",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "prettier": "prettier --check src test",
-    "prettier:write": "prettier --write src test",
+    "prettier": "prettier --check .",
+    "prettier:write": "prettier --write .",
     "coverage": "c8 mocha --reporter min",
     "document": "typedoc && cp -r docs_statics/* docs/",
     "clear": "rm -rf docs/ docs_temp/ lib/ coverage/"
