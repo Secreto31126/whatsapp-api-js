@@ -97,6 +97,9 @@ dist
 # FuseBox cache
 .fusebox/
 
+# Firebase cache
+.firebase/
+
 # DynamoDB Local files
 .dynamodb/
 
