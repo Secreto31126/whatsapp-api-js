@@ -5,10 +5,7 @@
 ```ts
 import { Template } from "whatsapp-api-js/messages";
 
-const template_message = new Template(
-    "template_name",
-    "en"
-);
+const template_message = new Template("template_name", "en");
 ```
 
 ## Simple template with simple variables in header and body
@@ -29,21 +26,13 @@ const template_variables_message = new Template(
     "en",
     new HeaderComponent(
         new HeaderParameter("Hello"),
-        new HeaderParameter(
-            new Currency(1.5 * 1000, "USD", "U$1.5"),
-        ),
-        new HeaderParameter(
-            new DateTime("01/01/2023")
-        )
+        new HeaderParameter(new Currency(1.5 * 1000, "USD", "U$1.5")),
+        new HeaderParameter(new DateTime("01/01/2023"))
     ),
     new BodyComponent(
         new BodyParameter("Hello"),
-        new BodyParameter(
-            new Currency(1.5 * 1000, "USD", "U$1.5"),
-        ),
-        new BodyParameter(
-            new DateTime("01/01/2023")
-        )
+        new BodyParameter(new Currency(1.5 * 1000, "USD", "U$1.5")),
+        new BodyParameter(new DateTime("01/01/2023"))
     )
 );
 ```
@@ -66,7 +55,7 @@ const template_media_message = new Template(
             // Can also be image, document, or location
             new Video("https://www.w3schools.com/html/mov_bbb.mp4")
         )
-    ),
+    )
 );
 ```
 
@@ -78,12 +67,8 @@ import { Template, PayloadComponent } from "whatsapp-api-js/messages";
 const template_reply_buttons_message = new Template(
     "template_name",
     "en",
-    new PayloadComponent(
-        "reply_1"
-    ),
-    new PayloadComponent(
-        "reply_2"
-    )
+    new PayloadComponent("reply_1"),
+    new PayloadComponent("reply_2")
 );
 ```
 
@@ -95,12 +80,8 @@ import { Template, URLComponent } from "whatsapp-api-js/messages";
 const template_call_to_action_message = new Template(
     "template_name",
     "en",
-    new URLComponent(
-        "?user_id=123"
-    ),
-    new URLComponent(
-        "?user_id=456"
-    )
+    new URLComponent("?user_id=123"),
+    new URLComponent("?user_id=456")
 );
 ```
 
@@ -112,9 +93,7 @@ import { Template, CopyComponent } from "whatsapp-api-js/messages";
 const template_copy_coupon_message = new Template(
     "template_name",
     "en",
-    new CopyComponent(
-        "PROMO10"
-    )
+    new CopyComponent("PROMO10")
 );
 ```
 
@@ -131,15 +110,9 @@ import {
 const template_mixed_buttons_message = new Template(
     "template_name",
     "en",
-    new CopyComponent(
-        "PROMO10"
-    ),
-    new URLComponent(
-        "?code=PROMO10"
-    ),
-    new PayloadComponent(
-        "send_catalog"
-    )
+    new CopyComponent("PROMO10"),
+    new URLComponent("?code=PROMO10"),
+    new PayloadComponent("send_catalog")
 );
 ```
 
@@ -151,9 +124,7 @@ import { Template, CatalogComponent, Product } from "whatsapp-api-js/messages";
 const template_catalog_message = new Template(
     "template_name",
     "en",
-    new CatalogComponent(
-        new Product("thumbnail")
-    )
+    new CatalogComponent(new Product("thumbnail"))
 );
 ```
 
@@ -201,9 +172,7 @@ import {
 const template_multi_product_message = new Template(
     "template_name",
     "en",
-    new BodyComponent(
-        new BodyParameter("PROMO10")
-    ),
+    new BodyComponent(new BodyParameter("PROMO10")),
     new CarouselComponent(
         new CarouselCard(
             new Image(image),
@@ -222,11 +191,7 @@ const template_multi_product_message = new Template(
 ```ts
 import { Template } from "whatsapp-api-js/messages";
 
-const template_otp_message = Template.OTP(
-    "template_name",
-    "en",
-    "123456"
-);
+const template_otp_message = Template.OTP("template_name", "en", "123456");
 ```
 
 ## Documentation

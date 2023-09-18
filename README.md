@@ -7,17 +7,17 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
-- [whatsapp-api-js v2](#whatsapp-api-js-v2)
-  - [List of contents](#list-of-contents)
-  - [Set up](#set-up)
-  - [Examples and Tutorials](#examples-and-tutorials)
-  - [Types](#types)
-  - [Changelog](#changelog)
-  - [Documentation](#documentation)
-  - [Contributors](#contributors)
-  - [Contributions](#contributions)
-  - [Breaking changes](#breaking-changes)
-  - [Beta releases](#beta-releases)
+-   [whatsapp-api-js v2](#whatsapp-api-js-v2)
+    -   [List of contents](#list-of-contents)
+    -   [Set up](#set-up)
+    -   [Examples and Tutorials](#examples-and-tutorials)
+    -   [Types](#types)
+    -   [Changelog](#changelog)
+    -   [Documentation](#documentation)
+    -   [Contributors](#contributors)
+    -   [Contributions](#contributions)
+    -   [Breaking changes](#breaking-changes)
+    -   [Beta releases](#beta-releases)
 
 ## Set up
 
@@ -48,42 +48,70 @@ const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 function post(e) {
     // The handlers work with any framework, as long as you pass the correct data
     // You can also use one of the middlewares provided in the package, keep reading
-    return Whatsapp.post(JSON.parse(e.data), e.data, e.headers["x-hub-signature-256"]);
+    return Whatsapp.post(
+        JSON.parse(e.data),
+        e.data,
+        e.headers["x-hub-signature-256"]
+    );
 }
 
 Whatsapp.on.message = async ({ phoneID, from, message, name }) => {
-    console.log(`User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(message)}`);
+    console.log(
+        `User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(
+            message
+        )}`
+    );
 
     let promise;
 
     if (message.type === "text") {
-        promise = Whatsapp.sendMessage(phoneID, from, new Text(`*${name}* said:\n\n${message.text.body}`), message.id);
+        promise = Whatsapp.sendMessage(
+            phoneID,
+            from,
+            new Text(`*${name}* said:\n\n${message.text.body}`),
+            message.id
+        );
     }
 
     if (message.type === "image") {
-        promise = Whatsapp.sendMessage(phoneID, from, new Image(message.image.id, true, `Nice photo, ${name}`));
+        promise = Whatsapp.sendMessage(
+            phoneID,
+            from,
+            new Image(message.image.id, true, `Nice photo, ${name}`)
+        );
     }
 
     if (message.type === "document") {
-        promise = Whatsapp.sendMessage(phoneID, from, new Document(message.document.id, true, undefined, "Our document"));
+        promise = Whatsapp.sendMessage(
+            phoneID,
+            from,
+            new Document(message.document.id, true, undefined, "Our document")
+        );
     }
 
     if (message.type === "contacts") {
-        promise = Whatsapp.sendMessage(phoneID, from, new Contacts.Contacts(
-            [
-                new Contacts.Name(name, "First name", "Last name"),
-                new Contacts.Phone(phone),
-                new Contacts.Birthday("2022", "04", "25"),
-            ],
-            [
-                new Contacts.Name("John", "First name", "Last name"),
-                new Contacts.Organization("Company", "Department", "Title"),
-                new Contacts.Url("https://www.google.com", "WORK"),
-            ]
-        ));
+        promise = Whatsapp.sendMessage(
+            phoneID,
+            from,
+            new Contacts.Contacts(
+                [
+                    new Contacts.Name(name, "First name", "Last name"),
+                    new Contacts.Phone(phone),
+                    new Contacts.Birthday("2022", "04", "25")
+                ],
+                [
+                    new Contacts.Name("John", "First name", "Last name"),
+                    new Contacts.Organization("Company", "Department", "Title"),
+                    new Contacts.Url("https://www.google.com", "WORK")
+                ]
+            )
+        );
     }
 
-    console.log(await promise ?? "There are more types of messages, such as locations, templates, interactive, reactions and all the other media types.");
+    console.log(
+        (await promise) ??
+            "There are more types of messages, such as locations, templates, interactive, reactions and all the other media types."
+    );
 
     Whatsapp.markAsRead(phoneID, message.id);
 };

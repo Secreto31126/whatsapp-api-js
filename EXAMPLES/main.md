@@ -51,7 +51,11 @@ import { Text } from "whatsapp-api-js/messages";
 
 const text_message = new Text("Hello world!");
 
-Whatsapp.sendMessage("from (bot phoneID)", "to (phone number/wa_id)", text_message);
+Whatsapp.sendMessage(
+    "from (bot phoneID)",
+    "to (phone number/wa_id)",
+    text_message
+);
 ```
 
 ## Documentation

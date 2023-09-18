@@ -1,26 +1,24 @@
 {
-  "baseBranches": ["main"],
-  "dependencyDashboard": true,
-  "extends": [
-    "config:base",
-    "group:allNonMajor",
-    "helpers:disableTypesNodeMajor",
-    "schedule:earlyMondays"
-  ],
-  "commitMessageAction": "",
-  "commitMessageTopic": "{{depName}}",
-  "commitMessageExtra": "{{#if isMajor}}v{{{newMajor}}}{{else}}{{#if isSingleVersion}}v{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}{{/if}}",
-  "labels": ["dependencies"],
-  "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{controls}}}{{{footer}}}",
-  "prHeader": "",
-  "prFooter": "",
-  "semanticCommits": "enabled",
-  "packageRules": [
-    {
-      "packageNames": [
-        "esbuild"
-      ],
-      "versioning": "regex:^(<major>\\d+)\\.(<major>\\d+)\\.(<patch>\\d+)$"
-    }
-  ]
+    "baseBranches": ["main"],
+    "dependencyDashboard": true,
+    "extends": [
+        "config:base",
+        "group:allNonMajor",
+        "helpers:disableTypesNodeMajor",
+        "schedule:earlyMondays"
+    ],
+    "commitMessageAction": "",
+    "commitMessageTopic": "{{depName}}",
+    "commitMessageExtra": "{{#if isMajor}}v{{{newMajor}}}{{else}}{{#if isSingleVersion}}v{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}{{/if}}",
+    "labels": ["dependencies"],
+    "prBodyTemplate": "{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{controls}}}{{{footer}}}",
+    "prHeader": "",
+    "prFooter": "",
+    "semanticCommits": "enabled",
+    "packageRules": [
+        {
+            "packageNames": ["esbuild"],
+            "versioning": "regex:^(<major>\\d+)\\.(<major>\\d+)\\.(<patch>\\d+)$"
+        }
+    ]
 }

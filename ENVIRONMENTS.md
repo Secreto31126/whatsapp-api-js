@@ -22,7 +22,7 @@ const WhatsAppAPI = require("whatsapp-api-js").default;
 For each version of Node, you can use the `setup` function to simplify the
 process.
 
-- Node 19 and above (using Express):
+-   Node 19 and above (using Express):
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js/middleware/express";
@@ -44,7 +44,7 @@ app.post("/message", async (req, res) => {
 });
 ```
 
-- Node 18:
+-   Node 18:
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
@@ -58,7 +58,7 @@ const Whatsapp = new WhatsAppAPI(
 );
 ```
 
-- Node 15 to 17 (deprecated):
+-   Node 15 to 17 (deprecated):
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js";
@@ -68,10 +68,13 @@ import { Node15 } from "whatsapp-api-js/setup/node";
 import fetch from "node-fetch"; // or any other fetch implementation
 
 const Whatsapp = new WhatsAppAPI(
-    Node15({
-        token: "123",
-        appSecret: "123"
-    }, fetch)
+    Node15(
+        {
+            token: "123",
+            appSecret: "123"
+        },
+        fetch
+    )
 );
 ```
 

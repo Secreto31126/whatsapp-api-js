@@ -4,10 +4,7 @@
         "node": true,
         "mocha": true
     },
-    "plugins": [
-        "@typescript-eslint",
-        "eslint-plugin-tsdoc"
-    ],
+    "plugins": ["@typescript-eslint", "eslint-plugin-tsdoc"],
     "extends": [
         "eslint:recommended",
         "prettier",
@@ -19,9 +16,7 @@
         "sourceType": "module"
     },
     "rules": {
-        "no-unused-vars": [
-            "off"
-        ],
+        "no-unused-vars": ["off"],
         "tsdoc/syntax": "warn"
     },
     "globals": {
