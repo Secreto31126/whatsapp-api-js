@@ -18,18 +18,20 @@ const sharedConfig = {
     platform: "node"
 };
 
-// ESM
-await build({
-    ...sharedConfig,
-    format: "esm",
-    outdir: "lib/esm"
-});
+await Promise.all([
+    // ESM
+    build({
+        ...sharedConfig,
+        format: "esm",
+        outdir: "lib/esm"
+    }),
 
-// CJS
-await build({
-    ...sharedConfig,
-    format: "cjs",
-    outdir: "lib/cjs"
-});
+    // CJS
+    build({
+        ...sharedConfig,
+        format: "cjs",
+        outdir: "lib/cjs"
+    })
+]);
 
 await writeFile("./lib/cjs/package.json", '{"type":"commonjs"}');
