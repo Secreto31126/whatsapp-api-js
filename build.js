@@ -33,12 +33,3 @@ await build({
 });
 
 await writeFile("./lib/cjs/package.json", '{"type":"commonjs"}');
-
-await build({
-    ...sharedConfig,
-    entryPoints: ["src/standalone.ts"],
-    bundle: true,
-    minify: false,
-    format: "esm",
-    outfile: "lib/standalone.js"
-});
