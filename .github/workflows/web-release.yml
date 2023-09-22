@@ -41,10 +41,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+
+            - run: mkdir docs
             - name: Copy docs
               uses: actions/download-artifact@v3
               with:
                   name: docs
+                  path: docs
 
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:
