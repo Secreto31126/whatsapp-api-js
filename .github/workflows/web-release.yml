@@ -41,6 +41,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+
+            - run: mkdir docs
             - name: Copy docs
               uses: actions/download-artifact@v3
               with:
