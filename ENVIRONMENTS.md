@@ -22,7 +22,7 @@ const WhatsAppAPI = require("whatsapp-api-js").default;
 For each version of Node, you can use the `setup` function to simplify the
 process.
 
--   Node 19 and above (using Express):
+-   Node 19 and above (using Express and it's middleware):
 
 ```js
 import WhatsAppAPI from "whatsapp-api-js/middleware/express";
@@ -154,10 +154,70 @@ HTML module example:
 
 ## Google App Script
 
-In the transition to v1, Google App Script support was lost, but we are working
-on bringing it back.
+The library is exported as standalone to Google App Script. You can import it
+using the code:
 
-In the meantime, check out Secreto31126/whatsapp-api-google-app-script. It's
-outdated, unsuported and not recommended, but it gets the job done.
+```
+1iTMl1x_CayBWuLYBBZH0DM72eXqjuavZ0nAwSZ6y3jj9ELXOMckcHmW6
+```
 
-(I still use it :)
+Unfortunately, type definitions, middlewares and setup methods aren't available,
+as the standalone version doesn't include them while bundling.
+
+```js
+const { WhatsAppAPI, Text } = WhatsAppScript; // Or whatever name you gave to the library
+
+async function fetchPonyfill(url, options = {}) {
+    if (options?.body) {
+        options.payload = options.body;
+        delete options.body;
+    }
+
+    if (options?.headers?.["Content-Type"]) {
+        options.contentType = options.headers["Content-Type"];
+        delete options.headers["Content-Type"];
+    }
+
+    if (options?.method) {
+        options.method = options.method.toLowerCase();
+    }
+
+    const request = UrlFetchApp.fetch(url, {
+        ...options,
+        muteHttpExceptions: true
+    });
+
+    return {
+        text: async () => request.getContentText,
+        json: async () => JSON.parse(request.getContentText())
+    };
+}
+
+const Whatsapp = new WhatsAppAPI({
+    token: YOUR_TOKEN,
+    webhookVerifyToken: YOUR_WEBHOOK_VERIFY_TOKEN,
+    // GAS doesn't support crypto nor getting the headers of a request, there's no way to verify payloads
+    secure: false,
+    ponyfill: {
+        fetch: fetchPonyfill
+    }
+});
+
+Whatsapp.on.message = ({ phoneID, from, name }) => {
+    Whatsapp.sendMessage(phoneID, from, new Text(`Hello ${name}!`));
+};
+
+async function doPost(e) {
+    const data = JSON.parse(e.postData.contents);
+
+    let status_code;
+    try {
+        status_code = await Whatsapp.post(data);
+    } catch (e) {
+        status_code = e;
+    }
+
+    // GAS doesn't support sending custom status codes
+    return ContentService.createTextOutput(status_code);
+}
+```
