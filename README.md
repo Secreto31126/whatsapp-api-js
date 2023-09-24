@@ -45,10 +45,10 @@ const APP_SECRET = "YOUR_SECRET";
 const Whatsapp = new WhatsAppAPI({ token: TOKEN, appSecret: APP_SECRET });
 
 // Assuming post is called on a POST request to your server
-function post(e) {
+async function post(e) {
     // The handlers work with any framework, as long as you pass the correct data
     // You can also use one of the middlewares provided in the package, keep reading
-    return Whatsapp.post(
+    return await Whatsapp.post(
         JSON.parse(e.data),
         e.data,
         e.headers["x-hub-signature-256"]
@@ -142,6 +142,7 @@ const Whatsapp = new WhatsAppAPI({
 });
 
 // Assuming get is called on a GET request to your server
+// You can also use one of the middlewares provided in the package, keep reading
 function get(e) {
     return Whatsapp.get(e.query);
 }
