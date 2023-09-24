@@ -1,5 +1,6 @@
 {
     "include": ["src/**/*"],
+    "exclude": ["src/standalone.ts"],
     "compilerOptions": {
         "lib": ["ESNext"],
         "outDir": "lib/types",
