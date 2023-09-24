@@ -93,6 +93,7 @@
         "build:code:dev": "npm run build:code",
         "build:types": "tsc",
         "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs",
+        "build:standalone": "esbuild src/standalone.ts --outfile=lib/standalone.js --bundle --platform=neutral --target=node10 --minify-syntax",
         "test": "mocha",
         "test:build": "npm run build && npm run test",
         "test:watch": "mocha --reporter min --watch",
