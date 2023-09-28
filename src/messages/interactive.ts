@@ -21,15 +21,15 @@ export class Interactive extends ClientMessage {
      */
     readonly action: InteractiveAction;
     /**
-     * The body component of the interactive message, it may be undefined if not needed.
+     * The body component of the interactive message
      */
     readonly body?: Body;
     /**
-     * The header component of the interactive message, it may be undefined if not needed.
+     * The header component of the interactive message
      */
     readonly header?: Header;
     /**
-     * The footer component of the interactive message, it may be undefined if not needed.
+     * The footer component of the interactive message
      */
     readonly footer?: Footer;
 
