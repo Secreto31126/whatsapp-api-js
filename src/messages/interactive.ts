@@ -21,22 +21,22 @@ export class Interactive extends ClientMessage {
      */
     readonly action: InteractiveAction;
     /**
-     * The type of the interactive message
-     */
-    readonly type: InteractiveAction["_type"];
-
-    /**
-     * The body component of the interactive message
+     * The body component of the interactive message, it may be undefined if not needed.
      */
     readonly body?: Body;
     /**
-     * The header component of the interactive message
+     * The header component of the interactive message, it may be undefined if not needed.
      */
     readonly header?: Header;
     /**
-     * The footer component of the interactive message
+     * The footer component of the interactive message, it may be undefined if not needed.
      */
     readonly footer?: Footer;
+
+    /**
+     * The type of the interactive message
+     */
+    readonly type: InteractiveAction["_type"];
 
     /**
      * @override
