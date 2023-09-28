@@ -50,9 +50,9 @@ export class Interactive extends ClientMessage {
      * Create an Interactive object for the API
      *
      * @param action - The action component of the interactive message
-     * @param body - The body component of the interactive message
-     * @param header - The header component of the interactive message
-     * @param footer - The footer component of the interactive message
+     * @param body - The body component of the interactive message, it may be undefined if not needed.
+     * @param header - The header component of the interactive message, it may be undefined if not needed.
+     * @param footer - The footer component of the interactive message, it may be undefined if not needed.
      * @throws If body is not provided, unless action is an {@link ActionProduct} with a single product
      * @throws If header is provided for an {@link ActionProduct} with a single product
      * @throws If header of type text is not provided for an {@link ActionProduct} with a product list
