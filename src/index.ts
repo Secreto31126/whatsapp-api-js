@@ -130,7 +130,9 @@ export default class WhatsAppAPI {
                     typeof crypto?.subtle !== "object")
             ) {
                 throw new Error(
-                    "subtle is not defined in the enviroment, please provide a valid ponyfill object with the parameter 'ponyfill.subtle'."
+                    "subtle is not defined in the enviroment. Consider using a setup helper," +
+                        " defined at 'whatsapp-api-js/setup', or provide a valid ponyfill" +
+                        " object with the argument 'ponyfill.subtle'."
                 );
             }
 
@@ -152,7 +154,9 @@ export default class WhatsAppAPI {
             typeof fetch !== "function"
         ) {
             throw new Error(
-                "fetch is not defined in the enviroment, please provide a valid ponyfill function with the parameter 'ponyfill.fetch'."
+                "fetch is not defined in the enviroment. Consider using a setup helper," +
+                    " defined at 'whatsapp-api-js/setup', or provide a valid ponyfill" +
+                    " object with the argument 'ponyfill.fetch'."
             );
         }
 
