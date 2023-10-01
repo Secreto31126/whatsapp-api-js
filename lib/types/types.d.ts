@@ -469,7 +469,7 @@ export type ServerUnknownMessage = {
         }
     ];
 };
-export type ServerMessageTypes = ServerTextMessage | ServerAudioMessage | ServerDocumentMessage | ServerImageMessage | ServerStickerMessage | ServerVideoMessage | ServerLocationMessage | ServerContactsMessage | ServerInteractiveMessage | ServerButtonMessage | ServerReactionMessage | ServerOrderMessage | ServerUnknownMessage;
+export type ServerMessageTypes = ServerTextMessage | ServerAudioMessage | ServerDocumentMessage | ServerImageMessage | ServerStickerMessage | ServerVideoMessage | ServerLocationMessage | ServerContactsMessage | ServerInteractiveMessage | ServerButtonMessage | ServerReactionMessage | ServerOrderMessage | ServerSystemMessage | ServerUnknownMessage;
 export type ServerMessage = {
     from: string;
     id: string;
@@ -486,20 +486,29 @@ export type ServerMessage = {
     };
     identity?: {
         acknowledged: boolean;
-        created_timestamp: number;
+        created_timestamp: string;
         hash: string;
     };
+    /**
+     * Never saw this property on the wild, but it's documented
+     */
+    errors?: [ServerError];
     referral?: {
         source_url: string;
         source_id: string;
-        source_type: string;
+        source_type: "ad" | "post";
         headline: string;
         body: string;
-        media_type: string;
+        ctwa_clid: string;
+        media_type: "image" | "video";
+    } & ({
+        media_type: "image";
         image_url: string;
+    } | {
+        media_type: "video";
         video_url: string;
         thumbnail_url: string;
-    };
+    });
 } & ServerMessageTypes;
 export type ServerContacts = {
     profile: {
@@ -507,11 +516,14 @@ export type ServerContacts = {
     };
     wa_id: string;
 };
-export type ServerInitiation = "user_initiated" | "business_initated" | "referral_conversion";
-export type ServerStatus = "sent" | "delivered" | "read" | "failed" | "deleted";
+export type ServerInitiation = "authentication" | "marketing" | "utility" | "service" | "referral_conversion";
+export type ServerStatus = "sent" | "delivered" | "read";
 export type ServerPricing = {
     pricing_model: "CBP";
-    billable: boolean;
+    /**
+     * @deprecated Since v16 with the release of the new pricing model
+     */
+    billable?: boolean;
     category: ServerInitiation;
 };
 export type ServerConversation = {
@@ -522,8 +534,12 @@ export type ServerConversation = {
     };
 };
 export type ServerError = {
-    code: string;
+    code: number;
     title: string;
+    message: string;
+    error_data: {
+        details: string;
+    };
 };
 export type GetParams = {
     "hub.mode": "subscribe";
