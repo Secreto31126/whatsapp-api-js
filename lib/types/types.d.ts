@@ -517,7 +517,7 @@ export type ServerContacts = {
     wa_id: string;
 };
 export type ServerInitiation = "authentication" | "marketing" | "utility" | "service" | "referral_conversion";
-export type ServerStatus = "sent" | "delivered" | "read";
+export type ServerStatus = "sent" | "delivered" | "read" | "failed";
 export type ServerPricing = {
     pricing_model: "CBP";
     /**
