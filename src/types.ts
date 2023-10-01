@@ -651,7 +651,7 @@ export type ServerInitiation =
     | "service"
     | "referral_conversion";
 
-export type ServerStatus = "sent" | "delivered" | "read";
+export type ServerStatus = "sent" | "delivered" | "read" | "failed";
 
 export type ServerPricing = {
     pricing_model: "CBP";
