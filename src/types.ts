@@ -671,7 +671,7 @@ export type ServerConversation = {
 };
 
 export type ServerError = {
-    code: `${number}`;
+    code: number;
     title: string;
     message: string;
     error_data: {
