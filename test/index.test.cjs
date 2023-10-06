@@ -1694,7 +1694,7 @@ describe("WhatsAppAPI", function () {
 
                     Whatsapp.on.message = async ({ reply }) => {
                         reply(new Text("Hello World"));
-                    }
+                    };
 
                     Whatsapp.post(valid_message_mock);
 
