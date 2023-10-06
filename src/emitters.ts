@@ -96,6 +96,9 @@ export type OnMessageArgs = {
         response: ClientMessage,
         context: boolean
     ) => Promise<ServerMessageResponse | Response>;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
     Whatsapp: WhatsAppAPI;
 };
 
