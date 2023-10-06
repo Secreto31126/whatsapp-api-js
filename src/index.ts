@@ -778,7 +778,14 @@ export default class WhatsAppAPI {
                 from,
                 message,
                 name,
-                raw: data
+                raw: data,
+                reply: (response, context = false) =>
+                    this.sendMessage(
+                        phoneID,
+                        from,
+                        response,
+                        context ? message.id : undefined
+                    )
             };
 
             this.offload(this.on?.message, args);
