@@ -203,8 +203,8 @@ const Whatsapp = new WhatsAppAPI({
     }
 });
 
-Whatsapp.on.message = ({ phoneID, from, name }) => {
-    Whatsapp.sendMessage(phoneID, from, new Text(`Hello ${name}!`));
+Whatsapp.on.message = ({ name, reply }) => {
+    reply(new Text(`Hello ${name}!`));
 };
 
 async function doPost(e) {

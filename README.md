@@ -55,7 +55,7 @@ async function post(e) {
     );
 }
 
-Whatsapp.on.message = async ({ phoneID, from, message, name }) => {
+Whatsapp.on.message = async ({ phoneID, from, message, name, reply }) => {
     console.log(
         `User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(
             message
@@ -65,34 +65,26 @@ Whatsapp.on.message = async ({ phoneID, from, message, name }) => {
     let promise;
 
     if (message.type === "text") {
-        promise = Whatsapp.sendMessage(
-            phoneID,
-            from,
+        promise = reply(
             new Text(`*${name}* said:\n\n${message.text.body}`),
-            message.id
+            true
         );
     }
 
     if (message.type === "image") {
-        promise = Whatsapp.sendMessage(
-            phoneID,
-            from,
+        promise = reply(
             new Image(message.image.id, true, `Nice photo, ${name}`)
         );
     }
 
     if (message.type === "document") {
-        promise = Whatsapp.sendMessage(
-            phoneID,
-            from,
+        promise = reply(
             new Document(message.document.id, true, undefined, "Our document")
         );
     }
 
     if (message.type === "contacts") {
-        promise = Whatsapp.sendMessage(
-            phoneID,
-            from,
+        promise = reply(
             new Contacts.Contacts(
                 [
                     new Contacts.Name(name, "First name", "Last name"),
