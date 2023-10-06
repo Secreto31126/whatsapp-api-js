@@ -785,7 +785,8 @@ export default class WhatsAppAPI {
                         from,
                         response,
                         context ? message.id : undefined
-                    )
+                    ),
+                Whatsapp: this
             };
 
             this.offload(this.on?.message, args);
