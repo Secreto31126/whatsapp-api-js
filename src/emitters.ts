@@ -1,3 +1,4 @@
+import { Response } from "undici";
 import type {
     ClientMessage,
     ClientMessageRequest,
@@ -83,6 +84,12 @@ export type OnMessageArgs = {
      * The raw data from the API
      */
     raw: PostData;
+    /**
+     * A method to easily reply to the user who sent the message
+     */
+    reply: (
+        message: ClientMessage
+    ) => Promise<ServerMessageResponse | Response>;
 };
 
 /**
