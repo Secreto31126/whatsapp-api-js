@@ -849,3 +849,57 @@ export class CarouselCard implements ClientBuildableMessageComponent {
         return this;
     }
 }
+
+/**
+ * Components API object
+ *
+ * @group Template
+ */
+export class LTOComponent implements ClientBuildableMessageComponent {
+    /**
+     * The type of the component
+     */
+    readonly type = "limited_time_offer";
+    /**
+     * The parameters of the component
+     */
+    readonly parameters: [
+        {
+            type: "limited_time_offer";
+            limited_time_offer: {
+                expiration_time_ms: number;
+            };
+        }
+    ];
+
+    /**
+     * Builds a limited-time offer component for a Template message
+     *
+     * @param expiration - Offer code expiration time as a UNIX timestamp in milliseconds
+     * @throws If expiration is negative
+     */
+    constructor(expiration: number) {
+        if (expiration < 0) {
+            throw new Error(
+                "Expiration time must be a positive Unix timestamp"
+            );
+        }
+
+        this.parameters = [
+            {
+                type: "limited_time_offer",
+                limited_time_offer: {
+                    expiration_time_ms: expiration
+                }
+            }
+        ];
+    }
+
+    /**
+     * @override
+     * @internal
+     */
+    _build() {
+        return this;
+    }
+}
