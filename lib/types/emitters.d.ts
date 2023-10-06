@@ -1,3 +1,4 @@
+import { Response } from "undici";
 import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types";
 /**
  * Callback for "sent" event
@@ -70,6 +71,14 @@ export type OnMessageArgs = {
      * The raw data from the API
      */
     raw: PostData;
+    /**
+     * A method to easily reply to the user who sent the message
+     *
+     * @param response - The message to send as a reply
+     * @param context - Wether to mention the current message
+     * @returns WhatsAppAPI.sendMessage return value
+     */
+    reply: (response: ClientMessage, context: boolean) => Promise<ServerMessageResponse | Response>;
 };
 /**
  * Callback for "status" event
