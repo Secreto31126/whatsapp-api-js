@@ -169,7 +169,7 @@ import {
     URLComponent
 } from "whatsapp-api-js/messages";
 
-const template_multi_product_message = new Template(
+const template_carousel_message = new Template(
     "template_name",
     "en",
     new BodyComponent(new BodyParameter("PROMO10")),
@@ -183,6 +183,25 @@ const template_multi_product_message = new Template(
             new URLComponent("?code=PROMO10&product=2")
         )
     )
+);
+```
+
+## Complex template with Limited-Time Offer
+
+```ts
+import {
+    Template,
+    LTOComponent,
+    URLComponent,
+    CopyComponent
+} from "whatsapp-api-js/messages";
+
+const template_limited_time_offer_message = new Template(
+    "template_name",
+    "en",
+    new LTOComponent(1696622508595),
+    new CopyComponent("PROMO10"),
+    new URLComponent("?code=PROMO10&product=1")
 );
 ```
 
@@ -205,3 +224,4 @@ https://whatsappapijs.web.app/classes/messages.CopyComponent.html
 https://whatsappapijs.web.app/classes/messages.CatalogComponent.html
 https://whatsappapijs.web.app/classes/messages.MPMComponent.html
 https://whatsappapijs.web.app/classes/messages.CarouselComponent.html
+https://whatsappapijs.web.app/classes/messages.LTOComponent.html

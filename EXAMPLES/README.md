@@ -43,4 +43,5 @@ the most basic methods or features.
     -   [Complex template with reply buttons](template.md#complex-template-with-reply-buttons)
     -   [Complex template with call to action url](template.md#complex-template-with-call-to-action-url)
     -   [Complex template with Carousel](template.md#complex-template-with-carousel)
+    -   [Complex template with Limited-Time Offer](template.md#complex-template-with-limited-time-offer)
     -   [OTP prefab template](template.md#otp-prefab-template)
