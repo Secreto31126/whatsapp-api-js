@@ -1635,6 +1635,21 @@ describe("WhatsAppAPI", function () {
             });
 
             describe("Messages", function () {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    contacts: [
+                        {
+                            input: user,
+                            wa_id: user
+                        }
+                    ],
+                    messages: [
+                        {
+                            id
+                        }
+                    ]
+                };
+
                 let spy_on_message;
                 this.beforeEach(function () {
                     spy_on_message = sinon_spy();
@@ -1660,6 +1675,33 @@ describe("WhatsAppAPI", function () {
                         name,
                         raw: valid_message_mock
                     });
+                });
+
+                it("should reply to a message with the method reply", async function () {
+                    const spy_on_sent = sinon_spy();
+                    Whatsapp.on.sent = spy_on_sent;
+
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${phoneID}/messages`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        })
+                        .reply(200, expectedResponse)
+                        .times(1);
+
+                    Whatsapp.on.message = async ({ reply }) => {
+                        reply(new Text("Hello World"));
+                    }
+
+                    Whatsapp.post(valid_message_mock);
+
+                    // Callbacks are executed in the next tick
+                    await new Promise((resolve) => setTimeout(resolve, 0));
+
+                    sinon_assert.calledOnce(spy_on_sent);
                 });
 
                 it("should not block the main thread with the user's callback", async function () {
