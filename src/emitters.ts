@@ -86,6 +86,10 @@ export type OnMessageArgs = {
     raw: PostData;
     /**
      * A method to easily reply to the user who sent the message
+     *
+     * @param response - The message to send as a reply
+     * @param context - Wether to mention the current message
+     * @returns WhatsAppAPI.sendMessage return value
      */
     reply: (
         response: ClientMessage,
