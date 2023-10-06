@@ -1,4 +1,4 @@
-import { Response } from "undici";
+import type { Response } from "undici";
 import type {
     ClientMessage,
     ClientMessageRequest,
@@ -9,6 +9,7 @@ import type {
     ServerError,
     PostData
 } from "./types";
+import type WhatsAppAPI from "./index";
 
 /**
  * Callback for "sent" event
@@ -95,6 +96,10 @@ export type OnMessageArgs = {
         response: ClientMessage,
         context: boolean
     ) => Promise<ServerMessageResponse | Response>;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: WhatsAppAPI;
 };
 
 /**
