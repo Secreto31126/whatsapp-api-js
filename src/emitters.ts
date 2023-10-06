@@ -89,12 +89,12 @@ export type OnMessageArgs = {
      * A method to easily reply to the user who sent the message
      *
      * @param response - The message to send as a reply
-     * @param context - Wether to mention the current message
+     * @param context - Wether to mention the current message, defaults to false
      * @returns WhatsAppAPI.sendMessage return value
      */
     reply: (
         response: ClientMessage,
-        context: boolean
+        context?: boolean
     ) => Promise<ServerMessageResponse | Response>;
     /**
      * The WhatsAppAPI instance that emitted the event
