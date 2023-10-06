@@ -1,5 +1,6 @@
-import { Response } from "undici";
+import type { Response } from "undici";
 import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types";
+import type WhatsAppAPI from "./index";
 /**
  * Callback for "sent" event
  *
@@ -79,6 +80,10 @@ export type OnMessageArgs = {
      * @returns WhatsAppAPI.sendMessage return value
      */
     reply: (response: ClientMessage, context: boolean) => Promise<ServerMessageResponse | Response>;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: WhatsAppAPI;
 };
 /**
  * Callback for "status" event
