@@ -88,7 +88,8 @@ export type OnMessageArgs = {
      * A method to easily reply to the user who sent the message
      */
     reply: (
-        message: ClientMessage
+        response: ClientMessage,
+        context: boolean
     ) => Promise<ServerMessageResponse | Response>;
 };
 
