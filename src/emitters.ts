@@ -99,7 +99,7 @@ export type OnMessageArgs = {
     /**
      * The WhatsAppAPI instance that emitted the event
      */
-    Whatsapp: WhatsAppAPI;
+    Whatsapp: InstanceType<typeof WhatsAppAPI>;
 };
 
 /**
