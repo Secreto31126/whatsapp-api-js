@@ -521,3 +521,43 @@ export class ActionProduct implements InteractiveAction {
         else this.product_retailer_id = products[0].product_retailer_id;
     }
 }
+
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export class ActionCTA implements InteractiveAction {
+    /**
+     * The name of the component
+     */
+    readonly name = "cta_url";
+    /**
+     * The CTA parameters
+     */
+    readonly parameters?: {
+        display_text: string;
+        url: string;
+    };
+
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "cta_url" {
+        return "cta_url";
+    }
+
+    /**
+     * Builds a call-to-action component for an Interactive message
+     *
+     * @param display_text - The text to be displayed in the CTA button
+     * @param url - The url to be opened when the CTA button is clicked
+     */
+    constructor(display_text: string, url: string) {
+        this.parameters = {
+            display_text,
+            url
+        };
+    }
+}
