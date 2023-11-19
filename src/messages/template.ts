@@ -307,7 +307,7 @@ export class URLComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with call to action buttons.
      *
-     * @param parameters - The variable for each url button.
+     * @param parameters - The variable for the url button.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string) {
