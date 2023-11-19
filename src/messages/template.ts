@@ -73,6 +73,7 @@ export class Template extends ClientMessage {
             | BodyComponent
             | ButtonComponent
             | CarouselComponent
+            | LTOComponent
         >
     >;
 
@@ -100,6 +101,7 @@ export class Template extends ClientMessage {
             | BodyComponent
             | ButtonComponent
             | CarouselComponent
+            | LTOComponent
         )[]
     ) {
         super();
@@ -479,7 +481,7 @@ export class CopyComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with copy coupon button.
      *
-     * @param parameters - The variable for each url button.
+     * @param parameters - The coupon's code of the button to copy.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string) {
