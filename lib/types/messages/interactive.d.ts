@@ -327,4 +327,34 @@ export declare class ActionProduct implements InteractiveAction {
      */
     constructor(catalog_id: string, ...products: [Product] | AtLeastOne<ProductSection>);
 }
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export declare class ActionCTA implements InteractiveAction {
+    /**
+     * The name of the component
+     */
+    readonly name = "cta_url";
+    /**
+     * The CTA parameters
+     */
+    readonly parameters?: {
+        display_text: string;
+        url: string;
+    };
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "cta_url";
+    /**
+     * Builds a call-to-action component for an Interactive message
+     *
+     * @param display_text - The text to be displayed in the CTA button
+     * @param url - The url to be opened when the CTA button is clicked
+     */
+    constructor(display_text: string, url: string);
+}
 //# sourceMappingURL=interactive.d.ts.map
