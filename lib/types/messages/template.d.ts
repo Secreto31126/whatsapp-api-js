@@ -57,7 +57,7 @@ export declare class Template extends ClientMessage {
     /**
      * The components of the template
      */
-    readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent>>;
+    readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent | LTOComponent>>;
     /**
      * @override
      * @internal
@@ -71,7 +71,7 @@ export declare class Template extends ClientMessage {
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
      * @throws If the template isn't text-based (only one {@link BodyComponent} is given) and one of the parameters is a string and it's over 1024 characters.
      */
-    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent)[]);
+    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent | LTOComponent)[]);
     /**
      * OTP Template generator
      *
@@ -212,7 +212,7 @@ export declare class URLComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with call to action buttons.
      *
-     * @param parameters - The variable for each url button.
+     * @param parameters - The variable for the url button.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string);
@@ -285,7 +285,7 @@ export declare class CopyComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with copy coupon button.
      *
-     * @param parameters - The variable for each url button.
+     * @param parameters - The coupon's code of the button to copy.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string);
