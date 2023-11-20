@@ -1,5 +1,5 @@
 import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
-import type { AtLeastOne } from "../utils";
+import type { AtLeastOne, XOR } from "../utils";
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
 import { Product, ProductSection } from "./globals.js";
@@ -26,10 +26,13 @@ export type ButtonParameter = {
     /**
      * The action of the button
      */
-    readonly action?: {
+    readonly action?: XOR<{
         thumbnail_product_retailer_id: string;
         sections?: AtLeastOne<ProductSection>;
-    };
+    }, {
+        flow_token: string;
+        flow_action_data: unknown;
+    }>;
 };
 /**
  * This type is used as a C struct pointer for the _build method
@@ -179,7 +182,7 @@ export declare abstract class ButtonComponent implements ClientBuildableMessageC
     /**
      * The subtype of the component
      */
-    readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code";
+    readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code" | "flow";
     /**
      * The parameter of the component
      */
@@ -196,7 +199,7 @@ export declare abstract class ButtonComponent implements ClientBuildableMessageC
      * @param sub_type - The type of button component to create.
      * @param parameter - The parameter for the component. The index of each component is defined by the order they are sent to the Template's constructor.
      */
-    constructor(sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code", parameter: ButtonParameter);
+    constructor(sub_type: ButtonComponent["sub_type"], parameter: ButtonParameter);
     /**
      * @override
      * @internal
@@ -289,6 +292,24 @@ export declare class CopyComponent extends ButtonComponent {
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string);
+    /**
+     * @internal
+     */
+    private static Action;
+}
+/**
+ * Button Component API object for flow button
+ *
+ * @group Template
+ */
+export declare class FlowComponent extends ButtonComponent {
+    /**
+     * Creates a button component for a Template message with flow button.
+     *
+     * @param flow_token - Honestly, I don't know what this is, the documentation only says this might be "FLOW_TOKEN" and defaults to "unused".
+     * @param flow_action_data - JSON object with the data payload for the first screen.
+     */
+    constructor(flow_token: string, flow_action_data: unknown);
     /**
      * @internal
      */
