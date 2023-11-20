@@ -4,7 +4,7 @@ import {
     type ClientBuildableMessageComponent,
     type ClientTypedMessageComponent
 } from "../types.js";
-import type { AtLeastOne } from "../utils";
+import type { AtLeastOne, XOR } from "../utils";
 
 import type Location from "./location";
 import type { Document, Image, Video } from "./media";
@@ -34,10 +34,16 @@ export type ButtonParameter = {
     /**
      * The action of the button
      */
-    readonly action?: {
-        thumbnail_product_retailer_id: string;
-        sections?: AtLeastOne<ProductSection>;
-    };
+    readonly action?: XOR<
+        {
+            thumbnail_product_retailer_id: string;
+            sections?: AtLeastOne<ProductSection>;
+        },
+        {
+            flow_token: string;
+            flow_action_data: unknown;
+        }
+    >;
 };
 
 /**
@@ -262,7 +268,13 @@ export abstract class ButtonComponent
     /**
      * The subtype of the component
      */
-    readonly sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code";
+    readonly sub_type:
+        | "url"
+        | "quick_reply"
+        | "catalog"
+        | "mpm"
+        | "copy_code"
+        | "flow";
     /**
      * The parameter of the component
      */
@@ -281,7 +293,7 @@ export abstract class ButtonComponent
      * @param parameter - The parameter for the component. The index of each component is defined by the order they are sent to the Template's constructor.
      */
     constructor(
-        sub_type: "url" | "quick_reply" | "catalog" | "mpm" | "copy_code",
+        sub_type: ButtonComponent["sub_type"],
         parameter: ButtonParameter
     ) {
         this.sub_type = sub_type;
@@ -507,6 +519,47 @@ export class CopyComponent extends ButtonComponent {
             }
 
             this.coupon_code = coupon_code;
+        }
+    };
+}
+
+/**
+ * Button Component API object for flow button
+ *
+ * @group Template
+ */
+export class FlowComponent extends ButtonComponent {
+    /**
+     * Creates a button component for a Template message with flow button.
+     *
+     * @param flow_token - Honestly, I don't know what this is, the documentation only says this might be "FLOW_TOKEN" and defaults to "unused".
+     * @param flow_action_data - JSON object with the data payload for the first screen.
+     */
+    constructor(flow_token: string, flow_action_data: unknown) {
+        super("flow", new FlowComponent.Action(flow_token, flow_action_data));
+    }
+
+    /**
+     * @internal
+     */
+    private static Action = class implements ButtonParameter {
+        readonly type = "action";
+        readonly action: {
+            flow_token: string;
+            flow_action_data: unknown;
+        };
+
+        /**
+         * Creates a parameter for a Template message with flow button.
+         *
+         * @param flow_token - Idk, some string.
+         * @param flow_action_data - JSON object with the data payload for the first screen.
+         */
+        constructor(flow_token: string, flow_action_data: unknown) {
+            this.action = {
+                flow_token,
+                flow_action_data
+            };
         }
     };
 }
