@@ -667,10 +667,10 @@ export class ActionFlow implements InteractiveAction {
         flow_action_payload: { screen, data } = { screen: "", data: {} },
         mode = "published",
         flow_message_version = "3"
-    }: ActionFlowParametersType &
-        Partial<
-            Pick<ActionFlowParametersType, "mode" | "flow_message_version">
-        >) {
+    }: Omit<ActionFlow["parameters"], "mode" | "flow_message_version"> & {
+        mode?: ActionFlow["parameters"]["mode"];
+        flow_message_version?: ActionFlow["parameters"]["flow_message_version"];
+    }) {
         if (!flow_cta.length || flow_cta.length > 20) {
             throw new Error("Flow CTA must be between 1 and 20 characters");
         }
