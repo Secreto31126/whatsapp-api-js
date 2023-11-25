@@ -87,6 +87,17 @@ const interactive_catalog_message = new Interactive(
 );
 ```
 
+## Click To Action
+
+```ts
+import { Interactive, ActionCTA, Body } from "whatsapp-api-js/messages";
+
+const interactive_catalog_message = new Interactive(
+    new ActionCatalog("Open Google", "https://google.com"),
+    new Body("You should google it")
+);
+```
+
 ## Payments and Location request
 
 Check out [#154](https://github.com/Secreto31126/whatsapp-api-js/issues/154) for more information.
@@ -98,3 +109,4 @@ https://whatsappapijs.web.app/classes/messages.ActionButtons.html
 https://whatsappapijs.web.app/classes/messages.ActionList.html
 https://whatsappapijs.web.app/classes/messages.ActionProduct.html
 https://whatsappapijs.web.app/classes/messages.ActionCatalog.html
+https://whatsappapijs.web.app/classes/messages.ActionCTA.html
