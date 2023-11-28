@@ -114,8 +114,8 @@ const interactive_navigate_flow_message = new Interactive(
         "Hello World",
         "form_screen",
         {
-            "name": "John Doe",
-            "age": 42
+            name: "John Doe",
+            age: 42
         }
     ),
     new Body("How was your experience today?")
