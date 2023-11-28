@@ -87,6 +87,17 @@ const interactive_catalog_message = new Interactive(
 );
 ```
 
+## Click To Action
+
+```ts
+import { Interactive, ActionCTA, Body } from "whatsapp-api-js/messages";
+
+const interactive_catalog_message = new Interactive(
+    new ActionCatalog("Open Google", "https://google.com"),
+    new Body("You should google it")
+);
+```
+
 ## Navigate Flow
 
 ```ts
@@ -141,5 +152,6 @@ https://whatsappapijs.web.app/classes/messages.ActionButtons.html
 https://whatsappapijs.web.app/classes/messages.ActionList.html
 https://whatsappapijs.web.app/classes/messages.ActionProduct.html
 https://whatsappapijs.web.app/classes/messages.ActionCatalog.html
+https://whatsappapijs.web.app/classes/messages.ActionCTA.html
 https://whatsappapijs.web.app/classes/messages.ActionNavigateFlow.html
 https://whatsappapijs.web.app/classes/messages.ActionDataExchangeFlow.html

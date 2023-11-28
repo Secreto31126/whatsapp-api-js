@@ -97,6 +97,18 @@ const template_copy_coupon_message = new Template(
 );
 ```
 
+## Complex template with flow component
+
+```ts
+import { Template, FlowComponent } from "whatsapp-api-js/messages";
+
+const template_copy_coupon_message = new Template(
+    "template_name",
+    "en",
+    new FlowComponent("rating", { user: "name" })
+);
+```
+
 ## Complex template with combination of buttons
 
 ```ts
@@ -221,6 +233,7 @@ https://whatsappapijs.web.app/classes/messages.BodyComponent.html
 https://whatsappapijs.web.app/classes/messages.URLComponent.html
 https://whatsappapijs.web.app/classes/messages.PayloadComponent.html
 https://whatsappapijs.web.app/classes/messages.CopyComponent.html
+https://whatsappapijs.web.app/classes/messages.FlowComponent.html
 https://whatsappapijs.web.app/classes/messages.CatalogComponent.html
 https://whatsappapijs.web.app/classes/messages.MPMComponent.html
 https://whatsappapijs.web.app/classes/messages.CarouselComponent.html
