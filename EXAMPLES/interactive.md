@@ -87,6 +87,49 @@ const interactive_catalog_message = new Interactive(
 );
 ```
 
+## Navigate Flow
+
+```ts
+import {
+    Interactive,
+    ActionNavigateFlow,
+    Body
+} from "whatsapp-api-js/messages";
+
+const interactive_navigate_flow_message = new Interactive(
+    new ActionNavigateFlow(
+        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+        "Hello World",
+        "form_screen",
+        {
+            "name": "John Doe",
+            "age": 42
+        }
+    ),
+    new Body("How was your experience today?")
+);
+```
+
+## Data Exchange Flow
+
+```ts
+import {
+    Interactive,
+    ActionNavigateFlow,
+    Body
+} from "whatsapp-api-js/messages";
+
+const interactive_data_exchange_flow_message = new Interactive(
+    new ActionDataExchangeFlow(
+        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+        "Hello World"
+    ),
+    new Body("Hello World")
+);
+```
+
 ## Payments and Location request
 
 Check out [#154](https://github.com/Secreto31126/whatsapp-api-js/issues/154) for more information.
@@ -98,3 +141,5 @@ https://whatsappapijs.web.app/classes/messages.ActionButtons.html
 https://whatsappapijs.web.app/classes/messages.ActionList.html
 https://whatsappapijs.web.app/classes/messages.ActionProduct.html
 https://whatsappapijs.web.app/classes/messages.ActionCatalog.html
+https://whatsappapijs.web.app/classes/messages.ActionNavigateFlow.html
+https://whatsappapijs.web.app/classes/messages.ActionDataExchangeFlow.html

@@ -31,6 +31,8 @@ the most basic methods or features.
     -   [Single Product](interactive.md#single-product)
     -   [Multi Product](interactive.md#multi-product)
     -   [Catalog](interactive.md#catalog)
+    -   [Navigate Flow](interactive.md#navigate-flow)
+    -   [Data Exchange Flow](interactive.md#data-exchange-flow)
     -   [Payments and Location request](interactive.md#payments-and-location-request)
 -   [Contacts](contacts.md)
     -   [Simple contact](contacts.md#simple-contact)
