@@ -152,6 +152,6 @@
         "sinon": "17.0.0",
         "typedoc": "0.25.2",
         "typescript": "5.2.2",
-        "undici": "5.26.4"
+        "undici-types": "^5.28.1"
     }
 }

@@ -4,7 +4,7 @@
     "compilerOptions": {
         "lib": ["ESNext"],
         "outDir": "lib/types",
-        "types": ["node", "undici"],
+        "types": ["node", "undici-types"],
         "declaration": true,
         "declarationMap": true,
         "emitDeclarationOnly": true,
