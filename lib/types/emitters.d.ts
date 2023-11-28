@@ -1,4 +1,4 @@
-import type { Response } from "undici";
+import type { Response } from "undici-types";
 import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types";
 import type WhatsAppAPI from "./index";
 /**

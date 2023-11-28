@@ -1,5 +1,5 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
-import type { Request } from "undici";
+import type { Request } from "undici-types";
 /**
  * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/Hono)
  */

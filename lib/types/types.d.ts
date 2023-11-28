@@ -7,7 +7,7 @@
  * feel free to read the docs :)
  */
 /// <reference types="node" />
-import type { fetch as FetchType } from "undici";
+import type { fetch as FetchType } from "undici-types";
 import type { subtle as CryptoSubtle } from "node:crypto";
 import type { AtLeastOne } from "./utils";
 /**

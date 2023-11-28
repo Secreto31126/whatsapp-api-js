@@ -1,5 +1,5 @@
 import type { WhatsAppAPIConstructorArguments } from "../types";
-import type { fetch as FetchType } from "undici";
+import type { fetch as FetchType } from "undici-types";
 /**
  * A Node\@^19 quick setup for the WhatsAppAPI
  *
