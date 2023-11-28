@@ -1,5 +1,5 @@
 import type { WhatsAppAPIConstructorArguments } from "../types";
-import type { fetch as FetchType } from "undici";
+import type { fetch as FetchType } from "undici-types";
 
 // If this line of code didn't exist,
 // setup would be a single file rather than a folder

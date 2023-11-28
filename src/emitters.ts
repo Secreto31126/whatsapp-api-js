@@ -1,4 +1,4 @@
-import type { Response } from "undici";
+import type { Response } from "undici-types";
 import type {
     ClientMessage,
     ClientMessageRequest,

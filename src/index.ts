@@ -25,7 +25,12 @@ import type {
     OnStatusArgs
 } from "./emitters";
 
-import type { fetch as FetchType, Request, Response, FormData } from "undici";
+import type {
+    fetch as FetchType,
+    Request,
+    Response,
+    FormData
+} from "undici-types";
 import type { subtle as CryptoSubtle } from "node:crypto";
 import type { Blob } from "node:buffer";
 
