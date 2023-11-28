@@ -116,7 +116,7 @@ const interactive_navigate_flow_message = new Interactive(
 ```ts
 import {
     Interactive,
-    ActionNavigateFlow,
+    ActionDataExchangeFlow,
     Body
 } from "whatsapp-api-js/messages";
 
