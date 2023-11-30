@@ -204,13 +204,15 @@ export default class WhatsAppAPI {
      * @param to - The user's phone number
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
      * @param context - The message ID of the message to reply to
+     * @param biz_opaque_callback_data - An arbitrary 256B string, useful for tracking (length not checked by the framework)
      * @returns The server response
      */
     async sendMessage(
         phoneID: string,
         to: string,
         message: ClientMessage,
-        context?: string
+        context?: string,
+        biz_opaque_callback_data?: string
     ): Promise<ServerMessageResponse | Response> {
         const type = message._type;
 
@@ -228,6 +230,8 @@ export default class WhatsAppAPI {
             message._build();
 
         if (context) request.context = { message_id: context };
+        if (biz_opaque_callback_data)
+            request.biz_opaque_callback_data = biz_opaque_callback_data;
 
         // Make the post request
         const promise = this.fetch(
@@ -784,12 +788,13 @@ export default class WhatsAppAPI {
                 message,
                 name,
                 raw: data,
-                reply: (response, context = false) =>
+                reply: (response, context = false, biz_opaque_callback_data) =>
                     this.sendMessage(
                         phoneID,
                         from,
                         response,
-                        context ? message.id : undefined
+                        context ? message.id : undefined,
+                        biz_opaque_callback_data
                     ),
                 Whatsapp: this
             };
@@ -804,6 +809,7 @@ export default class WhatsAppAPI {
             const conversation = statuses.conversation;
             const pricing = statuses.pricing;
             const error = statuses.errors?.[0];
+            const biz_opaque_callback_data = statuses.biz_opaque_callback_data;
 
             const args: OnStatusArgs = {
                 phoneID,
@@ -813,6 +819,7 @@ export default class WhatsAppAPI {
                 conversation,
                 pricing,
                 error,
+                biz_opaque_callback_data,
                 raw: data
             };
 

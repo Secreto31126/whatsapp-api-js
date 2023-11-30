@@ -50,7 +50,15 @@ class StatusWebhookMock {
     /**
      * Helper class to test the status post request, conditionally creating the object based on the available data
      */
-    constructor(phoneID, phone, status, messageID, conversation, pricing) {
+    constructor(
+        phoneID,
+        phone,
+        status,
+        messageID,
+        conversation,
+        pricing,
+        biz_opaque_callback_data
+    ) {
         this.object = "whatsapp_business_account";
         this.entry = [
             {
@@ -93,6 +101,11 @@ class StatusWebhookMock {
 
         if (pricing) {
             this.entry[0].changes[0].value.statuses[0].pricing = pricing;
+        }
+
+        if (biz_opaque_callback_data) {
+            this.entry[0].changes[0].value.statuses[0].biz_opaque_callback_data =
+                biz_opaque_callback_data;
         }
 
         if (
