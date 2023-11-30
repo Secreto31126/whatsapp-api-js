@@ -87,13 +87,13 @@ const interactive_catalog_message = new Interactive(
 );
 ```
 
-## Click To Action
+## Call To Action
 
 ```ts
 import { Interactive, ActionCTA, Body } from "whatsapp-api-js/messages";
 
 const interactive_catalog_message = new Interactive(
-    new ActionCatalog("Open Google", "https://google.com"),
+    new ActionCTA("Open Google", "https://google.com"),
     new Body("You should google it")
 );
 ```
