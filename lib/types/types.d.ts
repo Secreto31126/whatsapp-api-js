@@ -247,9 +247,9 @@ export type ClientMessageRequest = {
      */
     to: string;
     /**
-     * Undocumented, optional (the framework doesn't use it)
+     * Currently you can only send messages to individuals
      */
-    recipient_type?: "individual";
+    recipient_type: "individual";
     /**
      * The message to reply to
      */
@@ -259,6 +259,15 @@ export type ClientMessageRequest = {
          */
         message_id: string;
     };
+    /**
+     * An arbitrary 256B string, useful for tracking.
+     *
+     * Any app subscribed to the messages webhook field on the WhatsApp Business Account can get this string,
+     * as it is included in statuses object within webhook payloads.
+     *
+     * Cloud API does not process this field, it just returns it as part of sent/delivered/read message webhooks.
+     */
+    biz_opaque_callback_data?: string;
 } & ({
     type: "text";
     text?: string;
@@ -567,6 +576,7 @@ export type PostData = {
                         status: ServerStatus;
                         timestamp: string;
                         recipient_id: string;
+                        biz_opaque_callback_data?: string;
                     } & ({
                         conversation: ServerConversation;
                         pricing: ServerPricing;

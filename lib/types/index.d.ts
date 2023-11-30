@@ -101,9 +101,10 @@ export default class WhatsAppAPI {
      * @param to - The user's phone number
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
      * @param context - The message ID of the message to reply to
+     * @param biz_opaque_callback_data - An arbitrary 256B string, useful for tracking (length not checked by the framework)
      * @returns The server response
      */
-    sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string): Promise<ServerMessageResponse | Response>;
+    sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse | Response>;
     /**
      * Send the same Whatsapp message to multiple phone numbers.
      *
