@@ -102,7 +102,7 @@ const template_copy_coupon_message = new Template(
 ```ts
 import { Template, FlowComponent } from "whatsapp-api-js/messages";
 
-const template_copy_coupon_message = new Template(
+const template_flow_message = new Template(
     "template_name",
     "en",
     new FlowComponent("rating", { user: "name" })
