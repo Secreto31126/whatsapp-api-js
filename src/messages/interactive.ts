@@ -535,7 +535,7 @@ export class ActionCTA implements InteractiveAction {
     /**
      * The CTA parameters
      */
-    readonly parameters?: {
+    readonly parameters: {
         display_text: string;
         url: string;
     };
