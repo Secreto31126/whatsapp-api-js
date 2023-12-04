@@ -25,15 +25,6 @@ import type {
     OnStatusArgs
 } from "./emitters";
 
-import type {
-    fetch as FetchType,
-    Request,
-    Response,
-    FormData
-} from "undici-types";
-import type { subtle as CryptoSubtle } from "node:crypto";
-import type { Blob } from "node:buffer";
-
 /**
  * The main API Class
  */
@@ -58,11 +49,11 @@ export default class WhatsAppAPI {
     /**
      * The fetch function for the requests
      */
-    private fetch: typeof FetchType;
+    private fetch: typeof fetch;
     /**
      * The CryptoSubtle library for checking the signatures
      */
-    private subtle?: typeof CryptoSubtle;
+    private subtle?: Pick<typeof crypto.subtle, "importKey" | "sign">;
     /**
      * If true, API operations will return the fetch promise instead. Intended for low level debugging.
      */
@@ -127,11 +118,7 @@ export default class WhatsAppAPI {
 
             if (
                 typeof ponyfill.subtle !== "object" &&
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore - crypto might not be defined in the enviroment
                 (typeof crypto !== "object" ||
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore - crypto.subtle might not be defined in the enviroment
                     typeof crypto?.subtle !== "object")
             ) {
                 throw new Error(
@@ -142,20 +129,13 @@ export default class WhatsAppAPI {
             }
 
             // Let's hope the user is using a valid ponyfill
-            this.subtle =
-                ponyfill.subtle ||
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                // @ts-ignore - crypto.subtle might not be defined in the enviroment
-                // Splitted in two lines to reduce the impact of the ts-ignore
-                crypto.subtle;
+            this.subtle = ponyfill.subtle || crypto.subtle;
         }
 
         if (webhookVerifyToken) this.webhookVerifyToken = webhookVerifyToken;
 
         if (
             typeof ponyfill.fetch !== "function" &&
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore - fetch might not be defined in the enviroment
             typeof fetch !== "function"
         ) {
             throw new Error(
@@ -166,12 +146,7 @@ export default class WhatsAppAPI {
         }
 
         // Let's hope the user is using a valid ponyfill
-        this.fetch =
-            ponyfill.fetch ||
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore - fetch might not be defined in the enviroment
-            // Splitted in two lines to reduce the impact of the ts-ignore
-            fetch;
+        this.fetch = ponyfill.fetch || fetch;
 
         this.v = v;
 

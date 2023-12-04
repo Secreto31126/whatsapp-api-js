@@ -7,8 +7,6 @@
  * feel free to read the docs :)
  */
 
-import type { fetch as FetchType } from "undici-types";
-import type { subtle as CryptoSubtle } from "node:crypto";
 import type { AtLeastOne } from "./utils";
 
 /**
@@ -108,11 +106,11 @@ export type TheBasicConstructorArguments = {
         /**
          * The fetch ponyfill to use for the requests. If not specified, it defaults to the fetch function from the enviroment.
          */
-        fetch?: typeof FetchType;
+        fetch?: typeof fetch;
         /**
          * The subtle ponyfill to use for the signatures. If not specified, it defaults to crypto.subtle from the enviroment.
          */
-        subtle?: typeof CryptoSubtle;
+        subtle?: Pick<typeof crypto.subtle, "importKey" | "sign">;
     };
 };
 
