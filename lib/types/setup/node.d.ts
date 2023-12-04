@@ -1,5 +1,4 @@
 import type { WhatsAppAPIConstructorArguments } from "../types";
-import type { fetch as FetchType } from "undici-types";
 /**
  * A Node\@^19 quick setup for the WhatsAppAPI
  *
@@ -23,8 +22,8 @@ export declare function Node18(settings: WhatsAppAPIConstructorArguments): Whats
  *
  * @deprecated Node 15 to 17 reached EoL and are no longer supported by the library
  * @param settings - The WhatsAppAPI arguments
- * @param fetch - The fetch ponyfill function to use (e.g. node-fetch or undici)
+ * @param fetch_ponyfill - The fetch ponyfill function to use (e.g. node-fetch or undici)
  * @returns A WhatsAppAPI arguments object for Node 15 to 17
  */
-export declare function Node15(settings: WhatsAppAPIConstructorArguments, fetch: typeof FetchType): WhatsAppAPIConstructorArguments;
+export declare function Node15(settings: WhatsAppAPIConstructorArguments, fetch_ponyfill: typeof fetch): WhatsAppAPIConstructorArguments;
 //# sourceMappingURL=node.d.ts.map

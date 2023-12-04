@@ -1,5 +1,4 @@
 import WebStandardMiddleware from "./web-standard.js";
-import type { Request } from "undici-types";
 /**
  * Deno server middleware for WhatsAppAPI
  */

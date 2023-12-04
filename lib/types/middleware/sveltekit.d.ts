@@ -1,5 +1,4 @@
 import WebStandardMiddleware from "./web-standard.js";
-import type { Request } from "undici-types";
 /**
  * SvelteKit Endpoints middleware for WhatsAppAPI
  *
@@ -23,8 +22,6 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      *
      * export const POST: RequestHandler = async ({ request }) => {
      *     return new Response(null, {
-     *         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-     *         // @ts-ignore - Unfortunately, undici request type and SvelteKit request type are not fully compatible
      *         status: await Whatsapp.handle_post(request)
      *     });
      * };
@@ -51,8 +48,6 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      *
      * export const GET: RequestHandler = ({ request, url }) => {
      *     try {
-     *         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-     *         // @ts-ignore - Unfortunately, undici's Request and SvelteKit's Request types are not fully compatible
      *         return new Response(Whatsapp.handle_get(request));
      *     } catch (e) {
      *         return new Response(null, { status: e as number });

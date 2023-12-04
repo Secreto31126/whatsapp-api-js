@@ -1,5 +1,4 @@
 import WebStandardMiddleware from "./web-standard.js";
-import type { Request } from "undici-types";
 /**
  * Bun server middleware for WhatsAppAPI
  */
