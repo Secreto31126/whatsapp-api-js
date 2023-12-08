@@ -134,24 +134,24 @@
     },
     "devDependencies": {
         "@adonisjs/http-server": "5.12.0",
-        "@types/express": "4.17.17",
-        "@types/node": "18.18.13",
-        "@typescript-eslint/eslint-plugin": "6.13.1",
-        "@typescript-eslint/parser": "6.13.1",
-        "@vercel/node": "3.0.4",
+        "@types/express": "4.17.21",
+        "@types/node": "18.19.3",
+        "@typescript-eslint/eslint-plugin": "6.13.2",
+        "@typescript-eslint/parser": "6.13.2",
+        "@vercel/node": "3.0.11",
         "all-contributors-cli": "6.26.1",
         "c8": "8.0.1",
         "dotenv": "16.3.1",
         "esbuild": "0.19.0",
-        "eslint": "8.54.0",
-        "eslint-config-prettier": "9.0.0",
+        "eslint": "8.55.0",
+        "eslint-config-prettier": "9.1.0",
         "eslint-plugin-tsdoc": "0.2.17",
         "glob": "10.3.10",
         "mocha": "10.2.0",
         "prettier": "3.1.0",
         "sinon": "17.0.1",
         "typedoc": "0.25.4",
-        "typescript": "5.3.2",
-        "undici": "5.28.1"
+        "typescript": "5.3.3",
+        "undici": "5.28.2"
     }
 }
