@@ -1,5 +1,4 @@
 import type { WhatsAppAPIConstructorArguments } from "../types";
-import type { fetch as FetchType } from "undici-types";
 
 // If this line of code didn't exist,
 // setup would be a single file rather than a folder
@@ -44,17 +43,17 @@ export function Node18(
  *
  * @deprecated Node 15 to 17 reached EoL and are no longer supported by the library
  * @param settings - The WhatsAppAPI arguments
- * @param fetch - The fetch ponyfill function to use (e.g. node-fetch or undici)
+ * @param fetch_ponyfill - The fetch ponyfill function to use (e.g. node-fetch or undici)
  * @returns A WhatsAppAPI arguments object for Node 15 to 17
  */
 export function Node15(
     settings: WhatsAppAPIConstructorArguments,
-    fetch: typeof FetchType
+    fetch_ponyfill: typeof fetch
 ): WhatsAppAPIConstructorArguments {
     return {
         ...settings,
         ponyfill: {
-            fetch,
+            fetch: fetch_ponyfill,
             subtle: webcrypto.subtle,
             ...settings.ponyfill
         }

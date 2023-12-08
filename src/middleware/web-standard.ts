@@ -1,7 +1,6 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
 import { isInteger } from "../utils.js";
 
-import type { Request } from "undici-types";
 import type { GetParams } from "../types";
 
 /**
