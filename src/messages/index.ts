@@ -14,9 +14,9 @@
  * - {@link Reaction}
  */
 
-export { default as Text } from "./text.js";
-export { default as Location } from "./location.js";
-export { default as Reaction } from "./reaction.js";
+export * from "./text.js";
+export * from "./location.js";
+export * from "./reaction.js";
 export * from "./contacts.js";
 export * from "./interactive.js";
 export * from "./media.js";
