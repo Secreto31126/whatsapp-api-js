@@ -40,3 +40,5 @@ export default class Reaction extends ClientMessage {
         this.emoji = emoji;
     }
 }
+
+export { Reaction };

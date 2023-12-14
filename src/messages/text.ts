@@ -38,3 +38,5 @@ export default class Text extends ClientMessage {
         if (preview_url) this.preview_url = preview_url;
     }
 }
+
+export { Text };
