@@ -27,4 +27,5 @@ export default class Reaction extends ClientMessage {
      */
     constructor(message_id: string, emoji?: string);
 }
+export { Reaction };
 //# sourceMappingURL=reaction.d.ts.map

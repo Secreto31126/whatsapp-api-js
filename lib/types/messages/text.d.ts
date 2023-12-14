@@ -27,4 +27,5 @@ export default class Text extends ClientMessage {
      */
     constructor(body: string, preview_url?: boolean);
 }
+export { Text };
 //# sourceMappingURL=text.d.ts.map

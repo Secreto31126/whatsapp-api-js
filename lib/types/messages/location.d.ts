@@ -36,4 +36,5 @@ export default class Location extends ClientMessage {
      */
     constructor(longitude: number, latitude: number, name?: string, address?: string);
 }
+export { Location };
 //# sourceMappingURL=location.d.ts.map
