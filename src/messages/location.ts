@@ -52,3 +52,5 @@ export default class Location extends ClientMessage {
         if (address) this.address = address;
     }
 }
+
+export { Location };
