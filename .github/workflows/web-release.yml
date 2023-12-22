@@ -44,7 +44,7 @@ jobs:
 
             - run: mkdir docs
             - name: Copy docs
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v3
               with:
                   name: docs
                   path: docs
@@ -80,7 +80,7 @@ jobs:
               run: mkdir ${{ inputs.tag_name }}
 
             - name: Copy docs into Endpoint
-              uses: actions/download-artifact@v4
+              uses: actions/download-artifact@v3
               with:
                   name: docs
                   path: ${{ inputs.tag_name }}
