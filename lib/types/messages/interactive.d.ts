@@ -474,4 +474,20 @@ export declare class ActionDataExchangeFlow extends ActionFlow {
      */
     constructor(flow_token: string, flow_id: string, flow_cta: string, mode?: "published" | "draft", flow_message_version?: "3");
 }
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export declare class ActionLocation implements InteractiveAction {
+    /**
+     * The name of the component
+     */
+    readonly name = "send_location";
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "location_request_message";
+}
 //# sourceMappingURL=interactive.d.ts.map

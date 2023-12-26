@@ -231,7 +231,7 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
     /**
      * @overload
      */
-    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow";
+    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message";
 }
 export type ClientMessageNames = "text" | "audio" | "document" | "image" | "sticker" | "video" | "location" | "contacts" | "interactive" | "template" | "reaction";
 export type ClientMessageRequest = {
