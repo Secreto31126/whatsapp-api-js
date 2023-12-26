@@ -738,3 +738,23 @@ export class ActionDataExchangeFlow extends ActionFlow {
         });
     }
 }
+
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export class ActionLocation implements InteractiveAction {
+    /**
+     * The name of the component
+     */
+    readonly name = "send_location";
+
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "location_request_message" {
+        return "location_request_message";
+    }
+}
