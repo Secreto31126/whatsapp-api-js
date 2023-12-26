@@ -141,7 +141,18 @@ const interactive_data_exchange_flow_message = new Interactive(
 );
 ```
 
-## Payments and Location request
+## Location Request
+
+```ts
+import { Interactive, ActionLocation, Body } from "whatsapp-api-js/messages";
+
+const interactive_catalog_message = new Interactive(
+    new ActionLocation(),
+    new Body("You should google it")
+);
+```
+
+## Payments and Address Request
 
 Check out [#154](https://github.com/Secreto31126/whatsapp-api-js/issues/154) for more information.
 
@@ -155,3 +166,4 @@ https://whatsappapijs.web.app/classes/messages.ActionCatalog.html
 https://whatsappapijs.web.app/classes/messages.ActionCTA.html
 https://whatsappapijs.web.app/classes/messages.ActionNavigateFlow.html
 https://whatsappapijs.web.app/classes/messages.ActionDataExchangeFlow.html
+https://whatsappapijs.web.app/classes/messages.ActionLocation.html

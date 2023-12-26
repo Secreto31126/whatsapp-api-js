@@ -296,7 +296,8 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
         | "product"
         | "product_list"
         | "cta_url"
-        | "flow";
+        | "flow"
+        | "location_request_message";
 }
 
 export type ClientMessageNames =
