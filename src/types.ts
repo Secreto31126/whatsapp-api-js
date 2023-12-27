@@ -535,10 +535,23 @@ export type ServerInteractiveMessage = {
           }
         | {
             "type":"nfm_reply";
-            "nfm_reply": {
-                "response_json": any,
+            "nfm_reply": 
+            | {
+                "name": "address_reply",
+                "body": string | undefined,
+                "response_json": any
             }
-          };
+            | {
+                "name": "flow",
+                "body": "Sent",
+                "response_json": any
+            }
+            | {
+                "name": string | undefined,
+                "body": string | undefined,
+                "response_json": any
+            };
+        };
 };
 
 export type ServerButtonMessage = {
