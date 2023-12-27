@@ -533,6 +533,12 @@ export type ServerInteractiveMessage = {
               };
               button_reply: never;
           };
+        | {
+            "type":"nfm_reply";
+            "nfm_reply": {
+                "response_json": any,
+            }
+          } ⁠
 };
 
 export type ServerButtonMessage = {
