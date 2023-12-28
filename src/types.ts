@@ -523,6 +523,7 @@ export type ServerInteractiveMessage = {
                   title: string;
               };
               list_reply: never;
+              nfm_reply: never;
           }
         | {
               type: "list_reply";
@@ -532,13 +533,14 @@ export type ServerInteractiveMessage = {
                   description: string;
               };
               button_reply: never;
+              nfm_reply: never;
           }
         | {
               type: "nfm_reply";
               nfm_reply:
                   | {
                         name: "address_reply";
-                        body: string | undefined;
+                        body?: string;
                         response_json: unknown;
                     }
                   | {
@@ -547,10 +549,12 @@ export type ServerInteractiveMessage = {
                         response_json: unknown;
                     }
                   | {
-                        name: string | undefined;
-                        body: string | undefined;
+                        name?: string;
+                        body?: string;
                         response_json: unknown;
                     };
+              button_reply: never;
+              list_reply: never;
           };
 };
 
