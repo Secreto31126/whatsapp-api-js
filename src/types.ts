@@ -539,7 +539,7 @@ export type ServerInteractiveMessage = {
               type: "nfm_reply";
               nfm_reply:
                   | {
-                        name: "address_reply";
+                        name: "address_message";
                         body?: string;
                         response_json: unknown;
                     }
