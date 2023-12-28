@@ -534,24 +534,24 @@ export type ServerInteractiveMessage = {
               button_reply: never;
           }
         | {
-            "type":"nfm_reply";
-            "nfm_reply": 
-            | {
-                "name": "address_reply",
-                "body": string | undefined,
-                "response_json": any
-            }
-            | {
-                "name": "flow",
-                "body": "Sent",
-                "response_json": any
-            }
-            | {
-                "name": string | undefined,
-                "body": string | undefined,
-                "response_json": any
-            };
-        };
+              type: "nfm_reply";
+              nfm_reply:
+                  | {
+                        name: "address_reply";
+                        body: string | undefined;
+                        response_json: unknown;
+                    }
+                  | {
+                        name: "flow";
+                        body: "Sent";
+                        response_json: unknown;
+                    }
+                  | {
+                        name: string | undefined;
+                        body: string | undefined;
+                        response_json: unknown;
+                    };
+          };
 };
 
 export type ServerButtonMessage = {
