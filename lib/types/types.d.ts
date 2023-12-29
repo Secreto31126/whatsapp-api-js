@@ -418,6 +418,7 @@ export type ServerInteractiveMessage = {
             title: string;
         };
         list_reply: never;
+        nfm_reply: never;
     } | {
         type: "list_reply";
         list_reply: {
@@ -426,6 +427,24 @@ export type ServerInteractiveMessage = {
             description: string;
         };
         button_reply: never;
+        nfm_reply: never;
+    } | {
+        type: "nfm_reply";
+        nfm_reply: {
+            name: "address_message";
+            body?: string;
+            response_json: unknown;
+        } | {
+            name: "flow";
+            body: "Sent";
+            response_json: unknown;
+        } | {
+            name?: string;
+            body?: string;
+            response_json: unknown;
+        };
+        button_reply: never;
+        list_reply: never;
     };
 };
 export type ServerButtonMessage = {
