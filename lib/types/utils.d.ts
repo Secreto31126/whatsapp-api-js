@@ -1,5 +1,6 @@
 export type AtLeastOne<T> = [T, ...T[]];
 export declare function isInteger(n: unknown): n is number;
+export declare function escapeUnicode(str: string): string;
 type Without<T, U> = {
     [P in Exclude<keyof T, keyof U>]?: never;
 };
