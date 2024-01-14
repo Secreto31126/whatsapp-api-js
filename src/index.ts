@@ -24,6 +24,7 @@ import type {
     OnStatus,
     OnStatusArgs
 } from "./emitters";
+import { escapeUnicode } from "./utils";
 
 /**
  * The main API Class
@@ -730,7 +731,7 @@ export default class WhatsAppAPI {
                 ["sign", "verify"]
             );
 
-            const data = encoder.encode(raw_body);
+            const data = encoder.encode(escapeUnicode(raw_body));
             const result = await this.subtle.sign("HMAC", key, data.buffer);
             const result_array = Array.from(new Uint8Array(result));
 

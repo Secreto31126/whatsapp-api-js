@@ -1520,9 +1520,9 @@ describe("WhatsAppAPI", function () {
             const phoneID = "1";
             const user = "2";
             const body =
-                "Let's pretend this body is equal to the message object";
+                "Let's pretend this body is equal to the message object and can handle unicode characters like みどりいろ and J'ai mangé des pâtes";
             const signature =
-                "sha256=8d2c8fd74d3ac31eafd99563ac39107a45e5ea1d44831e291353193729d57f56";
+                "sha256=0363007aabdf1ab579f35936651a460fb5fa1aaf40df98b1264446b72cc96688";
 
             const name = "name";
             const message = {
