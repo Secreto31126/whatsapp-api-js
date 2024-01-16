@@ -60,6 +60,11 @@ export default class WhatsAppAPI {
      */
     private parsed: boolean;
     /**
+     * If false, the user functions won't be offloaded from the main event loop.
+     * Intended for Serverless Environments where the process might be killed after the main function finished.
+     */
+    private offload_functions: boolean;
+    /**
      * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
      */
     private secure: boolean;
@@ -108,6 +113,7 @@ export default class WhatsAppAPI {
         webhookVerifyToken,
         v = "v18.0",
         parsed = true,
+        offload_functions = true,
         secure = true,
         ponyfill = {}
     }: WhatsAppAPIConstructorArguments) {
@@ -152,6 +158,7 @@ export default class WhatsAppAPI {
         this.v = v;
 
         this.parsed = !!parsed;
+        this.offload_functions = !!offload_functions;
     }
 
     //#region Message Operations
@@ -240,7 +247,7 @@ export default class WhatsAppAPI {
             response
         };
 
-        this.offload(this.on?.sent, args);
+        this.user_function(this.on?.sent, args);
 
         return response ?? promise;
     }
@@ -775,7 +782,7 @@ export default class WhatsAppAPI {
                 Whatsapp: this
             };
 
-            this.offload(this.on?.message, args);
+            this.user_function(this.on?.message, args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -799,7 +806,7 @@ export default class WhatsAppAPI {
                 raw: data
             };
 
-            this.offload(this.on?.status, args);
+            this.user_function(this.on?.status, args);
         }
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
@@ -868,6 +875,7 @@ export default class WhatsAppAPI {
     /**
      * Get the body of a fetch response
      *
+     * @internal
      * @param promise - The fetch response
      * @returns The json body parsed
      */
@@ -878,19 +886,34 @@ export default class WhatsAppAPI {
     }
 
     /**
+     * Call a user function, offloading it from the main thread if needed
+     *
+     * @internal
+     * @param f - The user function to call
+     * @param a - The arguments to pass to the function
+     */
+    private user_function<A, F extends ((...a: A[]) => unknown) | undefined>(
+        f: F,
+        ...a: A[]
+    ) {
+        if (f) {
+            if (this.offload_functions) {
+                this.offload(f, ...a);
+            } else {
+                f(...a);
+            }
+        }
+    }
+
+    /**
      * Offload a function to the next tick of the event loop
      *
      * @internal
      * @param f - The function to offload from the main thread
      * @param a - The arguments to pass to the function
      */
-    private offload<A, F extends ((...a: A[]) => unknown) | undefined>(
-        f: F,
-        ...a: A[]
-    ) {
-        if (f) {
-            // Thanks @RahulLanjewar93
-            Promise.resolve().then(() => f(...a));
-        }
+    private offload<A, F extends (...a: A[]) => unknown>(f: F, ...a: A[]) {
+        // Thanks @RahulLanjewar93
+        Promise.resolve().then(() => f(...a));
     }
 }
