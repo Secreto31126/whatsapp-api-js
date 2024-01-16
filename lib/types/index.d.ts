@@ -34,6 +34,11 @@ export default class WhatsAppAPI {
      */
     private parsed;
     /**
+     * If false, the user functions won't be offloaded from the main event loop.
+     * Intended for Serverless Environments where the process might be killed after the main function finished.
+     */
+    private offload_functions;
+    /**
      * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
      */
     private secure;
@@ -74,7 +79,7 @@ export default class WhatsAppAPI {
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
      */
-    constructor({ token, appSecret, webhookVerifyToken, v, parsed, secure, ponyfill }: WhatsAppAPIConstructorArguments);
+    constructor({ token, appSecret, webhookVerifyToken, v, parsed, offload_functions, secure, ponyfill }: WhatsAppAPIConstructorArguments);
     /**
      * Send a Whatsapp message
      *
@@ -342,10 +347,19 @@ export default class WhatsAppAPI {
     /**
      * Get the body of a fetch response
      *
+     * @internal
      * @param promise - The fetch response
      * @returns The json body parsed
      */
     private getBody;
+    /**
+     * Call a user function, offloading it from the main thread if needed
+     *
+     * @internal
+     * @param f - The user function to call
+     * @param a - The arguments to pass to the function
+     */
+    private user_function;
     /**
      * Offload a function to the next tick of the event loop
      *
