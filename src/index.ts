@@ -24,7 +24,8 @@ import type {
     OnStatus,
     OnStatusArgs
 } from "./emitters";
-import { escapeUnicode } from "./utils";
+
+import { escapeUnicode } from "./utils.js";
 
 /**
  * The main API Class
