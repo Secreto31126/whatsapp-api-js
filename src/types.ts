@@ -604,6 +604,10 @@ export type ServerSystemMessage = {
     };
 };
 
+export type ServerRequestWelcomeMessage = {
+    type: "request_welcome";
+};
+
 export type ServerUnknownMessage = {
     type: "unknown";
     errors: [
@@ -629,6 +633,7 @@ export type ServerMessageTypes =
     | ServerReactionMessage
     | ServerOrderMessage
     | ServerSystemMessage
+    | ServerRequestWelcomeMessage
     | ServerUnknownMessage;
 
 export type ServerMessage = {
