@@ -489,6 +489,9 @@ export type ServerSystemMessage = {
         type: string | "user_changed_number";
     };
 };
+export type ServerRequestWelcomeMessage = {
+    type: "request_welcome";
+};
 export type ServerUnknownMessage = {
     type: "unknown";
     errors: [
@@ -499,7 +502,7 @@ export type ServerUnknownMessage = {
         }
     ];
 };
-export type ServerMessageTypes = ServerTextMessage | ServerAudioMessage | ServerDocumentMessage | ServerImageMessage | ServerStickerMessage | ServerVideoMessage | ServerLocationMessage | ServerContactsMessage | ServerInteractiveMessage | ServerButtonMessage | ServerReactionMessage | ServerOrderMessage | ServerSystemMessage | ServerUnknownMessage;
+export type ServerMessageTypes = ServerTextMessage | ServerAudioMessage | ServerDocumentMessage | ServerImageMessage | ServerStickerMessage | ServerVideoMessage | ServerLocationMessage | ServerContactsMessage | ServerInteractiveMessage | ServerButtonMessage | ServerReactionMessage | ServerOrderMessage | ServerSystemMessage | ServerRequestWelcomeMessage | ServerUnknownMessage;
 export type ServerMessage = {
     from: string;
     id: string;
