@@ -89,7 +89,7 @@ export type OnMessageArgs = {
      *
      * @param response - The message to send as a reply
      * @param context - Wether to mention the current message, defaults to false
-     * @param biz_opaque_callback_data - An arbitrary 256B string, useful for tracking
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking
      * @returns WhatsAppAPI.sendMessage return value
      */
     reply: (
