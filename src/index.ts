@@ -188,7 +188,7 @@ export default class WhatsAppAPI {
      * @param to - The user's phone number
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
      * @param context - The message ID of the message to reply to
-     * @param biz_opaque_callback_data - An arbitrary 256B string, useful for tracking (length not checked by the framework)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
      * @returns The server response
      */
     async sendMessage(

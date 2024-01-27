@@ -343,7 +343,7 @@ export type ClientMessageRequest = {
         message_id: string;
     };
     /**
-     * An arbitrary 256B string, useful for tracking.
+     * An arbitrary 512B string, useful for tracking.
      *
      * Any app subscribed to the messages webhook field on the WhatsApp Business Account can get this string,
      * as it is included in statuses object within webhook payloads.
