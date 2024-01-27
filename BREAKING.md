@@ -40,7 +40,7 @@ Among the affected classes and files are:
 ### Node min version bumped
 
 Node 14 and 16 support was dropped as they reached EoL. The engine requirement
-is now `>=18`.
+is now `>=16`.
 
 ## 1.0.0
 
