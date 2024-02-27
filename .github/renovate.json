@@ -18,7 +18,7 @@
     "packageRules": [
         {
             "packageNames": ["esbuild"],
-            "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)?$"
+            "versioning": "regex:^(?<compatibility>\\d+)\\.(?<major>\\d+)\\.(?<patch>\\d+)?$"
         }
     ]
 }
