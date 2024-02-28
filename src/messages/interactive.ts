@@ -8,7 +8,7 @@ import type { AtLeastOne } from "../utils";
 
 import type { Document, Image, Video } from "./media";
 
-import { Product, ProductSection, isProductSections } from "./globals.js";
+import { Product, ProductSection } from "./globals.js";
 
 /**
  * Interactive API object
