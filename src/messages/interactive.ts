@@ -17,19 +17,19 @@ import { Product, ProductSection } from "./globals.js";
  */
 export class Interactive extends ClientMessage {
     /**
-     * The action component of the interactive message
+     * The action for the interactive message
      */
     readonly action: InteractiveAction;
     /**
-     * The body component of the interactive message
+     * The body for the interactive message
      */
     readonly body?: Body;
     /**
-     * The header component of the interactive message
+     * The header for the interactive message
      */
     readonly header?: Header;
     /**
-     * The footer component of the interactive message
+     * The footer for the interactive message
      */
     readonly footer?: Footer;
 
@@ -46,57 +46,123 @@ export class Interactive extends ClientMessage {
         return "interactive";
     }
 
+    /**
+     * Creates an Interactive Reply Buttons object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - The header for the interactive message, it may be undefined if not needed
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     */
     constructor(
         action: ActionButtons,
         body: Body,
         header?: Header,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive List object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - The header of type text for the interactive message, it may be undefined if not needed
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     * @throws If a header is provided and it's not of type "text"
+     */
     constructor(
         action: ActionList,
         body: Body,
         header?: Header,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive Catalog object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - Undefined
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     */
     constructor(
         action: ActionCatalog,
         body: Body,
         header?: undefined,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive Single Product object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - Undefined
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     */
     constructor(
         action: ActionProduct,
         body?: Body,
         header?: undefined,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive Multi Product object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - The header of type text for the interactive message
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     * @throws If header is not of type "text"
+     */
     constructor(
         action: ActionProductList,
         body: Body,
         header: Header,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive CTA object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - The header of type text for the interactive message, it may be undefined if not needed
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     * @throws If a header is provided and it's not of type "text"
+     */
     constructor(
         action: ActionCTA,
         body: Body,
         header?: Header,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive Flow object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message
+     * @param header - The header of type text for the interactive message, it may be undefined if not needed
+     * @param footer - The footer for the interactive message, it may be undefined if not needed
+     * @throws If a header is provided and it's not of type "text"
+     */
     constructor(
         action: ActionFlow,
         body: Body,
         header?: Header,
         footer?: Footer
     );
+    /**
+     * Creates an Interactive Flow object for the API
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body of the interactive message
+     */
     constructor(action: ActionLocation, body: Body);
 
     /**
      * Create an Interactive object for the API
      *
-     * @param action - The action component of the interactive message
-     * @param body - The body component of the interactive message, it may be undefined if not needed.
-     * @param header - The header component of the interactive message, it may be undefined if not needed.
-     * @param footer - The footer component of the interactive message, it may be undefined if not needed.
+     * @param action - The action for the interactive message
+     * @param body - The body for the interactive message, it may be undefined if not needed.
+     * @param header - The header for the interactive message, it may be undefined if not needed.
+     * @param footer - The footer for the interactive message, it may be undefined if not needed.
      * @throws If a header is provided for an {@link ActionList}, {@link ActionProductList}, {@link ActionCTA} or {@link ActionFlow} and it's not of type "text"
      */
     constructor(
