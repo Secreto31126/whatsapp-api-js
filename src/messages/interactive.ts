@@ -46,6 +46,50 @@ export class Interactive extends ClientMessage {
         return "interactive";
     }
 
+    constructor(
+        action: ActionButtons,
+        body: Body,
+        header?: Header,
+        footer?: Footer
+    );
+    constructor(
+        action: ActionList,
+        body: Body,
+        header?: Header,
+        footer?: Footer
+    );
+    constructor(
+        action: ActionCatalog,
+        body: Body,
+        header?: undefined,
+        footer?: Footer
+    );
+    constructor(
+        action: ActionProduct,
+        body?: Body,
+        header?: undefined,
+        footer?: Footer
+    );
+    constructor(
+        action: ActionProductList,
+        body: Body,
+        header: Header,
+        footer?: Footer
+    );
+    constructor(
+        action: ActionCTA,
+        body: Body,
+        header?: Header,
+        footer?: Footer
+    );
+    constructor(
+        action: ActionFlow,
+        body: Body,
+        header?: Header,
+        footer?: Footer
+    );
+    constructor(action: ActionLocation, body: Body);
+
     /**
      * Create an Interactive object for the API
      *
@@ -53,10 +97,7 @@ export class Interactive extends ClientMessage {
      * @param body - The body component of the interactive message, it may be undefined if not needed.
      * @param header - The header component of the interactive message, it may be undefined if not needed.
      * @param footer - The footer component of the interactive message, it may be undefined if not needed.
-     * @throws If body is not provided, unless action is an {@link ActionProduct} with a single product
-     * @throws If header is provided for an {@link ActionProduct} with a single product
-     * @throws If header of type text is not provided for an {@link ActionProduct} with a product list
-     * @throws If header is not of type text, unless action is an {@link ActionButtons}
+     * @throws If a header is provided for an {@link ActionList}, {@link ActionProductList}, {@link ActionCTA} or {@link ActionFlow} and it's not of type "text"
      */
     constructor(
         action: InteractiveAction,
@@ -66,18 +107,22 @@ export class Interactive extends ClientMessage {
     ) {
         super();
 
-        if (action._type !== "product" && !body)
-            throw new Error("Interactive must have a body component");
-        if (action._type === "product" && header)
+        const require_text_header: InteractiveAction["_type"][] = [
+            "list",
+            "product_list",
+            "cta_url",
+            "flow"
+        ];
+
+        if (
+            header &&
+            require_text_header.includes(action._type) &&
+            header.type !== "text"
+        ) {
             throw new Error(
-                "Interactive must not have a header component if action is a single product"
+                `Header of type text is required for ${action._type} action`
             );
-        if (action._type === "product_list" && header?.type !== "text")
-            throw new Error(
-                "Interactive must have a text header component if action is a product list"
-            );
-        if (header && action._type !== "button" && header?.type !== "text")
-            throw new Error("Interactive header must be of type text");
+        }
 
         this.type = action._type;
 
