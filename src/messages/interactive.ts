@@ -469,56 +469,80 @@ export class ActionProduct implements InteractiveAction {
      */
     readonly catalog_id: string;
     /**
-     * The product to be added to the catalog
+     * The product to show
      */
-    readonly product_retailer_id?: string;
-    /**
-     * The section to be added to the catalog
-     */
-    readonly sections?: ProductSection[];
+    readonly product_retailer_id: string;
 
     /**
      * @override
      * @internal
      */
-    get _type(): "product" | "product_list" {
-        return this.product_retailer_id ? "product" : "product_list";
+    get _type(): "product" {
+        return "product";
     }
 
     /**
-     * Builds a Multi or Single Product component for an Interactive message
+     * Builds a Single Product component for an Interactive message
      *
      * @param catalog_id - The catalog id
-     * @param products - The products to add to the catalog. It can be a _single_ Product object, or a list of ProductSections.
-     * @throws If products is a product list and more than 10 sections are provided
-     * @throws If products is a product list with more than 1 section and at least one section is missing a title
+     * @param product - The product to show in the message
      */
-    constructor(
-        catalog_id: string,
-        ...products: [Product] | AtLeastOne<ProductSection>
-    ) {
-        const is_sections = isProductSections(products);
+    constructor(catalog_id: string, product: Product) {
+        this.catalog_id = catalog_id;
+        this.product_retailer_id = product.product_retailer_id;
+    }
+}
 
-        if (is_sections) {
-            if (products.length > 1) {
-                if (products.length > 10)
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export class ActionProductList implements InteractiveAction {
+    /**
+     * The id of the catalog from where to get the products
+     */
+    readonly catalog_id: string;
+    /**
+     * The section to be added to the catalog
+     */
+    readonly sections: ProductSection[];
+
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "product_list" {
+        return "product_list";
+    }
+
+    /**
+     * Builds a Multi Product component for an Interactive message
+     *
+     * @param catalog_id - The catalog id
+     * @param sections - The product sections to show in the message
+     * @throws If more than 10 product sections are provided
+     * @throws If more than 1 product section is provided and at least one section is missing a title
+     */
+    constructor(catalog_id: string, ...sections: AtLeastOne<ProductSection>) {
+        if (sections.length > 1) {
+            if (sections.length > 10) {
+                throw new Error(
+                    "Catalog must have between 1 and 10 product sections"
+                );
+            }
+
+            for (const obj of sections) {
+                if (!obj.title) {
                     throw new Error(
-                        "Catalog must have between 1 and 10 product sections"
+                        "All sections must have a title if more than 1 section is provided"
                     );
-                for (const obj of products) {
-                    if (!obj.title) {
-                        throw new Error(
-                            "All sections must have a title if more than 1 section is provided"
-                        );
-                    }
                 }
             }
         }
 
         this.catalog_id = catalog_id;
-
-        if (is_sections) this.sections = products;
-        else this.product_retailer_id = products[0].product_retailer_id;
+        this.sections = sections;
     }
 }
 
