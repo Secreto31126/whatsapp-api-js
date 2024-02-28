@@ -319,7 +319,7 @@ export class URLComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with call to action buttons.
      *
-     * @param parameters - The variable for the url button.
+     * @param parameter - The variable for the url button.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string) {
@@ -358,7 +358,7 @@ export class PayloadComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with quick reply buttons.
      *
-     * @param parameters - Parameter for the component.
+     * @param parameter - Parameter for the component.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string) {
@@ -493,7 +493,7 @@ export class CopyComponent extends ButtonComponent {
     /**
      * Creates a button component for a Template message with copy coupon button.
      *
-     * @param parameters - The coupon's code of the button to copy.
+     * @param parameter - The coupon's code of the button to copy.
      * @throws If parameter is an empty string.
      */
     constructor(parameter: string) {
