@@ -8,7 +8,7 @@ import type {
     ServerError,
     PostData
 } from "./types";
-import type WhatsAppAPI from "./index";
+import type { WhatsAppAPI } from "./index";
 
 /**
  * Callback for "sent" event
