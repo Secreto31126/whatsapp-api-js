@@ -26,6 +26,7 @@ import type {
 } from "./emitters";
 
 import { escapeUnicode } from "./utils.js";
+import { DEFAULT_API_VERSION } from "./types.js";
 
 /**
  * The main API Class
@@ -112,7 +113,7 @@ export class WhatsAppAPI {
         token,
         appSecret,
         webhookVerifyToken,
-        v = "v19.0",
+        v,
         parsed = true,
         offload_functions = true,
         secure = true,
@@ -156,7 +157,13 @@ export class WhatsAppAPI {
         // Let's hope the user is using a valid ponyfill
         this.fetch = ponyfill.fetch || fetch;
 
-        this.v = v;
+        if (v) this.v = v;
+        else {
+            console.warn(
+                `[whatsapp-api-js] Cloud API version not defined. In production, it's strongly recommended pinning it to the desired version with the "v" argument. Defaulting to "${DEFAULT_API_VERSION}".`
+            );
+            this.v = DEFAULT_API_VERSION;
+        }
 
         this.parsed = !!parsed;
         this.offload_functions = !!offload_functions;
