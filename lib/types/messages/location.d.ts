@@ -4,7 +4,7 @@ import { ClientMessage } from "../types.js";
  *
  * @group Location
  */
-export default class Location extends ClientMessage {
+export declare class Location extends ClientMessage {
     /**
      * The latitude of the location
      */
@@ -36,5 +36,4 @@ export default class Location extends ClientMessage {
      */
     constructor(longitude: number, latitude: number, name?: string, address?: string);
 }
-export { Location };
 //# sourceMappingURL=location.d.ts.map

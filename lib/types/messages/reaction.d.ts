@@ -4,7 +4,7 @@ import { ClientMessage } from "../types.js";
  *
  * @group Reaction
  */
-export default class Reaction extends ClientMessage {
+export declare class Reaction extends ClientMessage {
     /**
      * The message's id to react to
      */
@@ -27,5 +27,4 @@ export default class Reaction extends ClientMessage {
      */
     constructor(message_id: string, emoji?: string);
 }
-export { Reaction };
 //# sourceMappingURL=reaction.d.ts.map

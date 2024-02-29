@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import WhatsAppAPI from "whatsapp-api-js";
+ * import { WhatsAppAPI } from "whatsapp-api-js";
  * import { NodeNext } from "whatsapp-api-js/setup/node";
  *
  * const Whatsapp = new WhatsAppAPI(NodeNext({
@@ -15,8 +15,8 @@
  * }));
  * ```
  */
-export { default as Bun } from "./bun";
-export { default as Deno } from "./deno";
-export { default as Web } from "./web";
+export * from "./bun";
+export * from "./deno";
+export * from "./web";
 export * from "./node";
 //# sourceMappingURL=index.d.ts.map

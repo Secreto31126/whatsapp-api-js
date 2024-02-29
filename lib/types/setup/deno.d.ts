@@ -7,5 +7,5 @@ import type { WhatsAppAPIConstructorArguments } from "../types";
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for Deno
  */
-export default function Deno(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
+export declare function Deno(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
 //# sourceMappingURL=deno.d.ts.map

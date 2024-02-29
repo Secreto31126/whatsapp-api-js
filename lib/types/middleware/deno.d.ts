@@ -1,14 +1,14 @@
-import WebStandardMiddleware from "./web-standard.js";
+import { WhatsAppAPI as WebStandardMiddleware } from "./web-standard.js";
 /**
  * Deno server middleware for WhatsAppAPI
  */
-export default class WhatsAppAPI extends WebStandardMiddleware {
+export declare class WhatsAppAPI extends WebStandardMiddleware {
     /**
      * POST request handler for Deno server
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/deno";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/deno";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -34,7 +34,7 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/deno";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/deno";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",

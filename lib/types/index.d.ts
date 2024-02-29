@@ -4,7 +4,7 @@ import type { OnMessage, OnSent, OnStatus } from "./emitters";
 /**
  * The main API Class
  */
-export default class WhatsAppAPI {
+export declare class WhatsAppAPI {
     /**
      * The API token
      */
@@ -85,8 +85,8 @@ export default class WhatsAppAPI {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
-     * import Text from "whatsapp-api-js/messages/text";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { Text } from "whatsapp-api-js/messages/text";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -121,8 +121,8 @@ export default class WhatsAppAPI {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
-     * import Text from "whatsapp-api-js/messages/text";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { Text } from "whatsapp-api-js/messages/text";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -210,7 +210,7 @@ export default class WhatsAppAPI {
      * @throws If check is set to true and the form file is too big for the file type
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
      *
      * const token = "token";
      * const appSecret = "appSecret";
@@ -245,7 +245,7 @@ export default class WhatsAppAPI {
      * @throws If url is not a valid url
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
      *
      * const token = "token";
      * const appSecret = "appSecret";
@@ -274,7 +274,7 @@ export default class WhatsAppAPI {
      * ```ts
      * // author arivanbastos on issue #114
      * // Simple http example implementation with Whatsapp.post() on Node@^19
-     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
      *
      * import { createServer } from "http";

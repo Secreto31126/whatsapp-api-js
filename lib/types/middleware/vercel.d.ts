@@ -1,9 +1,9 @@
-import NodeHTTPMiddleware from "./node-http.js";
+import { WhatsAppAPI as NodeHTTPMiddleware } from "./node-http.js";
 import type { VercelRequest } from "@vercel/node";
 /**
  * Vercel serverless functions middleware for WhatsAppAPI (Node/Next.js)
  */
-export default class WhatsAppAPI extends NodeHTTPMiddleware {
+export declare class WhatsAppAPI extends NodeHTTPMiddleware {
     /**
      * POST request handler for Vercel serverless functions
      *
@@ -13,7 +13,7 @@ export default class WhatsAppAPI extends NodeHTTPMiddleware {
      * @example
      * ```ts
      * import type { VercelRequest, VercelResponse } from "@vercel/node";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/vercel";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/vercel";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -46,7 +46,7 @@ export default class WhatsAppAPI extends NodeHTTPMiddleware {
      * @example
      * ```ts
      * import type { VercelRequest, VercelResponse } from "@vercel/node";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/vercel";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/vercel";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",

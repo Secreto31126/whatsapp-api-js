@@ -9,5 +9,5 @@ import type { WhatsAppAPIConstructorArguments } from "../types";
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for the Web
  */
-export default function Web(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
+export declare function Web(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
 //# sourceMappingURL=web.d.ts.map

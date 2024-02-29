@@ -4,7 +4,7 @@ import { ClientMessage } from "../types.js";
  *
  * @group Text
  */
-export default class Text extends ClientMessage {
+export declare class Text extends ClientMessage {
     /**
      * Body of the message. Maximum length: 4096 characters.
      */
@@ -27,5 +27,4 @@ export default class Text extends ClientMessage {
      */
     constructor(body: string, preview_url?: boolean);
 }
-export { Text };
 //# sourceMappingURL=text.d.ts.map

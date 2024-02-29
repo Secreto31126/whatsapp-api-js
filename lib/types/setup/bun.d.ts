@@ -7,5 +7,5 @@ import type { WhatsAppAPIConstructorArguments } from "../types";
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for Bun
  */
-export default function Bun(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
+export declare function Bun(settings: WhatsAppAPIConstructorArguments): WhatsAppAPIConstructorArguments;
 //# sourceMappingURL=bun.d.ts.map

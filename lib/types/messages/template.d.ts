@@ -1,6 +1,6 @@
 import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne, XOR } from "../utils";
-import type Location from "./location";
+import type { Location } from "./location";
 import type { Document, Image, Video } from "./media";
 import { Product, ProductSection } from "./globals.js";
 /**
