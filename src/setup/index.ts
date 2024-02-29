@@ -19,7 +19,7 @@
  * ```
  */
 
-export { default as Bun } from "./bun";
-export { default as Deno } from "./deno";
-export { default as Web } from "./web";
+export * from "./bun";
+export * from "./deno";
+export * from "./web";
 export * from "./node";

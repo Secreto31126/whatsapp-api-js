@@ -10,7 +10,7 @@ import type { WhatsAppAPIConstructorArguments } from "../types";
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for the Web
  */
-export default function Web(
+export function Web(
     settings: WhatsAppAPIConstructorArguments
 ): WhatsAppAPIConstructorArguments {
     return settings;
