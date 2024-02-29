@@ -580,7 +580,7 @@ export class ActionProduct implements InteractiveAction {
      */
     readonly catalog_id: string;
     /**
-     * The product to show
+     * The product to show in the message
      */
     readonly product_retailer_id: string;
 
@@ -615,7 +615,7 @@ export class ActionProductList implements InteractiveAction {
      */
     readonly catalog_id: string;
     /**
-     * The section to be added to the catalog
+     * The sections to show in the message
      */
     readonly sections: ProductSection[];
 
