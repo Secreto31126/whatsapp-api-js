@@ -7,14 +7,14 @@ import type { GetParams, PostData } from "../types";
 /**
  * AdonisJS middleware for WhatsAppAPI
  */
-export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
+export class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for AdonisJS
      *
      * @example
      * ```ts
      * import Route from "@ioc:Adonis/Core/Route";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/adonis";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/adonis";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -50,7 +50,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import Route from "@ioc:Adonis/Core/Route";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/adonis";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/adonis";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",

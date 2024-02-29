@@ -26,11 +26,12 @@ import type {
 } from "./emitters";
 
 import { escapeUnicode } from "./utils.js";
+import { DEFAULT_API_VERSION } from "./types.js";
 
 /**
  * The main API Class
  */
-export default class WhatsAppAPI {
+export class WhatsAppAPI {
     //#region Properties
     /**
      * The API token
@@ -112,7 +113,7 @@ export default class WhatsAppAPI {
         token,
         appSecret,
         webhookVerifyToken,
-        v = "v19.0",
+        v,
         parsed = true,
         offload_functions = true,
         secure = true,
@@ -156,7 +157,13 @@ export default class WhatsAppAPI {
         // Let's hope the user is using a valid ponyfill
         this.fetch = ponyfill.fetch || fetch;
 
-        this.v = v;
+        if (v) this.v = v;
+        else {
+            console.warn(
+                `[whatsapp-api-js] Cloud API version not defined. In production, it's strongly recommended pinning it to the desired version with the "v" argument. Defaulting to "${DEFAULT_API_VERSION}".`
+            );
+            this.v = DEFAULT_API_VERSION;
+        }
 
         this.parsed = !!parsed;
         this.offload_functions = !!offload_functions;
@@ -169,8 +176,8 @@ export default class WhatsAppAPI {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
-     * import Text from "whatsapp-api-js/messages/text";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { Text } from "whatsapp-api-js/messages/text";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -266,8 +273,8 @@ export default class WhatsAppAPI {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
-     * import Text from "whatsapp-api-js/messages/text";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { Text } from "whatsapp-api-js/messages/text";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -497,7 +504,7 @@ export default class WhatsAppAPI {
      * @throws If check is set to true and the form file is too big for the file type
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
      *
      * const token = "token";
      * const appSecret = "appSecret";
@@ -611,7 +618,7 @@ export default class WhatsAppAPI {
      * @throws If url is not a valid url
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
      *
      * const token = "token";
      * const appSecret = "appSecret";
@@ -665,7 +672,7 @@ export default class WhatsAppAPI {
      * ```ts
      * // author arivanbastos on issue #114
      * // Simple http example implementation with Whatsapp.post() on Node@^19
-     * import WhatsAppAPI from "whatsapp-api-js";
+     * import { WhatsAppAPI } from "whatsapp-api-js";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
      *
      * import { createServer } from "http";

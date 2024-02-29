@@ -7,7 +7,8 @@ const { equal, throws, rejects, deepEqual } = require("assert");
 const { spy: sinon_spy, assert: sinon_assert } = require("sinon");
 
 // Import the module
-const WhatsAppAPI = require("../lib/cjs").default;
+const { WhatsAppAPI } = require("../lib/cjs/middleware/node-http");
+const { DEFAULT_API_VERSION } = require("../lib/cjs/types");
 const { Text } = require("../lib/cjs/messages/text");
 
 // Mock the https requests
@@ -27,6 +28,7 @@ const { subtle } = require("node:crypto").webcrypto; // Assert availability in n
 setGlobalDispatcher(agent);
 
 describe("WhatsAppAPI", function () {
+    const v = "v13.0";
     const token = "YOUR_ACCESS_TOKEN";
     const appSecret = "YOUR_APP_SECRET";
     const webhookVerifyToken = "YOUR_WEBHOOK_VERIFY_TOKEN";
@@ -34,6 +36,7 @@ describe("WhatsAppAPI", function () {
     describe("Token", function () {
         it("should create a WhatsAppAPI object with the token", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 ponyfill: {
@@ -48,6 +51,7 @@ describe("WhatsAppAPI", function () {
     describe("App secret", function () {
         it("should create a WhatsAppAPI object with the appSecret", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 ponyfill: {
@@ -62,6 +66,7 @@ describe("WhatsAppAPI", function () {
     describe("Webhook verify token", function () {
         it("should work with any specified webhook verify token", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 webhookVerifyToken,
@@ -75,7 +80,7 @@ describe("WhatsAppAPI", function () {
     });
 
     describe("Version", function () {
-        it("should work with v19.0 as default", function () {
+        it("should work with DEFAULT_API_VERSION as default (and log warning)", function () {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
@@ -84,20 +89,20 @@ describe("WhatsAppAPI", function () {
                     subtle
                 }
             });
-            equal(Whatsapp.v, "v19.0");
+            equal(Whatsapp.v, DEFAULT_API_VERSION);
         });
 
         it("should work with any specified version", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
-                v: "v13.0",
                 ponyfill: {
                     fetch: undici_fetch,
                     subtle
                 }
             });
-            equal(Whatsapp.v, "v13.0");
+            equal(Whatsapp.v, v);
         });
     });
 
@@ -109,6 +114,7 @@ describe("WhatsAppAPI", function () {
                 }
 
                 const Whatsapp = new WhatsAppAPI({
+                    v,
                     token,
                     appSecret,
                     ponyfill: {
@@ -122,6 +128,7 @@ describe("WhatsAppAPI", function () {
             it("should work with any specified ponyfill", function () {
                 const spy = sinon_spy();
                 const Whatsapp = new WhatsAppAPI({
+                    v,
                     token,
                     appSecret,
                     ponyfill: {
@@ -145,6 +152,7 @@ describe("WhatsAppAPI", function () {
                 }
 
                 const Whatsapp = new WhatsAppAPI({
+                    v,
                     token,
                     appSecret,
                     ponyfill: {
@@ -158,6 +166,7 @@ describe("WhatsAppAPI", function () {
             it("should work with any specified ponyfill", function () {
                 const spy = subtle;
                 const Whatsapp = new WhatsAppAPI({
+                    v,
                     token,
                     appSecret,
                     ponyfill: {
@@ -174,6 +183,7 @@ describe("WhatsAppAPI", function () {
     describe("Parsed", function () {
         it("should set parsed to true by default", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 ponyfill: {
@@ -186,6 +196,7 @@ describe("WhatsAppAPI", function () {
 
         it("should be able to set parsed to true", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 parsed: true,
@@ -199,6 +210,7 @@ describe("WhatsAppAPI", function () {
 
         it("should be able to set parsed to false", function () {
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 parsed: false,
@@ -245,6 +257,7 @@ describe("WhatsAppAPI", function () {
         let spy_on_sent;
         this.beforeEach(function () {
             Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 ponyfill: {
@@ -428,6 +441,7 @@ describe("WhatsAppAPI", function () {
         };
 
         const Whatsapp = new WhatsAppAPI({
+            v,
             token,
             appSecret,
             ponyfill: {
@@ -658,6 +672,7 @@ describe("WhatsAppAPI", function () {
         const code = "something_random";
 
         const Whatsapp = new WhatsAppAPI({
+            v,
             token,
             appSecret,
             ponyfill: {
@@ -1000,6 +1015,7 @@ describe("WhatsAppAPI", function () {
         const id = "2";
 
         const Whatsapp = new WhatsAppAPI({
+            v,
             token,
             appSecret,
             ponyfill: {
@@ -1465,6 +1481,7 @@ describe("WhatsAppAPI", function () {
             };
 
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 webhookVerifyToken,
@@ -1568,6 +1585,7 @@ describe("WhatsAppAPI", function () {
             );
 
             const Whatsapp = new WhatsAppAPI({
+                v,
                 token,
                 appSecret,
                 ponyfill: {
@@ -1922,6 +1940,7 @@ describe("WhatsAppAPI", function () {
 
     describe("_authenicatedRequest", function () {
         const Whatsapp = new WhatsAppAPI({
+            v,
             token,
             appSecret,
             ponyfill: {

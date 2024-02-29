@@ -5,7 +5,7 @@ import { ClientMessage } from "../types.js";
  *
  * @group Location
  */
-export default class Location extends ClientMessage {
+export class Location extends ClientMessage {
     /**
      * The latitude of the location
      */
@@ -52,5 +52,3 @@ export default class Location extends ClientMessage {
         if (address) this.address = address;
     }
 }
-
-export { Location };

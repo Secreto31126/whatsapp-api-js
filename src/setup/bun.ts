@@ -8,7 +8,7 @@ import type { WhatsAppAPIConstructorArguments } from "../types";
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for Bun
  */
-export default function Bun(
+export function Bun(
     settings: WhatsAppAPIConstructorArguments
 ): WhatsAppAPIConstructorArguments {
     return settings;

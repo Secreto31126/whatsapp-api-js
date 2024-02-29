@@ -1,15 +1,15 @@
-import WebStandardMiddleware from "./web-standard.js";
+import { WhatsAppAPI as WebStandardMiddleware } from "./web-standard.js";
 
 /**
  * Bun server middleware for WhatsAppAPI
  */
-export default class WhatsAppAPI extends WebStandardMiddleware {
+export class WhatsAppAPI extends WebStandardMiddleware {
     /**
      * POST request handler for Bun server
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/bun";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/bun";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -38,7 +38,7 @@ export default class WhatsAppAPI extends WebStandardMiddleware {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/bun";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/bun";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",

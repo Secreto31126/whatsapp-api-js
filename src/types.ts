@@ -9,6 +9,8 @@
 
 import type { AtLeastOne } from "./utils";
 
+export const DEFAULT_API_VERSION = "v19.0";
+
 /**
  * The main constructor arguments for the API
  */
@@ -60,7 +62,7 @@ export type TheBasicConstructorArguments = {
      */
     webhookVerifyToken?: string;
     /**
-     * The version of the API, defaults to v19.0
+     * The version of the API, defaults to {@link DEFAULT_API_VERSION}.
      */
     v?: string;
     /**
@@ -180,6 +182,7 @@ export abstract class ClientLimitedMessageComponent<T, N extends number> {
      * @param c - The component name
      * @param a - The array to check the length of
      * @param n - The maximum length
+     * @throws `${p} can't have more than ${n} ${c}`
      */
     constructor(p: string, c: string, a: Array<T>, n: N) {
         if (a.length > n) {

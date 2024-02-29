@@ -5,7 +5,7 @@ import { ClientMessage } from "../types.js";
  *
  * @group Text
  */
-export default class Text extends ClientMessage {
+export class Text extends ClientMessage {
     /**
      * Body of the message. Maximum length: 4096 characters.
      */
@@ -38,5 +38,3 @@ export default class Text extends ClientMessage {
         if (preview_url) this.preview_url = preview_url;
     }
 }
-
-export { Text };
