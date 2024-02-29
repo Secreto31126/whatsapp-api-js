@@ -5,7 +5,7 @@ import { ClientMessage } from "../types.js";
  *
  * @group Reaction
  */
-export default class Reaction extends ClientMessage {
+export class Reaction extends ClientMessage {
     /**
      * The message's id to react to
      */
@@ -40,5 +40,3 @@ export default class Reaction extends ClientMessage {
         this.emoji = emoji;
     }
 }
-
-export { Reaction };
