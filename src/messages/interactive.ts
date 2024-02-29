@@ -609,7 +609,10 @@ export class ActionProduct implements InteractiveAction {
  *
  * @group Interactive
  */
-export class ActionProductList implements InteractiveAction {
+export class ActionProductList
+    extends ClientLimitedMessageComponent<ProductSection, 10>
+    implements InteractiveAction
+{
     /**
      * The id of the catalog from where to get the products
      */
@@ -636,13 +639,9 @@ export class ActionProductList implements InteractiveAction {
      * @throws If more than 1 product section is provided and at least one section is missing a title
      */
     constructor(catalog_id: string, ...sections: AtLeastOne<ProductSection>) {
-        if (sections.length > 1) {
-            if (sections.length > 10) {
-                throw new Error(
-                    "Catalog must have between 1 and 10 product sections"
-                );
-            }
+        super("ActionProductList", "sections", sections, 10);
 
+        if (sections.length > 1) {
             for (const obj of sections) {
                 if (!obj.title) {
                     throw new Error(
