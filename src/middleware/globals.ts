@@ -1,4 +1,4 @@
-import WhatsAppAPI from "../index.js";
+import { WhatsAppAPI } from "../index.js";
 
 /**
  * The abstract class for the middlewares, it extends the WhatsAppAPI class

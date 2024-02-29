@@ -7,7 +7,7 @@ import type { GetParams } from "../types";
 /**
  * Express.js middleware for WhatsAppAPI
  */
-export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
+export class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for Express.js
      *
@@ -18,7 +18,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import express from "express";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/express";
      *
      * const app = express();
      * const Whatsapp = new WhatsAppAPI({
@@ -60,7 +60,7 @@ export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import express from "express";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/express";
      *
      * const app = express();
      * const Whatsapp = new WhatsAppAPI({

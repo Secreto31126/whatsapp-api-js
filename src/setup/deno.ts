@@ -8,7 +8,7 @@ import type { WhatsAppAPIConstructorArguments } from "../types";
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for Deno
  */
-export default function Deno(
+export function Deno(
     settings: WhatsAppAPIConstructorArguments
 ): WhatsAppAPIConstructorArguments {
     return settings;
