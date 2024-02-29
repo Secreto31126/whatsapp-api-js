@@ -30,7 +30,7 @@ import { escapeUnicode } from "./utils.js";
 /**
  * The main API Class
  */
-export default class WhatsAppAPI {
+export class WhatsAppAPI {
     //#region Properties
     /**
      * The API token
