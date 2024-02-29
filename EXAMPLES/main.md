@@ -3,7 +3,7 @@
 ## Simple Whatsapp creation
 
 ```ts
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 
 const Whatsapp = new WhatsAppAPI({
     token: "",
@@ -14,7 +14,7 @@ const Whatsapp = new WhatsAppAPI({
 ## Using the setup helpers
 
 ```ts
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 import { Node18 } from "whatsapp-api-js/setup/node";
 
 const Whatsapp = new WhatsAppAPI(
@@ -29,7 +29,7 @@ const Whatsapp = new WhatsAppAPI(
 
 ```ts
 import express from "express";
-import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+import { WhatsAppAPI } from "whatsapp-api-js/middleware/express";
 
 const Whatsapp = new WhatsAppAPI({
     token: "",
@@ -60,6 +60,6 @@ Whatsapp.sendMessage(
 
 ## Documentation
 
-https://whatsappapijs.web.app/classes/WhatsAppAPI.default.html
+https://whatsappapijs.web.app/classes/WhatsAppAPI.WhatsAppAPI.html
 https://whatsappapijs.web.app/modules/setup.html
 https://whatsappapijs.web.app/modules/middleware.html

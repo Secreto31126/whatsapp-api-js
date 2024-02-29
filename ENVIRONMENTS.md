@@ -9,14 +9,13 @@ helpers for the most popular choices.
 If using ESM, you can import the module like this:
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 ```
 
-If using CommonJS, you can require the package, although you will need to use
-the default export:
+If using CommonJS, you can require the package:
 
 ```js
-const WhatsAppAPI = require("whatsapp-api-js").default;
+const { WhatsAppAPI } = require("whatsapp-api-js");
 ```
 
 For each version of Node, you can use the `setup` function to simplify the
@@ -25,7 +24,7 @@ process.
 -   Node 19 and above (using Express and it's middleware):
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+import { WhatsAppAPI } from "whatsapp-api-js/middleware/express";
 import { NodeNext } from "whatsapp-api-js/setup/node";
 
 import express from "express";
@@ -47,7 +46,7 @@ app.post("/message", async (req, res) => {
 -   Node 18:
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 import { Node18 } from "whatsapp-api-js/setup/node";
 
 const Whatsapp = new WhatsAppAPI(
@@ -61,7 +60,7 @@ const Whatsapp = new WhatsAppAPI(
 -   Node 15 to 17 (deprecated):
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 import { Node15 } from "whatsapp-api-js/setup/node";
 
 // As fetch isn't available until Node 18, you will need to pass a ponyfill as a parameter
@@ -84,7 +83,7 @@ With the release of Deno 1.25.0, now you can import npm modules directly to
 Deno. It's really simple to use:
 
 ```js
-import WhatsAppAPI from "npm:whatsapp-api-js";
+import { WhatsAppAPI } from "npm:whatsapp-api-js";
 ```
 
 If you want to use prior versions of Deno, use
@@ -94,8 +93,8 @@ code.
 Deno also counts with setup and middleware helpers:
 
 ```js
-import WhatsAppAPI from "npm:whatsapp-api-js/middleware/deno";
-import Deno from "whatsapp-api-js/setup/deno";
+import { WhatsAppAPI } from "npm:whatsapp-api-js/middleware/deno";
+import { Deno } from "whatsapp-api-js/setup/deno";
 
 const Whatsapp = new WhatsAppAPI(
     Deno({
@@ -122,8 +121,8 @@ bun install whatsapp-api-js
 ```
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js/middleware/bun";
-import Bun from "whatsapp-api-js/setup/bun";
+import { WhatsAppAPI } from "whatsapp-api-js/middleware/bun";
+import { Bun } from "whatsapp-api-js/setup/bun";
 
 const Whatsapp = new WhatsAppAPI(
     Bun({
@@ -147,7 +146,7 @@ HTML module example:
 
 ```html
 <script type="module">
-    import WhatsAppAPI from "https://esm.sh/whatsapp-api-js";
+    import { WhatsAppAPI } from "https://esm.sh/whatsapp-api-js";
     <!-- Please, never use your API tokens in a website, use this method wisely -->
 </script>
 ```
