@@ -1,5 +1,19 @@
 # Breaking changes
 
+## 3.0.0
+
+In the last few years, the library has been growing and changing, and
+with that, not only new functionalities are added, but also new bugs
+are created, which sometimes require breaking changes to be fixed. This
+version is one of those cases.
+
+### Once again, classes splitted and renamed
+
+In order to improve the typing in Interactive's constructor, the
+`ActionProduct` class was splitted into `ActionProduct` and
+`ActionProductList`. If you are using the former to send multi product
+messages, updating is as simple as renaming the class to the new one.
+
 ## 2.0.0
 
 ### Classes renamed, splitted and moved
