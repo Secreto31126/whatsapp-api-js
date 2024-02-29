@@ -3,6 +3,7 @@ import type { AtLeastOne } from "../utils";
 /**
  * TS knowledge intensifies
  * @internal
+ * @deprecated - Unused with the release of ActionProductList
  */
 export declare function isProductSections(obj: unknown[]): obj is ProductSection[];
 /**
