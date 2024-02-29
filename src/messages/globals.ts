@@ -4,6 +4,7 @@ import type { AtLeastOne } from "../utils";
 /**
  * TS knowledge intensifies
  * @internal
+ * @deprecated - Unused with the release of ActionProductList
  */
 export function isProductSections(obj: unknown[]): obj is ProductSection[] {
     return obj[0] instanceof ProductSection;
