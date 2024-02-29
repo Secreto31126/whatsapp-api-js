@@ -7,6 +7,7 @@
  * feel free to read the docs :)
  */
 import type { AtLeastOne } from "./utils";
+export declare const DEFAULT_API_VERSION = "v19.0";
 /**
  * The main constructor arguments for the API
  */
@@ -58,7 +59,7 @@ export type TheBasicConstructorArguments = {
      */
     webhookVerifyToken?: string;
     /**
-     * The version of the API, defaults to v19.0
+     * The version of the API, defaults to {@link DEFAULT_API_VERSION}.
      */
     v?: string;
     /**
