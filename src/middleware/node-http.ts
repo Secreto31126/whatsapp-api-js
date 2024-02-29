@@ -9,7 +9,7 @@ import type { GetParams } from "../types";
 /**
  * node:http server middleware for WhatsAppAPI
  */
-export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
+export class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for node:http server
      *

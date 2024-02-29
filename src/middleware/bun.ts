@@ -1,9 +1,9 @@
-import WebStandardMiddleware from "./web-standard.js";
+import { WhatsAppAPI as WebStandardMiddleware } from "./web-standard.js";
 
 /**
  * Bun server middleware for WhatsAppAPI
  */
-export default class WhatsAppAPI extends WebStandardMiddleware {
+export class WhatsAppAPI extends WebStandardMiddleware {
     /**
      * POST request handler for Bun server
      *

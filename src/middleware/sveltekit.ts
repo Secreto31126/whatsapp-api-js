@@ -1,11 +1,11 @@
-import WebStandardMiddleware from "./web-standard.js";
+import { WhatsAppAPI as WebStandardMiddleware } from "./web-standard.js";
 
 /**
  * SvelteKit Endpoints middleware for WhatsAppAPI
  *
  * @see https://kit.svelte.dev/docs/routing#server
  */
-export default class WhatsAppAPI extends WebStandardMiddleware {
+export class WhatsAppAPI extends WebStandardMiddleware {
     /**
      * POST request handler for SvelteKit RequestHandler
      *

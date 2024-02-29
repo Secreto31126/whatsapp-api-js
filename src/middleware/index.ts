@@ -32,11 +32,11 @@
  */
 
 export { WhatsAppAPIMiddleware } from "./globals.js";
-export { default as ExpressMiddleware } from "./express.js";
-export { default as AdonisMiddleware } from "./adonis.js";
-export { default as VercelMiddleware } from "./vercel.js";
-export { default as DenoMiddleware } from "./deno.js";
-export { default as BunMiddleware } from "./bun.js";
-export { default as SvelteKitMiddleware } from "./sveltekit.js";
-export { default as WebStandardMiddleware } from "./web-standard.js";
-export { default as NodeHTTPMiddleware } from "./node-http.js";
+export { WhatsAppAPI as ExpressMiddleware } from "./express.js";
+export { WhatsAppAPI as AdonisMiddleware } from "./adonis.js";
+export { WhatsAppAPI as VercelMiddleware } from "./vercel.js";
+export { WhatsAppAPI as DenoMiddleware } from "./deno.js";
+export { WhatsAppAPI as BunMiddleware } from "./bun.js";
+export { WhatsAppAPI as SvelteKitMiddleware } from "./sveltekit.js";
+export { WhatsAppAPI as WebStandardMiddleware } from "./web-standard.js";
+export { WhatsAppAPI as NodeHTTPMiddleware } from "./node-http.js";

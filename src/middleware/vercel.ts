@@ -1,4 +1,4 @@
-import NodeHTTPMiddleware from "./node-http.js";
+import { WhatsAppAPI as NodeHTTPMiddleware } from "./node-http.js";
 import { isInteger } from "../utils.js";
 
 import type { VercelRequest } from "@vercel/node";
@@ -7,7 +7,7 @@ import type { GetParams } from "../types.js";
 /**
  * Vercel serverless functions middleware for WhatsAppAPI (Node/Next.js)
  */
-export default class WhatsAppAPI extends NodeHTTPMiddleware {
+export class WhatsAppAPI extends NodeHTTPMiddleware {
     /**
      * POST request handler for Vercel serverless functions
      *

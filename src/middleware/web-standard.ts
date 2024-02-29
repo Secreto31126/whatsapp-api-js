@@ -6,7 +6,7 @@ import type { GetParams } from "../types";
 /**
  * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/Hono)
  */
-export default class WhatsAppAPI extends WhatsAppAPIMiddleware {
+export class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
      * POST request handler for Web Standard API http server
      *
