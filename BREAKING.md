@@ -41,6 +41,13 @@ In order to improve the typing in Interactive's constructor, the
 `ActionProductList`. If you are using the former to send multi product
 messages, updating is as simple as renaming the class to the new one.
 
+### Version pinning warning
+
+Although not a breaking change, it's worth mentioning that the library
+will now show a warning if the API version is not pinned. This is to
+encourage good practices and avoid unexpected changes in the API
+at production.
+
 ## 2.0.0
 
 ### Classes renamed, splitted and moved
