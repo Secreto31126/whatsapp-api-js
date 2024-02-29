@@ -17,7 +17,7 @@ export class WhatsAppAPI extends NodeHTTPMiddleware {
      * @example
      * ```ts
      * import type { VercelRequest, VercelResponse } from "@vercel/node";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/vercel";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/vercel";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -53,7 +53,7 @@ export class WhatsAppAPI extends NodeHTTPMiddleware {
      * @example
      * ```ts
      * import type { VercelRequest, VercelResponse } from "@vercel/node";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/vercel";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/vercel";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",

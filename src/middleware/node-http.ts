@@ -16,7 +16,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/node-http";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/node-http";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -77,7 +77,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import { createServer, IncomingMessage, ServerResponse } from 'node:http';
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/node-http";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/node-http";
      *
      * const server = createServer((request: IncomingMessage, response: ServerResponse) => {
      *     if (request.url === "/message" && request.method === "GET") {

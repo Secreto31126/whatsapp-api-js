@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import WhatsAppAPI from "whatsapp-api-js";
+ * import { WhatsAppAPI } from "whatsapp-api-js";
  * import { NodeNext } from "whatsapp-api-js/setup/node";
  *
  * const Whatsapp = new WhatsAppAPI(NodeNext({

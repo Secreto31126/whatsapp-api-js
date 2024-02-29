@@ -9,7 +9,7 @@ export class WhatsAppAPI extends WebStandardMiddleware {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/bun";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/bun";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",
@@ -38,7 +38,7 @@ export class WhatsAppAPI extends WebStandardMiddleware {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/bun";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/bun";
      *
      * const Whatsapp = new WhatsAppAPI({
      *     token: "YOUR_TOKEN",

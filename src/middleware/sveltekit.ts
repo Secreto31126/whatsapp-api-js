@@ -11,7 +11,7 @@ export class WhatsAppAPI extends WebStandardMiddleware {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from 'whatsapp-api-js/middleware/sveltekit';
+     * import { WhatsAppAPI } from 'whatsapp-api-js/middleware/sveltekit';
      *
      * import type { RequestHandler } from './$types';
      *
@@ -40,7 +40,7 @@ export class WhatsAppAPI extends WebStandardMiddleware {
      *
      * @example
      * ```ts
-     * import WhatsAppAPI from 'whatsapp-api-js/middleware/sveltekit';
+     * import { WhatsAppAPI } from 'whatsapp-api-js/middleware/sveltekit';
      *
      * import type { RequestHandler } from './$types';
      *

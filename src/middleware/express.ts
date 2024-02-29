@@ -18,7 +18,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import express from "express";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/express";
      *
      * const app = express();
      * const Whatsapp = new WhatsAppAPI({
@@ -60,7 +60,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @example
      * ```ts
      * import express from "express";
-     * import WhatsAppAPI from "whatsapp-api-js/middleware/express";
+     * import { WhatsAppAPI } from "whatsapp-api-js/middleware/express";
      *
      * const app = express();
      * const Whatsapp = new WhatsAppAPI({

@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import WhatsAppAPI from "whatsapp-api-js/middleware/deno";
+ * import { WhatsAppAPI } from "whatsapp-api-js/middleware/deno";
  *
  * const Whatsapp = new WhatsAppAPI({
  *     token: "YOUR_TOKEN",
