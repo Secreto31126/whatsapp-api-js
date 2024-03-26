@@ -1,4 +1,4 @@
-# whatsapp-api-js v2
+# whatsapp-api-js v3
 
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
