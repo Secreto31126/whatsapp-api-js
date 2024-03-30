@@ -11,7 +11,7 @@ version is one of those cases.
 
 Due to interoperability issues between ESM and CJS, all the default
 exports were removed to assure a consistent behavior across all
-runtimes. The list of imports affected by this change is:
+runtimes. The list of affected imports by this change is:
 
 -   `whatsapp-api-js`
 -   `whatsapp-api-js/messages/location`
