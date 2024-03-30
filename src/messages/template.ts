@@ -2,7 +2,8 @@ import {
     ClientMessage,
     ClientLimitedMessageComponent,
     type ClientBuildableMessageComponent,
-    type ClientTypedMessageComponent
+    type ClientTypedMessageComponent,
+    type TemplateComponent
 } from "../types.js";
 import type { AtLeastOne, XOR } from "../utils";
 
@@ -73,15 +74,7 @@ export class Template extends ClientMessage {
     /**
      * The components of the template
      */
-    readonly components?: Array<
-        NonNullable<
-            | HeaderComponent
-            | BodyComponent
-            | ButtonComponent
-            | CarouselComponent
-            | LTOComponent
-        >
-    >;
+    readonly components?: Array<NonNullable<TemplateComponent>>;
 
     /**
      * @override
@@ -102,13 +95,7 @@ export class Template extends ClientMessage {
     constructor(
         name: string,
         language: string | Language,
-        ...components: (
-            | HeaderComponent
-            | BodyComponent
-            | ButtonComponent
-            | CarouselComponent
-            | LTOComponent
-        )[]
+        ...components: TemplateComponent[]
     ) {
         super();
         this.name = name;
@@ -123,7 +110,7 @@ export class Template extends ClientMessage {
             };
             this.components = components
                 .map((cmpt) => cmpt._build(pointers))
-                .filter((e) => !!e);
+                .filter((e) => !!e) as NonNullable<TemplateComponent>[];
         }
     }
 
@@ -258,9 +245,7 @@ export class DateTime implements ClientTypedMessageComponent {
  *
  * @group Template
  */
-export abstract class ButtonComponent
-    implements ClientBuildableMessageComponent
-{
+export abstract class ButtonComponent implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -594,7 +579,7 @@ export class SkipButtonComponent extends ButtonComponent {
  *
  * @group Template
  */
-export class HeaderComponent implements ClientBuildableMessageComponent {
+export class HeaderComponent implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -717,7 +702,7 @@ export class HeaderParameter {
  *
  * @group Template
  */
-export class BodyComponent implements ClientBuildableMessageComponent {
+export class BodyComponent implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -817,7 +802,7 @@ export class BodyParameter {
  */
 export class CarouselComponent
     extends ClientLimitedMessageComponent<CarouselCard, 10>
-    implements ClientBuildableMessageComponent
+    implements TemplateComponent
 {
     /**
      * The type of the component
@@ -910,7 +895,7 @@ export class CarouselCard implements ClientBuildableMessageComponent {
  *
  * @group Template
  */
-export class LTOComponent implements ClientBuildableMessageComponent {
+export class LTOComponent implements TemplateComponent {
     /**
      * The type of the component
      */

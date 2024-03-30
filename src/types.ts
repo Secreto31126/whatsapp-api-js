@@ -308,6 +308,8 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
         | "location_request_message";
 }
 
+export interface TemplateComponent extends ClientBuildableMessageComponent {}
+
 export type ClientMessageNames =
     | "text"
     | "audio"
