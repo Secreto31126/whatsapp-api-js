@@ -34,6 +34,15 @@ export class Location extends ClientMessage {
     /**
      * Create a Location object for the API
      *
+     * @example
+     * ```ts
+     * import { Location } from "whatsapp-api-js/messages";
+     *
+     * const location_message = new Location(0, 0);
+     *
+     * const location_named_message = new Location(0, 0, "My Store", "Address");
+     * ```
+     *
      * @param longitude - Longitude of the location
      * @param latitude - Latitude of the location
      * @param name - Name of the location

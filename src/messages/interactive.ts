@@ -49,6 +49,24 @@ export class Interactive extends ClientMessage {
     /**
      * Creates an Interactive Reply Buttons object for the API
      *
+     * @example
+     * ```ts
+     * import {
+     *     Interactive,
+     *     ActionButtons,
+     *     Button,
+     *     Body
+     * } from "whatsapp-api-js/messages";
+     *
+     * const interactive_button_message = new Interactive(
+     *     new ActionButtons(
+     *         new Button("reply_1", "Hello"),
+     *         new Button("reply_2", "World")
+     *     ),
+     *     new Body("Hello World")
+     * );
+     * ```
+     *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
      * @param header - The header for the interactive message, it may be undefined if not needed
@@ -62,6 +80,23 @@ export class Interactive extends ClientMessage {
     );
     /**
      * Creates an Interactive List object for the API
+     *
+     * @example
+     * ```ts
+     * import { Interactive, ActionList, Row, Body } from "whatsapp-api-js/messages";
+     *
+     * const interactive_list_message = new Interactive(
+     *     new ActionList(
+     *         "Button text",
+     *         new ListSection(
+     *             "Section title",
+     *             new Row("reply_1", "Hello", "Hello description"),
+     *             new Row("reply_2", "World", "World description")
+     *         )
+     *     ),
+     *     new Body("Hello World")
+     * );
+     * ```
      *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
@@ -78,6 +113,21 @@ export class Interactive extends ClientMessage {
     /**
      * Creates an Interactive Catalog object for the API
      *
+     * @example
+     * ```ts
+     * import {
+     *     Interactive,
+     *     ActionCatalog,
+     *     Product,
+     *     Body
+     * } from "whatsapp-api-js/messages";
+     *
+     * const interactive_catalog_message = new Interactive(
+     *     new ActionCatalog(new Product("hello")),
+     *     new Body("Hello World")
+     * );
+     * ```
+     *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
      * @param header - Undefined
@@ -92,6 +142,15 @@ export class Interactive extends ClientMessage {
     /**
      * Creates an Interactive Single Product object for the API
      *
+     * @example
+     * ```ts
+     * import { Interactive, ActionProduct, Product } from "whatsapp-api-js/messages";
+     *
+     * const interactive_single_product_message = new Interactive(
+     *     new ActionProduct("catalog_id", new Product("product_id"))
+     * );
+     * ```
+     *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
      * @param header - Undefined
@@ -105,6 +164,29 @@ export class Interactive extends ClientMessage {
     );
     /**
      * Creates an Interactive Multi Product object for the API
+     *
+     * @example
+     * ```ts
+     * import {
+     *     Interactive,
+     *     ActionProductList,
+     *     ProductSection,
+     *     Product
+     * } from "whatsapp-api-js/messages";
+     *
+     * const interactive_multi_product_message = new Interactive(
+     *     new ActionProductList(
+     *         "catalog_id",
+     *         new ProductSection(
+     *             "Product section title",
+     *             new Product("product_id"),
+     *             new Product("product_id")
+     *         )
+     *     ),
+     *     new Body("Hello World"),
+     *     new Header("Hello World Header")
+     * );
+     * ```
      *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
@@ -121,6 +203,16 @@ export class Interactive extends ClientMessage {
     /**
      * Creates an Interactive CTA object for the API
      *
+     * @example
+     * ```ts
+     * import { Interactive, ActionCTA, Body } from "whatsapp-api-js/messages";
+     *
+     * const interactive_catalog_message = new Interactive(
+     *     new ActionCTA("Open Google", "https://google.com"),
+     *     new Body("You should google it")
+     * );
+     * ```
+     *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
      * @param header - The header of type text for the interactive message, it may be undefined if not needed
@@ -136,6 +228,47 @@ export class Interactive extends ClientMessage {
     /**
      * Creates an Interactive Flow object for the API
      *
+     * @example
+     * ```ts
+     * import {
+     *     Interactive,
+     *     ActionNavigateFlow,
+     *     Body
+     * } from "whatsapp-api-js/messages";
+     *
+     * const interactive_navigate_flow_message = new Interactive(
+     *     new ActionNavigateFlow(
+     *         "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+     *         "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+     *         "Hello World",
+     *         "form_screen",
+     *         {
+     *             name: "John Doe",
+     *             age: 42
+     *         }
+     *     ),
+     *     new Body("How was your experience today?")
+     * );
+     * ```
+     *
+     * @example
+     * ```ts
+     * import {
+     *     Interactive,
+     *     ActionDataExchangeFlow,
+     *     Body
+     * } from "whatsapp-api-js/messages";
+     *
+     * const interactive_data_exchange_flow_message = new Interactive(
+     *     new ActionDataExchangeFlow(
+     *         "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+     *         "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+     *         "Hello World"
+     *     ),
+     *     new Body("Hello World")
+     * );
+     * ```
+     *
      * @param action - The action for the interactive message
      * @param body - The body for the interactive message
      * @param header - The header of type text for the interactive message, it may be undefined if not needed
@@ -149,7 +282,17 @@ export class Interactive extends ClientMessage {
         footer?: Footer
     );
     /**
-     * Creates an Interactive Flow object for the API
+     * Creates an Interactive Location request object for the API
+     *
+     * @example
+     * ```ts
+     * import { Interactive, ActionLocation, Body } from "whatsapp-api-js/messages";
+     *
+     * const interactive_catalog_message = new Interactive(
+     *     new ActionLocation(),
+     *     new Body("Show me where you live")
+     * );
+     * ```
      *
      * @param action - The action for the interactive message
      * @param body - The body of the interactive message

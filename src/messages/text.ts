@@ -26,6 +26,15 @@ export class Text extends ClientMessage {
     /**
      * Create a Text object for the API
      *
+     * @example
+     * ```ts
+     * import { Text } from "whatsapp-api-js/messages";
+     *
+     * const text_message = new Text("Hello world!");
+     *
+     * const text_preview_message = new Text("Hello URL!", true);
+     * ```
+     *
      * @param body - The content of the text message which can contain formatting and URLs which begin with http:// or https://
      * @param preview_url - By default, WhatsApp recognizes URLs and makes them clickable, but you can also include a preview box with more information about the link. Set this field to true if you want to include a URL preview box.
      * @throws If body is over 4096 characters

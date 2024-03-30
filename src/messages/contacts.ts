@@ -42,6 +42,25 @@ export class Contacts extends ClientMessage {
     /**
      * Create a Contacts object for the API
      *
+     * @example
+     * ```ts
+     * import { Contacts, Name, Address, Phone } from "whatsapp-api-js/messages";
+     *
+     * const contact_message = new Contacts([
+     *     new Name("John Doe", "John", "Doe", undefined, "Mr.", "Jr."),
+     *     new Address(
+     *         "United States",
+     *         "US",
+     *         "FL",
+     *         "Miami",
+     *         "221B Baker Street",
+     *         "33101",
+     *         "Mystery"
+     *     ),
+     *     new Phone("+123456789", "Mystery", "123456789")
+     * ]);
+     * ```
+     *
      * @param contact - Array of contact's components
      * @throws If contact contains multiple of the same components and _many is set to false (for example, Name, Birthday and Organization)
      */
