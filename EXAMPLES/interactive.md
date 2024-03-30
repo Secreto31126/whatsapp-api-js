@@ -148,7 +148,7 @@ import { Interactive, ActionLocation, Body } from "whatsapp-api-js/messages";
 
 const interactive_catalog_message = new Interactive(
     new ActionLocation(),
-    new Body("You should google it")
+    new Body("Show me where you live")
 );
 ```
 
