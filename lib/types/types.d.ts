@@ -240,6 +240,8 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
      */
     get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message";
 }
+export interface TemplateComponent extends ClientBuildableMessageComponent {
+}
 export type ClientMessageNames = "text" | "audio" | "document" | "image" | "sticker" | "video" | "location" | "contacts" | "interactive" | "template" | "reaction";
 export type ClientMessageRequest = {
     /**

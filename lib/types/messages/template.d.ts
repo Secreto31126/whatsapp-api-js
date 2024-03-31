@@ -1,4 +1,4 @@
-import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent } from "../types.js";
+import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent, type TemplateComponent } from "../types.js";
 import type { AtLeastOne, XOR } from "../utils";
 import type { Location } from "./location";
 import type { Document, Image, Video } from "./media";
@@ -60,7 +60,7 @@ export declare class Template extends ClientMessage {
     /**
      * The components of the template
      */
-    readonly components?: Array<NonNullable<HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent | LTOComponent>>;
+    readonly components?: Array<NonNullable<TemplateComponent>>;
     /**
      * @override
      * @internal
@@ -74,7 +74,7 @@ export declare class Template extends ClientMessage {
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
      * @throws If the template isn't text-based (only one {@link BodyComponent} is given) and one of the parameters is a string and it's over 1024 characters.
      */
-    constructor(name: string, language: string | Language, ...components: (HeaderComponent | BodyComponent | ButtonComponent | CarouselComponent | LTOComponent)[]);
+    constructor(name: string, language: string | Language, ...components: TemplateComponent[]);
     /**
      * OTP Template generator
      *
@@ -174,7 +174,7 @@ export declare class DateTime implements ClientTypedMessageComponent {
  *
  * @group Template
  */
-export declare abstract class ButtonComponent implements ClientBuildableMessageComponent {
+export declare abstract class ButtonComponent implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -336,7 +336,7 @@ export declare class SkipButtonComponent extends ButtonComponent {
  *
  * @group Template
  */
-export declare class HeaderComponent implements ClientBuildableMessageComponent {
+export declare class HeaderComponent implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -412,7 +412,7 @@ export declare class HeaderParameter {
  *
  * @group Template
  */
-export declare class BodyComponent implements ClientBuildableMessageComponent {
+export declare class BodyComponent implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -472,7 +472,7 @@ export declare class BodyParameter {
  *
  * @group Template
  */
-export declare class CarouselComponent extends ClientLimitedMessageComponent<CarouselCard, 10> implements ClientBuildableMessageComponent {
+export declare class CarouselComponent extends ClientLimitedMessageComponent<CarouselCard, 10> implements TemplateComponent {
     /**
      * The type of the component
      */
@@ -531,7 +531,7 @@ export declare class CarouselCard implements ClientBuildableMessageComponent {
  *
  * @group Template
  */
-export declare class LTOComponent implements ClientBuildableMessageComponent {
+export declare class LTOComponent implements TemplateComponent {
     /**
      * The type of the component
      */
