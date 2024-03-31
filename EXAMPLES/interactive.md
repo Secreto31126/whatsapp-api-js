@@ -52,13 +52,13 @@ const interactive_single_product_message = new Interactive(
 ```ts
 import {
     Interactive,
-    ActionProduct,
+    ActionProductList,
     ProductSection,
     Product
 } from "whatsapp-api-js/messages";
 
 const interactive_multi_product_message = new Interactive(
-    new ActionProduct(
+    new ActionProductList(
         "catalog_id",
         new ProductSection(
             "Product section title",
@@ -148,7 +148,7 @@ import { Interactive, ActionLocation, Body } from "whatsapp-api-js/messages";
 
 const interactive_catalog_message = new Interactive(
     new ActionLocation(),
-    new Body("You should google it")
+    new Body("Show me where you live")
 );
 ```
 
@@ -162,6 +162,7 @@ https://whatsappapijs.web.app/classes/messages.Interactive.html
 https://whatsappapijs.web.app/classes/messages.ActionButtons.html
 https://whatsappapijs.web.app/classes/messages.ActionList.html
 https://whatsappapijs.web.app/classes/messages.ActionProduct.html
+https://whatsappapijs.web.app/classes/messages.ActionProductList.html
 https://whatsappapijs.web.app/classes/messages.ActionCatalog.html
 https://whatsappapijs.web.app/classes/messages.ActionCTA.html
 https://whatsappapijs.web.app/classes/messages.ActionNavigateFlow.html

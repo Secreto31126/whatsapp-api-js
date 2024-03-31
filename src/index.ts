@@ -67,7 +67,7 @@ export class WhatsAppAPI {
      */
     private offload_functions: boolean;
     /**
-     * If false, the API will be used in a less secure way, reducing the need for appSecret. Defaults to true.
+     * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
     private secure: boolean;
     /**
@@ -83,8 +83,8 @@ export class WhatsAppAPI {
      * // Set the callback
      * Whatsapp.on.message = ({ from, phoneID }) => console.log(`Message from ${from} to bot ${phoneID}`);
      *
-     * // Remove the callback
-     * Whatsapp.on.message = undefined;
+     * // If you need to disable the callback:
+     * // Whatsapp.on.message = undefined;
      * ```
      */
     public on: {
@@ -105,6 +105,16 @@ export class WhatsAppAPI {
      * The other parameters are used for fine tunning the framework,
      * such as `ponyfill`, which allows the code to execute on platforms
      * that are missing standard APIs such as fetch and crypto.
+     *
+     * @example
+     * ```ts
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     *
+     * const Whatsapp = new WhatsAppAPI({
+     *    token: "YOUR_TOKEN",
+     *    appSecret: "YOUR_APP_SECRET"
+     * });
+     * ```
      *
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
@@ -295,7 +305,7 @@ export class WhatsAppAPI {
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
      * @param batch_size - The number of messages to send per batch
      * @param delay - The delay between each batch of messages in milliseconds
-     * @returns The server response
+     * @returns The server's responses
      * @throws if batch_size is lower than 1
      * @throws if delay is lower than 0
      */
@@ -471,6 +481,8 @@ export class WhatsAppAPI {
     /**
      * Get a Media object data with an ID
      *
+     * @see {@link fetchMedia}
+     *
      * @param id - The Media's ID
      * @param phoneID - Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns The server response
@@ -493,15 +505,8 @@ export class WhatsAppAPI {
     }
 
     /**
-     * Upload a Media to the server
+     * Upload a Media to the API server
      *
-     * @param phoneID - The bot's phone ID
-     * @param form - The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
-     * @param check - If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
-     * @returns The server response
-     * @throws If check is set to true and form is not a FormData
-     * @throws If check is set to true and the form doesn't have valid required properties (file, type)
-     * @throws If check is set to true and the form file is too big for the file type
      * @example
      * ```ts
      * import { WhatsAppAPI } from "whatsapp-api-js";
@@ -528,6 +533,14 @@ export class WhatsAppAPI {
      * console.log(await Whatsapp.uploadMedia("phoneID", form));
      * // Expected output: { id: "mediaID" }
      * ```
+     *
+     * @param phoneID - The bot's phone ID
+     * @param form - The Media's FormData. Must have a 'file' property with the file to upload as a blob and a valid mime-type in the 'type' field of the blob. Example for Node ^18: new FormData().set("file", new Blob([stringOrFileBuffer], "image/png")); Previous versions of Node will need an external FormData, such as undici's. To use non spec complaints versions of FormData (eg: form-data) or Blob set the 'check' parameter to false.
+     * @param check - If the FormData should be checked before uploading. The FormData must have the method .get("name") to work with the checks. If it doesn't (for example, using the module "form-data"), set this to false.
+     * @returns The server response
+     * @throws If check is set to true and form is not a FormData
+     * @throws If check is set to true and the form doesn't have valid required properties (file, type)
+     * @throws If check is set to true and the form file is too big for the file type
      */
     async uploadMedia(
         phoneID: string,
@@ -613,9 +626,6 @@ export class WhatsAppAPI {
      * Get a Media fetch from an url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
      *
-     * @param url - The Media's url
-     * @returns The fetch raw response
-     * @throws If url is not a valid url
      * @example
      * ```ts
      * import { WhatsAppAPI } from "whatsapp-api-js";
@@ -629,6 +639,10 @@ export class WhatsAppAPI {
      * const { url } = await Whatsapp.retrieveMedia(id);
      * const response = Whatsapp.fetchMedia(url);
      * ```
+     *
+     * @param url - The Media's url
+     * @returns The fetch raw response
+     * @throws If url is not a valid url
      */
     fetchMedia(url: string): Promise<Response> {
         // Hacky way to check if the url is valid and throw if invalid
@@ -825,6 +839,38 @@ export class WhatsAppAPI {
     /**
      * GET helper, must be called inside the get function of your code.
      * Used once at the first webhook setup.
+     *
+     * @example
+     * ```ts
+     * // Simple http example implementation with Whatsapp.get() on Node@^19
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { NodeNext } from "whatsapp-api-js/setup/node";
+     *
+     * import { createServer } from "http";
+     *
+     * const token = "token";
+     * const appSecret = "appSecret";
+     * const Whatsapp = new WhatsAppAPI(NodeNext({ token, appSecret }));
+     *
+     * function handler(req, res) {
+     *     if (req.method == "GET") {
+     *         const params = new URLSearchParams(req.url.split("?")[1]);
+     *
+     *         const response = Whatsapp.get(Object.fromEntries(params));
+     *
+     *         res.writeHead(200, {"Content-Type": "text/html"});
+     *         res.write(response)
+     *         res.end();
+     *     } else res.writeHead(501).end();
+     * };
+     *
+     * Whatsapp.on.message = ({ phoneID, from, message, name }) => {
+     *     console.log(`User ${name} (${from}) sent to bot ${phoneID} a(n) ${message.type}`);
+     * };
+     *
+     * const server = createServer(handler);
+     * server.listen(3000);
+     * ```
      *
      * @param params - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body

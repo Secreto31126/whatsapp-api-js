@@ -87,6 +87,34 @@ export class Template extends ClientMessage {
     /**
      * Create a Template object for the API
      *
+     * @example
+     * ```ts
+     * import {
+     *     Template,
+     *     HeaderComponent,
+     *     HeaderParameter,
+     *     BodyComponent,
+     *     BodyParameter,
+     *     Currency,
+     *     DateTime
+     * } from "whatsapp-api-js/messages";
+     *
+     * const template_variables_message = new Template(
+     *     "template_name",
+     *     "en",
+     *     new HeaderComponent(
+     *         new HeaderParameter("Hello"),
+     *         new HeaderParameter(new Currency(1.5 * 1000, "USD", "U$1.5")),
+     *         new HeaderParameter(new DateTime("01/01/2023"))
+     *     ),
+     *     new BodyComponent(
+     *         new BodyParameter("Hello"),
+     *         new BodyParameter(new Currency(1.5 * 1000, "USD", "U$1.5")),
+     *         new BodyParameter(new DateTime("01/01/2023"))
+     *     )
+     * );
+     * ```
+     *
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
@@ -116,6 +144,13 @@ export class Template extends ClientMessage {
 
     /**
      * OTP Template generator
+     *
+     * @example
+     * ```ts
+     * import { Template } from "whatsapp-api-js/messages";
+     *
+     * const template_otp_message = Template.OTP("template_name", "en", "123456");
+     * ```
      *
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).

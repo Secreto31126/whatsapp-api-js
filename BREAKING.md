@@ -1,5 +1,53 @@
 # Breaking changes
 
+## 3.0.0
+
+In the last few years, the library has been growing and changing, and
+with that, not only new functionalities are added, but also new bugs
+are created, which sometimes require breaking changes to be fixed. This
+version is one of those cases.
+
+### Removed default exports
+
+Due to interoperability issues between ESM and CJS, all the default
+exports were removed to assure a consistent behavior across all
+runtimes. The list of affected imports by this change is:
+
+-   `whatsapp-api-js`
+-   `whatsapp-api-js/messages/location`
+-   `whatsapp-api-js/messages/reaction`
+-   `whatsapp-api-js/messages/text`
+-   `whatsapp-api-js/middleware/*` (yeah, all of them, issue [#306](https://github.com/Secreto31126/whatsapp-api-js/issues/306))
+-   `whatsapp-api-js/setup/bun`
+-   `whatsapp-api-js/setup/deno`
+-   `whatsapp-api-js/setup/web`
+
+ESM example:
+
+```js
+import { WhatsAppAPI } from "whatsapp-api-js";
+```
+
+CJS example:
+
+```js
+const { WhatsAppAPI } = require("whatsapp-api-js");
+```
+
+### Once again, classes splitted and renamed
+
+In order to improve the typing in Interactive's constructor, the
+`ActionProduct` class was splitted into `ActionProduct` and
+`ActionProductList`. If you are using the former to send multi product
+messages, updating is as simple as renaming the class to the new one.
+
+### Version pinning warning
+
+Although not a breaking change, it's worth mentioning that the library
+will now show a warning if the API version is not pinned. This is to
+encourage good practices and avoid unexpected changes in the API
+at production.
+
 ## 2.0.0
 
 ### Classes renamed, splitted and moved
