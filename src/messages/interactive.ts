@@ -977,7 +977,7 @@ export class ActionNavigateFlow extends ActionFlow {
             }
         });
 
-        if (data && !Object.keys(data)) {
+        if (data && !Object.keys(data).length) {
             throw new Error("Flow data must be a non-empty object if provided");
         }
     }
