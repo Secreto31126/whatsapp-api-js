@@ -1,4 +1,4 @@
-# whatsapp-api-js v2
+# whatsapp-api-js v3
 
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
@@ -7,7 +7,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
--   [whatsapp-api-js v2](#whatsapp-api-js-v2)
+-   [whatsapp-api-js v3](#whatsapp-api-js-v3)
     -   [List of contents](#list-of-contents)
     -   [Set up](#set-up)
     -   [Examples and Tutorials](#examples-and-tutorials)
@@ -34,7 +34,7 @@ npm install whatsapp-api-js
 Now you can write code like this:
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 import { Text, Image, Document } from "whatsapp-api-js/messages";
 import * as Contacts from "whatsapp-api-js/messages/contacts";
 
@@ -121,7 +121,7 @@ While setting it up, you will be asked for a Verify Token. This can be any strin
 The package also has a GET wizard for the webhook authentication:
 
 ```js
-import WhatsAppAPI from "whatsapp-api-js";
+import { WhatsAppAPI } from "whatsapp-api-js";
 
 const TOKEN = "YOUR_TOKEN";
 const APP_SECRET = "YOUR_SECRET";

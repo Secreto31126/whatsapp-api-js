@@ -35,7 +35,7 @@ export type TheBasicConstructorArguments = {
      *
      * Really wish WhatsApp gets away from Meta soon...
      *
-     * (Sorry for the rant, here's the [actual documentation](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started))
+     * (Sorry for the rant, here's the [actual documentation](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started) :)
      */
     token: string;
     /**
