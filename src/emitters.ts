@@ -35,6 +35,10 @@ export type OnSentArgs = {
      */
     type: string;
     /**
+     * The message timestamp
+     */
+    timestamp: string;
+    /**
      * The message object
      */
     message: ClientMessage;
@@ -76,6 +80,10 @@ export type OnMessageArgs = {
      * The messages object
      */
     message: ServerMessage;
+    /**
+     * The message timestamp
+     */
+    timestamp: string;
     /**
      * The username
      */
@@ -127,6 +135,10 @@ export type OnStatusArgs = {
      * The message status
      */
     status: string;
+    /**
+     * The message timestamp
+     */
+    timestamp: string;
     /**
      * The message ID
      */
