@@ -258,6 +258,7 @@ export class WhatsAppAPI {
             message,
             timestamp: (Date.now()/1000|0).toString(),
             request,
+            status: !response ? undefined : 'error' in response ? 'failed' : ("messages" in response ? response.messages[0].message_status : undefined),
             id: response
                 ? "messages" in response
                     ? response.messages[0].id
