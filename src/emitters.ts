@@ -46,6 +46,7 @@ export type OnSentArgs = {
      * The object sent to the server
      */
     request: ClientMessageRequest;
+    status?: string;
     /**
      * The message id, undefined if parsed is set to false
      */

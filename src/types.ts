@@ -809,6 +809,7 @@ export type ServerSentMessageResponse = {
     messages: [
         {
             id: string;
+            message_status: string;
         }
     ];
 };
