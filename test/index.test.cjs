@@ -1938,7 +1938,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("_authenicatedRequest", function () {
+    describe("_authenticatedRequest", function () {
         const Whatsapp = new WhatsAppAPI({
             v,
             token,
@@ -1960,20 +1960,20 @@ describe("WhatsAppAPI", function () {
                 .reply(200)
                 .times(1);
 
-            Whatsapp._authenicatedRequest("https://example.com/");
+            Whatsapp._authenticatedRequest("https://example.com/");
         });
 
         it("should fail if the url param is not defined", function () {
             throws(function () {
-                Whatsapp._authenicatedRequest(undefined);
+                Whatsapp._authenticatedRequest(undefined);
             });
 
             throws(function () {
-                Whatsapp._authenicatedRequest(false);
+                Whatsapp._authenticatedRequest(false);
             });
 
             throws(function () {
-                Whatsapp._authenicatedRequest();
+                Whatsapp._authenticatedRequest();
             });
         });
     });
