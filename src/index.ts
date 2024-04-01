@@ -256,6 +256,7 @@ export class WhatsAppAPI {
             to,
             type,
             message,
+            timestamp: (Date.now()/1000|0).toString(),
             request,
             id: response
                 ? "messages" in response
@@ -792,6 +793,7 @@ export class WhatsAppAPI {
                 from,
                 message,
                 name,
+                timestamp: message.timestamp,
                 raw: data,
                 reply: (response, context = false, biz_opaque_callback_data) =>
                     this.sendMessage(
@@ -822,6 +824,7 @@ export class WhatsAppAPI {
                 status,
                 id,
                 conversation,
+                timestamp: statuses.timestamp,
                 pricing,
                 error,
                 biz_opaque_callback_data,
