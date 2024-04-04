@@ -1044,8 +1044,7 @@ describe("WhatsAppAPI", function () {
                         path: `/${Whatsapp.v}/${bot}/media`,
                         method: "POST",
                         headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data"
+                            Authorization: `Bearer ${token}`
                         },
                         query: {
                             messaging_product: "whatsapp"
@@ -1109,8 +1108,7 @@ describe("WhatsAppAPI", function () {
                             path: `/${Whatsapp.v}/${bot}/media`,
                             method: "POST",
                             headers: {
-                                Authorization: `Bearer ${token}`,
-                                "Content-Type": "multipart/form-data"
+                                Authorization: `Bearer ${token}`
                             },
                             query: {
                                 messaging_product: "whatsapp"
@@ -1133,8 +1131,7 @@ describe("WhatsAppAPI", function () {
                             path: `/${Whatsapp.v}/${bot}/media`,
                             method: "POST",
                             headers: {
-                                Authorization: `Bearer ${token}`,
-                                "Content-Type": "multipart/form-data"
+                                Authorization: `Bearer ${token}`
                             },
                             query: {
                                 messaging_product: "whatsapp"
@@ -1155,8 +1152,7 @@ describe("WhatsAppAPI", function () {
                             path: `/${Whatsapp.v}/${bot}/media`,
                             method: "POST",
                             headers: {
-                                Authorization: `Bearer ${token}`,
-                                "Content-Type": "multipart/form-data"
+                                Authorization: `Bearer ${token}`
                             },
                             query: {
                                 messaging_product: "whatsapp"
@@ -1180,8 +1176,7 @@ describe("WhatsAppAPI", function () {
                             path: `/${Whatsapp.v}/${bot}/media`,
                             method: "POST",
                             headers: {
-                                Authorization: `Bearer ${token}`,
-                                "Content-Type": "multipart/form-data"
+                                Authorization: `Bearer ${token}`
                             },
                             query: {
                                 messaging_product: "whatsapp"
@@ -1209,8 +1204,7 @@ describe("WhatsAppAPI", function () {
                             path: `/${Whatsapp.v}/${bot}/media`,
                             method: "POST",
                             headers: {
-                                Authorization: `Bearer ${token}`,
-                                "Content-Type": "multipart/form-data"
+                                Authorization: `Bearer ${token}`
                             },
                             query: {
                                 messaging_product: "whatsapp"
@@ -1239,8 +1233,7 @@ describe("WhatsAppAPI", function () {
                         path: `/${Whatsapp.v}/${bot}/media`,
                         method: "POST",
                         headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "multipart/form-data"
+                            Authorization: `Bearer ${token}`
                         },
                         query: {
                             messaging_product: "whatsapp"

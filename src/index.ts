@@ -613,8 +613,7 @@ export class WhatsAppAPI {
                 method: "POST",
                 body: form as FormData,
                 headers: {
-                    Authorization: `Bearer ${this.token}`,
-                    "Content-Type": "multipart/form-data"
+                    Authorization: `Bearer ${this.token}`
                 }
             }
         );
