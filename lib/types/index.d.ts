@@ -389,7 +389,7 @@ export declare class WhatsAppAPI {
      * @returns The fetch response
      * @throws If url is not specified
      */
-    _authenicatedRequest(url: string | URL | Request): Promise<Response>;
+    _authenticatedRequest(url: string | URL | Request): Promise<Response>;
     /**
      * Get the body of a fetch response
      *
