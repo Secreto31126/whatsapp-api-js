@@ -646,7 +646,7 @@ export class WhatsAppAPI {
      */
     fetchMedia(url: string): Promise<Response> {
         // Hacky way to check if the url is valid and throw if invalid
-        return this._authenicatedRequest(new URL(url));
+        return this._authenticatedRequest(new URL(url));
     }
 
     /**
@@ -915,7 +915,7 @@ export class WhatsAppAPI {
      * @returns The fetch response
      * @throws If url is not specified
      */
-    _authenicatedRequest(url: string | URL | Request): Promise<Response> {
+    _authenticatedRequest(url: string | URL | Request): Promise<Response> {
         // Keep the check to ensure on runtime that no weird stuff happens
         if (!url) throw new Error("URL must be specified");
 
