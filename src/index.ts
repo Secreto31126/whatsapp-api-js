@@ -509,6 +509,31 @@ export class WhatsAppAPI {
      *
      * @example
      * ```ts
+     * // author ekoeryanto on issue #322
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     *
+     * const token = "token";
+     * const appSecret = "appSecret";
+     *
+     * const Whatsapp = new WhatsAppAPI({ token, appSecret });
+     *
+     * const url = "https://example.com/image.png";
+     *
+     * const image = await fetch(url);
+     * const blob = await image.blob();
+     *
+     * // If required:
+     * // import FormData from "undici";
+     *
+     * const form = new FormData();
+     * form.set("file", blob);
+     *
+     * console.log(await Whatsapp.uploadMedia("phoneID", form));
+     * // Expected output: { id: "mediaID" }
+     * ```
+     *
+     * @example
+     * ```ts
      * import { WhatsAppAPI } from "whatsapp-api-js";
      *
      * const token = "token";
