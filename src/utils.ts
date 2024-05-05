@@ -6,7 +6,7 @@ export function isInteger(n: unknown): n is number {
 
 export function escapeUnicode(str: string) {
     // https://stackoverflow.com/a/40558081
-    return str.replace(/[^\0-~]/g, (ch) => {
+    return str.toString().replace(/[^\0-~]/g, (ch) => {
         return "\\u" + ("000" + ch.charCodeAt(0).toString(16)).slice(-4);
     });
 }
