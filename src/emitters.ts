@@ -138,6 +138,10 @@ export type OnStatusArgs = {
      */
     id: string;
     /**
+     * The message timestamp
+     */
+    timestamp: string;
+    /**
      * The conversation object
      */
     conversation?: ServerConversation;

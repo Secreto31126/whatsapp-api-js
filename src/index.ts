@@ -843,6 +843,7 @@ export class WhatsAppAPI {
             const phone = statuses.recipient_id;
             const status = statuses.status;
             const id = statuses.id;
+            const timestamp = statuses.timestamp;
             const conversation = statuses.conversation;
             const pricing = statuses.pricing;
             const error = statuses.errors?.[0];
@@ -853,6 +854,7 @@ export class WhatsAppAPI {
                 phone,
                 status,
                 id,
+                timestamp,
                 conversation,
                 pricing,
                 error,
