@@ -47,6 +47,12 @@ export type OnSentArgs = {
      */
     id?: string;
     /**
+     * If true, the message send was delayed until quality can be validated and it will
+     * either be sent or dropped at this point. Undefined if parsed is set to false or
+     * the message_status property is not present in the response.
+     */
+    held_for_quality_assessment?: boolean;
+    /**
      * The parsed response from the server, undefined if parsed is set to false
      */
     response?: ServerMessageResponse;

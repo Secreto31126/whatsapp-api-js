@@ -262,6 +262,14 @@ export class WhatsAppAPI {
                     ? response.messages[0].id
                     : undefined
                 : undefined,
+            held_for_quality_assessment: response
+                ? "messages" in response
+                    ? "message_status" in response.messages[0]
+                        ? response.messages[0].message_status ===
+                          "held_for_quality_assessment"
+                        : undefined
+                    : undefined
+                : undefined,
             response
         };
 

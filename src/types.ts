@@ -809,6 +809,7 @@ export type ServerSentMessageResponse = {
     messages: [
         {
             id: string;
+            message_status?: "accepted" | "held_for_quality_assessment";
         }
     ];
 };
