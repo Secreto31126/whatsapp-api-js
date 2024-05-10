@@ -411,10 +411,11 @@ export declare class WhatsAppAPI {
      *
      * @internal
      * @param url - The url to request to
+     * @param headers - The headers to pass to the request (Authorization is already included)
      * @returns The fetch response
      * @throws If url is not specified
      */
-    _authenticatedRequest(url: string | URL | Request): Promise<Response>;
+    _authenticatedRequest(url: string | URL | Request, headers?: {}): Promise<Response>;
     /**
      * Get the body of a fetch response
      *
