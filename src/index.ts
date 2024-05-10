@@ -669,8 +669,16 @@ export class WhatsAppAPI {
      * @throws If url is not a valid url
      */
     fetchMedia(url: string): Promise<Response> {
-        // Hacky way to check if the url is valid and throw if invalid
-        return this._authenticatedRequest(new URL(url));
+        /**
+         * Hacky way to check if the url is valid and throw if invalid
+         *
+         * @see https://github.com/Secreto31126/whatsapp-api-js/issues/335#issuecomment-2103814359
+         */
+        return this._authenticatedRequest(new URL(url), {
+            // Thanks @tecoad
+            "User-Agent":
+                "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        });
     }
 
     /**
@@ -936,16 +944,21 @@ export class WhatsAppAPI {
      *
      * @internal
      * @param url - The url to request to
+     * @param headers - The headers to pass to the request (Authorization is already included)
      * @returns The fetch response
      * @throws If url is not specified
      */
-    _authenticatedRequest(url: string | URL | Request): Promise<Response> {
+    _authenticatedRequest(
+        url: string | URL | Request,
+        headers = {}
+    ): Promise<Response> {
         // Keep the check to ensure on runtime that no weird stuff happens
         if (!url) throw new Error("URL must be specified");
 
         return this.fetch(url, {
             headers: {
-                Authorization: `Bearer ${this.token}`
+                Authorization: `Bearer ${this.token}`,
+                ...headers
             }
         });
     }
