@@ -1406,14 +1406,16 @@ describe("WhatsAppAPI", function () {
         });
 
         describe("Fetch", function () {
-            it("should GET fetch an url with the Token", async function () {
+            it("should GET fetch an url with the Token and the known to work User-Agent", async function () {
                 const expectedResponse = {};
 
                 clientExample
                     .intercept({
                         path: `/`,
                         headers: {
-                            Authorization: `Bearer ${token}`
+                            Authorization: `Bearer ${token}`,
+                            "User-Agent":
+                                "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
                         }
                     })
                     .reply(200, expectedResponse)

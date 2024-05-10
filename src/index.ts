@@ -669,8 +669,16 @@ export class WhatsAppAPI {
      * @throws If url is not a valid url
      */
     fetchMedia(url: string): Promise<Response> {
-        // Hacky way to check if the url is valid and throw if invalid
-        return this._authenticatedRequest(new URL(url));
+        /**
+         * Hacky way to check if the url is valid and throw if invalid
+         *
+         * @see https://github.com/Secreto31126/whatsapp-api-js/issues/335#issuecomment-2103814359
+         */
+        return this._authenticatedRequest(new URL(url), {
+            // Thanks @tecoad
+            "User-Agent":
+                "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        });
     }
 
     /**
