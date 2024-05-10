@@ -936,16 +936,21 @@ export class WhatsAppAPI {
      *
      * @internal
      * @param url - The url to request to
+     * @param headers - The headers to pass to the request (Authorization is already included)
      * @returns The fetch response
      * @throws If url is not specified
      */
-    _authenticatedRequest(url: string | URL | Request): Promise<Response> {
+    _authenticatedRequest(
+        url: string | URL | Request,
+        headers = {}
+    ): Promise<Response> {
         // Keep the check to ensure on runtime that no weird stuff happens
         if (!url) throw new Error("URL must be specified");
 
         return this.fetch(url, {
             headers: {
-                Authorization: `Bearer ${this.token}`
+                Authorization: `Bearer ${this.token}`,
+                ...headers
             }
         });
     }

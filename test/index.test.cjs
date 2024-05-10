@@ -1956,6 +1956,23 @@ describe("WhatsAppAPI", function () {
             Whatsapp._authenticatedRequest("https://example.com/");
         });
 
+        it("should make an authenticated request to any url with custom headers", async function () {
+            clientExample
+                .intercept({
+                    path: "/",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        blablabla: "blablabla"
+                    }
+                })
+                .reply(200)
+                .times(1);
+
+            Whatsapp._authenticatedRequest("https://example.com/", {
+                blablabla: "blablabla"
+            });
+        });
+
         it("should fail if the url param is not defined", function () {
             throws(function () {
                 Whatsapp._authenticatedRequest(undefined);
