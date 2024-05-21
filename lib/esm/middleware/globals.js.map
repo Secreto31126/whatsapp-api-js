@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../../src/middleware/globals.ts"],
   "sourcesContent": ["import { WhatsAppAPI } from \"../index.js\";\n\n/**\n * The abstract class for the middlewares, it extends the WhatsAppAPI class\n * and defines the handle_post and handle_get methods for its childs.\n */\nexport abstract class WhatsAppAPIMiddleware extends WhatsAppAPI {\n    /**\n     * This method should be called when the server receives a POST request.\n     * Each child implements it differently depending on the framework.\n     *\n     * @returns The status code to be sent to the client\n     */\n    abstract handle_post(...a: unknown[]): Promise<number>;\n\n    /**\n     * This method should be called when the server receives a GET request.\n     * Each child implements it differently depending on the framework.\n     *\n     * @returns The challenge string to be sent to the client\n     * @throws The error code\n     */\n    abstract handle_get(...a: unknown[]): string;\n}\n"],
-  "mappings": "AAAA,OAAS,gBAAmB,cAMrB,MAAe,8BAA8B,WAAY,CAiBhE",
+  "mappings": "AAAA,SAAS,mBAAmB;AAMrB,MAAe,8BAA8B,YAAY;AAiBhE;",
   "names": []
 }

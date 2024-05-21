@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../../src/messages/index.ts"],
   "sourcesContent": ["/**\n * @module messages\n *\n * @description\n * A collection of classes to construct WhatsApp API messages.\n *\n * There are 7 types of messages:\n * - {@link Text}\n * - {@link Media}\n * - {@link Template}\n * - {@link Interactive}\n * - {@link Location}\n * - {@link Contacts}\n * - {@link Reaction}\n */\n\nexport * from \"./text.js\";\nexport * from \"./location.js\";\nexport * from \"./reaction.js\";\nexport * from \"./contacts.js\";\nexport * from \"./interactive.js\";\nexport * from \"./media.js\";\nexport * from \"./template.js\";\nexport * from \"./globals.js\";\n"],
-  "mappings": "srBAAA,sEAgBA,4BAAc,qBAhBd,gBAiBA,4BAAc,yBAjBd,gBAkBA,4BAAc,yBAlBd,gBAmBA,4BAAc,yBAnBd,gBAoBA,4BAAc,4BApBd,gBAqBA,4BAAc,sBArBd,gBAsBA,4BAAc,yBAtBd,gBAuBA,4BAAc,wBAvBd",
+  "mappings": ";;;;;;;;;;;;;;;AAAA;AAAA;AAgBA,6BAAc,sBAhBd;AAiBA,6BAAc,0BAjBd;AAkBA,6BAAc,0BAlBd;AAmBA,6BAAc,0BAnBd;AAoBA,6BAAc,6BApBd;AAqBA,6BAAc,uBArBd;AAsBA,6BAAc,0BAtBd;AAuBA,6BAAc,yBAvBd;",
   "names": []
 }

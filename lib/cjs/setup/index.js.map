@@ -2,6 +2,6 @@
   "version": 3,
   "sources": ["../../../src/setup/index.ts"],
   "sourcesContent": ["// This file is a stud for the documentation.\n// You shouldn't import it as it might execute code for different runtimes.\n\n/**\n * @module setup\n *\n * @description\n * Simplify the setup proccess of the WhatsAppAPI for different runtimes.\n *\n * @example\n * ```ts\n * import { WhatsAppAPI } from \"whatsapp-api-js\";\n * import { NodeNext } from \"whatsapp-api-js/setup/node\";\n *\n * const Whatsapp = new WhatsAppAPI(NodeNext({\n *     token: \"YOUR_TOKEN\",\n *     appSecret: \"YOUR_APP_SECRET\"\n * }));\n * ```\n */\n\nexport * from \"./bun\";\nexport * from \"./deno\";\nexport * from \"./web\";\nexport * from \"./node\";\n"],
-  "mappings": "srBAAA,gEAqBA,yBAAc,iBArBd,gBAsBA,yBAAc,kBAtBd,gBAuBA,yBAAc,iBAvBd,gBAwBA,yBAAc,kBAxBd",
+  "mappings": ";;;;;;;;;;;;;;;AAAA;AAAA;AAqBA,0BAAc,kBArBd;AAsBA,0BAAc,mBAtBd;AAuBA,0BAAc,kBAvBd;AAwBA,0BAAc,mBAxBd;",
   "names": []
 }
