@@ -4,8 +4,6 @@ import { build } from "esbuild";
 import { glob } from "glob";
 import { writeFile } from "fs/promises";
 
-const production = process.env.NODE_ENV !== "development";
-
 /**
  * @type {import("esbuild").BuildOptions}
  */
