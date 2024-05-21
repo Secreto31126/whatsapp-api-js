@@ -149,7 +149,7 @@
         "glob": "10.3.12",
         "mocha": "10.4.0",
         "prettier": "3.2.5",
-        "sinon": "17.0.1",
+        "sinon": "18.0.0",
         "typedoc": "0.25.12",
         "typescript": "5.4.3",
         "undici": "6.11.1"
