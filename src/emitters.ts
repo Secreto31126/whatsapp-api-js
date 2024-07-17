@@ -104,6 +104,11 @@ export type OnMessageArgs = {
         biz_opaque_callback_data?: string
     ) => Promise<ServerMessageResponse | Response>;
     /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
+    /**
      * The WhatsAppAPI instance that emitted the event
      */
     Whatsapp: InstanceType<typeof WhatsAppAPI>;
@@ -157,6 +162,11 @@ export type OnStatusArgs = {
      * Arbitrary string included in sent messages
      */
     biz_opaque_callback_data?: string;
+    /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
     /**
      * The raw data from the API
      */

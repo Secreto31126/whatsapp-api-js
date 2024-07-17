@@ -62,11 +62,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      */
     private parsed: boolean;
     /**
-     * If false, the user functions won't be offloaded from the main event loop.
-     * Intended for Serverless Environments where the process might be killed after the main function finished.
-     */
-    private offload_functions: boolean;
-    /**
      * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
     private secure: boolean;
@@ -125,7 +120,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         webhookVerifyToken,
         v,
         parsed = true,
-        offload_functions = true,
         secure = true,
         ponyfill = {}
     }: WhatsAppAPIConstructorArguments) {
@@ -176,7 +170,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         }
 
         this.parsed = !!parsed;
-        this.offload_functions = !!offload_functions;
     }
 
     //#region Message Operations
@@ -273,7 +266,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             response
         };
 
-        this.user_function(this.on?.sent, args);
+        WhatsAppAPI.user_function(this.on?.sent, args);
 
         return response ?? promise;
     }
@@ -755,8 +748,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *     } else res.writeHead(501).end();
      * };
      *
-     * Whatsapp.on.message = ({ phoneID, from, message, name }) => {
+     * Whatsapp.on.message = ({ phoneID, from, message, name, reply, offload }) => {
      *     console.log(`User ${name} (${from}) sent to bot ${phoneID} a(n) ${message.type}`);
+     *     offload(() => reply(new Text("Hello!")));
      *     return 202;
      * };
      *
@@ -844,6 +838,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                         context ? message.id : undefined,
                         biz_opaque_callback_data
                     ),
+                offload: WhatsAppAPI.offload,
                 Whatsapp: this
             };
 
@@ -874,6 +869,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 pricing,
                 error,
                 biz_opaque_callback_data,
+                offload: WhatsAppAPI.offload,
                 raw: data
             };
 
@@ -1004,27 +1000,22 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param f - The user function to call
      * @param a - The arguments to pass to the function
      */
-    private user_function<A, F extends ((...a: A[]) => unknown) | undefined>(
-        f: F,
+    private static async user_function<A, F extends (...a: A[]) => unknown>(
+        f?: F,
         ...a: A[]
     ) {
         if (f) {
-            if (this.offload_functions) {
-                this.offload(f, ...a);
-            } else {
-                f(...a);
-            }
+            WhatsAppAPI.offload(f, ...a);
         }
     }
 
     /**
      * Offload a function to the next tick of the event loop
      *
-     * @internal
      * @param f - The function to offload from the main thread
      * @param a - The arguments to pass to the function
      */
-    private offload<A, F extends (...a: A[]) => unknown>(f: F, ...a: A[]) {
+    static offload<A, F extends (...a: A[]) => unknown>(f: F, ...a: A[]) {
         // Thanks @RahulLanjewar93
         Promise.resolve().then(() => f(...a));
     }
