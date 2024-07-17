@@ -64,7 +64,7 @@ export type OnSentArgs = {
  * @public
  * @param args - The arguments object
  */
-export type OnMessage = (args: OnMessageArgs) => unknown;
+export type OnMessage<Returns> = (args: OnMessageArgs) => Returns;
 
 /**
  * @public
@@ -115,7 +115,7 @@ export type OnMessageArgs = {
  * @public
  * @param args - The arguments object
  */
-export type OnStatus = (args: OnStatusArgs) => unknown;
+export type OnStatus<Returns> = (args: OnStatusArgs) => Returns;
 
 /**
  * @public
