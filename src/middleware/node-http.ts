@@ -64,7 +64,9 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
 
             if (typeof signature !== "string") throw 400;
 
-            return this.post(JSON.parse(body || "{}"), body, signature);
+            await this.post(JSON.parse(body || "{}"), body, signature);
+
+            return 200;
         } catch (e) {
             // In case the JSON.parse fails ¯\_(ツ)_/¯
             return isInteger(e) ? e : 500;

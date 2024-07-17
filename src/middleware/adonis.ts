@@ -33,11 +33,13 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      */
     async handle_post(req: Request) {
         try {
-            return await this.post(
+            await this.post(
                 req.body() as PostData,
                 req.raw() ?? "",
                 req.header("x-hub-signature-256") ?? ""
             );
+
+            return 200;
         } catch (e) {
             // In case who knows what fails ¯\_(ツ)_/¯
             return isInteger(e) ? e : 500;

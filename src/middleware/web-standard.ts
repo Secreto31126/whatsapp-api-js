@@ -18,11 +18,13 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
         try {
             const body = await req.text();
 
-            return this.post(
+            await this.post(
                 JSON.parse(body || "{}"),
                 body,
                 req.headers.get("x-hub-signature-256") ?? ""
             );
+
+            return 200;
         } catch (e) {
             // In case the JSON.parse fails ¯\_(ツ)_/¯
             return isInteger(e) ? e : 500;

@@ -4,7 +4,7 @@ import { WhatsAppAPI } from "../index.js";
  * The abstract class for the middlewares, it extends the WhatsAppAPI class
  * and defines the handle_post and handle_get methods for its childs.
  */
-export abstract class WhatsAppAPIMiddleware extends WhatsAppAPI {
+export abstract class WhatsAppAPIMiddleware extends WhatsAppAPI<void> {
     /**
      * This method should be called when the server receives a POST request.
      * Each child implements it differently depending on the framework.
