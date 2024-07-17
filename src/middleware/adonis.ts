@@ -1,7 +1,7 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
 import { isInteger } from "../utils.js";
 
-import type { Request } from "@adonisjs/http-server/build";
+import type { Request } from "@adonisjs/http-server";
 import type { GetParams, PostData } from "../types";
 
 /**
