@@ -1,5 +1,5 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
-import type { Request } from "@adonisjs/http-server/build";
+import type { Request } from "@adonisjs/http-server";
 /**
  * AdonisJS middleware for WhatsAppAPI
  */
