@@ -1632,15 +1632,6 @@ describe("WhatsAppAPI", function () {
                             threw(401)
                         );
                     });
-
-                    it("should return 200 if the signature matches the hash", async function () {
-                        const code = await Whatsapp.post(
-                            valid_message_mock,
-                            body,
-                            signature
-                        );
-                        equal(code, 200);
-                    });
                 });
 
                 describe("Secure falsy", function () {
@@ -1694,7 +1685,6 @@ describe("WhatsAppAPI", function () {
                     // This should improve the test speed
                     // Validation is already tested in the previous section
                     Whatsapp.secure = false;
-                    Whatsapp.offload_functions = true;
                 });
 
                 it("should parse the post request and call back with the right parameters", async function () {
@@ -1710,6 +1700,15 @@ describe("WhatsAppAPI", function () {
                         name,
                         raw: valid_message_mock
                     });
+                });
+
+                it("should return the on.message return value", async function () {
+                    Whatsapp.on.message = async () => {
+                        return "Hi";
+                    };
+
+                    const response = await Whatsapp.post(valid_message_mock);
+                    equal(response, "Hi");
                 });
 
                 it("should reply to a message with the method reply", async function () {
@@ -1739,7 +1738,7 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.calledOnce(spy_on_sent);
                 });
 
-                it("should not block the main thread with the user's callback", async function () {
+                it("should not block the main thread with the user's callback with the method offload", async function () {
                     // Emulates a blocking function
                     function block(delay) {
                         const start = Date.now();
@@ -1749,9 +1748,11 @@ describe("WhatsAppAPI", function () {
                     const shorter_delay = 5;
                     const longer_delay = 10;
 
-                    Whatsapp.on.message = () => {
-                        block(longer_delay);
-                        spy_on_message();
+                    Whatsapp.on.message = ({ offload }) => {
+                        offload(() => {
+                            block(longer_delay);
+                            spy_on_message();
+                        });
                     };
 
                     Whatsapp.post(valid_message_mock);
@@ -1765,31 +1766,6 @@ describe("WhatsAppAPI", function () {
                     await new Promise((resolve) =>
                         setTimeout(resolve, longer_delay)
                     );
-
-                    sinon_assert.calledOnce(spy_on_message);
-                });
-
-                it("should block the main thread with the user's callback if offload_functions is false", async function () {
-                    // Emulates a blocking function
-                    function block(delay) {
-                        const start = Date.now();
-                        while (Date.now() - start < delay);
-                    }
-
-                    const shorter_delay = 5;
-                    const longer_delay = 10;
-
-                    Whatsapp.offload_functions = false;
-
-                    Whatsapp.on.message = () => {
-                        block(longer_delay);
-                        spy_on_message();
-                    };
-
-                    Whatsapp.post(valid_message_mock);
-
-                    // Do critical operations for less time than the user's function
-                    block(shorter_delay);
 
                     sinon_assert.calledOnce(spy_on_message);
                 });
@@ -1821,7 +1797,6 @@ describe("WhatsAppAPI", function () {
                     // This should improve the test speed
                     // Validation is already tested in the previous section
                     Whatsapp.secure = false;
-                    Whatsapp.offload_functions = true;
                 });
 
                 it("should parse the post request and call back with the right parameters", async function () {
@@ -1842,7 +1817,16 @@ describe("WhatsAppAPI", function () {
                     });
                 });
 
-                it("should not block the main thread with the user's callback", async function () {
+                it("should return the on.status return value", async function () {
+                    Whatsapp.on.status = async () => {
+                        return "Hi";
+                    };
+
+                    const response = await Whatsapp.post(valid_status_mock);
+                    equal(response, "Hi");
+                });
+
+                it("should not block the main thread with the user's callback with the method offload", async function () {
                     // Emulates a blocking function
                     function block(delay) {
                         const start = Date.now();
@@ -1852,9 +1836,11 @@ describe("WhatsAppAPI", function () {
                     const shorter_delay = 5;
                     const longer_delay = 10;
 
-                    Whatsapp.on.status = () => {
-                        block(longer_delay);
-                        spy_on_status();
+                    Whatsapp.on.status = ({ offload }) => {
+                        offload(() => {
+                            block(longer_delay);
+                            spy_on_status();
+                        });
                     };
 
                     Whatsapp.post(valid_status_mock);
@@ -1868,31 +1854,6 @@ describe("WhatsAppAPI", function () {
                     await new Promise((resolve) =>
                         setTimeout(resolve, longer_delay)
                     );
-
-                    sinon_assert.calledOnce(spy_on_status);
-                });
-
-                it("should block the main thread with the user's callback if offload_functions is false", async function () {
-                    // Emulates a blocking function
-                    function block(delay) {
-                        const start = Date.now();
-                        while (Date.now() - start < delay);
-                    }
-
-                    const shorter_delay = 5;
-                    const longer_delay = 10;
-
-                    Whatsapp.offload_functions = false;
-
-                    Whatsapp.on.status = () => {
-                        block(longer_delay);
-                        spy_on_status();
-                    };
-
-                    Whatsapp.post(valid_status_mock);
-
-                    // Do critical operations for less time than the user's function
-                    block(shorter_delay);
 
                     sinon_assert.calledOnce(spy_on_status);
                 });
