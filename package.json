@@ -146,7 +146,7 @@
         "eslint": "8.57.0",
         "eslint-config-prettier": "9.1.0",
         "eslint-plugin-tsdoc": "0.3.0",
-        "glob": "10.4.5",
+        "glob": "11.0.0",
         "mocha": "10.6.0",
         "prettier": "3.3.3",
         "sinon": "18.0.0",
