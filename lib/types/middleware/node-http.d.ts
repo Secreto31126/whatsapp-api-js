@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { WhatsAppAPIMiddleware } from "./globals.js";
 import type { IncomingMessage } from "node:http";
 /**
