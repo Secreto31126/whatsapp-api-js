@@ -59,6 +59,7 @@ export type OnSentArgs = {
  * Callback for "message" event
  *
  * @public
+ * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
  * @param args - The arguments object
  */
 export type OnMessage<Returns> = (args: OnMessageArgs) => Returns;
@@ -109,6 +110,7 @@ export type OnMessageArgs = {
  * Callback for "status" event
  *
  * @public
+ * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
  * @param args - The arguments object
  */
 export type OnStatus<Returns> = (args: OnStatusArgs) => Returns;

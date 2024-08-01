@@ -389,10 +389,6 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      *     } else res.writeHead(501).end();
      * };
      *
-     * Whatsapp.on.message = ({ phoneID, from, message, name }) => {
-     *     console.log(`User ${name} (${from}) sent to bot ${phoneID} a(n) ${message.type}`);
-     * };
-     *
      * const server = createServer(handler);
      * server.listen(3000);
      * ```
