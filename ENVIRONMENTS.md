@@ -204,6 +204,7 @@ const Whatsapp = new WhatsAppAPI({
 
 Whatsapp.on.message = ({ name, reply }) => {
     reply(new Text(`Hello ${name}!`));
+    return 200;
 };
 
 async function doPost(e) {
