@@ -12,7 +12,9 @@ class MessageWebhookMock {
                         field: "messages",
                         value: {
                             messaging_product: "whatsapp",
-                            messages: [{}]
+                            // eslint-disable-next-line tsdoc/syntax
+                            /** @type {Array<any>} */
+                            messages: []
                         }
                     }
                 ]

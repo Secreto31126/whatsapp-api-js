@@ -1060,34 +1060,34 @@ describe("WhatsAppAPI", function () {
             });
 
             describe("Check truthy (default)", function () {
-                it("should fail if the form param is not a FormData instance", function () {
-                    rejects(Whatsapp.uploadMedia(bot, {}));
+                it("should fail if the form param is not a FormData instance", async function () {
+                    await rejects(Whatsapp.uploadMedia(bot, {}));
 
-                    rejects(Whatsapp.uploadMedia(bot, []));
+                    await rejects(Whatsapp.uploadMedia(bot, []));
 
-                    rejects(Whatsapp.uploadMedia(bot, "Hello World"));
+                    await rejects(Whatsapp.uploadMedia(bot, "Hello World"));
                 });
 
-                it("should fail if the form param does not contain a file", function () {
-                    rejects(Whatsapp.uploadMedia(bot, new FormData()));
+                it("should fail if the form param does not contain a file", async function () {
+                    await rejects(Whatsapp.uploadMedia(bot, new FormData()));
                 });
 
-                it("should fail if the form param contains a file with no type", function () {
+                it("should fail if the form param contains a file with no type", async function () {
                     form.append("file", new Blob(["Hello World"]));
 
-                    rejects(Whatsapp.uploadMedia(bot, form));
+                    await rejects(Whatsapp.uploadMedia(bot, form));
                 });
 
-                it("should fail if the file type is invalid", function () {
+                it("should fail if the file type is invalid", async function () {
                     form.append(
                         "file",
                         new Blob(["Not a real file"], { type: "random/type" })
                     );
 
-                    rejects(Whatsapp.uploadMedia(bot, form));
+                    await rejects(Whatsapp.uploadMedia(bot, form));
                 });
 
-                it("should fail if the file size is too big for the format", function () {
+                it("should fail if the file size is too big for the format", async function () {
                     const str = "I only need 500.000 chars";
                     form.append(
                         "file",
@@ -1097,7 +1097,7 @@ describe("WhatsAppAPI", function () {
                         )
                     );
 
-                    rejects(Whatsapp.uploadMedia(bot, form));
+                    await rejects(Whatsapp.uploadMedia(bot, form));
                 });
             });
 
@@ -1596,38 +1596,41 @@ describe("WhatsAppAPI", function () {
 
             describe("Validation", function () {
                 describe("Secure truthy (default)", function () {
-                    it("should throw 400 if rawBody is missing", function () {
-                        rejects(Whatsapp.post(valid_message_mock), threw(400));
+                    it("should throw 400 if rawBody is missing", async function () {
+                        await rejects(
+                            Whatsapp.post(valid_message_mock),
+                            threw(400)
+                        );
 
-                        rejects(
+                        await rejects(
                             Whatsapp.post(valid_message_mock, undefined),
                             threw(400)
                         );
                     });
 
-                    it("should throw 401 if signature is missing", function () {
-                        rejects(
+                    it("should throw 401 if signature is missing", async function () {
+                        await rejects(
                             Whatsapp.post(valid_message_mock, body),
                             threw(401)
                         );
 
-                        rejects(
+                        await rejects(
                             Whatsapp.post(valid_message_mock, body, undefined),
                             threw(401)
                         );
                     });
 
-                    it("should throw 500 if appSecret is not specified", function () {
+                    it("should throw 500 if appSecret is not specified", async function () {
                         delete Whatsapp.appSecret;
 
-                        rejects(
+                        await rejects(
                             Whatsapp.post(valid_message_mock, body, signature),
                             threw(500)
                         );
                     });
 
-                    it("should throw 401 if the signature doesn't match the hash", function () {
-                        rejects(
+                    it("should throw 401 if the signature doesn't match the hash", async function () {
+                        await rejects(
                             Whatsapp.post(valid_message_mock, body, "wrong"),
                             threw(401)
                         );
@@ -1652,10 +1655,10 @@ describe("WhatsAppAPI", function () {
                     });
                 });
 
-                it("should throw 400 if the request isn't a valid WhatsApp Cloud API request (data.object)", function () {
+                it("should throw 400 if the request isn't a valid WhatsApp Cloud API request (data.object)", async function () {
                     Whatsapp.secure = false;
 
-                    rejects(Whatsapp.post({}), threw(400));
+                    await rejects(Whatsapp.post({}), threw(400));
                 });
             });
 
@@ -1770,17 +1773,17 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.calledOnce(spy_on_message);
                 });
 
-                it("should throw TypeError if the request is missing any data", function () {
+                it("should throw TypeError if the request is missing any data", async function () {
                     let moddedMock;
 
                     moddedMock = new MessageWebhookMock();
-                    rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(Whatsapp.post(moddedMock), TypeError);
 
                     moddedMock = new MessageWebhookMock(phoneID);
-                    rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(Whatsapp.post(moddedMock), TypeError);
 
                     moddedMock = new MessageWebhookMock(phoneID, user);
-                    rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(Whatsapp.post(moddedMock), TypeError);
 
                     // Missing name doesn't throw error
                 });
@@ -1858,14 +1861,14 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.calledOnce(spy_on_status);
                 });
 
-                it("should throw TypeError if the request is missing any data", function () {
+                it("should throw TypeError if the request is missing any data", async function () {
                     let moddedMock;
 
                     moddedMock = new StatusWebhookMock();
-                    rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(Whatsapp.post(moddedMock), TypeError);
 
                     moddedMock = new StatusWebhookMock(phoneID);
-                    rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(Whatsapp.post(moddedMock), TypeError);
 
                     // In conclution, it's pointless. As soon as any of the other parameters are defined,
                     // the code will return undefined for the missing ones, without any error.
