@@ -168,12 +168,12 @@ export type OnStatusArgs = {
      */
     biz_opaque_callback_data?: string;
     /**
+     * The raw data from the API
+     */
+    raw: PostData;
+    /**
      * Utility function for offloading code from the main thread,
      * useful for long running tasks such as AI generation
      */
     offload: typeof WhatsAppAPI.offload;
-    /**
-     * The raw data from the API
-     */
-    raw: PostData;
 };

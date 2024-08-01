@@ -848,8 +848,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 pricing,
                 error,
                 biz_opaque_callback_data,
-                offload: WhatsAppAPI.offload,
-                raw: data
+                raw: data,
+                offload: WhatsAppAPI.offload
             };
 
             try {
