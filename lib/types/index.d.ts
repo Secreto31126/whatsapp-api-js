@@ -152,7 +152,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @throws if batch_size is lower than 1
      * @throws if delay is lower than 0
      */
-    broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size?: number, delay?: number): Promise<Array<ReturnType<typeof this.sendMessage>>>;
+    broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size?: number, delay?: number): Array<ReturnType<typeof this.sendMessage>>;
     /**
      * Mark a message as read
      *
