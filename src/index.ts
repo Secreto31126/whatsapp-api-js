@@ -309,13 +309,13 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @throws if batch_size is lower than 1
      * @throws if delay is lower than 0
      */
-    async broadcastMessage(
+    broadcastMessage(
         phoneID: string,
         to: string[],
         message: ClientMessage,
         batch_size = 50,
         delay = 1000
-    ): Promise<Array<ReturnType<typeof this.sendMessage>>> {
+    ): Array<ReturnType<typeof this.sendMessage>> {
         const responses = [] as ReturnType<typeof this.sendMessage>[];
 
         if (batch_size < 1) {
@@ -326,15 +326,20 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             throw new RangeError("delay must be greater or equal to 0");
         }
 
-        for (let i = 0; i < to.length; i += batch_size) {
-            if (i !== 0) {
-                await new Promise((resolve) => setTimeout(resolve, delay));
-            }
-
-            for (const u of to.slice(i, i + batch_size)) {
-                responses.push(this.sendMessage(phoneID, u, message));
-            }
-        }
+        to.forEach((phone, i) => {
+            responses.push(
+                new Promise((resolve) => {
+                    setTimeout(
+                        () => {
+                            this.sendMessage(phoneID, phone, message).then(
+                                resolve
+                            );
+                        },
+                        delay * ((i / batch_size) | 0)
+                    );
+                })
+            );
+        });
 
         return responses;
     }
