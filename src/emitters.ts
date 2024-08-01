@@ -61,6 +61,10 @@ export type OnSentArgs = {
      * useful for long running tasks such as AI generation
      */
     offload: typeof WhatsAppAPI.offload;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: InstanceType<typeof WhatsAppAPI>;
 };
 
 /**
@@ -176,4 +180,8 @@ export type OnStatusArgs = {
      * useful for long running tasks such as AI generation
      */
     offload: typeof WhatsAppAPI.offload;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: InstanceType<typeof WhatsAppAPI>;
 };

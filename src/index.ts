@@ -263,7 +263,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                     : undefined
                 : undefined,
             response,
-            offload: WhatsAppAPI.offload
+            offload: WhatsAppAPI.offload,
+            Whatsapp: this
         };
 
         this.on?.sent?.(args);
@@ -849,7 +850,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 error,
                 biz_opaque_callback_data,
                 raw: data,
-                offload: WhatsAppAPI.offload
+                offload: WhatsAppAPI.offload,
+                Whatsapp: this
             };
 
             try {
