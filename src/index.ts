@@ -228,12 +228,11 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             request.biz_opaque_callback_data = biz_opaque_callback_data;
 
         // Make the post request
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
             {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${this.token}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify(request)
@@ -351,12 +350,11 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         messageId: string
     ): Promise<ServerMarkAsReadResponse | Response> {
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
             {
                 method: "POST",
                 headers: {
-                    Authorization: `Bearer ${this.token}`,
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
@@ -387,13 +385,10 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         message: string,
         format: "png" | "svg" = "png"
     ): Promise<ServerCreateQRResponse | Response> {
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls?generate_qr_image=${format}&prefilled_message=${message}`,
             {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
+                method: "POST"
             }
         );
 
@@ -411,15 +406,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         id?: string
     ): Promise<ServerRetrieveQRResponse | Response> {
-        const promise = this.fetch(
-            `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${
-                id ?? ""
-            }`,
-            {
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
-            }
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id ?? ""}`
         );
 
         return this.getBody<ServerRetrieveQRResponse>(promise);
@@ -438,13 +426,10 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         id: string,
         message: string
     ): Promise<ServerUpdateQRResponse | Response> {
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}?prefilled_message=${message}`,
             {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
+                method: "POST"
             }
         );
 
@@ -462,13 +447,10 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         id: string
     ): Promise<ServerDeleteQRResponse | Response> {
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}`,
             {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
+                method: "DELETE"
             }
         );
 
@@ -493,13 +475,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID?: string
     ): Promise<ServerMediaRetrieveResponse | Response> {
         const params = phoneID ? `phone_number_id=${phoneID}` : "";
-        const promise = this.fetch(
-            `https://graph.facebook.com/${this.v}/${id}?${params}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
-            }
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${id}?${params}`
         );
 
         return this.getBody<ServerMediaRetrieveResponse>(promise);
@@ -633,14 +610,11 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 );
         }
 
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/media?messaging_product=whatsapp`,
             {
                 method: "POST",
-                body: form as FormData,
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
+                body: form as FormData
             }
         );
 
@@ -696,13 +670,10 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID?: string
     ): Promise<ServerMediaDeleteResponse | Response> {
         const params = phoneID ? `phone_number_id=${phoneID}` : "";
-        const promise = this.fetch(
+        const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${id}?${params}`,
             {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${this.token}`
-                }
+                method: "DELETE"
             }
         );
 
