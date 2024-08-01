@@ -742,10 +742,10 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws 500 if secure and the appSecret isn't specified
-     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
      * @throws 400 if secure and the raw body is missing
      * @throws 401 if secure and the signature is missing
+     * @throws 500 if secure and the appSecret isn't defined
+     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
      * @throws 401 if secure and the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
      * @throws 500 if the user's callback throws an error
@@ -758,35 +758,11 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     ): Promise<EmittersReturnType | undefined> {
         //Validating the payload
         if (this.secure) {
-            if (!this.appSecret) throw 500;
-            if (!this.subtle) throw 501;
-
             if (!raw_body) throw 400;
-
-            signature = signature?.split("sha256=")[1];
             if (!signature) throw 401;
-
-            const encoder = new TextEncoder();
-            const keyBuffer = encoder.encode(this.appSecret);
-
-            const key = await this.subtle.importKey(
-                "raw",
-                keyBuffer,
-                { name: "HMAC", hash: "SHA-256" },
-                true,
-                ["sign", "verify"]
-            );
-
-            const data = encoder.encode(escapeUnicode(raw_body));
-            const result = await this.subtle.sign("HMAC", key, data.buffer);
-            const result_array = Array.from(new Uint8Array(result));
-
-            // Convert an array of bytes to a hex string
-            const check = result_array
-                .map((b) => b.toString(16).padStart(2, "0"))
-                .join("");
-
-            if (signature !== check) throw 401;
+            if (!(await this.verifyRequestSignature(raw_body, signature))) {
+                throw 401;
+            }
         }
 
         // Throw "400 Bad Request" if data is not a valid WhatsApp API request
@@ -958,6 +934,48 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 ...options.headers
             }
         });
+    }
+
+    /**
+     * Verify the signature of a request
+     *
+     * @param raw_body - The raw body of the request
+     * @param signature - The signature to validate
+     * @returns If the signature is valid
+     * @throws 500 if the appSecret isn't defined
+     * @throws 501 if crypto.subtle or ponyfill isn't available
+     */
+    async verifyRequestSignature(
+        raw_body: string,
+        signature: string
+    ): Promise<boolean> {
+        if (!this.appSecret) throw 500;
+        if (!this.subtle) throw 501;
+
+        signature = signature.split("sha256=")[1];
+        if (!signature) return false;
+
+        const encoder = new TextEncoder();
+        const keyBuffer = encoder.encode(this.appSecret);
+
+        const key = await this.subtle.importKey(
+            "raw",
+            keyBuffer,
+            { name: "HMAC", hash: "SHA-256" },
+            true,
+            ["sign", "verify"]
+        );
+
+        const data = encoder.encode(escapeUnicode(raw_body));
+        const result = await this.subtle.sign("HMAC", key, data.buffer);
+        const result_array = Array.from(new Uint8Array(result));
+
+        // Convert an array of bytes to a hex string
+        const check = result_array
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+
+        return signature !== check;
     }
 
     /**
