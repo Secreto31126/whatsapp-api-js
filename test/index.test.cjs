@@ -1897,7 +1897,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("_authenticatedRequest", function () {
+    describe("$$apiFetch$$", function () {
         const Whatsapp = new WhatsAppAPI({
             v,
             token,
@@ -1919,37 +1919,23 @@ describe("WhatsAppAPI", function () {
                 .reply(200)
                 .times(1);
 
-            Whatsapp._authenticatedRequest("https://example.com/");
+            Whatsapp.$$apiFetch$$("https://example.com/");
         });
 
-        it("should make an authenticated request to any url with custom headers", async function () {
+        it("should make an authenticated request to any url with custom options", async function () {
             clientExample
                 .intercept({
                     path: "/",
+                    method: "POST",
                     headers: {
-                        Authorization: `Bearer ${token}`,
-                        blablabla: "blablabla"
+                        Authorization: `Bearer ${token}`
                     }
                 })
                 .reply(200)
                 .times(1);
 
-            Whatsapp._authenticatedRequest("https://example.com/", {
-                blablabla: "blablabla"
-            });
-        });
-
-        it("should fail if the url param is not defined", function () {
-            throws(function () {
-                Whatsapp._authenticatedRequest(undefined);
-            });
-
-            throws(function () {
-                Whatsapp._authenticatedRequest(false);
-            });
-
-            throws(function () {
-                Whatsapp._authenticatedRequest();
+            Whatsapp.$$apiFetch$$("https://example.com/", {
+                method: "POST"
             });
         });
     });
