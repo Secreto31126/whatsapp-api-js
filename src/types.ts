@@ -9,7 +9,7 @@
 
 import type { AtLeastOne } from "./utils";
 
-export const DEFAULT_API_VERSION = "v19.0";
+export const DEFAULT_API_VERSION = "v20.0";
 
 /**
  * The main constructor arguments for the API
