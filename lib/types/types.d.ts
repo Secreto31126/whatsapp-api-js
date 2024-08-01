@@ -68,11 +68,6 @@ export type TheBasicConstructorArguments = {
      */
     parsed?: boolean;
     /**
-     * If false, the user functions won't be offloaded from the main event loop.
-     * Intended for Serverless Environments where the process might be killed after the main function finished.
-     */
-    offload_functions?: boolean;
-    /**
      * If set to false, none of the API checks will be performed, and it will be used in a less secure way.
      *
      * Defaults to true.

@@ -4,7 +4,7 @@ import type { OnMessage, OnSent, OnStatus } from "./emitters";
 /**
  * The main API Class
  */
-export declare class WhatsAppAPI {
+export declare class WhatsAppAPI<EmittersReturnType = void> {
     /**
      * The API token
      */
@@ -34,11 +34,6 @@ export declare class WhatsAppAPI {
      */
     private parsed;
     /**
-     * If false, the user functions won't be offloaded from the main event loop.
-     * Intended for Serverless Environments where the process might be killed after the main function finished.
-     */
-    private offload_functions;
-    /**
      * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
     private secure;
@@ -60,9 +55,9 @@ export declare class WhatsAppAPI {
      * ```
      */
     on: {
-        message?: OnMessage;
+        message?: OnMessage<EmittersReturnType>;
         sent?: OnSent;
-        status?: OnStatus;
+        status?: OnStatus<EmittersReturnType>;
     };
     /**
      * Main entry point for the API.
@@ -89,7 +84,7 @@ export declare class WhatsAppAPI {
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
      */
-    constructor({ token, appSecret, webhookVerifyToken, v, parsed, offload_functions, secure, ponyfill }: WhatsAppAPIConstructorArguments);
+    constructor({ token, appSecret, webhookVerifyToken, v, parsed, secure, ponyfill }: WhatsAppAPIConstructorArguments);
     /**
      * Send a Whatsapp message
      *
@@ -320,7 +315,7 @@ export declare class WhatsAppAPI {
      *
      * const token = "token";
      * const appSecret = "appSecret";
-     * const Whatsapp = new WhatsAppAPI(NodeNext({ token, appSecret }));
+     * const Whatsapp = new WhatsAppAPI<number>(NodeNext({ token, appSecret }));
      *
      * function handler(req, res) {
      *     if (req.method == "POST") {
@@ -342,8 +337,10 @@ export declare class WhatsAppAPI {
      *     } else res.writeHead(501).end();
      * };
      *
-     * Whatsapp.on.message = ({ phoneID, from, message, name }) => {
+     * Whatsapp.on.message = ({ phoneID, from, message, name, reply, offload }) => {
      *     console.log(`User ${name} (${from}) sent to bot ${phoneID} a(n) ${message.type}`);
+     *     offload(() => reply(new Text("Hello!")));
+     *     return 202;
      * };
      *
      * const server = createServer(handler);
@@ -353,15 +350,17 @@ export declare class WhatsAppAPI {
      * @param data - The POSTed data object sent by Whatsapp
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
-     * @returns 200, it's the expected http/s response code
+     * @returns The emitter's return value, undefined if the corresponding emitter isn't set
      * @throws 500 if secure and the appSecret isn't specified
      * @throws 501 if secure and crypto.subtle or ponyfill isn't available
      * @throws 400 if secure and the raw body is missing
      * @throws 401 if secure and the signature is missing
      * @throws 401 if secure and the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
+     * @throws 500 if the user's callback throws an error
+     * @throws 200, if the POSTed data is valid but not a message or status update (ignored)
      */
-    post(data: PostData, raw_body?: string, signature?: string): Promise<200>;
+    post(data: PostData, raw_body?: string, signature?: string): Promise<EmittersReturnType | undefined>;
     /**
      * GET helper, must be called inside the get function of your code.
      * Used once at the first webhook setup.
@@ -431,14 +430,13 @@ export declare class WhatsAppAPI {
      * @param f - The user function to call
      * @param a - The arguments to pass to the function
      */
-    private user_function;
+    private static user_function;
     /**
      * Offload a function to the next tick of the event loop
      *
-     * @internal
      * @param f - The function to offload from the main thread
      * @param a - The arguments to pass to the function
      */
-    private offload;
+    static offload<A, F extends (...a: A[]) => unknown>(f: F, ...a: A[]): void;
 }
 //# sourceMappingURL=index.d.ts.map

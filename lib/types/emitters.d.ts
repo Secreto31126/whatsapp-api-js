@@ -52,7 +52,7 @@ export type OnSentArgs = {
  * @public
  * @param args - The arguments object
  */
-export type OnMessage = (args: OnMessageArgs) => unknown;
+export type OnMessage<Returns> = (args: OnMessageArgs) => Returns;
 /**
  * @public
  */
@@ -87,6 +87,11 @@ export type OnMessageArgs = {
      */
     reply: (response: ClientMessage, context?: boolean, biz_opaque_callback_data?: string) => Promise<ServerMessageResponse | Response>;
     /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
+    /**
      * The WhatsAppAPI instance that emitted the event
      */
     Whatsapp: InstanceType<typeof WhatsAppAPI>;
@@ -97,7 +102,7 @@ export type OnMessageArgs = {
  * @public
  * @param args - The arguments object
  */
-export type OnStatus = (args: OnStatusArgs) => unknown;
+export type OnStatus<Returns> = (args: OnStatusArgs) => Returns;
 /**
  * @public
  */
@@ -138,6 +143,11 @@ export type OnStatusArgs = {
      * Arbitrary string included in sent messages
      */
     biz_opaque_callback_data?: string;
+    /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
     /**
      * The raw data from the API
      */
