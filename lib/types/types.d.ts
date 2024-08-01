@@ -7,7 +7,7 @@
  * feel free to read the docs :)
  */
 import type { AtLeastOne } from "./utils";
-export declare const DEFAULT_API_VERSION = "v19.0";
+export declare const DEFAULT_API_VERSION = "v20.0";
 /**
  * The main constructor arguments for the API
  */
