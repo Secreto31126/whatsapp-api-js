@@ -351,10 +351,10 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws 500 if secure and the appSecret isn't specified
-     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
      * @throws 400 if secure and the raw body is missing
      * @throws 401 if secure and the signature is missing
+     * @throws 500 if secure and the appSecret isn't defined
+     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
      * @throws 401 if secure and the signature doesn't match the hash
      * @throws 400 if the POSTed data is not a valid Whatsapp API request
      * @throws 500 if the user's callback throws an error
@@ -416,6 +416,16 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @returns The fetch response
      */
     $$apiFetch$$(url: string | URL | Request, options?: RequestInit): Promise<Response>;
+    /**
+     * Verify the signature of a request
+     *
+     * @param raw_body - The raw body of the request
+     * @param signature - The signature to validate
+     * @returns If the signature is valid
+     * @throws 500 if the appSecret isn't defined
+     * @throws 501 if crypto.subtle or ponyfill isn't available
+     */
+    verifyRequestSignature(raw_body: string, signature: string): Promise<boolean>;
     /**
      * Get the body of a fetch response
      *
