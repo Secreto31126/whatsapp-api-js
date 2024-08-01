@@ -262,10 +262,12 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                         : undefined
                     : undefined
                 : undefined,
-            response
+            response,
+            offload: WhatsAppAPI.offload,
+            Whatsapp: this
         };
 
-        WhatsAppAPI.user_function(this.on?.sent, args);
+        this.on?.sent?.(args);
 
         return response ?? promise;
     }
@@ -847,8 +849,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 pricing,
                 error,
                 biz_opaque_callback_data,
+                raw: data,
                 offload: WhatsAppAPI.offload,
-                raw: data
+                Whatsapp: this
             };
 
             try {
@@ -968,22 +971,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         promise: Promise<Response>
     ): Promise<T | Response> {
         return this.parsed ? ((await (await promise).json()) as T) : promise;
-    }
-
-    /**
-     * Call a user function, offloading it from the main thread if needed
-     *
-     * @internal
-     * @param f - The user function to call
-     * @param a - The arguments to pass to the function
-     */
-    private static async user_function<A, F extends (...a: A[]) => unknown>(
-        f?: F,
-        ...a: A[]
-    ) {
-        if (f) {
-            WhatsAppAPI.offload(f, ...a);
-        }
     }
 
     /**
