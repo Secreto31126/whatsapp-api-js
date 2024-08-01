@@ -425,14 +425,6 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     private getBody;
     /**
-     * Call a user function, offloading it from the main thread if needed
-     *
-     * @internal
-     * @param f - The user function to call
-     * @param a - The arguments to pass to the function
-     */
-    private static user_function;
-    /**
      * Offload a function to the next tick of the event loop
      *
      * @param f - The function to offload from the main thread
