@@ -56,6 +56,11 @@ export type OnSentArgs = {
      * The parsed response from the server, undefined if parsed is set to false
      */
     response?: ServerMessageResponse;
+    /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
 };
 
 /**
