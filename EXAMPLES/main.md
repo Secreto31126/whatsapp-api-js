@@ -58,8 +58,19 @@ Whatsapp.sendMessage(
 );
 ```
 
+## Replying to a message
+
+```ts
+import { Text } from "whatsapp-api-js/messages";
+
+Whatsapp.on.message = async ({ reply }) => {
+    await reply(new Text("Hello!"));
+};
+```
+
 ## Documentation
 
 https://whatsappapijs.web.app/classes/WhatsAppAPI.WhatsAppAPI.html
 https://whatsappapijs.web.app/modules/setup.html
 https://whatsappapijs.web.app/modules/middleware.html
+https://whatsappapijs.web.app/modules/emitters.html

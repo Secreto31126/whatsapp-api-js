@@ -1,5 +1,97 @@
 # Breaking changes
 
+## 4.0.0
+
+### Emitters and post() signature change
+
+This might be one of the most requested features since the
+beginning of the library. It is now possible to return
+custom information from the emitters, which can be accessed
+from the promise returned by the method `post()`.
+
+```ts
+type EmitterReturn = { replied: boolean; status: number };
+
+const Whatsapp = new WhatsAppAPI<EmitterReturn>({
+    token,
+    appSecret
+});
+
+Whatsapp.on.message = async ({ reply }) => {
+    try {
+        await reply(new Text("Hello!"));
+        return { replied: true, status: 200 };
+    } catch (e) {
+        return { replied: false, status: 500 };
+    }
+};
+
+Whatsapp.on.status = ({ id, status }) => {
+    return { replied: false, status: 200 };
+};
+
+// Assuming post is called on a POST request to your server
+async function post(e) {
+    const body = JSON.parse(e.data);
+
+    let status: number, replied = false;
+    try {
+        { replied, status } = await Whatsapp.post(body, e.data, e.headers["x-hub-signature-256"]);
+    } catch (e) {
+        status = e;
+    }
+
+    console.log(`Replied: ${replied}, Status: ${status}`);
+    return status;
+}
+```
+
+Some things to note:
+
+1.  As you may notice, the method no longer returns 200 by default,
+    but rather a promise of the custom type.
+
+2.  Any error thrown within the emitters will be caught by `post()` and
+    throw a 500 status code.
+
+3.  OnSent is not affected by this change as it is not invoked
+    by the method `post()`.
+
+4.  Middlewares are also not affected by this, as they still
+    return a promise of 200 with no option to change it. They, however,
+    will return 500 if an error is thrown within the emitter, as
+    they internally call `post()`, which will catch the error as
+    mentioned in point 2.
+
+### offload_functions option removed
+
+The option `offload_functions` was removed from the constructor.
+All emitters are now always executed synchronously. In order to
+offload the execution of the handlers, you can use the new `offload`
+method, which can be called from the emitters' parameters.
+
+```ts
+const Whatsapp = new WhatsAppAPI<number>({ token, appSecret });
+
+Whatsapp.on.message = ({ reply, offload }) => {
+    offload(() => {
+        reply(new Text(AI.text()));
+    });
+
+    return 202;
+};
+```
+
+### broadcastMessage() signature change
+
+The method no longer returns a promise, and rather than waiting
+within the function to send the message, it immediately returns
+an array of timeout promises which will execute `sendMessage()`.
+
+### Bumped API version
+
+The default API version was bumped to `v20.0`. Not much else to say.
+
 ## 3.0.0
 
 In the last few years, the library has been growing and changing, and

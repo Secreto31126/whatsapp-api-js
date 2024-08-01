@@ -1,4 +1,4 @@
-# whatsapp-api-js v3
+# whatsapp-api-js v4
 
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
@@ -7,7 +7,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
--   [whatsapp-api-js v3](#whatsapp-api-js-v3)
+-   [whatsapp-api-js v4](#whatsapp-api-js-v4)
     -   [List of contents](#list-of-contents)
     -   [Set up](#set-up)
     -   [Examples and Tutorials](#examples-and-tutorials)
@@ -106,6 +106,8 @@ Whatsapp.on.message = async ({ phoneID, from, message, name, reply }) => {
     );
 
     Whatsapp.markAsRead(phoneID, message.id);
+
+    return 200;
 };
 
 Whatsapp.on.sent = ({ phoneID, to, message }) => {

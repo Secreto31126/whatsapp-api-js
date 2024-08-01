@@ -16,6 +16,11 @@
         {
             "tagName": "@overload",
             "syntaxKind": "block"
+        },
+        {
+            "tagName": "@template",
+            "syntaxKind": "block",
+            "allowMultiple": true
         }
     ]
 }
