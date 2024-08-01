@@ -408,13 +408,14 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * Make an authenticated request to any url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
      *
-     * @internal
-     * @param url - The url to request to
-     * @param headers - The headers to pass to the request (Authorization is already included)
+     * It's strongly recommended NOT using this method as you might risk exposing your API key accidentally,
+     * but it's here in case you need a specific API operation which is not implemented by the library.
+     *
+     * @param url - The url to fetch
+     * @param options - The fetch options (headers.Authorization is already included)
      * @returns The fetch response
-     * @throws If url is not specified
      */
-    _authenticatedRequest(url: string | URL | Request, headers?: {}): Promise<Response>;
+    $$apiFetch$$(url: string | URL | Request, options?: RequestInit): Promise<Response>;
     /**
      * Get the body of a fetch response
      *
