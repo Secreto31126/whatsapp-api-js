@@ -996,10 +996,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * Offload a function to the next tick of the event loop
      *
      * @param f - The function to offload from the main thread
-     * @param a - The arguments to pass to the function
      */
-    static offload<A, F extends (...a: A[]) => unknown>(f: F, ...a: A[]) {
+    static offload(f: () => unknown) {
         // Thanks @RahulLanjewar93
-        Promise.resolve().then(() => f(...a));
+        Promise.resolve().then(f);
     }
 }
