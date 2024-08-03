@@ -1,5 +1,7 @@
 export type AtLeastOne<T> = [T, ...T[]];
 
+export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
+
 export function isInteger(n: unknown): n is number {
     return Number.isInteger(n);
 }

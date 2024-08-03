@@ -9,6 +9,7 @@ import type {
     PostData
 } from "./types";
 import type { WhatsAppAPI } from "./index";
+import type { MaybePromise } from "./utils";
 
 /**
  * Callback for "sent" event
@@ -74,7 +75,7 @@ export type OnSentArgs = {
  * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
  * @param args - The arguments object
  */
-export type OnMessage<Returns> = (args: OnMessageArgs) => Returns;
+export type OnMessage<Returns> = (args: OnMessageArgs) => MaybePromise<Returns>;
 
 /**
  * @public
@@ -131,7 +132,7 @@ export type OnMessageArgs = {
  * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
  * @param args - The arguments object
  */
-export type OnStatus<Returns> = (args: OnStatusArgs) => Returns;
+export type OnStatus<Returns> = (args: OnStatusArgs) => MaybePromise<Returns>;
 
 /**
  * @public
