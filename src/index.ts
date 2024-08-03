@@ -267,7 +267,12 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             Whatsapp: this
         };
 
-        this.on?.sent?.(args);
+        try {
+            await this.on?.sent?.(args);
+        } catch (error) {
+            // Eh... I don't like it nor hate it
+            console.error(error);
+        }
 
         return response ?? promise;
     }
@@ -799,7 +804,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             };
 
             try {
-                return this.on?.message?.(args);
+                return await this.on?.message?.(args);
             } catch (error) {
                 throw 500;
             }
@@ -831,7 +836,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             };
 
             try {
-                return this.on?.status?.(args);
+                return await this.on?.status?.(args);
             } catch (error) {
                 throw 500;
             }
