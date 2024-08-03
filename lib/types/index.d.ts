@@ -434,8 +434,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * Offload a function to the next tick of the event loop
      *
      * @param f - The function to offload from the main thread
-     * @param a - The arguments to pass to the function
      */
-    static offload<A, F extends (...a: A[]) => unknown>(f: F, ...a: A[]): void;
+    static offload(f: () => unknown): void;
 }
 //# sourceMappingURL=index.d.ts.map
