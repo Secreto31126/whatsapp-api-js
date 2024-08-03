@@ -1,4 +1,5 @@
 export type AtLeastOne<T> = [T, ...T[]];
+export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 export declare function isInteger(n: unknown): n is number;
 export declare function escapeUnicode(str: string): string;
 type Without<T, U> = {
