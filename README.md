@@ -7,17 +7,17 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
-- [whatsapp-api-js v4](#whatsapp-api-js-v4)
-  - [List of contents](#list-of-contents)
-  - [Set up](#set-up)
-  - [Examples and Tutorials](#examples-and-tutorials)
-  - [Types](#types)
-  - [Changelog](#changelog)
-  - [Documentation](#documentation)
-  - [Contributors](#contributors)
-  - [Contributions](#contributions)
-  - [Breaking changes](#breaking-changes)
-  - [Beta releases](#beta-releases)
+-   [whatsapp-api-js v4](#whatsapp-api-js-v4)
+    -   [List of contents](#list-of-contents)
+    -   [Set up](#set-up)
+    -   [Examples and Tutorials](#examples-and-tutorials)
+    -   [Types](#types)
+    -   [Changelog](#changelog)
+    -   [Documentation](#documentation)
+    -   [Contributors](#contributors)
+    -   [Contributions](#contributions)
+    -   [Breaking changes](#breaking-changes)
+    -   [Beta releases](#beta-releases)
 
 ## Set up
 
@@ -25,12 +25,12 @@ Before all, you will need a Meta Bussiness App with WhatsApp API activated. You
 can create your first app following
 [this steps](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started).
 
-- Get the API token, either a temporal or a
-  [permanent one](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started).
-- Get your App secret from App Settings > Basic > App Secret.
-- More in-depth information on how to set and retrieve this values is available
-  at
-  [the module documentation](https://whatsappapijs.web.app/types/types.TheBasicConstructorArguments.html)
+-   Get the API token, either a temporal or a
+    [permanent one](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started).
+-   Get your App secret from App Settings > Basic > App Secret.
+-   More in-depth information on how to set and retrieve this values is available
+    at
+    [the module documentation](https://whatsappapijs.web.app/types/types.TheBasicConstructorArguments.html)
 
 You can now install the module using npm:
 
@@ -57,17 +57,15 @@ async function post(e) {
     return await Whatsapp.post(
         JSON.parse(e.data),
         e.data,
-        e.headers["x-hub-signature-256"],
+        e.headers["x-hub-signature-256"]
     );
 }
 
 Whatsapp.on.message = async ({ phoneID, from, message, name, reply }) => {
     console.log(
-        `User ${name} (${from}) sent to bot ${phoneID} ${
-            JSON.stringify(
-                message,
-            )
-        }`,
+        `User ${name} (${from}) sent to bot ${phoneID} ${JSON.stringify(
+            message
+        )}`
     );
 
     let response;
@@ -75,19 +73,19 @@ Whatsapp.on.message = async ({ phoneID, from, message, name, reply }) => {
     if (message.type === "text") {
         response = await reply(
             new Text(`*${name}* said:\n\n${message.text.body}`),
-            true,
+            true
         );
     }
 
     if (message.type === "image") {
         response = await reply(
-            new Image(message.image.id, true, `Nice photo, ${name}`),
+            new Image(message.image.id, true, `Nice photo, ${name}`)
         );
     }
 
     if (message.type === "document") {
         response = await reply(
-            new Document(message.document.id, true, undefined, "Our document"),
+            new Document(message.document.id, true, undefined, "Our document")
         );
     }
 
@@ -95,7 +93,7 @@ Whatsapp.on.message = async ({ phoneID, from, message, name, reply }) => {
         response ??
             "There are more types of messages, such as contacts, " +
                 "locations, templates, interactive, reactions and " +
-                "all the other media types.",
+                "all the other media types."
     );
 
     Whatsapp.markAsRead(phoneID, message.id);
@@ -127,7 +125,7 @@ const VERIFY_TOKEN = "YOUR_VERIFY_TOKEN";
 const Whatsapp = new WhatsAppAPI({
     token: TOKEN,
     appSecret: APP_SECRET,
-    webhookVerifyToken: VERIFY_TOKEN,
+    webhookVerifyToken: VERIFY_TOKEN
 });
 
 // Assuming get is called on a GET request to your server
