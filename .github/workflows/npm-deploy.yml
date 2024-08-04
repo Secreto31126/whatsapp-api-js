@@ -61,13 +61,16 @@ jobs:
         needs: test
 
         runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+
         if: ${{ !github.event.release.prerelease }}
 
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
                   registry-url: https://registry.npmjs.org/
             - uses: actions/download-artifact@v3
               with:
@@ -78,7 +81,7 @@ jobs:
               run: sleep 60s
 
             - name: Ok, now publish it
-              run: npm publish
+              run: npm publish --provenance
               env:
                   NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
@@ -87,13 +90,16 @@ jobs:
         needs: test
 
         runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+
         if: ${{ github.event.release.prerelease }}
 
         steps:
             - uses: actions/checkout@v4
             - uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
                   registry-url: https://registry.npmjs.org/
             - uses: actions/download-artifact@v3
               with:
@@ -104,7 +110,7 @@ jobs:
               run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
 
             - name: Beta Release
-              run: npm publish --tag beta
+              run: npm publish --tag beta --provenance
               env:
                   NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
