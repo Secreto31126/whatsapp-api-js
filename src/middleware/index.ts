@@ -38,5 +38,6 @@ export { WhatsAppAPI as VercelMiddleware } from "./vercel.js";
 export { WhatsAppAPI as DenoMiddleware } from "./deno.js";
 export { WhatsAppAPI as BunMiddleware } from "./bun.js";
 export { WhatsAppAPI as SvelteKitMiddleware } from "./sveltekit.js";
+export { WhatsAppAPI as NextAppMiddleware } from "./next.js";
 export { WhatsAppAPI as WebStandardMiddleware } from "./web-standard.js";
 export { WhatsAppAPI as NodeHTTPMiddleware } from "./node-http.js";
