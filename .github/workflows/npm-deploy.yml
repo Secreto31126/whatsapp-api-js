@@ -23,7 +23,7 @@ jobs:
               run: npm run build
 
             - name: Store builds
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: build
                   path: lib
@@ -39,7 +39,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build
                   path: lib
@@ -72,7 +72,7 @@ jobs:
               with:
                   node-version: 20.x
                   registry-url: https://registry.npmjs.org/
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build
                   path: lib
@@ -101,7 +101,7 @@ jobs:
               with:
                   node-version: 20.x
                   registry-url: https://registry.npmjs.org/
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build
                   path: lib
