@@ -27,7 +27,7 @@ can create your first app following
 
 -   Get the API token, either a temporal or a
     [permanent one](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started).
--   Get your App secret from App Settings > Basic > App Secret.
+-   Get your App secret from the dashboard in App Settings > Basic > App Secret.
 -   More in-depth information on how to set and retrieve this values is available
     at
     [the module documentation](https://whatsappapijs.web.app/types/types.TheBasicConstructorArguments.html)
@@ -107,11 +107,9 @@ Whatsapp.on.sent = ({ phoneID, to, message }) => {
 ```
 
 To receive the messages updates, you must set-up the webhook at your Meta app.
-
-Back in the dashboard, click on WhatsApp > Settings, and write down your webhook
-URL. Make sure to subscribe to the messages event.
-
-You will also be asked for a Verify Token. This can be any string you want.
+Back in the dashboard, click on WhatsApp > Settings, write down your webhook
+URL, and make sure to subscribe to the messages event. You will also be asked
+for a Verify Token. This can be any string you want.
 
 The package also includes a GET handler for the webhook authentication:
 
