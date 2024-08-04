@@ -9,16 +9,32 @@ export default ts.config(
     ...ts.configs.recommended,
     prettier,
     {
+        languageOptions: {
+            globals: globals.node
+        }
+    },
+    {
+        files: ["src/*"],
+
         plugins: {
             tsdoc
         },
 
+        rules: {
+            "tsdoc/syntax": "warn"
+        }
+    },
+    {
+        files: ["test/*"],
+
         languageOptions: {
-            globals: globals.node
+            globals: {
+                ...globals.mocha
+            }
         },
 
         rules: {
-            "tsdoc/syntax": "warn"
+            "@typescript-eslint/no-require-imports": "off"
         }
     }
 );

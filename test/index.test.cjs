@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable-next-line */
 // @ts-nocheck
 
@@ -145,7 +144,6 @@ describe("WhatsAppAPI", function () {
             it("should default to the enviroment crypto.subtle (skip if not defined)", function () {
                 if (
                     typeof crypto === "undefined" ||
-                    // eslint-disable-next-line no-undef
                     typeof crypto.subtle === "undefined"
                 ) {
                     this.skip();
