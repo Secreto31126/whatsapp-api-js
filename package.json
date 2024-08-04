@@ -134,10 +134,10 @@
     },
     "devDependencies": {
         "@adonisjs/http-server": "7.2.3",
+        "@eslint/js": "9.8.0",
+        "@types/eslint__js": "8.42.3",
         "@types/express": "4.17.21",
         "@types/node": "18.19.42",
-        "@typescript-eslint/eslint-plugin": "8.0.0",
-        "@typescript-eslint/parser": "8.0.0",
         "@vercel/node": "3.2.7",
         "all-contributors-cli": "6.26.1",
         "c8": "10.1.2",
@@ -147,11 +147,13 @@
         "eslint-config-prettier": "9.1.0",
         "eslint-plugin-tsdoc": "0.3.0",
         "glob": "11.0.0",
+        "globals": "^15.9.0",
         "mocha": "10.7.0",
         "prettier": "3.3.3",
         "sinon": "18.0.0",
         "typedoc": "0.26.5",
         "typescript": "5.5.4",
+        "typescript-eslint": "8.0.0",
         "undici": "6.19.5"
     }
 }
