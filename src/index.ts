@@ -805,7 +805,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
 
             try {
                 return await this.on?.message?.(args);
-            } catch (error) {
+            } catch {
                 throw 500;
             }
         } else if ("statuses" in value) {
@@ -837,7 +837,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
 
             try {
                 return await this.on?.status?.(args);
-            } catch (error) {
+            } catch {
                 throw 500;
             }
         }
