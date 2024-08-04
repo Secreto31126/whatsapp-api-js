@@ -1,6 +1,6 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
 /**
- * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/Hono)
+ * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/NextJS/Hono)
  */
 export declare class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**

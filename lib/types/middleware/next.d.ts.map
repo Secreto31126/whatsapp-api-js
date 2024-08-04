@@ -1,0 +1,1 @@
+{"version":3,"file":"next.d.ts","sourceRoot":"","sources":["../../../src/middleware/next.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,IAAI,qBAAqB,EAAE,MAAM,mBAAmB,CAAC;AAEzE;;GAEG;AACH,qBAAa,WAAY,SAAQ,qBAAqB;IAClD;;;;;;;;;;;;;;;;;;;;;;OAsBG;IACG,WAAW,CAAC,GAAG,EAAE,OAAO;IAI9B;;;;;;;;;;;;;;;;;;;;;;;;;OAyBG;IACH,UAAU,CAAC,GAAG,EAAE,OAAO;CAG1B"}
