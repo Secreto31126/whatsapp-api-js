@@ -4,7 +4,7 @@ import { isInteger } from "../utils.js";
 import type { GetParams } from "../types";
 
 /**
- * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/Hono)
+ * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/NextJS/Hono)
  */
 export class WhatsAppAPI extends WhatsAppAPIMiddleware {
     /**
