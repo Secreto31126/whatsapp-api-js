@@ -790,9 +790,15 @@ export type ServerErrorResponse = {
     };
 };
 
-export type ServerSuccessResponse = {
-    success: true;
+export type NoServerError = {
+    error: never;
 };
+
+export type ServerSuccessResponse =
+    | {
+          success: true;
+      }
+    | NoServerError;
 
 export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
@@ -811,7 +817,7 @@ export type ServerSentMessageResponse = {
 };
 
 export type ServerMessageResponse =
-    | ServerSentMessageResponse
+    | (ServerSentMessageResponse | NoServerError)
     | ServerErrorResponse;
 
 export type ServerMarkAsReadResponse =
@@ -825,15 +831,22 @@ export type ServerQR = {
     qr_image_url?: string;
 };
 
-export type ServerCreateQRResponse = ServerQR | ServerErrorResponse;
-
-export type ServerRetrieveQRResponse =
-    | {
-          data: ServerQR[];
-      }
+export type ServerCreateQRResponse =
+    | (ServerQR | NoServerError)
     | ServerErrorResponse;
 
-export type ServerUpdateQRResponse = ServerQR | ServerErrorResponse;
+export type ServerRetrieveQRResponse =
+    | (
+          | {
+                data: ServerQR[];
+            }
+          | NoServerError
+      )
+    | ServerErrorResponse;
+
+export type ServerUpdateQRResponse =
+    | (ServerQR | NoServerError)
+    | ServerErrorResponse;
 
 export type ServerDeleteQRResponse =
     | ServerSuccessResponse
@@ -843,7 +856,9 @@ export type ServerMedia = {
     id: string;
 };
 
-export type ServerMediaUploadResponse = ServerMedia | ServerErrorResponse;
+export type ServerMediaUploadResponse =
+    | (ServerMedia | NoServerError)
+    | ServerErrorResponse;
 
 export type ValidMimeTypes =
     | "audio/aac"
@@ -866,13 +881,16 @@ export type ValidMimeTypes =
     | "image/webp";
 
 export type ServerMediaRetrieveResponse =
-    | ({
-          messaging_product: "whatsapp";
-          url: string;
-          mime_type: ValidMimeTypes;
-          sha256: string;
-          file_size: string;
-      } & ServerMedia)
+    | (
+          | ({
+                messaging_product: "whatsapp";
+                url: string;
+                mime_type: ValidMimeTypes;
+                sha256: string;
+                file_size: string;
+            } & ServerMedia)
+          | NoServerError
+      )
     | ServerErrorResponse;
 
 export type ServerMediaDeleteResponse =
