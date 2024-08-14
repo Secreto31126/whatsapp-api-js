@@ -322,8 +322,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         message: ClientMessage,
         batch_size = 50,
         delay = 1000
-    ): Array<ReturnType<typeof this.sendMessage>> {
-        const responses = [] as ReturnType<typeof this.sendMessage>[];
+    ): Array<ReturnType<WhatsAppAPI["sendMessage"]>> {
+        const responses = [] as ReturnType<WhatsAppAPI["sendMessage"]>[];
 
         if (batch_size < 1) {
             throw new RangeError("batch_size must be greater than 0");

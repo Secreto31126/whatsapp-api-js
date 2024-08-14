@@ -145,10 +145,14 @@ export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
 export abstract class ClientMessage {
     /**
      * The message type
+     *
+     * @internal
      */
     abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
+     *
+     * @internal
      */
     _build(): string {
         return JSON.stringify(this);
@@ -158,6 +162,8 @@ export abstract class ClientMessage {
 export interface ClientTypedMessageComponent {
     /**
      * The message's component type
+     *
+     * @internal
      */
     get _type(): string;
 }
@@ -165,6 +171,8 @@ export interface ClientTypedMessageComponent {
 export interface ClientBuildableMessageComponent {
     /**
      * The message's component builder method
+     *
+     * @internal
      */
     _build(..._: unknown[]): unknown;
 }
@@ -245,6 +253,7 @@ export abstract class ContactComponent
 {
     /**
      * @override
+     * @internal
      */
     _build(): unknown {
         return this;
@@ -252,8 +261,14 @@ export abstract class ContactComponent
 
     /**
      * Whether the component can be repeated multiple times in a contact.
+     *
+     * @internal
      */
     abstract get _many(): boolean;
+    /**
+     * @override
+     * @internal
+     */
     abstract get _type(): string;
 }
 
@@ -263,11 +278,16 @@ export abstract class ContactComponent
 export abstract class ContactMultipleComponent extends ContactComponent {
     /**
      * @override
+     * @internal
      */
     get _many(): true {
         return true;
     }
 
+    /**
+     * @override
+     * @internal
+     */
     abstract get _type(): string;
 }
 
@@ -277,11 +297,16 @@ export abstract class ContactMultipleComponent extends ContactComponent {
 export abstract class ContactUniqueComponent extends ContactComponent {
     /**
      * @override
+     * @internal
      */
     get _many(): false {
         return false;
     }
 
+    /**
+     * @override
+     * @internal
+     */
     abstract get _type(): string;
 }
 
@@ -291,6 +316,7 @@ export abstract class ContactUniqueComponent extends ContactComponent {
 export interface InteractiveAction extends ClientTypedMessageComponent {
     /**
      * @overload
+     * @internal
      */
     get _type():
         | "list"
@@ -790,9 +816,15 @@ export type ServerErrorResponse = {
     };
 };
 
-export type ServerSuccessResponse = {
-    success: true;
+export type NoServerError = {
+    error: never;
 };
+
+export type ServerSuccessResponse =
+    | {
+          success: true;
+      }
+    | NoServerError;
 
 export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
@@ -811,7 +843,7 @@ export type ServerSentMessageResponse = {
 };
 
 export type ServerMessageResponse =
-    | ServerSentMessageResponse
+    | (ServerSentMessageResponse | NoServerError)
     | ServerErrorResponse;
 
 export type ServerMarkAsReadResponse =
@@ -825,15 +857,22 @@ export type ServerQR = {
     qr_image_url?: string;
 };
 
-export type ServerCreateQRResponse = ServerQR | ServerErrorResponse;
-
-export type ServerRetrieveQRResponse =
-    | {
-          data: ServerQR[];
-      }
+export type ServerCreateQRResponse =
+    | (ServerQR | NoServerError)
     | ServerErrorResponse;
 
-export type ServerUpdateQRResponse = ServerQR | ServerErrorResponse;
+export type ServerRetrieveQRResponse =
+    | (
+          | {
+                data: ServerQR[];
+            }
+          | NoServerError
+      )
+    | ServerErrorResponse;
+
+export type ServerUpdateQRResponse =
+    | (ServerQR | NoServerError)
+    | ServerErrorResponse;
 
 export type ServerDeleteQRResponse =
     | ServerSuccessResponse
@@ -843,7 +882,9 @@ export type ServerMedia = {
     id: string;
 };
 
-export type ServerMediaUploadResponse = ServerMedia | ServerErrorResponse;
+export type ServerMediaUploadResponse =
+    | (ServerMedia | NoServerError)
+    | ServerErrorResponse;
 
 export type ValidMimeTypes =
     | "audio/aac"
@@ -866,13 +907,16 @@ export type ValidMimeTypes =
     | "image/webp";
 
 export type ServerMediaRetrieveResponse =
-    | ({
-          messaging_product: "whatsapp";
-          url: string;
-          mime_type: ValidMimeTypes;
-          sha256: string;
-          file_size: string;
-      } & ServerMedia)
+    | (
+          | ({
+                messaging_product: "whatsapp";
+                url: string;
+                mime_type: ValidMimeTypes;
+                sha256: string;
+                file_size: string;
+            } & ServerMedia)
+          | NoServerError
+      )
     | ServerErrorResponse;
 
 export type ServerMediaDeleteResponse =
