@@ -135,22 +135,30 @@ export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments & Ext
 export declare abstract class ClientMessage {
     /**
      * The message type
+     *
+     * @internal
      */
     abstract get _type(): ClientMessageNames;
     /**
      * The message built as a string. In most cases it's just JSON.stringify(this)
+     *
+     * @internal
      */
     _build(): string;
 }
 export interface ClientTypedMessageComponent {
     /**
      * The message's component type
+     *
+     * @internal
      */
     get _type(): string;
 }
 export interface ClientBuildableMessageComponent {
     /**
      * The message's component builder method
+     *
+     * @internal
      */
     _build(..._: unknown[]): unknown;
 }
@@ -198,12 +206,19 @@ export declare abstract class Section<T, N extends number> extends ClientLimited
 export declare abstract class ContactComponent implements ClientTypedMessageComponent, ClientBuildableMessageComponent {
     /**
      * @override
+     * @internal
      */
     _build(): unknown;
     /**
      * Whether the component can be repeated multiple times in a contact.
+     *
+     * @internal
      */
     abstract get _many(): boolean;
+    /**
+     * @override
+     * @internal
+     */
     abstract get _type(): string;
 }
 /**
@@ -212,8 +227,13 @@ export declare abstract class ContactComponent implements ClientTypedMessageComp
 export declare abstract class ContactMultipleComponent extends ContactComponent {
     /**
      * @override
+     * @internal
      */
     get _many(): true;
+    /**
+     * @override
+     * @internal
+     */
     abstract get _type(): string;
 }
 /**
@@ -222,8 +242,13 @@ export declare abstract class ContactMultipleComponent extends ContactComponent 
 export declare abstract class ContactUniqueComponent extends ContactComponent {
     /**
      * @override
+     * @internal
      */
     get _many(): false;
+    /**
+     * @override
+     * @internal
+     */
     abstract get _type(): string;
 }
 /**
@@ -232,6 +257,7 @@ export declare abstract class ContactUniqueComponent extends ContactComponent {
 export interface InteractiveAction extends ClientTypedMessageComponent {
     /**
      * @overload
+     * @internal
      */
     get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message";
 }
@@ -631,9 +657,12 @@ export type ServerErrorResponse = {
         fbtrace_id: string;
     };
 };
+export type NoServerError = {
+    error: never;
+};
 export type ServerSuccessResponse = {
     success: true;
-};
+} | NoServerError;
 export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
     contacts: [
@@ -649,7 +678,7 @@ export type ServerSentMessageResponse = {
         }
     ];
 };
-export type ServerMessageResponse = ServerSentMessageResponse | ServerErrorResponse;
+export type ServerMessageResponse = (ServerSentMessageResponse | NoServerError) | ServerErrorResponse;
 export type ServerMarkAsReadResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerQR = {
     code: string;
@@ -657,23 +686,23 @@ export type ServerQR = {
     deep_link_url: string;
     qr_image_url?: string;
 };
-export type ServerCreateQRResponse = ServerQR | ServerErrorResponse;
-export type ServerRetrieveQRResponse = {
+export type ServerCreateQRResponse = (ServerQR | NoServerError) | ServerErrorResponse;
+export type ServerRetrieveQRResponse = ({
     data: ServerQR[];
-} | ServerErrorResponse;
-export type ServerUpdateQRResponse = ServerQR | ServerErrorResponse;
+} | NoServerError) | ServerErrorResponse;
+export type ServerUpdateQRResponse = (ServerQR | NoServerError) | ServerErrorResponse;
 export type ServerDeleteQRResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerMedia = {
     id: string;
 };
-export type ServerMediaUploadResponse = ServerMedia | ServerErrorResponse;
+export type ServerMediaUploadResponse = (ServerMedia | NoServerError) | ServerErrorResponse;
 export type ValidMimeTypes = "audio/aac" | "audio/mp4" | "audio/mpeg" | "audio/amr" | "audio/ogg" | "text/plain" | "application/pdf" | "application/vnd.ms-powerpoint" | "application/msword" | "application/vnd.ms-excel" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/vnd.openxmlformats-officedocument.presentationml.presentation" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" | "image/jpeg" | "image/png" | "video/mp4" | "video/3gp" | "image/webp";
-export type ServerMediaRetrieveResponse = ({
+export type ServerMediaRetrieveResponse = (({
     messaging_product: "whatsapp";
     url: string;
     mime_type: ValidMimeTypes;
     sha256: string;
     file_size: string;
-} & ServerMedia) | ServerErrorResponse;
+} & ServerMedia) | NoServerError) | ServerErrorResponse;
 export type ServerMediaDeleteResponse = ServerSuccessResponse | ServerErrorResponse;
 //# sourceMappingURL=types.d.ts.map
