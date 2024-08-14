@@ -126,7 +126,7 @@ export class Contacts extends ClientMessage {
      * @override
      * @internal
      */
-    _build() {
+    _build(): string {
         return JSON.stringify(this.component);
     }
 }
@@ -245,7 +245,7 @@ export class Birthday extends ContactUniqueComponent {
      * @override
      * @internal
      */
-    _build() {
+    _build(): string {
         return this.birthday;
     }
 }

@@ -157,7 +157,11 @@ export class Template extends ClientMessage {
      * @param code - The one time password to be sent
      * @returns A Template object for the API
      */
-    static OTP(name: string, language: string | Language, code: string) {
+    static OTP(
+        name: string,
+        language: string | Language,
+        code: string
+    ): Template {
         return new Template(
             name,
             language,
@@ -324,7 +328,7 @@ export abstract class ButtonComponent implements TemplateComponent {
      * @override
      * @internal
      */
-    _build(pointers: BuildingPointers) {
+    _build(pointers: BuildingPointers): this {
         this.index = pointers.button_counter++;
         return this;
     }
@@ -603,7 +607,7 @@ export class SkipButtonComponent extends ButtonComponent {
      * @override
      * @internal
      */
-    _build(pointers: BuildingPointers) {
+    _build(pointers: BuildingPointers): this {
         pointers.button_counter++;
         return null as unknown as this;
     }
@@ -638,7 +642,7 @@ export class HeaderComponent implements TemplateComponent {
      * @override
      * @internal
      */
-    _build() {
+    _build(): this {
         return this;
     }
 }
@@ -762,7 +766,7 @@ export class BodyComponent implements TemplateComponent {
      * @internal
      * @throws If theres_only_body is false and one of the parameters is a string and it's over 1024 characters
      */
-    _build({ theres_only_body }: BuildingPointers) {
+    _build({ theres_only_body }: BuildingPointers): this {
         // If it needs to check for the shorter max text length
         if (!theres_only_body) {
             for (const param of this.parameters) {
@@ -868,7 +872,7 @@ export class CarouselComponent
      * @override
      * @internal
      */
-    _build() {
+    _build(): this {
         return this;
     }
 }
@@ -919,7 +923,7 @@ export class CarouselCard implements ClientBuildableMessageComponent {
      * @override
      * @internal
      */
-    _build(ptr: { counter: number }) {
+    _build(ptr: { counter: number }): this {
         this.card_index = ptr.counter++;
         return this;
     }
@@ -974,7 +978,7 @@ export class LTOComponent implements TemplateComponent {
      * @override
      * @internal
      */
-    _build() {
+    _build(): this {
         return this;
     }
 }

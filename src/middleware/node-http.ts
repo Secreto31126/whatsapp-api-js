@@ -38,7 +38,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @param req - The request object
      * @returns The status code to be sent to the client
      */
-    async handle_post(req: IncomingMessage) {
+    async handle_post(req: IncomingMessage): Promise<number> {
         /**
          * Copy pasted from an issue on Deno's repository :)
          *
@@ -101,7 +101,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: IncomingMessage) {
+    handle_get(req: IncomingMessage): string {
         try {
             return this.get(
                 Object.fromEntries(

@@ -14,7 +14,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @param req - The request object
      * @returns The status code to be sent to the client
      */
-    async handle_post(req: Request) {
+    async handle_post(req: Request): Promise<number> {
         try {
             const body = await req.text();
 
@@ -39,7 +39,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: Request) {
+    handle_get(req: Request): string {
         try {
             return this.get(
                 Object.fromEntries(new URL(req.url).searchParams) as GetParams

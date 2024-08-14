@@ -31,7 +31,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @param req - The request object from AdonisJS
      * @returns The status code to be sent to the client
      */
-    async handle_post(req: Request) {
+    async handle_post(req: Request): Promise<number> {
         try {
             await this.post(
                 req.body() as PostData,
@@ -74,7 +74,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: Request) {
+    handle_get(req: Request): string {
         try {
             return this.get(req.qs() as GetParams);
         } catch (e) {

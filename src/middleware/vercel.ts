@@ -43,7 +43,7 @@ export class WhatsAppAPI extends NodeHTTPMiddleware {
      * @param req - The request object
      * @returns The status code to be sent to the client
      */
-    handle_post(req: VercelRequest) {
+    handle_post(req: VercelRequest): Promise<number> {
         return super.handle_post(req);
     }
 
@@ -78,7 +78,7 @@ export class WhatsAppAPI extends NodeHTTPMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: VercelRequest) {
+    handle_get(req: VercelRequest): string {
         try {
             return this.get(req.query as GetParams);
         } catch (e) {

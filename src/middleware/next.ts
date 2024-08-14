@@ -27,7 +27,7 @@ export class WhatsAppAPI extends WebStandardMiddleware {
      * @param req - The request object
      * @returns The status code to be sent to the client
      */
-    async handle_post(req: Request) {
+    async handle_post(req: Request): Promise<number> {
         return super.handle_post(req);
     }
 
@@ -57,7 +57,7 @@ export class WhatsAppAPI extends WebStandardMiddleware {
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: Request) {
+    handle_get(req: Request): string {
         return super.handle_get(req);
     }
 }
