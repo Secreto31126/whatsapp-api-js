@@ -602,7 +602,7 @@ export type ServerReactionMessage = {
     type: "reaction";
     reaction: {
         emoji: string;
-        messsage_id: string;
+        message_id: string;
     };
 };
 
