@@ -1629,7 +1629,11 @@ describe("WhatsAppAPI", function () {
 
                     it("should throw 401 if the signature doesn't match the hash", async function () {
                         await rejects(
-                            Whatsapp.post(valid_message_mock, body, "wrong"),
+                            Whatsapp.post(
+                                valid_message_mock,
+                                body,
+                                "sha256=wrong"
+                            ),
                             threw(401)
                         );
                     });
