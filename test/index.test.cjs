@@ -577,6 +577,31 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedArrayResponse);
             });
 
+            it("should be able to broadcast a message to many users with a message_builder", async function () {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(request)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(3);
+
+                const response = await Promise.all(
+                    await Whatsapp.broadcastMessage(
+                        bot,
+                        [user, user, user],
+                        (data) => [data, message]
+                    )
+                );
+
+                deepEqual(response, expectedArrayResponse);
+            });
+
             it("should return the raw fetch responses if parsed is false", async function () {
                 Whatsapp.parsed = false;
 
@@ -606,6 +631,15 @@ describe("WhatsAppAPI", function () {
                 );
 
                 deepEqual(response, expectedArrayResponse);
+            });
+
+            it("should fail if batch_size or delay aren't valid", function () {
+                throws(() =>
+                    Whatsapp.broadcastMessage(bot, [user], message, 0)
+                );
+                throws(() =>
+                    Whatsapp.broadcastMessage(bot, [user], message, 1, -1)
+                );
             });
         });
 
