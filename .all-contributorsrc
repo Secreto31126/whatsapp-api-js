@@ -28,6 +28,13 @@
             "avatar_url": "https://avatars.githubusercontent.com/u/63550998?v=4",
             "profile": "https://github.com/RahulLanjewar93",
             "contributions": ["code", "doc", "ideas"]
+        },
+        {
+            "login": "felixarjuna",
+            "name": "Felix Arjuna",
+            "avatar_url": "https://avatars.githubusercontent.com/u/79026094?v=4",
+            "profile": "https://github.com/felixarjuna",
+            "contributions": ["bug", "security"]
         }
     ],
     "contributorsPerLine": 7,
