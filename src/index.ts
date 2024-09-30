@@ -758,8 +758,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      */
     async post(
         data: PostData,
-        raw_body?: string,
-        signature?: string
+        raw_body: string,
+        signature: string
     ): Promise<EmittersReturnType | undefined> {
         //Validating the payload
         if (this.secure) {
