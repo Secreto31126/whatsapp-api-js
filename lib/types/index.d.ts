@@ -1,5 +1,5 @@
 /** @module WhatsAppAPI */
-import type { WhatsAppAPIConstructorArguments, PostData, GetParams, ClientMessage, ServerMessageResponse, ServerMarkAsReadResponse, ServerCreateQRResponse, ServerRetrieveQRResponse, ServerUpdateQRResponse, ServerDeleteQRResponse, ServerMediaRetrieveResponse, ServerMediaUploadResponse, ServerMediaDeleteResponse } from "./types";
+import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse } from "./types";
 import type { OnMessage, OnSent, OnStatus } from "./emitters";
 /**
  * The main API Class
@@ -114,7 +114,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse | Response>;
     /**
-     * Send the same Whatsapp message to multiple phone numbers.
+     * Send a Whatsapp message to multiple phone numbers.
      *
      * In order to avoid reaching the
      * [API rate limit](https://developers.facebook.com/docs/whatsapp/cloud-api/overview?locale=en_US#throughput),
@@ -152,7 +152,38 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @throws if batch_size is lower than 1
      * @throws if delay is lower than 0
      */
-    broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size?: number, delay?: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+    broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+    /**
+     * @example
+     * ```ts
+     * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { Text } from "whatsapp-api-js/messages/text";
+     *
+     * const Whatsapp = new WhatsAppAPI({
+     *     token: "YOUR_TOKEN",
+     *     appSecret: "YOUR_APP_SECRET"
+     * });
+     *
+     * const phoneID = "YOUR_BOT_NUMBER";
+     * const users = [{ user: "USER1_ID" }, { user: "USER2_ID" }];
+     * const message_builder = ({ user }) => [DB.fetch(user).phone, new Text(`Hello ${user}`)];
+     *
+     * const responses = Whatsapp.broadcastMessage(phoneID, users, message);
+     *
+     * Promise.all(responses).then(console.log);
+     * ```
+     *
+     * @typeParam T - The type of the data to be used in the message builder
+     * @param phoneID - The bot's phone ID
+     * @param to - The users' data
+     * @param message_builder - A Whatsapp message builder, it returns an array with the phone number and the message.
+     * @param batch_size - The number of messages to send per batch
+     * @param delay - The delay between each batch of messages in milliseconds
+     * @returns The server's responses
+     * @throws if batch_size is lower than 1
+     * @throws if delay is lower than 0
+     */
+    broadcastMessage<T>(phoneID: string, to: T[], message_builder: (data: T) => [string, ClientMessage], batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
     /**
      * Mark a message as read
      *
