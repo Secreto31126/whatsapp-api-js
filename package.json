@@ -142,7 +142,7 @@
         "all-contributors-cli": "6.26.1",
         "c8": "10.1.2",
         "dotenv": "16.4.5",
-        "esbuild": "0.23.0",
+        "esbuild": "0.24.0",
         "eslint": "9.8.0",
         "eslint-config-prettier": "9.1.0",
         "eslint-plugin-tsdoc": "0.3.0",
