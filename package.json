@@ -136,7 +136,7 @@
         "@adonisjs/http-server": "7.2.3",
         "@eslint/js": "9.8.0",
         "@types/eslint__js": "8.42.3",
-        "@types/express": "4.17.21",
+        "@types/express": "5.0.0",
         "@types/node": "18.19.42",
         "@vercel/node": "3.2.7",
         "all-contributors-cli": "6.26.1",
