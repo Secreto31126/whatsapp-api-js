@@ -42,5 +42,27 @@ export declare class Product {
      * @param product_retailer_id - The id of the product
      */
     constructor(product_retailer_id: string);
+    /**
+     * Clone a product object (useful for lambdas and scoping down {@link CatalogProduct})
+     *
+     * @param product - The product to create a new object from
+     * @returns A new product object
+     */
+    static create(product: Product): Product;
+}
+/**
+ * Product API object
+ *
+ * @group Globals
+ */
+export declare class CatalogProduct extends Product {
+    readonly catalog_id: string;
+    /**
+     * Builds a cataloged product component
+     *
+     * @param product_retailer_id - The id of the product
+     * @param catalog_id - The id of the catalog the product belongs to
+     */
+    constructor(product_retailer_id: string, catalog_id: string);
 }
 //# sourceMappingURL=globals.d.ts.map

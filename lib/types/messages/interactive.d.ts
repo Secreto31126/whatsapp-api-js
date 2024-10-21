@@ -1,7 +1,7 @@
 import { ClientMessage, ClientLimitedMessageComponent, Section, type InteractiveAction } from "../types.js";
 import type { AtLeastOne } from "../utils";
 import type { Document, Image, Video } from "./media";
-import { Product, ProductSection } from "./globals.js";
+import { CatalogProduct, Product, ProductSection } from "./globals.js";
 /**
  * Interactive API object
  *
@@ -520,6 +520,11 @@ export declare class ActionProduct implements InteractiveAction {
     /**
      * Builds a Single Product component for an Interactive message
      *
+     * @param product - The product to show in the message
+     */
+    constructor(product: CatalogProduct);
+    /**
+     * @deprecated Use {@link CatalogProduct} as a parameter instead
      * @param catalog_id - The catalog id
      * @param product - The product to show in the message
      */
