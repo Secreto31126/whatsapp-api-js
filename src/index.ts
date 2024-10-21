@@ -15,7 +15,7 @@ import {
     type ServerMediaRetrieveResponse,
     type ServerMediaUploadResponse,
     type ServerMediaDeleteResponse
-} from "./types";
+} from "./types.js";
 import type {
     OnMessage,
     OnMessageArgs,
