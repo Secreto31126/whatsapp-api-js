@@ -55,3 +55,23 @@ export class Product {
         this.product_retailer_id = product_retailer_id;
     }
 }
+
+/**
+ * Product API object
+ *
+ * @group Globals
+ */
+export class CatalogProduct extends Product {
+    /**
+     * Builds a cataloged product component
+     *
+     * @param product_retailer_id - The id of the product
+     * @param catalog_id - The id of the catalog the product belongs to
+     */
+    constructor(
+        product_retailer_id: string,
+        readonly catalog_id: string
+    ) {
+        super(product_retailer_id);
+    }
+}
