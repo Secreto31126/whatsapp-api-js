@@ -910,7 +910,7 @@ export class CarouselCard implements ClientBuildableMessageComponent {
      * @param components - The other components for the card
      */
     constructor(
-        header: Image | Video,
+        header: Image | Video | CatalogProduct,
         ...components: (BodyComponent | ButtonComponent)[]
     ) {
         const tmp = new Template(
