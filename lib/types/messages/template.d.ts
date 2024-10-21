@@ -556,7 +556,7 @@ export declare class CarouselCard implements ClientBuildableMessageComponent {
      * @param header - The header parameter for the card
      * @param components - The other components for the card
      */
-    constructor(header: Image | Video, ...components: (BodyComponent | ButtonComponent)[]);
+    constructor(header: Image | Video | CatalogProduct, ...components: (BodyComponent | ButtonComponent)[]);
     /**
      * @override
      * @internal
