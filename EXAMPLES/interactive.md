@@ -40,10 +40,14 @@ const interactive_list_message = new Interactive(
 ## Single Product
 
 ```ts
-import { Interactive, ActionProduct, Product } from "whatsapp-api-js/messages";
+import {
+    Interactive,
+    ActionProduct,
+    CatalogProduct
+} from "whatsapp-api-js/messages";
 
 const interactive_single_product_message = new Interactive(
-    new ActionProduct("catalog_id", new Product("product_id"))
+    new ActionProduct(new CatalogProduct("product_id", "catalog_id"))
 );
 ```
 
