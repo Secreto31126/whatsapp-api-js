@@ -50,6 +50,7 @@ the most basic methods or features.
     -   [Complex template with flow component](template.md#complex-template-with-flow-component)
     -   [Complex template with combination of buttons](template.md#complex-template-with-combination-of-buttons)
     -   [Complex template with catalog](template.md#complex-template-with-catalog)
+    -   [Complex template with Single-Product Message](template.md#complex-template-with-single-product-message)
     -   [Complex template with Multi-Product Message](template.md#complex-template-with-multi-product-message)
     -   [Complex template with Carousel](template.md#complex-template-with-carousel)
     -   [Complex template with Limited-Time Offer](template.md#complex-template-with-limited-time-offer)

@@ -52,7 +52,7 @@ const template_media_message = new Template(
     "en",
     new HeaderComponent(
         new HeaderParameter(
-            // Can also be image, document, or location
+            // Can also be image, document, location or catalog product
             new Video("https://www.w3schools.com/html/mov_bbb.mp4")
         )
     )
@@ -137,6 +137,25 @@ const template_catalog_message = new Template(
     "template_name",
     "en",
     new CatalogComponent(new Product("thumbnail"))
+);
+```
+
+## Complex template with Single-Product Message
+
+```ts
+import {
+    Template,
+    HeaderComponent,
+    HeaderParameter,
+    CatalogProduct
+} from "whatsapp-api-js/messages";
+
+const template_single_product_message = new Template(
+    "template_name",
+    "en",
+    new HeaderComponent(
+        new HeaderParameter(new CatalogProduct("product_id", "catalog_id"))
+    )
 );
 ```
 

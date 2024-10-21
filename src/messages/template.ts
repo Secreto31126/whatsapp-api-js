@@ -10,7 +10,7 @@ import type { AtLeastOne, XOR } from "../utils";
 import type { Location } from "./location";
 import type { Document, Image, Video } from "./media";
 
-import { Product, ProductSection } from "./globals.js";
+import { CatalogProduct, Product, ProductSection } from "./globals.js";
 
 /**
  * @group Template
@@ -663,7 +663,8 @@ export class HeaderParameter {
         | "image"
         | "document"
         | "video"
-        | "location";
+        | "location"
+        | "product";
     /**
      * The text of the parameter
      */
@@ -692,6 +693,10 @@ export class HeaderParameter {
      * The location of the parameter
      */
     readonly location?: Location;
+    /**
+     * The product of the parameter
+     */
+    readonly product?: CatalogProduct;
 
     /**
      * Builds a parameter object for a HeaderComponent.
@@ -712,6 +717,7 @@ export class HeaderParameter {
             | Document
             | Video
             | Location
+            | CatalogProduct
     ) {
         if (typeof parameter === "string") {
             if (parameter.length > 60)
