@@ -31,7 +31,7 @@ export class ProductSection extends Section<Product, 30> {
      */
     constructor(title: string | undefined, ...products: AtLeastOne<Product>) {
         super("ProductSection", "products", products, 30, title);
-        this.product_items = products.map(Product.clone);
+        this.product_items = products.map(Product.create);
     }
 }
 
@@ -61,7 +61,7 @@ export class Product {
      * @param product - The product to create a new object from
      * @returns A new product object
      */
-    static clone(product: Product): Product {
+    static create(product: Product): Product {
         return new Product(product.product_retailer_id);
     }
 }
