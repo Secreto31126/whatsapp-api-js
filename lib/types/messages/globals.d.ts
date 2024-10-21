@@ -1,4 +1,4 @@
-import { Section } from "../types.js";
+import { Section, type ClientTypedMessageComponent } from "../types.js";
 import type { AtLeastOne } from "../utils";
 /**
  * TS knowledge intensifies
@@ -31,11 +31,16 @@ export declare class ProductSection extends Section<Product, 30> {
  *
  * @group Globals
  */
-export declare class Product {
+export declare class Product implements ClientTypedMessageComponent {
     /**
      * The id of the product
      */
     readonly product_retailer_id: string;
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "product";
     /**
      * Builds a product component
      *

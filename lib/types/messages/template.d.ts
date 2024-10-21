@@ -2,7 +2,7 @@ import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessa
 import type { AtLeastOne, XOR } from "../utils";
 import type { Location } from "./location";
 import type { Document, Image, Video } from "./media";
-import { Product, ProductSection } from "./globals.js";
+import { CatalogProduct, Product, ProductSection } from "./globals.js";
 /**
  * @group Template
  */
@@ -401,7 +401,7 @@ export declare class HeaderParameter {
     /**
      * The type of the parameter
      */
-    readonly type: "text" | "currency" | "date_time" | "image" | "document" | "video" | "location";
+    readonly type: "text" | "currency" | "date_time" | "image" | "document" | "video" | "location" | "product";
     /**
      * The text of the parameter
      */
@@ -431,6 +431,10 @@ export declare class HeaderParameter {
      */
     readonly location?: Location;
     /**
+     * The product of the parameter
+     */
+    readonly product?: CatalogProduct;
+    /**
      * Builds a parameter object for a HeaderComponent.
      * For text parameter, the character limit is 60.
      * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
@@ -440,7 +444,7 @@ export declare class HeaderParameter {
      * @throws If parameter is a string and it's over 60 characters
      * @throws If parameter is a Location and it doesn't have a name and address
      */
-    constructor(parameter: string | Currency | DateTime | Image | Document | Video | Location);
+    constructor(parameter: string | Currency | DateTime | Image | Document | Video | Location | CatalogProduct);
 }
 /**
  * Components API object
