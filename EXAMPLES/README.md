@@ -53,5 +53,6 @@ the most basic methods or features.
     -   [Complex template with Single-Product Message](template.md#complex-template-with-single-product-message)
     -   [Complex template with Multi-Product Message](template.md#complex-template-with-multi-product-message)
     -   [Complex template with Carousel](template.md#complex-template-with-carousel)
+    -   [Complex template with Product Carousel](template.md#complex-template-with-product-carousel)
     -   [Complex template with Limited-Time Offer](template.md#complex-template-with-limited-time-offer)
     -   [OTP prefab template](template.md#otp-prefab-template)

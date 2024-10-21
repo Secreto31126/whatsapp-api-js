@@ -206,11 +206,39 @@ const template_carousel_message = new Template(
     new BodyComponent(new BodyParameter("PROMO10")),
     new CarouselComponent(
         new CarouselCard(
-            new Image(image),
+            new Image("image_url"),
             new URLComponent("?code=PROMO10&product=1")
         ),
         new CarouselCard(
-            new Image(image),
+            new Image("image_url"),
+            new URLComponent("?code=PROMO10&product=2")
+        )
+    )
+);
+```
+
+## Complex template with Product Carousel
+
+```ts
+import {
+    Template,
+    BodyComponent,
+    CarouselComponent,
+    CarouselCard,
+    CatalogProduct
+} from "whatsapp-api-js/messages";
+
+const template_product_carousel_message = new Template(
+    "template_name",
+    "en",
+    new BodyComponent(new BodyParameter("PROMO10")),
+    new CarouselComponent(
+        new CarouselCard(
+            new CatalogProduct("product_id_1", "catalog_id"),
+            new URLComponent("?code=PROMO10&product=1")
+        ),
+        new CarouselCard(
+            new CatalogProduct("product_id_2", "catalog_id"),
             new URLComponent("?code=PROMO10&product=2")
         )
     )
