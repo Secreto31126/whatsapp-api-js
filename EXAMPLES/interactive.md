@@ -47,7 +47,9 @@ import {
 } from "whatsapp-api-js/messages";
 
 const interactive_single_product_message = new Interactive(
-    new ActionProduct(new CatalogProduct("product_id", "catalog_id"))
+    new ActionProduct(
+        new CatalogProduct("product_id", "catalog_id")
+    )
 );
 ```
 
