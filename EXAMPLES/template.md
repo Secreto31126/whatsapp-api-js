@@ -206,11 +206,11 @@ const template_carousel_message = new Template(
     new BodyComponent(new BodyParameter("PROMO10")),
     new CarouselComponent(
         new CarouselCard(
-            new Image(image),
+            new Image("image_url"),
             new URLComponent("?code=PROMO10&product=1")
         ),
         new CarouselCard(
-            new Image(image),
+            new Image("image_url"),
             new URLComponent("?code=PROMO10&product=2")
         )
     )
