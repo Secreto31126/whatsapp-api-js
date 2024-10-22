@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../src/setup/bun.ts"],
-  "sourcesContent": ["import type { WhatsAppAPIConstructorArguments } from \"../types\";\n\n/**\n * A Bun quick setup for the WhatsAppAPI\n *\n * @remarks This method will return the same object as the one passed in\n *\n * @param settings - The WhatsAppAPI arguments\n * @returns A WhatsAppAPI arguments object for Bun\n */\nexport function Bun(\n    settings: WhatsAppAPIConstructorArguments\n): WhatsAppAPIConstructorArguments {\n    return settings;\n}\n"],
-  "mappings": "AAUO,SAAS,IACZ,UAC+B;AAC/B,SAAO;AACX;",
-  "names": []
-}
