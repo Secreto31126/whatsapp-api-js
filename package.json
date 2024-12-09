@@ -148,7 +148,7 @@
         "eslint-plugin-tsdoc": "0.3.0",
         "glob": "11.0.0",
         "globals": "^15.9.0",
-        "mocha": "10.7.3",
+        "mocha": "11.0.1",
         "prettier": "3.3.3",
         "sinon": "19.0.2",
         "typedoc": "0.26.9",
