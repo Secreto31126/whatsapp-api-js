@@ -1,4 +1,4 @@
-class MessageWebhookMock {
+export class MessageWebhookMock {
     /**
      * Helper class to test the messages post request, conditionally creating the object based on the available data
      */
@@ -12,7 +12,6 @@ class MessageWebhookMock {
                         field: "messages",
                         value: {
                             messaging_product: "whatsapp",
-                            // eslint-disable-next-line tsdoc/syntax
                             /** @type {Array<any>} */
                             messages: []
                         }
@@ -48,7 +47,7 @@ class MessageWebhookMock {
     }
 }
 
-class StatusWebhookMock {
+export class StatusWebhookMock {
     /**
      * Helper class to test the status post request, conditionally creating the object based on the available data
      */
@@ -117,8 +116,3 @@ class StatusWebhookMock {
         }
     }
 }
-
-module.exports = {
-    MessageWebhookMock,
-    StatusWebhookMock
-};
