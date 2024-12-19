@@ -2,38 +2,33 @@
 // @ts-nocheck
 
 // Unit tests with mocha and sinon
-const { equal, throws, rejects, deepEqual } = require("assert");
-const { spy: sinon_spy, assert: sinon_assert } = require("sinon");
+import { equal, throws, rejects, deepEqual } from "assert";
+import { spy as sinon_spy, assert as sinon_assert } from "sinon";
+import { describe, it, beforeEach, afterEach } from 'node:test';
 
 // Import the module
-const { WhatsAppAPI } = require("../lib/cjs/middleware/node-http");
-const { DEFAULT_API_VERSION } = require("../lib/cjs/types");
-const { Text } = require("../lib/cjs/messages/text");
+import { WhatsAppAPI } from "../lib/esm/middleware/node-http.js";
+import { DEFAULT_API_VERSION } from "../lib/esm/types.js";
+import { Text } from "../lib/esm/messages/text.js";
 
 // Mock the https requests
-const { agent, clientFacebook, clientExample } = require("./server.mocks.cjs");
-const {
-    MessageWebhookMock,
-    StatusWebhookMock
-} = require("./webhooks.mocks.cjs");
-const {
-    setGlobalDispatcher,
-    fetch: undici_fetch,
-    FormData
-} = require("undici");
-const { Blob } = require("node:buffer");
-const { subtle } = require("node:crypto").webcrypto; // Assert availability in node 16.0.0
+import { agent, clientFacebook, clientExample } from "./server.mocks.js";
+import { MessageWebhookMock, StatusWebhookMock } from "./webhooks.mocks.js";
+import { setGlobalDispatcher, fetch as undici_fetch, FormData } from "undici";
+import { Blob } from "node:buffer";
+import { webcrypto } from "node:crypto";
+const { subtle } = webcrypto; // Assert availability in node 16.0.0
 
 setGlobalDispatcher(agent);
 
-describe("WhatsAppAPI", function () {
+describe("WhatsAppAPI", () => {
     const v = "v13.0";
     const token = "YOUR_ACCESS_TOKEN";
     const appSecret = "YOUR_APP_SECRET";
     const webhookVerifyToken = "YOUR_WEBHOOK_VERIFY_TOKEN";
 
-    describe("Token", function () {
-        it("should create a WhatsAppAPI object with the token", function () {
+    describe("Token", () => {
+        it("should create a WhatsAppAPI object with the token", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -47,8 +42,8 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("App secret", function () {
-        it("should create a WhatsAppAPI object with the appSecret", function () {
+    describe("App secret", () => {
+        it("should create a WhatsAppAPI object with the appSecret", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -62,8 +57,8 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Webhook verify token", function () {
-        it("should work with any specified webhook verify token", function () {
+    describe("Webhook verify token", () => {
+        it("should work with any specified webhook verify token", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -78,8 +73,8 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Version", function () {
-        it("should work with DEFAULT_API_VERSION as default (and log warning)", function () {
+    describe("Version", () => {
+        it("should work with DEFAULT_API_VERSION as default (and log warning)", () => {
             const Whatsapp = new WhatsAppAPI({
                 token,
                 appSecret,
@@ -91,7 +86,7 @@ describe("WhatsAppAPI", function () {
             equal(Whatsapp.v, DEFAULT_API_VERSION);
         });
 
-        it("should work with any specified version", function () {
+        it("should work with any specified version", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -105,11 +100,11 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Ponyfill", function () {
-        describe("Fetch", function () {
-            it("should default to the enviroment fetch (skip if not defined)", function () {
+    describe("Ponyfill", () => {
+        describe("Fetch", () => {
+            it("should default to the enviroment fetch (skip if not defined)", function (t) {
                 if (typeof fetch === "undefined") {
-                    this.skip();
+                    t.skip();
                 }
 
                 const Whatsapp = new WhatsAppAPI({
@@ -124,7 +119,7 @@ describe("WhatsAppAPI", function () {
                 equal(typeof Whatsapp.fetch, "function");
             });
 
-            it("should work with any specified ponyfill", function () {
+            it("should work with any specified ponyfill", () => {
                 const spy = sinon_spy();
                 const Whatsapp = new WhatsAppAPI({
                     v,
@@ -140,8 +135,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("CryptoSubtle", function () {
-            it("should default to the enviroment crypto.subtle (skip if not defined)", function () {
+        describe("CryptoSubtle", () => {
+            it("should default to the enviroment crypto.subtle (skip if not defined)", () => {
                 if (
                     typeof crypto === "undefined" ||
                     typeof crypto.subtle === "undefined"
@@ -161,7 +156,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(Whatsapp.subtle, subtle);
             });
 
-            it("should work with any specified ponyfill", function () {
+            it("should work with any specified ponyfill", () => {
                 const spy = subtle;
                 const Whatsapp = new WhatsAppAPI({
                     v,
@@ -178,8 +173,8 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Parsed", function () {
-        it("should set parsed to true by default", function () {
+    describe("Parsed", () => {
+        it("should set parsed to true by default", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -192,7 +187,7 @@ describe("WhatsAppAPI", function () {
             equal(Whatsapp.parsed, true);
         });
 
-        it("should be able to set parsed to true", function () {
+        it("should be able to set parsed to true", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -206,7 +201,7 @@ describe("WhatsAppAPI", function () {
             equal(Whatsapp.parsed, true);
         });
 
-        it("should be able to set parsed to false", function () {
+        it("should be able to set parsed to false", () => {
             const Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -221,7 +216,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Logger", function () {
+    describe("Logger", () => {
         const bot = "1";
         const user = "2";
         const type = "text";
@@ -253,7 +248,7 @@ describe("WhatsAppAPI", function () {
 
         let Whatsapp;
         let spy_on_sent;
-        this.beforeEach(function () {
+        beforeEach(() => {
             Whatsapp = new WhatsAppAPI({
                 v,
                 token,
@@ -268,7 +263,7 @@ describe("WhatsAppAPI", function () {
             Whatsapp.on.sent = spy_on_sent;
         });
 
-        it("should run the logger after sending a message", async function () {
+        it("should run the logger after sending a message", async () => {
             clientFacebook
                 .intercept({
                     path: `/${Whatsapp.v}/${bot}/messages`,
@@ -293,7 +288,7 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        it("should handle failed deliveries responses", async function () {
+        it("should handle failed deliveries responses", async () => {
             const unexpectedResponse = {
                 error: {
                     message:
@@ -327,7 +322,7 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        it("should run the logger with id and response as undefined if parsed is set to false", async function () {
+        it("should run the logger with id and response as undefined if parsed is set to false", async () => {
             Whatsapp.parsed = false;
 
             clientFacebook
@@ -354,7 +349,7 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        it("should not block the main thread with the user's callback", async function () {
+        it("should not block the main thread with the user's callback", async () => {
             // Emulates a blocking function
             function block(delay) {
                 const start = Date.now();
@@ -394,7 +389,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Message", function () {
+    describe("Message", () => {
         const bot = "2";
         const user = "3";
         const id = "something_random";
@@ -448,12 +443,12 @@ describe("WhatsAppAPI", function () {
             }
         });
 
-        this.beforeEach(function () {
+        beforeEach(() => {
             Whatsapp.parsed = true;
         });
 
-        describe("Send", function () {
-            it("should be able to send a basic message", async function () {
+        describe("Send", () => {
+            it("should be able to send a basic message", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -472,7 +467,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to send a reply message (context)", async function () {
+            it("should be able to send a reply message (context)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -496,7 +491,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to send with a tracker (biz_opaque_callback_data)", async function () {
+            it("should be able to send with a tracker (biz_opaque_callback_data)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -521,7 +516,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 clientFacebook
@@ -545,14 +540,14 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Broadcast", function () {
+        describe("Broadcast", () => {
             const expectedArrayResponse = [
                 expectedResponse,
                 expectedResponse,
                 expectedResponse
             ];
 
-            it("should be able to broadcast a message to many users", async function () {
+            it("should be able to broadcast a message to many users", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -577,7 +572,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedArrayResponse);
             });
 
-            it("should be able to broadcast a message to many users with a message_builder", async function () {
+            it("should be able to broadcast a message to many users with a message_builder", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -602,7 +597,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedArrayResponse);
             });
 
-            it("should return the raw fetch responses if parsed is false", async function () {
+            it("should return the raw fetch responses if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 clientFacebook
@@ -633,7 +628,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedArrayResponse);
             });
 
-            it("should fail if batch_size or delay aren't valid", function () {
+            it("should fail if batch_size or delay aren't valid", () => {
                 throws(() =>
                     Whatsapp.broadcastMessage(bot, [user], message, 0)
                 );
@@ -643,8 +638,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Mark as read", function () {
-            it("should be able to mark a message as read", async function () {
+        describe("Mark as read", () => {
+            it("should be able to mark a message as read", async () => {
                 const expectedResponse = {
                     success: true
                 };
@@ -671,7 +666,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -698,7 +693,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("QR", function () {
+    describe("QR", () => {
         const bot = "1";
         const message = "Hello World";
         const code = "something_random";
@@ -713,12 +708,12 @@ describe("WhatsAppAPI", function () {
             }
         });
 
-        this.beforeEach(function () {
+        beforeEach(() => {
             Whatsapp.parsed = true;
         });
 
-        describe("Create", function () {
-            it("should be able to create a QR code as a png (default)", async function () {
+        describe("Create", () => {
+            it("should be able to create a QR code as a png (default)", async () => {
                 const format = "png";
 
                 const expectedResponse = {
@@ -749,7 +744,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to create a QR as a png", async function () {
+            it("should be able to create a QR as a png", async () => {
                 const format = "png";
 
                 const expectedResponse = {
@@ -780,7 +775,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to create a QR as a svg", async function () {
+            it("should be able to create a QR as a svg", async () => {
                 const format = "svg";
 
                 const expectedResponse = {
@@ -811,7 +806,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const format = "png";
@@ -847,8 +842,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Retrieve", function () {
-            it("should retrieve all QR codes if code is undefined", async function () {
+        describe("Retrieve", () => {
+            it("should retrieve all QR codes if code is undefined", async () => {
                 const expectedResponse = {
                     data: [
                         {
@@ -874,7 +869,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to retrieve a single QR code", async function () {
+            it("should be able to retrieve a single QR code", async () => {
                 const expectedResponse = {
                     data: [
                         {
@@ -900,7 +895,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -929,10 +924,10 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Update", function () {
+        describe("Update", () => {
             const new_message = "Hello World 2";
 
-            it("should be able to update a QR code", async function () {
+            it("should be able to update a QR code", async () => {
                 const expectedResponse = {
                     code,
                     prefilled_message: new_message,
@@ -962,7 +957,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -993,8 +988,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Delete", function () {
-            it("should be able to delete a QR code", async function () {
+        describe("Delete", () => {
+            it("should be able to delete a QR code", async () => {
                 const expectedResponse = {
                     success: true
                 };
@@ -1015,7 +1010,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -1042,7 +1037,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("Media", function () {
+    describe("Media", () => {
         const bot = "1";
         const id = "2";
 
@@ -1057,13 +1052,13 @@ describe("WhatsAppAPI", function () {
         });
 
         let form;
-        this.beforeEach(function () {
+        beforeEach(() => {
             Whatsapp.parsed = true;
             form = new FormData();
         });
 
-        describe("Upload", function () {
-            it("should upload a file", async function () {
+        describe("Upload", () => {
+            it("should upload a file", async () => {
                 const expectedResponse = { id };
 
                 form.append(
@@ -1081,7 +1076,6 @@ describe("WhatsAppAPI", function () {
                         query: {
                             messaging_product: "whatsapp"
                         }
-                        // body: form,
                     })
                     .reply(200, expectedResponse)
                     .times(1);
@@ -1091,8 +1085,8 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            describe("Check truthy (default)", function () {
-                it("should fail if the form param is not a FormData instance", async function () {
+            describe("Check truthy (default)", () => {
+                it("should fail if the form param is not a FormData instance", async () => {
                     await rejects(Whatsapp.uploadMedia(bot, {}));
 
                     await rejects(Whatsapp.uploadMedia(bot, []));
@@ -1100,17 +1094,17 @@ describe("WhatsAppAPI", function () {
                     await rejects(Whatsapp.uploadMedia(bot, "Hello World"));
                 });
 
-                it("should fail if the form param does not contain a file", async function () {
+                it("should fail if the form param does not contain a file", async () => {
                     await rejects(Whatsapp.uploadMedia(bot, new FormData()));
                 });
 
-                it("should fail if the form param contains a file with no type", async function () {
+                it("should fail if the form param contains a file with no type", async () => {
                     form.append("file", new Blob(["Hello World"]));
 
                     await rejects(Whatsapp.uploadMedia(bot, form));
                 });
 
-                it("should fail if the file type is invalid", async function () {
+                it("should fail if the file type is invalid", async () => {
                     form.append(
                         "file",
                         new Blob(["Not a real file"], { type: "random/type" })
@@ -1119,7 +1113,7 @@ describe("WhatsAppAPI", function () {
                     await rejects(Whatsapp.uploadMedia(bot, form));
                 });
 
-                it("should fail if the file size is too big for the format", async function () {
+                it("should fail if the file size is too big for the format", async () => {
                     const str = "I only need 500.000 chars";
                     form.append(
                         "file",
@@ -1133,8 +1127,8 @@ describe("WhatsAppAPI", function () {
                 });
             });
 
-            describe("Check falsy", function () {
-                it("should not fail if the form param is not a FormData instance", function () {
+            describe("Check falsy", () => {
+                it("should not fail if the form param is not a FormData instance", async () => {
                     clientFacebook
                         .intercept({
                             path: `/${Whatsapp.v}/${bot}/media`,
@@ -1144,20 +1138,19 @@ describe("WhatsAppAPI", function () {
                             },
                             query: {
                                 messaging_product: "whatsapp"
-                            },
-                            body: form
+                            }
                         })
-                        .reply(200)
+                        .reply(200, {})
                         .times(3);
 
-                    Whatsapp.uploadMedia(bot, {}, false);
+                    await Whatsapp.uploadMedia(bot, {}, false);
 
-                    Whatsapp.uploadMedia(bot, [], false);
+                    await Whatsapp.uploadMedia(bot, [], false);
 
-                    Whatsapp.uploadMedia(bot, "Hello World", false);
+                    await Whatsapp.uploadMedia(bot, "Hello World", false);
                 });
 
-                it("should not fail if the form param does not contain a file", function () {
+                it("should not fail if the form param does not contain a file", async () => {
                     clientFacebook
                         .intercept({
                             path: `/${Whatsapp.v}/${bot}/media`,
@@ -1167,16 +1160,15 @@ describe("WhatsAppAPI", function () {
                             },
                             query: {
                                 messaging_product: "whatsapp"
-                            },
-                            body: form
+                            }
                         })
-                        .reply(200)
+                        .reply(200, {})
                         .times(1);
 
-                    Whatsapp.uploadMedia(bot, form, false);
+                    await Whatsapp.uploadMedia(bot, form, false);
                 });
 
-                it("should not fail if the form param contains a file with no type", function () {
+                it("should not fail if the form param contains a file with no type", async () => {
                     form.append("file", new Blob(["Hello World"]));
 
                     clientFacebook
@@ -1188,16 +1180,15 @@ describe("WhatsAppAPI", function () {
                             },
                             query: {
                                 messaging_product: "whatsapp"
-                            },
-                            body: form
+                            }
                         })
-                        .reply(200)
+                        .reply(200, {})
                         .times(1);
 
-                    Whatsapp.uploadMedia(bot, form, false);
+                    await Whatsapp.uploadMedia(bot, form, false);
                 });
 
-                it("should not fail if the file type is invalid", function () {
+                it("should not fail if the file type is invalid", async () => {
                     form.append(
                         "file",
                         new Blob(["Not a real SVG"], { type: "image/svg" })
@@ -1212,16 +1203,15 @@ describe("WhatsAppAPI", function () {
                             },
                             query: {
                                 messaging_product: "whatsapp"
-                            },
-                            body: form
+                            }
                         })
-                        .reply(200)
+                        .reply(200, {})
                         .times(1);
 
-                    Whatsapp.uploadMedia(bot, form, false);
+                    await Whatsapp.uploadMedia(bot, form, false);
                 });
 
-                it("should not fail if the file size is too big for the format", function () {
+                it("should not fail if the file size is too big for the format", async () => {
                     const str = "I only need 500.000 chars";
                     form.append(
                         "file",
@@ -1240,17 +1230,16 @@ describe("WhatsAppAPI", function () {
                             },
                             query: {
                                 messaging_product: "whatsapp"
-                            },
-                            body: form
+                            }
                         })
-                        .reply(200)
+                        .reply(200, {})
                         .times(1);
 
-                    Whatsapp.uploadMedia(bot, form, false);
+                    await Whatsapp.uploadMedia(bot, form, false);
                 });
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = { id };
@@ -1270,7 +1259,6 @@ describe("WhatsAppAPI", function () {
                         query: {
                             messaging_product: "whatsapp"
                         }
-                        // body: form,
                     })
                     .reply(200, expectedResponse)
                     .times(1);
@@ -1283,8 +1271,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Retrieve", function () {
-            it("should retrieve a file data", async function () {
+        describe("Retrieve", () => {
+            it("should retrieve a file data", async () => {
                 const expectedResponse = {
                     messaging_product: "whatsapp",
                     url: "URL",
@@ -1309,7 +1297,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should include the phone_number_id param if provided", async function () {
+            it("should include the phone_number_id param if provided", async () => {
                 const expectedResponse = {
                     messaging_product: "whatsapp",
                     url: "URL",
@@ -1337,7 +1325,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -1367,8 +1355,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Delete", function () {
-            it("should delete a file", async function () {
+        describe("Delete", () => {
+            it("should delete a file", async () => {
                 const expectedResponse = {
                     success: true
                 };
@@ -1389,7 +1377,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should include the phone_number_id param if provided", async function () {
+            it("should include the phone_number_id param if provided", async () => {
                 const expectedResponse = {
                     success: true
                 };
@@ -1413,7 +1401,7 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should return the raw fetch response if parsed is false", async function () {
+            it("should return the raw fetch response if parsed is false", async () => {
                 Whatsapp.parsed = false;
 
                 const expectedResponse = {
@@ -1437,8 +1425,8 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Fetch", function () {
-            it("should GET fetch an url with the Token and the known to work User-Agent", async function () {
+        describe("Fetch", () => {
+            it("should GET fetch an url with the Token and the known to work User-Agent", async () => {
                 const expectedResponse = {};
 
                 clientExample
@@ -1460,44 +1448,44 @@ describe("WhatsAppAPI", function () {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should fail if the url param is not an url", function () {
-                throws(function () {
+            it("should fail if the url param is not an url", () => {
+                throws(() => {
                     Whatsapp.fetchMedia(undefined);
                 });
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.fetchMedia(false);
                 });
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.fetchMedia();
                 });
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.fetchMedia(123);
                 });
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.fetchMedia("not an url");
                 });
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.fetchMedia("");
                 });
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.fetchMedia("http://");
                 });
             });
         });
     });
 
-    describe("Webhooks", function () {
+    describe("Webhooks", () => {
         function threw(i) {
             return (e) => e === i;
         }
 
-        describe("Get", function () {
+        describe("Get", () => {
             const mode = "subscribe";
             const challenge = "challenge";
 
@@ -1518,39 +1506,39 @@ describe("WhatsAppAPI", function () {
                 }
             });
 
-            this.beforeEach(function () {
+            beforeEach(() => {
                 Whatsapp.webhookVerifyToken = webhookVerifyToken;
             });
 
-            it("should validate the get request and return the challenge", function () {
+            it("should validate the get request and return the challenge", () => {
                 const response = Whatsapp.get(params);
                 equal(response, challenge);
             });
 
-            it("should throw 500 if webhookVerifyToken is not specified", function () {
+            it("should throw 500 if webhookVerifyToken is not specified", () => {
                 delete Whatsapp.webhookVerifyToken;
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.get(params);
                 }, threw(500));
             });
 
-            it("should throw 400 if the request is missing data", function () {
-                throws(function () {
+            it("should throw 400 if the request is missing data", () => {
+                throws(() => {
                     Whatsapp.get({});
                 }, threw(400));
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.get({ "hub.mode": mode });
                 }, threw(400));
 
-                throws(function () {
+                throws(() => {
                     Whatsapp.get({ "hub.verify_token": token });
                 }, threw(400));
             });
 
-            it("should throw 403 if the verification tokens don't match", function () {
-                throws(function () {
+            it("should throw 403 if the verification tokens don't match", () => {
+                throws(() => {
                     Whatsapp.get(
                         { ...params, "hub.verify_token": "wrong" },
                         token
@@ -1559,7 +1547,7 @@ describe("WhatsAppAPI", function () {
             });
         });
 
-        describe("Post", function () {
+        describe("Post", () => {
             // Valid data
             const phoneID = "1";
             const user = "2";
@@ -1621,14 +1609,14 @@ describe("WhatsAppAPI", function () {
                 }
             });
 
-            this.beforeEach(function () {
+            beforeEach(() => {
                 Whatsapp.appSecret = appSecret;
                 Whatsapp.secure = true;
             });
 
-            describe("Validation", function () {
-                describe("Secure truthy (default)", function () {
-                    it("should throw 400 if rawBody is missing", async function () {
+            describe("Validation", () => {
+                describe("Secure truthy (default)", () => {
+                    it("should throw 400 if rawBody is missing", async () => {
                         await rejects(
                             Whatsapp.post(valid_message_mock),
                             threw(400)
@@ -1640,7 +1628,7 @@ describe("WhatsAppAPI", function () {
                         );
                     });
 
-                    it("should throw 401 if signature is missing", async function () {
+                    it("should throw 401 if signature is missing", async () => {
                         await rejects(
                             Whatsapp.post(valid_message_mock, body),
                             threw(401)
@@ -1652,7 +1640,7 @@ describe("WhatsAppAPI", function () {
                         );
                     });
 
-                    it("should throw 500 if appSecret is not specified", async function () {
+                    it("should throw 500 if appSecret is not specified", async () => {
                         delete Whatsapp.appSecret;
 
                         await rejects(
@@ -1661,7 +1649,7 @@ describe("WhatsAppAPI", function () {
                         );
                     });
 
-                    it("should throw 401 if the signature doesn't match the hash", async function () {
+                    it("should throw 401 if the signature doesn't match the hash", async () => {
                         await rejects(
                             Whatsapp.post(
                                 valid_message_mock,
@@ -1673,32 +1661,32 @@ describe("WhatsAppAPI", function () {
                     });
                 });
 
-                describe("Secure falsy", function () {
-                    this.beforeEach(function () {
+                describe("Secure falsy", () => {
+                    beforeEach(() => {
                         Whatsapp.secure = false;
                         delete Whatsapp.appSecret;
                     });
 
-                    this.afterEach(function () {
+                    afterEach(() => {
                         Whatsapp.secure = true;
                         Whatsapp.appSecret = appSecret;
                     });
 
-                    it("should not throw if any of the parameters is missing or is invalid", async function () {
+                    it("should not throw if any of the parameters is missing or is invalid", async () => {
                         await Whatsapp.post(valid_message_mock);
                         await Whatsapp.post(valid_message_mock, body);
                         await Whatsapp.post(valid_message_mock, body, "wrong");
                     });
                 });
 
-                it("should throw 400 if the request isn't a valid WhatsApp Cloud API request (data.object)", async function () {
+                it("should throw 400 if the request isn't a valid WhatsApp Cloud API request (data.object)", async () => {
                     Whatsapp.secure = false;
 
                     await rejects(Whatsapp.post({}), threw(400));
                 });
             });
 
-            describe("Messages", function () {
+            describe("Messages", () => {
                 const expectedResponse = {
                     messaging_product: "whatsapp",
                     contacts: [
@@ -1715,18 +1703,18 @@ describe("WhatsAppAPI", function () {
                 };
 
                 let spy_on_message;
-                this.beforeEach(function () {
+                beforeEach(() => {
                     spy_on_message = sinon_spy();
                     Whatsapp.on.message = spy_on_message;
                 });
 
-                this.beforeEach(function () {
+                beforeEach(() => {
                     // This should improve the test speed
                     // Validation is already tested in the previous section
                     Whatsapp.secure = false;
                 });
 
-                it("should parse the post request and call back with the right parameters", async function () {
+                it("should parse the post request and call back with the right parameters", async () => {
                     Whatsapp.post(valid_message_mock);
 
                     // Callbacks are executed in the next tick
@@ -1741,7 +1729,7 @@ describe("WhatsAppAPI", function () {
                     });
                 });
 
-                it("should return the on.message return value", async function () {
+                it("should return the on.message return value", async () => {
                     Whatsapp.on.message = async () => {
                         return "Hi";
                     };
@@ -1750,7 +1738,7 @@ describe("WhatsAppAPI", function () {
                     equal(response, "Hi");
                 });
 
-                it("should reply to a message with the method reply", async function () {
+                it("should reply to a message with the method reply", async () => {
                     const spy_on_sent = sinon_spy();
                     Whatsapp.on.sent = spy_on_sent;
 
@@ -1777,7 +1765,7 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.calledOnce(spy_on_sent);
                 });
 
-                it("should not block the main thread with the user's callback with the method offload", async function () {
+                it("should not block the main thread with the user's callback with the method offload", async () => {
                     // Emulates a blocking function
                     function block(delay) {
                         const start = Date.now();
@@ -1809,7 +1797,7 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.calledOnce(spy_on_message);
                 });
 
-                it("should throw TypeError if the request is missing any data", async function () {
+                it("should throw TypeError if the request is missing any data", async () => {
                     let moddedMock;
 
                     moddedMock = new MessageWebhookMock();
@@ -1825,20 +1813,20 @@ describe("WhatsAppAPI", function () {
                 });
             });
 
-            describe("Status", function () {
+            describe("Status", () => {
                 let spy_on_status;
-                this.beforeEach(function () {
+                beforeEach(() => {
                     spy_on_status = sinon_spy();
                     Whatsapp.on.status = spy_on_status;
                 });
 
-                this.beforeEach(function () {
+                beforeEach(() => {
                     // This should improve the test speed
                     // Validation is already tested in the previous section
                     Whatsapp.secure = false;
                 });
 
-                it("should parse the post request and call back with the right parameters", async function () {
+                it("should parse the post request and call back with the right parameters", async () => {
                     Whatsapp.post(valid_status_mock);
 
                     // Callbacks are executed in the next tick
@@ -1856,7 +1844,7 @@ describe("WhatsAppAPI", function () {
                     });
                 });
 
-                it("should return the on.status return value", async function () {
+                it("should return the on.status return value", async () => {
                     Whatsapp.on.status = async () => {
                         return "Hi";
                     };
@@ -1865,7 +1853,7 @@ describe("WhatsAppAPI", function () {
                     equal(response, "Hi");
                 });
 
-                it("should not block the main thread with the user's callback with the method offload", async function () {
+                it("should not block the main thread with the user's callback with the method offload", async () => {
                     // Emulates a blocking function
                     function block(delay) {
                         const start = Date.now();
@@ -1897,7 +1885,7 @@ describe("WhatsAppAPI", function () {
                     sinon_assert.calledOnce(spy_on_status);
                 });
 
-                it("should throw TypeError if the request is missing any data", async function () {
+                it("should throw TypeError if the request is missing any data", async () => {
                     let moddedMock;
 
                     moddedMock = new StatusWebhookMock();
@@ -1933,7 +1921,7 @@ describe("WhatsAppAPI", function () {
         });
     });
 
-    describe("$$apiFetch$$", function () {
+    describe("$$apiFetch$$", () => {
         const Whatsapp = new WhatsAppAPI({
             v,
             token,
@@ -1944,7 +1932,7 @@ describe("WhatsAppAPI", function () {
             }
         });
 
-        it("should make an authenticated request to any url", async function () {
+        it("should make an authenticated request to any url", async () => {
             clientExample
                 .intercept({
                     path: "/",
@@ -1958,7 +1946,7 @@ describe("WhatsAppAPI", function () {
             Whatsapp.$$apiFetch$$("https://example.com/");
         });
 
-        it("should make an authenticated request to any url with custom options", async function () {
+        it("should make an authenticated request to any url with custom options", async () => {
             clientExample
                 .intercept({
                     path: "/",
