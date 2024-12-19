@@ -1,6 +1,6 @@
 {
     "name": "whatsapp-api-js",
-    "version": "4.1.2",
+    "version": "4.1.1",
     "author": "Secreto31126",
     "description": "A TypeScript server agnostic Whatsapp's Official API framework",
     "license": "MIT",
@@ -12,46 +12,46 @@
     "files": [
         "lib/**/*"
     ],
-    "types": "lib/index.d.ts",
-    "module": "lib/index.js",
-    "main": "lib/index.js",
+    "types": "lib/types/index.d.ts",
+    "module": "lib/esm/index.js",
+    "main": "lib/cjs/index.js",
     "exports": {
         ".": {
-            "types": "./lib/index.d.ts",
-            "import": "./lib/index.js",
-            "require": "./lib/index.cjs"
+            "types": "./lib/types/index.d.ts",
+            "import": "./lib/esm/index.js",
+            "require": "./lib/cjs/index.js"
         },
         "./messages": {
-            "types": "./lib/messages/index.d.ts",
-            "import": "./lib/messages/index.js",
-            "require": "./lib/messages/index.cjs"
+            "types": "./lib/types/messages/index.d.ts",
+            "import": "./lib/esm/messages/index.js",
+            "require": "./lib/cjs/messages/index.js"
         },
         "./messages/*": {
-            "types": "./lib/messages/*.d.ts",
-            "import": "./lib/messages/*.js",
-            "require": "./lib/messages/*.cjs"
+            "types": "./lib/types/messages/*.d.ts",
+            "import": "./lib/esm/messages/*.js",
+            "require": "./lib/cjs/messages/*.js"
         },
         "./setup": null,
         "./setup/index": null,
         "./setup/*": {
-            "types": "./lib/setup/*.d.ts",
-            "import": "./lib/setup/*.js",
-            "require": "./lib/setup/*.cjs"
+            "types": "./lib/types/setup/*.d.ts",
+            "import": "./lib/esm/setup/*.js",
+            "require": "./lib/cjs/setup/*.js"
         },
         "./middleware": null,
         "./middleware/index": null,
         "./middleware/*": {
-            "types": "./lib/middleware/*.d.ts",
-            "import": "./lib/middleware/*.js",
-            "require": "./lib/middleware/*.cjs"
+            "types": "./lib/types/middleware/*.d.ts",
+            "import": "./lib/esm/middleware/*.js",
+            "require": "./lib/cjs/middleware/*.js"
         },
         "./emitters": {
-            "types": "./lib/emitters.d.ts"
+            "types": "./lib/types/emitters.d.ts"
         },
         "./types": {
-            "types": "./lib/types.d.ts",
-            "import": "./lib/types.js",
-            "require": "./lib/types.cjs"
+            "types": "./lib/types/types.d.ts",
+            "import": "./lib/esm/types.js",
+            "require": "./lib/cjs/types.js"
         }
     },
     "//": [
@@ -62,46 +62,46 @@
     "typesVersions": {
         "*": {
             ".": [
-                "lib/index.d.ts"
+                "lib/types/index.d.ts"
             ],
             "messages": [
-                "lib/messages/index.d.ts"
+                "lib/types/messages/index.d.ts"
             ],
             "messages/*": [
-                "lib/messages/*.d.ts"
+                "lib/types/messages/*.d.ts"
             ],
             "setup/index": [],
             "setup/*": [
-                "lib/setup/*.d.ts"
+                "lib/types/setup/*.d.ts"
             ],
             "middleware/index": [],
             "middleware/*": [
-                "lib/middleware/*.d.ts"
+                "lib/types/middleware/*.d.ts"
             ],
             "emitters": [
-                "lib/emitters.d.ts"
+                "lib/types/emitters.d.ts"
             ],
             "types": [
-                "lib/types.d.ts"
+                "lib/types/types.d.ts"
             ]
         }
     },
     "scripts": {
         "build": "npm run build:code && npm run build:types",
         "build:dev": "npm run build:code:dev && npm run build:types:dev",
-        "build:code": "tsup",
+        "build:code": "node -r dotenv/config build.js",
         "build:code:dev": "npm run build:code",
         "build:types": "tsc",
-        "build:types:dev": "npm run build:types",
+        "build:types:dev": "tsc --outDir ./lib/esm && tsc --outDir ./lib/cjs",
         "build:standalone": "esbuild src/standalone.ts --outfile=lib/standalone.js --bundle --platform=neutral --target=node10 --minify-syntax",
-        "test": "mocha",
+        "test": "node --test --test-reporter=@reporters/github --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout",
         "test:build": "npm run build && npm run test",
-        "test:watch": "mocha --reporter min --watch",
+        "test:watch": "node --test --watch",
         "lint": "eslint src",
         "lint:fix": "eslint src --fix",
         "prettier": "prettier --check .",
         "prettier:write": "prettier --write .",
-        "coverage": "c8 mocha --reporter min",
+        "coverage": "c8 node --test --test-reporter=@reporters/silent",
         "document": "typedoc && cp -r docs_statics/* docs/",
         "clear": "rm -rf docs/ docs_temp/ lib/ coverage/"
     },
@@ -135,6 +135,8 @@
     "devDependencies": {
         "@adonisjs/http-server": "7.2.5",
         "@eslint/js": "9.12.0",
+        "@reporters/github": "1.7.2",
+        "@reporters/silent": "1.2.7",
         "@types/eslint__js": "8.42.3",
         "@types/express": "5.0.0",
         "@types/node": "18.19.55",
@@ -147,11 +149,9 @@
         "eslint-config-prettier": "9.1.0",
         "eslint-plugin-tsdoc": "0.3.0",
         "glob": "11.0.0",
-        "globals": "^15.9.0",
-        "mocha": "10.7.3",
+        "globals": "15.9.0",
         "prettier": "3.3.3",
         "sinon": "19.0.2",
-        "tsup": "^8.3.0",
         "typedoc": "0.26.9",
         "typescript": "5.6.3",
         "typescript-eslint": "8.8.1",

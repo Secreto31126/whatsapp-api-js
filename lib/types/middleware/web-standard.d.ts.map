@@ -1,0 +1,1 @@
+{"version":3,"file":"web-standard.d.ts","sourceRoot":"","sources":["../../../src/middleware/web-standard.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,qBAAqB,EAAE,MAAM,cAAc,CAAC;AAKrD;;GAEG;AACH,qBAAa,WAAY,SAAQ,qBAAqB;IAClD;;;;;;OAMG;IACG,WAAW,CAAC,GAAG,EAAE,OAAO,GAAG,OAAO,CAAC,MAAM,CAAC;IAiBhD;;;;;;;OAOG;IACH,UAAU,CAAC,GAAG,EAAE,OAAO,GAAG,MAAM;CAUnC"}

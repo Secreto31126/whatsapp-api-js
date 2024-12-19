@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/utils.ts"],
+  "sourcesContent": ["export type AtLeastOne<T> = [T, ...T[]];\n\nexport type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;\n\nexport function isInteger(n: unknown): n is number {\n    return Number.isInteger(n);\n}\n\nexport function escapeUnicode(str: string) {\n    // https://stackoverflow.com/a/40558081\n    return str.replace(/[^\\0-~]/g, (ch) => {\n        return \"\\\\u\" + (\"000\" + ch.charCodeAt(0).toString(16)).slice(-4);\n    });\n}\n\ntype Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };\nexport type XOR<T, U> = T | U extends object\n    ? (Without<T, U> & U) | (Without<U, T> & T)\n    : T | U;\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA;AAIO,SAAS,UAAU,GAAyB;AAC/C,SAAO,OAAO,UAAU,CAAC;AAC7B;AAEO,SAAS,cAAc,KAAa;AAEvC,SAAO,IAAI,QAAQ,YAAY,CAAC,OAAO;AACnC,WAAO,SAAS,QAAQ,GAAG,WAAW,CAAC,EAAE,SAAS,EAAE,GAAG,MAAM,EAAE;AAAA,EACnE,CAAC;AACL;",
+  "names": []
+}
