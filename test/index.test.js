@@ -102,7 +102,7 @@ describe("WhatsAppAPI", () => {
 
     describe("Ponyfill", () => {
         describe("Fetch", () => {
-            it("should default to the enviroment fetch (skip if not defined)", function (t) {
+            it("should default to the enviroment fetch (skip if not defined)", (t) => {
                 if (typeof fetch === "undefined") {
                     t.skip();
                 }
@@ -136,12 +136,12 @@ describe("WhatsAppAPI", () => {
         });
 
         describe("CryptoSubtle", () => {
-            it("should default to the enviroment crypto.subtle (skip if not defined)", () => {
+            it("should default to the enviroment crypto.subtle (skip if not defined)", (t) => {
                 if (
                     typeof crypto === "undefined" ||
                     typeof crypto.subtle === "undefined"
                 ) {
-                    this.skip();
+                    t.skip();
                 }
 
                 const Whatsapp = new WhatsAppAPI({
