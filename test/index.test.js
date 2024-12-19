@@ -4,7 +4,7 @@
 // Unit tests with mocha and sinon
 import { equal, throws, rejects, deepEqual } from "assert";
 import { spy as sinon_spy, assert as sinon_assert } from "sinon";
-import { describe, it, beforeEach, afterEach } from 'node:test';
+import { describe, it, beforeEach, afterEach } from "node:test";
 
 // Import the module
 import { WhatsAppAPI } from "../lib/esm/middleware/node-http.js";
@@ -102,7 +102,7 @@ describe("WhatsAppAPI", () => {
 
     describe("Ponyfill", () => {
         describe("Fetch", () => {
-            it("should default to the enviroment fetch (skip if not defined)", t => {
+            it("should default to the enviroment fetch (skip if not defined)", (t) => {
                 if (typeof fetch === "undefined") {
                     t.skip();
                     return;
@@ -137,7 +137,7 @@ describe("WhatsAppAPI", () => {
         });
 
         describe("CryptoSubtle", () => {
-            it("should default to the enviroment crypto.subtle (skip if not defined)", t => {
+            it("should default to the enviroment crypto.subtle (skip if not defined)", (t) => {
                 if (
                     typeof crypto === "undefined" ||
                     typeof crypto.subtle === "undefined"
