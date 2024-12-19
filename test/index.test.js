@@ -105,6 +105,7 @@ describe("WhatsAppAPI", () => {
             it("should default to the enviroment fetch (skip if not defined)", t => {
                 if (typeof fetch === "undefined") {
                     t.skip();
+                    return;
                 }
 
                 const Whatsapp = new WhatsAppAPI({
@@ -142,6 +143,7 @@ describe("WhatsAppAPI", () => {
                     typeof crypto.subtle === "undefined"
                 ) {
                     t.skip();
+                    return;
                 }
 
                 const Whatsapp = new WhatsAppAPI({
