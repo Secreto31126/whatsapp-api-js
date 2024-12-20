@@ -7,9 +7,9 @@ import { spy as sinon_spy, assert as sinon_assert } from "sinon";
 import { describe, it, beforeEach, afterEach } from "node:test";
 
 // Import the module
-import { WhatsAppAPI } from "../lib/esm/middleware/node-http.js";
-import { DEFAULT_API_VERSION } from "../lib/esm/types.js";
-import { Text } from "../lib/esm/messages/text.js";
+import { WhatsAppAPI } from "../lib/middleware/node-http.js";
+import { DEFAULT_API_VERSION } from "../lib/types.js";
+import { Text } from "../lib/messages/text.js";
 
 // Mock the https requests
 import { agent, clientFacebook, clientExample } from "./server.mocks.js";
