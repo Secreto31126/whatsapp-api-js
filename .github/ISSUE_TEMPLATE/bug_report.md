@@ -20,9 +20,9 @@ A clear and concise description of what you expected to happen.
 
 **Desktop (please complete the following information):**
 
--   OS: [e.g. Windows]
--   Runtime [e.g. node@19, deno@1.33.4]
--   Library Version [e.g. 1.0.0]
+- OS: [e.g. Windows]
+- Runtime [e.g. node@19, deno@1.33.4]
+- Library Version [e.g. 1.0.0]
 
 **Additional context**
 Add any other context about the problem here.
