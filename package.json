@@ -133,7 +133,7 @@
         "@types/eslint__js": "8.42.3",
         "@types/express": "5.0.0",
         "@types/node": "18.19.55",
-        "@vercel/node": "3.2.23",
+        "@vercel/node": "5.0.0",
         "all-contributors-cli": "6.26.1",
         "c8": "10.1.2",
         "dotenv": "16.4.5",
