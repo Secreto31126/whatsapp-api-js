@@ -383,52 +383,54 @@ export type ClientMessageRequest = {
      * Cloud API does not process this field, it just returns it as part of sent/delivered/read message webhooks.
      */
     biz_opaque_callback_data?: string;
+} & {
+    [Type in ClientMessageNames]?: ClientMessage;
 } & (
-    | {
-          type: "text";
-          text?: Text;
-      }
-    | {
-          type: "audio";
-          audio?: Audio;
-      }
-    | {
-          type: "document";
-          document?: Document;
-      }
-    | {
-          type: "image";
-          image?: Image;
-      }
-    | {
-          type: "sticker";
-          sticker?: Sticker;
-      }
-    | {
-          type: "video";
-          video?: Video;
-      }
-    | {
-          type: "location";
-          location?: Location;
-      }
-    | {
-          type: "contacts";
-          contacts?: Contacts;
-      }
-    | {
-          type: "interactive";
-          interactive?: Interactive;
-      }
-    | {
-          type: "template";
-          template?: Template;
-      }
-    | {
-          type: "reaction";
-          reaction?: Reaction;
-      }
-);
+        | {
+              type: "text";
+              text: Text;
+          }
+        | {
+              type: "audio";
+              audio: Audio;
+          }
+        | {
+              type: "document";
+              document: Document;
+          }
+        | {
+              type: "image";
+              image: Image;
+          }
+        | {
+              type: "sticker";
+              sticker: Sticker;
+          }
+        | {
+              type: "video";
+              video: Video;
+          }
+        | {
+              type: "location";
+              location: Location;
+          }
+        | {
+              type: "contacts";
+              contacts: Contacts;
+          }
+        | {
+              type: "interactive";
+              interactive: Interactive;
+          }
+        | {
+              type: "template";
+              template: Template;
+          }
+        | {
+              type: "reaction";
+              reaction: Reaction;
+          }
+    );
 
 // #endregion
 
