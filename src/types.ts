@@ -386,7 +386,7 @@ export type ClientMessageRequest = {
 } & (
     | {
           type: "text";
-          text: Text;
+          text?: Text;
       }
     | {
           type: "audio";
