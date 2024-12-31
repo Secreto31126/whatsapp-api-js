@@ -10,6 +10,7 @@ import { describe, it, beforeEach, afterEach } from "node:test";
 import { WhatsAppAPI } from "../lib/middleware/node-http.js";
 import { DEFAULT_API_VERSION } from "../lib/types.js";
 import { Text } from "../lib/messages/text.js";
+import * as LibErrors from "../lib/errors.js";
 
 // Mock the https requests
 import { agent, clientFacebook, clientExample } from "./server.mocks.js";
@@ -1618,47 +1619,47 @@ describe("WhatsAppAPI", () => {
 
             describe("Validation", () => {
                 describe("Secure truthy (default)", () => {
-                    it("should throw 400 if rawBody is missing", async () => {
+                    it("should throw WhatsAppAPIMissingRawBodyError if rawBody is missing", async () => {
                         await rejects(
                             Whatsapp.post(valid_message_mock),
-                            threw(400)
+                            LibErrors.WhatsAppAPIMissingRawBodyError
                         );
 
                         await rejects(
                             Whatsapp.post(valid_message_mock, undefined),
-                            threw(400)
+                            LibErrors.WhatsAppAPIMissingRawBodyError
                         );
                     });
 
-                    it("should throw 401 if signature is missing", async () => {
+                    it("should throw WhatsAppAPIMissingSignatureError if signature is missing", async () => {
                         await rejects(
                             Whatsapp.post(valid_message_mock, body),
-                            threw(401)
+                            LibErrors.WhatsAppAPIMissingSignatureError
                         );
 
                         await rejects(
                             Whatsapp.post(valid_message_mock, body, undefined),
-                            threw(401)
+                            LibErrors.WhatsAppAPIMissingSignatureError
                         );
                     });
 
-                    it("should throw 500 if appSecret is not specified", async () => {
+                    it("should throw WhatsAppAPIMissingAppSecretError if appSecret is not specified", async () => {
                         delete Whatsapp.appSecret;
 
                         await rejects(
                             Whatsapp.post(valid_message_mock, body, signature),
-                            threw(500)
+                            LibErrors.WhatsAppAPIMissingAppSecretError
                         );
                     });
 
-                    it("should throw 401 if the signature doesn't match the hash", async () => {
+                    it("should throw WhatsAppAPIInvalidSignatureError if the signature doesn't match the hash", async () => {
                         await rejects(
                             Whatsapp.post(
                                 valid_message_mock,
                                 body,
                                 "sha256=wrong"
                             ),
-                            threw(401)
+                            LibErrors.WhatsAppAPIInvalidSignatureError
                         );
                     });
                 });

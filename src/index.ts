@@ -27,6 +27,14 @@ import type {
 
 import { escapeUnicode, MaybePromise } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";
+import {
+    WhatsAppAPIMissingAppSecretError,
+    WhatsAppAPIMissingCryptoSubtleError,
+    WhatsAppAPIMissingRawBodyError,
+    WhatsAppAPIMissingSignatureError,
+    WhatsAppAPIUnexpectedError,
+    WhatsAppAPIFailedToVerifyError
+} from "./errors.js";
 
 /**
  * The main API Class
@@ -802,31 +810,34 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws 400 if secure and the raw body is missing
-     * @throws 401 if secure and the signature is missing
-     * @throws 500 if secure and the appSecret isn't defined
-     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
-     * @throws 401 if secure and the signature doesn't match the hash
-     * @throws 400 if the POSTed data is not a valid Whatsapp API request
-     * @throws 500 if the user's callback throws an error
-     * @throws 200, if the POSTed data is valid but not a message or status update (ignored)
+     * @throws WhatsAppAPIMissingRawBodyError if secure and the raw body is missing
+     * @throws WhatsAppAPIMissingSignatureError if secure and the signature is missing
+     * @throws WhatsAppAPIMissingAppSecretError if secure and the appSecret isn't defined
+     * @throws WhatsAppAPIMissingCryptoSubtleError if secure and crypto.subtle or ponyfill isn't available
+     * @throws WhatsAppAPIFailedToVerifyError if secure and the signature doesn't match the hash
+     * @throws WhatsAppAPIUnexpectedError if the POSTed data is not a valid Whatsapp API request
+     * @throws Any error generated within the user's callbacks
+     * @throws WhatsAppAPIUnexpectedError if the POSTed data is valid but not a message or status update (ignored)
      */
     async post(
         data: PostData,
         raw_body?: string,
         signature?: string
     ): Promise<EmittersReturnType | undefined> {
-        //Validating the payload
+        // Validating the payload
         if (this.secure) {
-            if (!raw_body) throw 400;
-            if (!signature) throw 401;
+            if (!raw_body) throw new WhatsAppAPIMissingRawBodyError();
+            if (!signature) throw new WhatsAppAPIMissingSignatureError();
+
             if (!(await this.verifyRequestSignature(raw_body, signature))) {
-                throw 401;
+                throw new WhatsAppAPIFailedToVerifyError();
             }
         }
 
         // Throw "400 Bad Request" if data is not a valid WhatsApp API request
-        if (!data.object) throw 400;
+        if (!data.object) {
+            throw new WhatsAppAPIUnexpectedError("Invalid payload", 400);
+        }
 
         const value = data.entry[0].changes[0].value;
         const phoneID = value.metadata.phone_number_id;
@@ -858,11 +869,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 Whatsapp: this
             };
 
-            try {
-                return await this.on?.message?.(args);
-            } catch {
-                throw 500;
-            }
+            return await this.on?.message?.(args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -890,16 +897,12 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 Whatsapp: this
             };
 
-            try {
-                return await this.on?.status?.(args);
-            } catch {
-                throw 500;
-            }
+            return await this.on?.status?.(args);
         }
 
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
-        throw 200;
+        throw new WhatsAppAPIUnexpectedError("Unexpected payload", 200);
     }
 
     /**
@@ -998,15 +1001,15 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the request
      * @param signature - The signature to validate
      * @returns If the signature is valid
-     * @throws 500 if the appSecret isn't defined
-     * @throws 501 if crypto.subtle or ponyfill isn't available
+     * @throws WhatsAppAPIMissingAppSecretError if the appSecret isn't defined
+     * @throws WhatsAppAPIMissingCryptoSubtleError if crypto.subtle or ponyfill isn't available
      */
     async verifyRequestSignature(
         raw_body: string,
         signature: string
     ): Promise<boolean> {
-        if (!this.appSecret) throw 500;
-        if (!this.subtle) throw 501;
+        if (!this.appSecret) throw new WhatsAppAPIMissingAppSecretError();
+        if (!this.subtle) throw new WhatsAppAPIMissingCryptoSubtleError();
 
         signature = signature.split("sha256=")[1];
         if (!signature) return false;
