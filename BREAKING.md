@@ -105,14 +105,14 @@ Due to interoperability issues between ESM and CJS, all the default
 exports were removed to assure a consistent behavior across all
 runtimes. The list of affected imports by this change is:
 
--   `whatsapp-api-js`
--   `whatsapp-api-js/messages/location`
--   `whatsapp-api-js/messages/reaction`
--   `whatsapp-api-js/messages/text`
--   `whatsapp-api-js/middleware/*` (yeah, all of them, issue [#306](https://github.com/Secreto31126/whatsapp-api-js/issues/306))
--   `whatsapp-api-js/setup/bun`
--   `whatsapp-api-js/setup/deno`
--   `whatsapp-api-js/setup/web`
+- `whatsapp-api-js`
+- `whatsapp-api-js/messages/location`
+- `whatsapp-api-js/messages/reaction`
+- `whatsapp-api-js/messages/text`
+- `whatsapp-api-js/middleware/*` (yeah, all of them, issue [#306](https://github.com/Secreto31126/whatsapp-api-js/issues/306))
+- `whatsapp-api-js/setup/bun`
+- `whatsapp-api-js/setup/deno`
+- `whatsapp-api-js/setup/web`
 
 ESM example:
 
@@ -150,32 +150,32 @@ the original catalog messages.
 
 Among the affected classes and files are:
 
--   `interactive.ts`
+- `interactive.ts`
 
-    -   `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used for the
-        Catalog messages. The original class was renamed as `ActionProduct`.
-    -   `Product` and `ProductSection`: These classes were moved from the file
-        `messages/interactive.ts` to `messages/globals.ts`, as they are now also
-        used in templates.
-    -   `Section`: The class was moved from the file `messages/interactive.ts` to
-        `types.ts`.
+    - `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used for the
+      Catalog messages. The original class was renamed as `ActionProduct`.
+    - `Product` and `ProductSection`: These classes were moved from the file
+      `messages/interactive.ts` to `messages/globals.ts`, as they are now also
+      used in templates.
+    - `Section`: The class was moved from the file `messages/interactive.ts` to
+      `types.ts`.
 
--   `template.ts`
+- `template.ts`
 
-    -   `ButtonComponent` -> `URLComponent`, `PayloadComponent`, `CatalogComponent`,
-        `MPMComponent`, `CopyComponent`, `SkipButtonComponent`: As the API now
-        supports mixing button types, the `ButtonComponent` was splitted into
-        different classes, each one representing a button types. For example, an URL
-        component was updated from `new ButtonComponent("url", "example")` to
-        `new URLComponent("example")`.
-    -   `Template`: The constructor now receives multiple button components instead
-        of a single one.
-    -   `ButtonComponent`: The class was replaced with an abstract class.
-    -   `ButtonParameter`: The class was replaced with a type.
+    - `ButtonComponent` -> `URLComponent`, `PayloadComponent`, `CatalogComponent`,
+      `MPMComponent`, `CopyComponent`, `SkipButtonComponent`: As the API now
+      supports mixing button types, the `ButtonComponent` was splitted into
+      different classes, each one representing a button types. For example, an URL
+      component was updated from `new ButtonComponent("url", "example")` to
+      `new URLComponent("example")`.
+    - `Template`: The constructor now receives multiple button components instead
+      of a single one.
+    - `ButtonComponent`: The class was replaced with an abstract class.
+    - `ButtonParameter`: The class was replaced with a type.
 
--   `types.ts`
-    -   `ClientBuildableMessageComponent`: The class was replaced with an interface.
-    -   `PostData`: `PostData.entry[].changes[].value.contacts` may be undefined.
+- `types.ts`
+    - `ClientBuildableMessageComponent`: The class was replaced with an interface.
+    - `PostData`: `PostData.entry[].changes[].value.contacts` may be undefined.
 
 ### Node min version bumped
 

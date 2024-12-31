@@ -7,17 +7,17 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
--   [whatsapp-api-js v4](#whatsapp-api-js-v4)
-    -   [List of contents](#list-of-contents)
-    -   [Set up](#set-up)
-    -   [Examples and Tutorials](#examples-and-tutorials)
-    -   [Types](#types)
-    -   [Changelog](#changelog)
-    -   [Documentation](#documentation)
-    -   [Contributors](#contributors)
-    -   [Contributions](#contributions)
-    -   [Breaking changes](#breaking-changes)
-    -   [Beta releases](#beta-releases)
+- [whatsapp-api-js v4](#whatsapp-api-js-v4)
+    - [List of contents](#list-of-contents)
+    - [Set up](#set-up)
+    - [Examples and Tutorials](#examples-and-tutorials)
+    - [Types](#types)
+    - [Changelog](#changelog)
+    - [Documentation](#documentation)
+    - [Contributors](#contributors)
+    - [Contributions](#contributions)
+    - [Breaking changes](#breaking-changes)
+    - [Beta releases](#beta-releases)
 
 ## Set up
 
@@ -25,12 +25,12 @@ Before all, you will need a Meta Bussiness App with WhatsApp API activated. You
 can create your first app following
 [this steps](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started).
 
--   Get the API token, either a temporal or a
-    [permanent one](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started).
--   Get your App secret from the dashboard in App Settings > Basic > App Secret.
--   More in-depth information on how to set and retrieve this values is available
-    at
-    [the module documentation](https://whatsappapijs.web.app/types/types.TheBasicConstructorArguments.html)
+- Get the API token, either a temporal or a
+  [permanent one](https://developers.facebook.com/docs/whatsapp/business-management-api/get-started).
+- Get your App secret from the dashboard in App Settings > Basic > App Secret.
+- More in-depth information on how to set and retrieve this values is available
+  at
+  [the module documentation](https://whatsappapijs.web.app/types/types.TheBasicConstructorArguments.html)
 
 You can now install the module using npm:
 
