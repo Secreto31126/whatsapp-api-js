@@ -290,39 +290,41 @@ export type ClientMessageRequest = {
      * Cloud API does not process this field, it just returns it as part of sent/delivered/read message webhooks.
      */
     biz_opaque_callback_data?: string;
+} & {
+    [Type in ClientMessageNames]?: ClientMessage;
 } & ({
     type: "text";
-    text?: Text;
+    text: Text;
 } | {
     type: "audio";
-    audio?: Audio;
+    audio: Audio;
 } | {
     type: "document";
-    document?: Document;
+    document: Document;
 } | {
     type: "image";
-    image?: Image;
+    image: Image;
 } | {
     type: "sticker";
-    sticker?: Sticker;
+    sticker: Sticker;
 } | {
     type: "video";
-    video?: Video;
+    video: Video;
 } | {
     type: "location";
-    location?: Location;
+    location: Location;
 } | {
     type: "contacts";
-    contacts?: Contacts;
+    contacts: Contacts;
 } | {
     type: "interactive";
-    interactive?: Interactive;
+    interactive: Interactive;
 } | {
     type: "template";
-    template?: Template;
+    template: Template;
 } | {
     type: "reaction";
-    reaction?: Reaction;
+    reaction: Reaction;
 });
 export type ServerTextMessage = {
     type: "text";
