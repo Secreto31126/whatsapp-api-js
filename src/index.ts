@@ -216,8 +216,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             to
         } as ClientMessageRequest;
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore - TS dumb, the _type will always match the type
         request[type] = message;
 
         if (context) request.context = { message_id: context };
