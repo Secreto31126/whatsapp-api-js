@@ -227,7 +227,7 @@ describe("WhatsAppAPI", () => {
             messaging_product: "whatsapp",
             type,
             to: user,
-            text: JSON.stringify(message)
+            text: message
         };
 
         const id = "4";
@@ -405,7 +405,7 @@ describe("WhatsAppAPI", () => {
             messaging_product: "whatsapp",
             type,
             to: user,
-            text: JSON.stringify(message)
+            text: message
         };
 
         const requestWithContext = {
