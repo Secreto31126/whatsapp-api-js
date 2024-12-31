@@ -55,10 +55,9 @@ export declare class Contacts extends ClientMessage {
      */
     constructor(...contact: AtLeastOne<Array<Address | Birthday | Email | Name | Organization | Phone | Url | ContactComponent>>);
     /**
-     * @override
      * @internal
      */
-    _build(): string;
+    toJSON(): string;
 }
 /**
  * Address API object

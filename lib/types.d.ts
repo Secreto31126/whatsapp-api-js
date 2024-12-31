@@ -6,6 +6,7 @@
  * but if you want to "understand" the code under the hood,
  * feel free to read the docs :)
  */
+import type { Text, Audio, Document, Image, Sticker, Video, Location, Interactive, Template, Reaction, Contacts } from "./messages";
 import type { AtLeastOne } from "./utils";
 export declare const DEFAULT_API_VERSION = "v20.0";
 /**
@@ -139,12 +140,6 @@ export declare abstract class ClientMessage {
      * @internal
      */
     abstract get _type(): ClientMessageNames;
-    /**
-     * The message built as a string. In most cases it's just JSON.stringify(this)
-     *
-     * @internal
-     */
-    _build(): string;
 }
 export interface ClientTypedMessageComponent {
     /**
@@ -297,37 +292,37 @@ export type ClientMessageRequest = {
     biz_opaque_callback_data?: string;
 } & ({
     type: "text";
-    text?: string;
+    text?: Text;
 } | {
     type: "audio";
-    audio?: string;
+    audio?: Audio;
 } | {
     type: "document";
-    document?: string;
+    document?: Document;
 } | {
     type: "image";
-    image?: string;
+    image?: Image;
 } | {
     type: "sticker";
-    sticker?: string;
+    sticker?: Sticker;
 } | {
     type: "video";
-    video?: string;
+    video?: Video;
 } | {
     type: "location";
-    location?: string;
+    location?: Location;
 } | {
     type: "contacts";
-    contacts?: string;
+    contacts?: Contacts;
 } | {
     type: "interactive";
-    interactive?: string;
+    interactive?: Interactive;
 } | {
     type: "template";
-    template?: string;
+    template?: Template;
 } | {
     type: "reaction";
-    reaction?: string;
+    reaction?: Reaction;
 });
 export type ServerTextMessage = {
     type: "text";
