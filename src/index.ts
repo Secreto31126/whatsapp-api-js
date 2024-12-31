@@ -218,10 +218,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
 
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore - TS dumb, the _type will always match the type
-        request[type] =
-            // Prettier will probably kill me, but this comment has a purpose.
-            // It prevents ts-ignore from ignoring more than intended.
-            message._build();
+        request[type] = message;
 
         if (context) request.context = { message_id: context };
         if (biz_opaque_callback_data)
