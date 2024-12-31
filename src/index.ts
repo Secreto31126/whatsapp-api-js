@@ -1023,11 +1023,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         );
 
         const data = encoder.encode(escapeUnicode(raw_body));
-        const result = await this.subtle.sign(
-            "HMAC",
-            key,
-            Buffer.from(data.buffer)
-        );
+        const result = await this.subtle.sign("HMAC", key, data);
         const result_array = Array.from(new Uint8Array(result));
 
         // Convert an array of bytes to a hex string
