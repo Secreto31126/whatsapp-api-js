@@ -873,7 +873,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 Whatsapp: this
             };
 
-            return await this.on?.message?.(args);
+            return this.on?.message?.(args);
         } else if ("statuses" in value) {
             const statuses = value.statuses[0];
 
@@ -901,7 +901,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 Whatsapp: this
             };
 
-            return await this.on?.status?.(args);
+            return this.on?.status?.(args);
         }
 
         // If unknown payload, just ignore it
