@@ -10,6 +10,7 @@ import { describe, it, beforeEach, afterEach } from "node:test";
 import { WhatsAppAPI } from "../lib/middleware/node-http.js";
 import { DEFAULT_API_VERSION } from "../lib/types.js";
 import { Text } from "../lib/messages/text.js";
+import * as LibErrors from "../lib/errors.js";
 
 // Mock the https requests
 import { agent, clientFacebook, clientExample } from "./server.mocks.js";
@@ -1483,10 +1484,6 @@ describe("WhatsAppAPI", () => {
     });
 
     describe("Webhooks", () => {
-        function threw(i) {
-            return (e) => e === i;
-        }
-
         describe("Get", () => {
             const mode = "subscribe";
             const challenge = "challenge";
@@ -1517,35 +1514,35 @@ describe("WhatsAppAPI", () => {
                 equal(response, challenge);
             });
 
-            it("should throw 500 if webhookVerifyToken is not specified", () => {
+            it("should throw WhatsAppAPIMissingVerifyTokenError if webhookVerifyToken is not specified", () => {
                 delete Whatsapp.webhookVerifyToken;
 
                 throws(() => {
                     Whatsapp.get(params);
-                }, threw(500));
+                }, LibErrors.WhatsAppAPIMissingVerifyTokenError);
             });
 
-            it("should throw 400 if the request is missing data", () => {
+            it("should throw WhatsAppAPIMissingSearchParamsError if the request is missing data", () => {
                 throws(() => {
                     Whatsapp.get({});
-                }, threw(400));
+                }, LibErrors.WhatsAppAPIMissingSearchParamsError);
 
                 throws(() => {
                     Whatsapp.get({ "hub.mode": mode });
-                }, threw(400));
+                }, LibErrors.WhatsAppAPIMissingSearchParamsError);
 
                 throws(() => {
                     Whatsapp.get({ "hub.verify_token": token });
-                }, threw(400));
+                }, LibErrors.WhatsAppAPIMissingSearchParamsError);
             });
 
-            it("should throw 403 if the verification tokens don't match", () => {
+            it("should throw WhatsAppAPIFailedToVerifyTokenError if the verification tokens don't match", () => {
                 throws(() => {
                     Whatsapp.get(
                         { ...params, "hub.verify_token": "wrong" },
                         token
                     );
-                }, threw(403));
+                }, LibErrors.WhatsAppAPIFailedToVerifyTokenError);
             });
         });
 
@@ -1618,47 +1615,47 @@ describe("WhatsAppAPI", () => {
 
             describe("Validation", () => {
                 describe("Secure truthy (default)", () => {
-                    it("should throw 400 if rawBody is missing", async () => {
+                    it("should throw WhatsAppAPIMissingRawBodyError if rawBody is missing", async () => {
                         await rejects(
                             Whatsapp.post(valid_message_mock),
-                            threw(400)
+                            LibErrors.WhatsAppAPIMissingRawBodyError
                         );
 
                         await rejects(
                             Whatsapp.post(valid_message_mock, undefined),
-                            threw(400)
+                            LibErrors.WhatsAppAPIMissingRawBodyError
                         );
                     });
 
-                    it("should throw 401 if signature is missing", async () => {
+                    it("should throw WhatsAppAPIMissingSignatureError if signature is missing", async () => {
                         await rejects(
                             Whatsapp.post(valid_message_mock, body),
-                            threw(401)
+                            LibErrors.WhatsAppAPIMissingSignatureError
                         );
 
                         await rejects(
                             Whatsapp.post(valid_message_mock, body, undefined),
-                            threw(401)
+                            LibErrors.WhatsAppAPIMissingSignatureError
                         );
                     });
 
-                    it("should throw 500 if appSecret is not specified", async () => {
+                    it("should throw WhatsAppAPIMissingAppSecretError if appSecret is not specified", async () => {
                         delete Whatsapp.appSecret;
 
                         await rejects(
                             Whatsapp.post(valid_message_mock, body, signature),
-                            threw(500)
+                            LibErrors.WhatsAppAPIMissingAppSecretError
                         );
                     });
 
-                    it("should throw 401 if the signature doesn't match the hash", async () => {
+                    it("should throw WhatsAppAPIInvalidSignatureError if the signature doesn't match the hash", async () => {
                         await rejects(
                             Whatsapp.post(
                                 valid_message_mock,
                                 body,
                                 "sha256=wrong"
                             ),
-                            threw(401)
+                            LibErrors.WhatsAppAPIInvalidSignatureError
                         );
                     });
                 });
@@ -1681,10 +1678,13 @@ describe("WhatsAppAPI", () => {
                     });
                 });
 
-                it("should throw 400 if the request isn't a valid WhatsApp Cloud API request (data.object)", async () => {
+                it("should throw WhatsAppAPIUnexpectedError if the request isn't a valid WhatsApp Cloud API request (data.object)", async () => {
                     Whatsapp.secure = false;
 
-                    await rejects(Whatsapp.post({}), threw(400));
+                    await rejects(
+                        Whatsapp.post({}),
+                        LibErrors.WhatsAppAPIUnexpectedError
+                    );
                 });
             });
 

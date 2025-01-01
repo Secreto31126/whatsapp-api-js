@@ -1,5 +1,5 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
-import { isInteger } from "../utils.js";
+import { WhatsAppAPIError } from "../errors.js";
 
 import type { Request } from "@adonisjs/http-server";
 import type { GetParams, PostData } from "../types";
@@ -42,7 +42,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
             return 200;
         } catch (e) {
             // In case who knows what fails ¯\_(ツ)_/¯
-            return isInteger(e) ? e : 500;
+            return e instanceof WhatsAppAPIError ? e.httpStatus : 500;
         }
     }
 
@@ -79,7 +79,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
             return this.get(req.qs() as GetParams);
         } catch (e) {
             // In case who knows what fails ¯\_(ツ)_/¯
-            throw isInteger(e) ? e : 500;
+            throw e instanceof WhatsAppAPIError ? e.httpStatus : 500;
         }
     }
 }

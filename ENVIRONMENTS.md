@@ -214,7 +214,7 @@ async function doPost(e) {
     try {
         status_code = await Whatsapp.post(data);
     } catch (e) {
-        status_code = e;
+        status_code = e?.httpStatus ?? 500;
     }
 
     // GAS doesn't support sending custom status codes
