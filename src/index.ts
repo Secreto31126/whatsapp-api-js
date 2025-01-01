@@ -917,6 +917,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * ```ts
      * // Simple http example implementation with Whatsapp.get() on Node@^19
      * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { WhatsAppAPIError } from "whatsapp-api-js/errors";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
      *
      * import { createServer } from "http";
@@ -929,10 +930,14 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *     if (req.method == "GET") {
      *         const params = new URLSearchParams(req.url.split("?")[1]);
      *
-     *         const response = Whatsapp.get(Object.fromEntries(params));
+     *         try {
+     *             const response = Whatsapp.get(Object.fromEntries(params));
+     *             res.writeHead(200, {"Content-Type": "text/html"});
+     *             res.write(response);
+     *         } catch (err) {
+     *             res.writeHead(err instanceof WhatsAppAPIError ? err.httpStatus : 500);
+     *         }
      *
-     *         res.writeHead(200, {"Content-Type": "text/html"});
-     *         res.write(response)
      *         res.end();
      *     } else res.writeHead(501).end();
      * };
