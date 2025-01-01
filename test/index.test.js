@@ -1484,10 +1484,6 @@ describe("WhatsAppAPI", () => {
     });
 
     describe("Webhooks", () => {
-        function threw(i) {
-            return (e) => e === i;
-        }
-
         describe("Get", () => {
             const mode = "subscribe";
             const challenge = "challenge";
@@ -1518,35 +1514,35 @@ describe("WhatsAppAPI", () => {
                 equal(response, challenge);
             });
 
-            it("should throw 500 if webhookVerifyToken is not specified", () => {
+            it("should throw WhatsAppAPIMissingVerifyTokenError if webhookVerifyToken is not specified", () => {
                 delete Whatsapp.webhookVerifyToken;
 
                 throws(() => {
                     Whatsapp.get(params);
-                }, threw(500));
+                }, LibErrors.WhatsAppAPIMissingVerifyTokenError);
             });
 
-            it("should throw 400 if the request is missing data", () => {
+            it("should throw WhatsAppAPIMissingSearchParamsError if the request is missing data", () => {
                 throws(() => {
                     Whatsapp.get({});
-                }, threw(400));
+                }, LibErrors.WhatsAppAPIMissingSearchParamsError);
 
                 throws(() => {
                     Whatsapp.get({ "hub.mode": mode });
-                }, threw(400));
+                }, LibErrors.WhatsAppAPIMissingSearchParamsError);
 
                 throws(() => {
                     Whatsapp.get({ "hub.verify_token": token });
-                }, threw(400));
+                }, LibErrors.WhatsAppAPIMissingSearchParamsError);
             });
 
-            it("should throw 403 if the verification tokens don't match", () => {
+            it("should throw WhatsAppAPIFailedToVerifyTokenError if the verification tokens don't match", () => {
                 throws(() => {
                     Whatsapp.get(
                         { ...params, "hub.verify_token": "wrong" },
                         token
                     );
-                }, threw(403));
+                }, LibErrors.WhatsAppAPIFailedToVerifyTokenError);
             });
         });
 
@@ -1682,10 +1678,10 @@ describe("WhatsAppAPI", () => {
                     });
                 });
 
-                it("should throw 400 if the request isn't a valid WhatsApp Cloud API request (data.object)", async () => {
+                it("should throw WhatsAppAPIUnexpectedError if the request isn't a valid WhatsApp Cloud API request (data.object)", async () => {
                     Whatsapp.secure = false;
 
-                    await rejects(Whatsapp.post({}), threw(400));
+                    await rejects(Whatsapp.post({}), LibErrors.WhatsAppAPIUnexpectedError);
                 });
             });
 
