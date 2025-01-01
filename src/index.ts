@@ -768,6 +768,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * // author arivanbastos on issue #114
      * // Simple http example implementation with Whatsapp.post() on Node@^19
      * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { WhatsAppAPIError } from "whatsapp-api-js/errors";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
      *
      * import { createServer } from "http";
@@ -788,7 +789,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *                 const response = await Whatsapp.post(JSON.parse(body), body, req.headers["x-hub-signature-256"]);
      *                 res.writeHead(response);
      *             } catch (err) {
-     *                 res.writeHead(err);
+     *                 res.writeHead(err instanceof WhatsAppAPIError ? err.httpStatus : 500);
      *             }
      *
      *             res.end();

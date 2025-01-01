@@ -155,6 +155,11 @@ export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
 export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
     ExtraTypesThatMakeTypescriptWork;
 
+/**
+ * The base class of all the library messages
+ *
+ * Polymorphism is cool :]
+ */
 export abstract class ClientMessage {
     /**
      * The message type
