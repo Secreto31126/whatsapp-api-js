@@ -1,5 +1,5 @@
 import { WhatsAppAPI as NodeHTTPMiddleware } from "./node-http.js";
-import { isInteger } from "../utils.js";
+import { WhatsAppAPIError } from "../errors.js";
 
 import type { VercelRequest } from "@vercel/node";
 import type { GetParams } from "../types.js";
@@ -83,7 +83,7 @@ export class WhatsAppAPI extends NodeHTTPMiddleware {
             return this.get(req.query as GetParams);
         } catch (e) {
             // In case who knows what fails ¯\_(ツ)_/¯
-            throw isInteger(e) ? e : 500;
+            throw e instanceof WhatsAppAPIError ? e.httpStatus : 500;
         }
     }
 }

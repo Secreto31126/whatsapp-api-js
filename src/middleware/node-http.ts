@@ -1,5 +1,5 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
-import { isInteger } from "../utils.js";
+import { WhatsAppAPIError } from "../errors.js";
 
 import type { IncomingMessage } from "node:http";
 import type { Readable } from "node:stream";
@@ -69,7 +69,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
             return 200;
         } catch (e) {
             // In case the JSON.parse fails ¯\_(ツ)_/¯
-            return isInteger(e) ? e : 500;
+            return e instanceof WhatsAppAPIError ? e.httpStatus : 500;
         }
     }
 
@@ -110,7 +110,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
             );
         } catch (e) {
             // In case who knows what fails ¯\_(ツ)_/¯
-            throw isInteger(e) ? e : 500;
+            throw e instanceof WhatsAppAPIError ? e.httpStatus : 500;
         }
     }
 }
