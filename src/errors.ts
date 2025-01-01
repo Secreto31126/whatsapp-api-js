@@ -1,9 +1,20 @@
 /**
  * @module errors
  *
+ * @description
  * This module contains the custom errors that are thrown by the
- * {@link index.ts#WhatsAppAPI.get} and {@link index.ts#WhatsAppAPI.post} methods.
+ * {@link WhatsAppAPI.get} and {@link WhatsAppAPI.post} methods.
+ *
+ * I did my best to explain why each error happens, include examples,
+ * a few tips, and links to sources for further reading.
+ *
+ * This file is 300 lines of docs and the remaining is the actual code.
+ * So yeah, enjoy reading :]
  */
+
+// This import makes the docs' links work
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import type { WhatsAppAPI } from "./index";
 
 /**
  * The library's base exception class.
@@ -318,6 +329,11 @@ export class WhatsAppAPIMissingSearchParamsError extends WhatsAppAPIError {
  * for the verification token (hub.verify_token). If you are using a middleware and
  * this seems to be the case, consider opening an issue on
  * {@link https://github.com/Secreto31126/whatsapp-api-js/issues | GitHub}.
+ *
+ * @see https://whatsappapijs.web.app/classes/WhatsAppAPI.WhatsAppAPI.html#get
+ * @see https://whatsappapijs.web.app/types/types.TheBasicConstructorArguments.html
+ * @see https://whatsappapijs.web.app/types/types.GetParams.html
+ * @see https://developers.facebook.com/docs/graph-api/webhooks/getting-started/#verification-requests
  */
 export class WhatsAppAPIFailedToVerifyTokenError extends WhatsAppAPIError {
     /**
