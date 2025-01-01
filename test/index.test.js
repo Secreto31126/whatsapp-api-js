@@ -1681,7 +1681,10 @@ describe("WhatsAppAPI", () => {
                 it("should throw WhatsAppAPIUnexpectedError if the request isn't a valid WhatsApp Cloud API request (data.object)", async () => {
                     Whatsapp.secure = false;
 
-                    await rejects(Whatsapp.post({}), LibErrors.WhatsAppAPIUnexpectedError);
+                    await rejects(
+                        Whatsapp.post({}),
+                        LibErrors.WhatsAppAPIUnexpectedError
+                    );
                 });
             });
 
