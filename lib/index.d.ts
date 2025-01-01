@@ -340,6 +340,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * // author arivanbastos on issue #114
      * // Simple http example implementation with Whatsapp.post() on Node@^19
      * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { WhatsAppAPIError } from "whatsapp-api-js/errors";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
      *
      * import { createServer } from "http";
@@ -360,7 +361,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      *                 const response = await Whatsapp.post(JSON.parse(body), body, req.headers["x-hub-signature-256"]);
      *                 res.writeHead(response);
      *             } catch (err) {
-     *                 res.writeHead(err);
+     *                 res.writeHead(err instanceof WhatsAppAPIError ? err.httpStatus : 500);
      *             }
      *
      *             res.end();
@@ -382,14 +383,14 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws 400 if secure and the raw body is missing
-     * @throws 401 if secure and the signature is missing
-     * @throws 500 if secure and the appSecret isn't defined
-     * @throws 501 if secure and crypto.subtle or ponyfill isn't available
-     * @throws 401 if secure and the signature doesn't match the hash
-     * @throws 400 if the POSTed data is not a valid Whatsapp API request
-     * @throws 500 if the user's callback throws an error
-     * @throws 200, if the POSTed data is valid but not a message or status update (ignored)
+     * @throws WhatsAppAPIMissingRawBodyError if secure and the raw body is missing
+     * @throws WhatsAppAPIMissingSignatureError if secure and the signature is missing
+     * @throws WhatsAppAPIMissingAppSecretError if secure and the appSecret isn't defined
+     * @throws WhatsAppAPIMissingCryptoSubtleError if secure and crypto.subtle or ponyfill isn't available
+     * @throws WhatsAppAPIFailedToVerifyError if secure and the signature doesn't match the hash
+     * @throws WhatsAppAPIUnexpectedError if the POSTed data is not a valid Whatsapp API request
+     * @throws Any error generated within the user's callbacks
+     * @throws WhatsAppAPIUnexpectedError if the POSTed data is valid but not a message or status update (ignored)
      */
     post(data: PostData, raw_body?: string, signature?: string): Promise<EmittersReturnType | undefined>;
     /**
@@ -400,6 +401,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * ```ts
      * // Simple http example implementation with Whatsapp.get() on Node@^19
      * import { WhatsAppAPI } from "whatsapp-api-js";
+     * import { WhatsAppAPIError } from "whatsapp-api-js/errors";
      * import { NodeNext } from "whatsapp-api-js/setup/node";
      *
      * import { createServer } from "http";
@@ -412,10 +414,14 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      *     if (req.method == "GET") {
      *         const params = new URLSearchParams(req.url.split("?")[1]);
      *
-     *         const response = Whatsapp.get(Object.fromEntries(params));
+     *         try {
+     *             const response = Whatsapp.get(Object.fromEntries(params));
+     *             res.writeHead(200, {"Content-Type": "text/html"});
+     *             res.write(response);
+     *         } catch (err) {
+     *             res.writeHead(err instanceof WhatsAppAPIError ? err.httpStatus : 500);
+     *         }
      *
-     *         res.writeHead(200, {"Content-Type": "text/html"});
-     *         res.write(response)
      *         res.end();
      *     } else res.writeHead(501).end();
      * };
@@ -426,9 +432,9 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @param params - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body
-     * @throws 500 if webhookVerifyToken is not specified
-     * @throws 400 if the request is missing data
-     * @throws 403 if the verification tokens don't match
+     * @throws WhatsAppAPIMissingVerifyTokenError if webhookVerifyToken is not specified
+     * @throws WhatsAppAPIMissingSearchParamsError if the request is missing data
+     * @throws WhatsAppAPIFailedToVerifyTokenError if the verification tokens don't match
      */
     get(params: GetParams): string;
     /**
@@ -449,8 +455,8 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the request
      * @param signature - The signature to validate
      * @returns If the signature is valid
-     * @throws 500 if the appSecret isn't defined
-     * @throws 501 if crypto.subtle or ponyfill isn't available
+     * @throws WhatsAppAPIMissingAppSecretError if the appSecret isn't defined
+     * @throws WhatsAppAPIMissingCryptoSubtleError if crypto.subtle or ponyfill isn't available
      */
     verifyRequestSignature(raw_body: string, signature: string): Promise<boolean>;
     /**

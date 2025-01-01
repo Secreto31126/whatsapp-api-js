@@ -45,6 +45,10 @@
         "./types": {
             "types": "./lib/types.d.ts",
             "import": "./lib/types.js"
+        },
+        "./errors": {
+            "types": "./lib/errors.d.ts",
+            "import": "./lib/errors.js"
         }
     },
     "//": [
@@ -76,6 +80,9 @@
             ],
             "types": [
                 "lib/types.d.ts"
+            ],
+            "errors": [
+                "lib/errors.d.ts"
             ]
         }
     },
