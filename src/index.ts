@@ -32,8 +32,11 @@ import {
     WhatsAppAPIMissingCryptoSubtleError,
     WhatsAppAPIMissingRawBodyError,
     WhatsAppAPIMissingSignatureError,
+    WhatsAppAPIMissingVerifyTokenError,
     WhatsAppAPIUnexpectedError,
-    WhatsAppAPIFailedToVerifyError
+    WhatsAppAPIFailedToVerifyError,
+    WhatsAppAPIMissingSearchParamsError,
+    WhatsAppAPIFailedToVerifyTokenError
 } from "./errors.js";
 
 /**
@@ -940,12 +943,14 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @param params - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body
-     * @throws 500 if webhookVerifyToken is not specified
-     * @throws 400 if the request is missing data
-     * @throws 403 if the verification tokens don't match
+     * @throws WhatsAppAPIMissingVerifyTokenError if webhookVerifyToken is not specified
+     * @throws WhatsAppAPIMissingSearchParamsError if the request is missing data
+     * @throws WhatsAppAPIFailedToVerifyTokenError if the verification tokens don't match
      */
     get(params: GetParams): string {
-        if (!this.webhookVerifyToken) throw 500;
+        if (!this.webhookVerifyToken) {
+            throw new WhatsAppAPIMissingVerifyTokenError();
+        }
 
         // Parse params from the webhook verification request
         const {
@@ -956,18 +961,16 @@ export class WhatsAppAPI<EmittersReturnType = void> {
 
         // Check if a token and mode were sent
         if (!mode || !token) {
-            // Responds with "400 Bad Request" if it's missing data
-            throw 400;
+            throw new WhatsAppAPIMissingSearchParamsError();
         }
 
         // Check the mode and token sent are correct
         if (mode === "subscribe" && token === this.webhookVerifyToken) {
-            // Respond with 200 OK and challenge token from the request
             return challenge;
         }
 
         // Responds with "403 Forbidden" if verify tokens do not match
-        throw 403;
+        throw new WhatsAppAPIFailedToVerifyTokenError();
     }
 
     // #endregion
