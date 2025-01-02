@@ -2,7 +2,7 @@ import { WhatsAppAPIMiddleware } from "./globals.js";
 import { WhatsAppAPIError } from "../errors.js";
 
 import type { Request } from "express";
-import type { GetParams } from "../types";
+import type { GetParams } from "../types.d.ts";
 
 /**
  * Express.js middleware for WhatsAppAPI

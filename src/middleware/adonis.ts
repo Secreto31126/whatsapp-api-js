@@ -2,7 +2,7 @@ import { WhatsAppAPIMiddleware } from "./globals.js";
 import { WhatsAppAPIError } from "../errors.js";
 
 import type { Request } from "@adonisjs/http-server";
-import type { GetParams, PostData } from "../types";
+import type { GetParams, PostData } from "../types.d.ts";
 
 /**
  * AdonisJS middleware for WhatsAppAPI

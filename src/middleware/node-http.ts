@@ -4,7 +4,7 @@ import { WhatsAppAPIError } from "../errors.js";
 import type { IncomingMessage } from "node:http";
 import type { Readable } from "node:stream";
 
-import type { GetParams } from "../types";
+import type { GetParams } from "../types.d.ts";
 
 /**
  * node:http server middleware for WhatsAppAPI

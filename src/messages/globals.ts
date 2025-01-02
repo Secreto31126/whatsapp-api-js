@@ -1,5 +1,5 @@
 import { Section, type ClientTypedMessageComponent } from "../types.js";
-import type { AtLeastOne } from "../utils";
+import type { AtLeastOne } from "../utils.d.ts";
 
 /**
  * TS knowledge intensifies

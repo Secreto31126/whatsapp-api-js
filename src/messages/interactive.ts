@@ -4,9 +4,9 @@ import {
     Section,
     type InteractiveAction
 } from "../types.js";
-import type { AtLeastOne } from "../utils";
+import type { AtLeastOne } from "../utils.d.ts";
 
-import type { Document, Image, Video } from "./media";
+import type { Document, Image, Video } from "./media.d.ts";
 
 import { CatalogProduct, Product, ProductSection } from "./globals.js";
 

@@ -14,7 +14,7 @@
 
 // This import makes the docs' links work
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { WhatsAppAPI } from "./index";
+import type { WhatsAppAPI } from "./index.d.ts";
 
 /**
  * The library's base exception class.
