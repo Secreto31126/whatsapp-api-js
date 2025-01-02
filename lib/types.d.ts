@@ -6,8 +6,8 @@
  * but if you want to "understand" the code under the hood,
  * feel free to read the docs :)
  */
-import type { Text, Audio, Document, Image, Sticker, Video, Location, Interactive, Template, Reaction, Contacts } from "./messages";
-import type { AtLeastOne } from "./utils";
+import type { Text, Audio, Document, Image, Sticker, Video, Location, Interactive, Template, Reaction, Contacts } from "./messages/index.d.ts";
+import type { AtLeastOne } from "./utils.d.ts";
 export declare const DEFAULT_API_VERSION = "v21.0";
 /**
  * The main constructor arguments for the API

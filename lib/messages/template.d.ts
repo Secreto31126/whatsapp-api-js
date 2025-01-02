@@ -1,7 +1,7 @@
 import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent, type TemplateComponent } from "../types.js";
-import type { AtLeastOne, XOR } from "../utils";
-import type { Location } from "./location";
-import type { Document, Image, Video } from "./media";
+import type { AtLeastOne, XOR } from "../utils.d.ts";
+import type { Location } from "./location.d.ts";
+import type { Document, Image, Video } from "./media.d.ts";
 import { CatalogProduct, Product, ProductSection } from "./globals.js";
 /**
  * @group Template

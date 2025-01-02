@@ -1,4 +1,4 @@
-import type { WhatsAppAPIConstructorArguments } from "../types";
+import type { WhatsAppAPIConstructorArguments } from "../types.d.ts";
 /**
  * A Node\@^19 quick setup for the WhatsAppAPI
  *

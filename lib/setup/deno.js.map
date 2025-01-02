@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/setup/deno.ts"],
-  "sourcesContent": ["import type { WhatsAppAPIConstructorArguments } from \"../types\";\n\n/**\n * A Deno quick setup for the WhatsAppAPI\n *\n * @remarks This method will return the same object as the one passed in\n *\n * @param settings - The WhatsAppAPI arguments\n * @returns A WhatsAppAPI arguments object for Deno\n */\nexport function Deno(\n    settings: WhatsAppAPIConstructorArguments\n): WhatsAppAPIConstructorArguments {\n    return settings;\n}\n"],
+  "sourcesContent": ["import type { WhatsAppAPIConstructorArguments } from \"../types.d.ts\";\n\n/**\n * A Deno quick setup for the WhatsAppAPI\n *\n * @remarks This method will return the same object as the one passed in\n *\n * @param settings - The WhatsAppAPI arguments\n * @returns A WhatsAppAPI arguments object for Deno\n */\nexport function Deno(\n    settings: WhatsAppAPIConstructorArguments\n): WhatsAppAPIConstructorArguments {\n    return settings;\n}\n"],
   "mappings": "AAUO,SAAS,KACZ,UAC+B;AAC/B,SAAO;AACX;",
   "names": []
 }

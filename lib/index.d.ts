@@ -1,6 +1,6 @@
 /** @module WhatsAppAPI */
 import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse } from "./types.js";
-import type { OnMessage, OnSent, OnStatus } from "./emitters";
+import type { OnMessage, OnSent, OnStatus } from "./emitters.d.ts";
 /**
  * The main API Class
  *

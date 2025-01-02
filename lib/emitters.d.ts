@@ -1,6 +1,6 @@
-import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types";
-import type { WhatsAppAPI } from "./index";
-import type { MaybePromise } from "./utils";
+import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types.d.ts";
+import type { WhatsAppAPI } from "./index.d.ts";
+import type { MaybePromise } from "./utils.d.ts";
 /**
  * Callback for "sent" event
  *
