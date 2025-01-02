@@ -41,6 +41,9 @@ import {
 
 /**
  * The main API Class
+ *
+ * @template EmittersReturnType - The return type of the emitters
+ * ({@link OnMessage}, {@link OnStatus})
  */
 export class WhatsAppAPI<EmittersReturnType = void> {
     //#region Properties
@@ -121,6 +124,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *    appSecret: "YOUR_APP_SECRET"
      * });
      * ```
+     *
+     * @template EmittersReturnType - The return type of the emitters
+     * ({@link OnMessage}, {@link OnStatus})
      *
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
@@ -766,6 +772,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * POST helper, must be called inside the post function of your code.
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
      *
+     * raw_body and signature are required when secure is `true` on initialization (default).
+     *
      * @example
      * ```ts
      * // author arivanbastos on issue #114
@@ -812,17 +820,42 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @param data - The POSTed data object sent by Whatsapp
      * @param raw_body - The raw body of the POST request
-     * @param signature - The x-hub-signature-256 (all lowercase) header signature sent by Whatsapp
+     * @param signature - The x-hub-signature-256 header signature sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws WhatsAppAPIMissingRawBodyError if secure and the raw body is missing
-     * @throws WhatsAppAPIMissingSignatureError if secure and the signature is missing
-     * @throws WhatsAppAPIMissingAppSecretError if secure and the appSecret isn't defined
-     * @throws WhatsAppAPIMissingCryptoSubtleError if secure and crypto.subtle or ponyfill isn't available
-     * @throws WhatsAppAPIFailedToVerifyError if secure and the signature doesn't match the hash
-     * @throws WhatsAppAPIUnexpectedError if the POSTed data is not a valid Whatsapp API request
+     * @throws Class {@link WhatsAppAPIMissingRawBodyError} if the raw body is missing
+     * @throws Class {@link WhatsAppAPIMissingSignatureError} if the signature is missing
+     * @throws Class {@link WhatsAppAPIMissingAppSecretError} if the appSecret isn't defined
+     * @throws Class {@link WhatsAppAPIMissingCryptoSubtleError} if crypto.subtle or ponyfill isn't available
+     * @throws Class {@link WhatsAppAPIFailedToVerifyError} if the signature doesn't match the hash
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is not a valid Whatsapp API request
      * @throws Any error generated within the user's callbacks
-     * @throws WhatsAppAPIUnexpectedError if the POSTed data is valid but not a message or status update (ignored)
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is valid but not a message or status update (ignored)
      */
+    async post(
+        data: PostData,
+        raw_body: string,
+        signature: string
+    ): Promise<EmittersReturnType | undefined>;
+
+    /**
+     * POST helper, must be called inside the post function of your code.
+     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     *
+     * raw_body and signature are NOT required when secure is `false` on initialization.
+     *
+     * @deprecated The method isn't deprecated, but it's strongly discouraged to use
+     * the server without signature verification. It's a security risk.
+     *
+     * Provide an `appSecret` and set `secure` to true on {@link WhatsAppAPI} initialization.
+     *
+     * @param data - The POSTed data object sent by Whatsapp
+     * @returns The emitter's return value, undefined if the corresponding emitter isn't set
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is not a valid Whatsapp API request
+     * @throws Any error generated within the user's callbacks
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is valid but not a message or status update (ignored)
+     */
+    async post(data: PostData): Promise<EmittersReturnType | undefined>;
+
     async post(
         data: PostData,
         raw_body?: string,
@@ -948,9 +981,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @param params - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body
-     * @throws WhatsAppAPIMissingVerifyTokenError if webhookVerifyToken is not specified
-     * @throws WhatsAppAPIMissingSearchParamsError if the request is missing data
-     * @throws WhatsAppAPIFailedToVerifyTokenError if the verification tokens don't match
+     * @throws Class {@link WhatsAppAPIMissingVerifyTokenError} if webhookVerifyToken is not specified
+     * @throws Class {@link WhatsAppAPIMissingSearchParamsError} if the request is missing data
+     * @throws Class {@link WhatsAppAPIFailedToVerifyTokenError} if the verification tokens don't match
      */
     get(params: GetParams): string {
         if (!this.webhookVerifyToken) {
@@ -1010,8 +1043,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the request
      * @param signature - The signature to validate
      * @returns If the signature is valid
-     * @throws WhatsAppAPIMissingAppSecretError if the appSecret isn't defined
-     * @throws WhatsAppAPIMissingCryptoSubtleError if crypto.subtle or ponyfill isn't available
+     * @throws Class {@link WhatsAppAPIMissingAppSecretError} if the appSecret isn't defined
+     * @throws Class {@link WhatsAppAPIMissingCryptoSubtleError} if crypto.subtle or ponyfill isn't available
      */
     async verifyRequestSignature(
         raw_body: string,

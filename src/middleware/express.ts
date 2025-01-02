@@ -46,8 +46,10 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
             await this.post(
                 JSON.parse(req.body ?? "{}"),
                 req.body,
-                req.header("x-hub-signature-256")
+                req.header("x-hub-signature-256") ?? ""
             );
+
+            this.post(req.body);
 
             return 200;
         } catch (e) {
