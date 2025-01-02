@@ -822,14 +822,14 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the POST request
      * @param signature - The x-hub-signature-256 header signature sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws WhatsAppAPIMissingRawBodyError if the raw body is missing
-     * @throws WhatsAppAPIMissingSignatureError if the signature is missing
-     * @throws WhatsAppAPIMissingAppSecretError if the appSecret isn't defined
-     * @throws WhatsAppAPIMissingCryptoSubtleError if crypto.subtle or ponyfill isn't available
-     * @throws WhatsAppAPIFailedToVerifyError if the signature doesn't match the hash
-     * @throws WhatsAppAPIUnexpectedError if the POSTed data is not a valid Whatsapp API request
+     * @throws Class {@link WhatsAppAPIMissingRawBodyError} if the raw body is missing
+     * @throws Class {@link WhatsAppAPIMissingSignatureError} if the signature is missing
+     * @throws Class {@link WhatsAppAPIMissingAppSecretError} if the appSecret isn't defined
+     * @throws Class {@link WhatsAppAPIMissingCryptoSubtleError} if crypto.subtle or ponyfill isn't available
+     * @throws Class {@link WhatsAppAPIFailedToVerifyError} if the signature doesn't match the hash
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is not a valid Whatsapp API request
      * @throws Any error generated within the user's callbacks
-     * @throws WhatsAppAPIUnexpectedError if the POSTed data is valid but not a message or status update (ignored)
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is valid but not a message or status update (ignored)
      */
     async post(
         data: PostData,
@@ -850,9 +850,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @param data - The POSTed data object sent by Whatsapp
      * @returns The emitter's return value, undefined if the corresponding emitter isn't set
-     * @throws WhatsAppAPIUnexpectedError if the POSTed data is not a valid Whatsapp API request
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is not a valid Whatsapp API request
      * @throws Any error generated within the user's callbacks
-     * @throws WhatsAppAPIUnexpectedError if the POSTed data is valid but not a message or status update (ignored)
+     * @throws Class {@link WhatsAppAPIUnexpectedError} if the POSTed data is valid but not a message or status update (ignored)
      */
     async post(data: PostData): Promise<EmittersReturnType | undefined>;
 
@@ -981,9 +981,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @param params - The request object sent by Whatsapp
      * @returns The challenge string, it must be the http response body
-     * @throws WhatsAppAPIMissingVerifyTokenError if webhookVerifyToken is not specified
-     * @throws WhatsAppAPIMissingSearchParamsError if the request is missing data
-     * @throws WhatsAppAPIFailedToVerifyTokenError if the verification tokens don't match
+     * @throws Class {@link WhatsAppAPIMissingVerifyTokenError} if webhookVerifyToken is not specified
+     * @throws Class {@link WhatsAppAPIMissingSearchParamsError} if the request is missing data
+     * @throws Class {@link WhatsAppAPIFailedToVerifyTokenError} if the verification tokens don't match
      */
     get(params: GetParams): string {
         if (!this.webhookVerifyToken) {
@@ -1043,8 +1043,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param raw_body - The raw body of the request
      * @param signature - The signature to validate
      * @returns If the signature is valid
-     * @throws WhatsAppAPIMissingAppSecretError if the appSecret isn't defined
-     * @throws WhatsAppAPIMissingCryptoSubtleError if crypto.subtle or ponyfill isn't available
+     * @throws Class {@link WhatsAppAPIMissingAppSecretError} if the appSecret isn't defined
+     * @throws Class {@link WhatsAppAPIMissingCryptoSubtleError} if crypto.subtle or ponyfill isn't available
      */
     async verifyRequestSignature(
         raw_body: string,
