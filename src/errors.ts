@@ -147,7 +147,8 @@ export class WhatsAppAPIMissingAppSecretError extends WhatsAppAPIError {
  * @description
  * The `crypto.subtle` API is required to verify the signature of the incoming requests.
  * However, it isn't available in all environments. If your environment doesn't support it,
- * you can provide a ponyfill for it in the `crypto` option of the `WhatsAppAPI` constructor.
+ * you can provide a ponyfill for it in the `ponyfill.subtle` option of the `WhatsAppAPI`
+ * constructor.
  *
  * @example
  * ```ts
