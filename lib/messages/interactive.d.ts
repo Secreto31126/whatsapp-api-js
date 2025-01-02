@@ -523,12 +523,6 @@ export declare class ActionProduct implements InteractiveAction {
      * @param product - The product to show in the message
      */
     constructor(product: CatalogProduct);
-    /**
-     * @deprecated Use {@link CatalogProduct} as a parameter instead
-     * @param catalog_id - The catalog id
-     * @param product - The product to show in the message
-     */
-    constructor(catalog_id: string, product: Product);
 }
 /**
  * Action API object
