@@ -7,9 +7,9 @@ import type {
     ServerPricing,
     ServerError,
     PostData
-} from "./types";
-import type { WhatsAppAPI } from "./index";
-import type { MaybePromise } from "./utils";
+} from "./types.d.ts";
+import type { WhatsAppAPI } from "./index.d.ts";
+import type { MaybePromise } from "./utils.d.ts";
 
 /**
  * Callback for "sent" event

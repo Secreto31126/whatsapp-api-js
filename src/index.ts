@@ -23,7 +23,7 @@ import type {
     OnSentArgs,
     OnStatus,
     OnStatusArgs
-} from "./emitters";
+} from "./emitters.d.ts";
 
 import { escapeUnicode, MaybePromise } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";

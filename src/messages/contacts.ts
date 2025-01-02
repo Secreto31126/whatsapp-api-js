@@ -4,7 +4,7 @@ import {
     ContactUniqueComponent,
     ContactMultipleComponent
 } from "../types.js";
-import type { AtLeastOne } from "../utils";
+import type { AtLeastOne } from "../utils.d.ts";
 
 /**
  * @group Contacts

@@ -19,8 +19,8 @@ import type {
     Template,
     Reaction,
     Contacts
-} from "./messages";
-import type { AtLeastOne } from "./utils";
+} from "./messages/index.d.ts";
+import type { AtLeastOne } from "./utils.d.ts";
 
 export const DEFAULT_API_VERSION = "v21.0";
 

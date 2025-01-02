@@ -1,4 +1,4 @@
-import type { WhatsAppAPIConstructorArguments } from "../types";
+import type { WhatsAppAPIConstructorArguments } from "../types.d.ts";
 
 // If this line of code didn't exist,
 // setup would be a single file rather than a folder

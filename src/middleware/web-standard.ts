@@ -1,7 +1,7 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
 import { WhatsAppAPIError } from "../errors.js";
 
-import type { GetParams } from "../types";
+import type { GetParams } from "../types.d.ts";
 
 /**
  * Web Standard API http server middleware for WhatsAppAPI (deno/bun/SvelteKit/NextJS/Hono)
