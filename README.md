@@ -1,4 +1,4 @@
-# whatsapp-api-js v4
+# whatsapp-api-js v5
 
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
@@ -7,7 +7,7 @@ A TypeScript server agnostic Whatsapp's Official API framework.
 
 ## List of contents
 
-- [whatsapp-api-js v4](#whatsapp-api-js-v4)
+- [whatsapp-api-js v5](#whatsapp-api-js-v5)
     - [List of contents](#list-of-contents)
     - [Set up](#set-up)
     - [Examples and Tutorials](#examples-and-tutorials)
