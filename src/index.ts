@@ -41,6 +41,9 @@ import {
 
 /**
  * The main API Class
+ *
+ * @template EmittersReturnType - The return type of the emitters
+ * ({@link OnMessage}, {@link OnStatus})
  */
 export class WhatsAppAPI<EmittersReturnType = void> {
     //#region Properties
@@ -121,6 +124,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *    appSecret: "YOUR_APP_SECRET"
      * });
      * ```
+     *
+     * @template EmittersReturnType - The return type of the emitters
+     * ({@link OnMessage}, {@link OnStatus})
      *
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
