@@ -740,23 +740,9 @@ export class ActionProduct implements InteractiveAction {
      *
      * @param product - The product to show in the message
      */
-    constructor(product: CatalogProduct);
-
-    /**
-     * @deprecated Use {@link CatalogProduct} as a parameter instead
-     * @param catalog_id - The catalog id
-     * @param product - The product to show in the message
-     */
-    constructor(catalog_id: string, product: Product);
-
-    constructor(p1: string | CatalogProduct, p2?: Product) {
-        if (typeof p1 === "string") {
-            this.catalog_id = p1;
-            this.product_retailer_id = p2!.product_retailer_id;
-        } else {
-            this.catalog_id = p1.catalog_id;
-            this.product_retailer_id = p1.product_retailer_id;
-        }
+    constructor(product: CatalogProduct) {
+        this.catalog_id = product.catalog_id;
+        this.product_retailer_id = product.product_retailer_id;
     }
 }
 
