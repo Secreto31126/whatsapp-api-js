@@ -8,7 +8,7 @@
  */
 import type { Text, Audio, Document, Image, Sticker, Video, Location, Interactive, Template, Reaction, Contacts } from "./messages";
 import type { AtLeastOne } from "./utils";
-export declare const DEFAULT_API_VERSION = "v20.0";
+export declare const DEFAULT_API_VERSION = "v21.0";
 /**
  * The main constructor arguments for the API
  */
