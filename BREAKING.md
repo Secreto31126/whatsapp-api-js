@@ -1,5 +1,110 @@
 # Breaking changes
 
+## 5.0.0
+
+### post() and get() errors
+
+The webhook methods no longer throw simple numbers as errors, but rather
+custom classes extending the new WhatsAppAPIError class. This change was
+made to allow for more detailed error handling, as the new classes contain
+the error message, recommended status code and lots of docs to help.
+
+```ts
+import { WhatsAppAPIError } from "whatsapp-api-js/errors";
+
+const Whatsapp = new WhatsAppAPI({ token, secure: false });
+
+// Assuming post is called on a POST request to your server
+async function post(e) {
+    try {
+        await Whatsapp.post(e.data);
+        return 200;
+    } catch (e) {
+        console.error(e);
+
+        if (e instanceof WhatsAppAPIError) {
+            console.log("For more info, check", e.docs);
+            return e.httpStatus;
+        }
+
+        return 500;
+    }
+}
+```
+
+As you might notice, the example above first checks if the error is an
+instance of WhatsAppAPIError, and returns 500 if it isn't. That's because...
+
+### post() error handling
+
+The post() method no longer catches errors thrown by the `message` or
+`status` emitters. This means that any error within the handlers will be
+propagated to the caller, which can then manage it as needed.
+
+```ts
+import { WhatsAppAPIError } from "whatsapp-api-js/errors";
+
+const Whatsapp = new WhatsAppAPI({ token, secure: false });
+
+Whatsapp.on.message = () => {
+    throw new Error("This is an error on my code");
+};
+
+async function post(e) {
+    try {
+        await Whatsapp.post(e.data);
+    } catch (e) {
+        if (e instanceof WhatsAppAPIError) {
+            console.log("This is a library error");
+        } else {
+            console.log("This is my faulty code");
+        }
+    }
+
+    return 418;
+}
+```
+
+This change does NOT impact the middlewares, as they still catch
+the errors and asserts the return values are the documented ones.
+
+### ActionProduct signature change
+
+The ActionProduct class no longer takes the catalog ID and product as
+two separate arguments, but rather as a single CatalogProduct object.
+
+```ts
+import {
+    Interactive,
+    ActionProduct,
+    CatalogProduct
+} from "whatsapp-api-js/messages";
+
+const interactive_single_product_message = new Interactive(
+    new ActionProduct(new CatalogProduct("product_id", "catalog_id"))
+);
+```
+
+### Drop support for CJS
+
+Nine out of ten releases, there was a compatibility issue between ESM and CJS
+exports. Although the library was designed to support both, the complexity
+it brought didn't justify the effort, specially now as many other big libraries
+are dropping native CJS support too.
+
+If you 100% need CJS in Node.js, you can now use the release candidate feature
+to synchonously require ESM modules available since v22. The library is fully
+synchonous (contains no top-level await), so it should work just fine.
+
+https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require
+
+In order to keep the library easier to use with CJS, the code will still not
+use default exports.
+
+### Bumped API version
+
+The default API version was bumped to `v21.0`.
+
 ## 4.0.0
 
 ### Emitters and post() signature change
