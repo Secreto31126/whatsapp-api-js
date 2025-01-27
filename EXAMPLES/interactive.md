@@ -105,23 +105,20 @@ const interactive_catalog_message = new Interactive(
 ## Navigate Flow
 
 ```ts
-import {
-    Interactive,
-    ActionNavigateFlow,
-    Body
-} from "whatsapp-api-js/messages";
+import { Interactive, ActionFlow, Body } from "whatsapp-api-js/messages";
 
 const interactive_navigate_flow_message = new Interactive(
-    new ActionNavigateFlow(
-        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
-        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
-        "Hello World",
-        "form_screen",
-        {
-            name: "John Doe",
-            age: 42
+    new ActionFlow({
+        flow_token: "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+        flow_name: "my_welcome_flow", // Can also use flow_id instead
+        flow_cta: "Start the Flow!",
+        mode: "published",
+        flow_action: "navigate", // Default
+        flow_action_payload: {
+            screen: "FIRST_SCREEN",
+            data: { name: "John" }
         }
-    ),
+    }),
     new Body("How was your experience today?")
 );
 ```
@@ -129,18 +126,16 @@ const interactive_navigate_flow_message = new Interactive(
 ## Data Exchange Flow
 
 ```ts
-import {
-    Interactive,
-    ActionDataExchangeFlow,
-    Body
-} from "whatsapp-api-js/messages";
+import { Interactive, ActionFlow, Body } from "whatsapp-api-js/messages";
 
 const interactive_data_exchange_flow_message = new Interactive(
-    new ActionDataExchangeFlow(
-        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
-        "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
-        "Hello World"
-    ),
+    new ActionFlow({
+        flow_token: "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
+        flow_name: "my_welcome_flow", // Can also use flow_id instead
+        flow_cta: "Start the Flow!",
+        mode: "published",
+        flow_action: "data_exchange"
+    }),
     new Body("Hello World")
 );
 ```
