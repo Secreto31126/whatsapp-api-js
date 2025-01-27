@@ -113,7 +113,7 @@ const interactive_navigate_flow_message = new Interactive(
         flow_name: "my_welcome_flow", // Can also use flow_id instead
         flow_cta: "Start the Flow!",
         mode: "published",
-        flow_action: "navigate",
+        flow_action: "navigate", // Default
         flow_action_payload: {
             screen: "FIRST_SCREEN",
             data: { name: "John" }
