@@ -153,7 +153,7 @@
         "dotenv": "16.4.7",
         "esbuild": "0.25.0",
         "eslint": "9.17.0",
-        "eslint-config-prettier": "9.1.0",
+        "eslint-config-prettier": "10.0.1",
         "eslint-plugin-tsdoc": "0.4.0",
         "glob": "11.0.0",
         "globals": "15.14.0",
