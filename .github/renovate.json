@@ -2,7 +2,7 @@
     "baseBranches": ["main"],
     "dependencyDashboard": true,
     "extends": [
-        "config:base",
+        "config:recommended",
         "group:allNonMajor",
         "helpers:disableTypesNodeMajor",
         "schedule:earlyMondays"
@@ -17,7 +17,7 @@
     "semanticCommits": "enabled",
     "packageRules": [
         {
-            "packageNames": ["esbuild"],
+            "matchPackageNames": ["esbuild"],
             "versioning": "regex:^(?<compatibility>\\d+)\\.(?<major>\\d+)\\.(?<patch>\\d+)?$"
         }
     ]
