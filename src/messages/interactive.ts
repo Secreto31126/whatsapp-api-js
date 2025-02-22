@@ -852,11 +852,16 @@ export class ActionFlow implements InteractiveAction {
     readonly name = "flow";
     /**
      * The Flow parameters
-     *
-     * @remarks TSDoc is unable to document this type properly, so most of
-     * the documentation is in the subclasses constructors instead.
      */
     readonly parameters: {
+        /**
+         * Unique ID of the Flow provided by WhatsApp
+         */
+        flow_id?: string | never;
+        /**
+         * Flow name provided by the business as an alternative to flow_id
+         */
+        flow_name?: string | never;
         /**
          * The Flow can be in either draft or published mode
          */
@@ -874,22 +879,24 @@ export class ActionFlow implements InteractiveAction {
          */
         flow_cta: string;
         /**
-         * The Flow type, if set to "navigate", flow_action_payload must be provided default to "navigate"
+         * The Flow type. If set to "navigate", flow_action_payload must be provided.
          */
         flow_action?: "navigate" | "data_exchange";
         /**
-         * Required if flow_action is "navigate", should be omitted otherwise
+         * Required if flow_action is "navigate", must be omitted otherwise
          */
-        flow_action_payload?: {
-            /**
-             * The ID of the first Screen
-             */
-            screen: string;
-            /**
-             * Optional input data for the first Screen of the Flow. If provided, this must be a non-empty object.
-             */
-            data?: unknown;
-        };
+        flow_action_payload?:
+            | {
+                  /**
+                   * The ID of the first Screen
+                   */
+                  screen: string;
+                  /**
+                   * Optional input data for the first Screen of the Flow. If provided, this must be a non-empty object.
+                   */
+                  data?: unknown;
+              }
+            | never;
     } & (
         | {
               flow_action?: "navigate";
@@ -931,6 +938,8 @@ export class ActionFlow implements InteractiveAction {
     /**
      * Builds a flow component for an Interactive message
      *
+     * @note flow_message_version defaults to "3"
+     *
      * @param parameters - The Flow parameters
      * @throws If parameters.flow_cta is empty or over 20 characters
      * @throws If parameters.flow_cta contains emojis
@@ -938,7 +947,6 @@ export class ActionFlow implements InteractiveAction {
     constructor(parameters: ActionFlow["parameters"]) {
         parameters = {
             flow_message_version: "3",
-            flow_action: "navigate",
             ...parameters
         };
 
@@ -952,7 +960,8 @@ export class ActionFlow implements InteractiveAction {
 
         if (
             parameters.flow_action === "navigate" &&
-            !Object.keys(parameters.flow_action_payload).length
+            parameters.flow_action_payload.data &&
+            !Object.keys(parameters.flow_action_payload.data).length
         ) {
             throw new Error(
                 "Flow data must be a non-empty object when flow_action is navigate"

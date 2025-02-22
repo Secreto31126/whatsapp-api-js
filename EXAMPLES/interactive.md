@@ -109,11 +109,11 @@ import { Interactive, ActionFlow, Body } from "whatsapp-api-js/messages";
 
 const interactive_navigate_flow_message = new Interactive(
     new ActionFlow({
+        flow_action: "navigate",
         flow_token: "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
         flow_name: "my_welcome_flow", // Can also use flow_id instead
         flow_cta: "Start the Flow!",
         mode: "published",
-        flow_action: "navigate", // Default
         flow_action_payload: {
             screen: "FIRST_SCREEN",
             data: { name: "John" }
@@ -130,11 +130,11 @@ import { Interactive, ActionFlow, Body } from "whatsapp-api-js/messages";
 
 const interactive_data_exchange_flow_message = new Interactive(
     new ActionFlow({
+        flow_action: "data_exchange",
         flow_token: "5f9b3b4f-2b7a-4f4f-8f4f-4f4f4f4f4f4f",
         flow_name: "my_welcome_flow", // Can also use flow_id instead
         flow_cta: "Start the Flow!",
-        mode: "published",
-        flow_action: "data_exchange"
+        mode: "published"
     }),
     new Body("Hello World")
 );
