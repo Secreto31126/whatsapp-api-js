@@ -17,38 +17,45 @@
     "exports": {
         ".": {
             "types": "./lib/index.d.ts",
-            "import": "./lib/index.js"
+            "import": "./lib/index.js",
+            "require": "./lib/index.js"
         },
         "./messages": {
             "types": "./lib/messages/index.d.ts",
-            "import": "./lib/messages/index.js"
+            "import": "./lib/messages/index.js",
+            "require": "./lib/messages/index.js"
         },
         "./messages/*": {
             "types": "./lib/messages/*.d.ts",
-            "import": "./lib/messages/*.js"
+            "import": "./lib/messages/*.js",
+            "require": "./lib/messages/*.js"
         },
         "./setup": null,
         "./setup/index": null,
         "./setup/*": {
             "types": "./lib/setup/*.d.ts",
-            "import": "./lib/setup/*.js"
+            "import": "./lib/setup/*.js",
+            "require": "./lib/setup/*.js"
         },
         "./middleware": null,
         "./middleware/index": null,
         "./middleware/*": {
             "types": "./lib/middleware/*.d.ts",
-            "import": "./lib/middleware/*.js"
+            "import": "./lib/middleware/*.js",
+            "require": "./lib/middleware/*.js"
         },
         "./emitters": {
             "types": "./lib/emitters.d.ts"
         },
         "./types": {
             "types": "./lib/types.d.ts",
-            "import": "./lib/types.js"
+            "import": "./lib/types.js",
+            "require": "./lib/types.js"
         },
         "./errors": {
             "types": "./lib/errors.d.ts",
-            "import": "./lib/errors.js"
+            "import": "./lib/errors.js",
+            "require": "./lib/errors.js"
         }
     },
     "//": [
