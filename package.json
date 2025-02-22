@@ -92,7 +92,7 @@
         "build:code": "node -r dotenv/config build.js",
         "build:code:dev": "npm run build:code",
         "build:types": "tsc",
-        "build:types:dev": "npm run build:types",
+        "build:types:dev": "tsc --noCheck",
         "build:standalone": "esbuild src/standalone.ts --outfile=lib/standalone.js --bundle --platform=neutral --target=node10 --minify-syntax",
         "test": "node --test --test-reporter=@reporters/github --test-reporter-destination=stdout --test-reporter=spec --test-reporter-destination=stdout",
         "test:build": "npm run build && npm run test",
