@@ -585,17 +585,17 @@ export type ServerInteractiveMessage = {
                   | {
                         name: "address_message";
                         body?: string;
-                        response_json: unknown;
+                        response_json: string;
                     }
                   | {
                         name: "flow";
                         body: "Sent";
-                        response_json: unknown;
+                        response_json: string;
                     }
                   | {
                         name?: string;
                         body?: string;
-                        response_json: unknown;
+                        response_json: string;
                     };
               button_reply: never;
               list_reply: never;
