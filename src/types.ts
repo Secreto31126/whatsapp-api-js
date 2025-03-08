@@ -638,8 +638,19 @@ export type ServerSystemMessage = {
     type: "system";
     system: {
         body: string;
-        new_wa_id: number | string; // TODO: check if this is always a number
-        type: string | "user_changed_number";
+        identity: string;
+        /**
+         * @deprecated Since v12.0 it is undefined, use `wa_id` instead.
+         *
+         * I'm actually stunned this exists, since I started the library with v13 or 14.
+         */
+        new_wa_id: number | string;
+        wa_id: string;
+        type:
+            | "customer_changed_number"
+            | "customer_identity_changed"
+            | string /* Backwards compatibility */;
+        customer: string;
     };
 };
 
@@ -741,7 +752,7 @@ export type ServerPricing = {
      * @deprecated Since v16 with the release of the new pricing model
      */
     billable?: boolean;
-    category: ServerInitiation;
+    category: ServerInitiation | "authentication-international";
 };
 
 export type ServerConversation = {
