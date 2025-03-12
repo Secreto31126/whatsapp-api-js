@@ -840,14 +840,12 @@ export type ServerErrorResponse = {
 };
 
 export type NoServerError = {
-    error: never;
+    error?: never;
 };
 
-export type ServerSuccessResponse =
-    | {
-          success: true;
-      }
-    | NoServerError;
+export type ServerSuccessResponse = {
+    success: true;
+} & NoServerError;
 
 export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
@@ -866,7 +864,7 @@ export type ServerSentMessageResponse = {
 };
 
 export type ServerMessageResponse =
-    | (ServerSentMessageResponse | NoServerError)
+    | (ServerSentMessageResponse & NoServerError)
     | ServerErrorResponse;
 
 export type ServerMarkAsReadResponse =
@@ -881,7 +879,7 @@ export type ServerQR = {
 };
 
 export type ServerCreateQRResponse =
-    | (ServerQR | NoServerError)
+    | (ServerQR & NoServerError)
     | ServerErrorResponse;
 
 export type ServerRetrieveQRResponse =
@@ -894,7 +892,7 @@ export type ServerRetrieveQRResponse =
     | ServerErrorResponse;
 
 export type ServerUpdateQRResponse =
-    | (ServerQR | NoServerError)
+    | (ServerQR & NoServerError)
     | ServerErrorResponse;
 
 export type ServerDeleteQRResponse =
@@ -906,7 +904,7 @@ export type ServerMedia = {
 };
 
 export type ServerMediaUploadResponse =
-    | (ServerMedia | NoServerError)
+    | (ServerMedia & NoServerError)
     | ServerErrorResponse;
 
 export type ValidMimeTypes =
@@ -930,16 +928,14 @@ export type ValidMimeTypes =
     | "image/webp";
 
 export type ServerMediaRetrieveResponse =
-    | (
-          | ({
-                messaging_product: "whatsapp";
-                url: string;
-                mime_type: ValidMimeTypes;
-                sha256: string;
-                file_size: string;
-            } & ServerMedia)
-          | NoServerError
-      )
+    | ({
+          messaging_product: "whatsapp";
+          url: string;
+          mime_type: ValidMimeTypes;
+          sha256: string;
+          file_size: string;
+      } & ServerMedia &
+          NoServerError)
     | ServerErrorResponse;
 
 export type ServerMediaDeleteResponse =
