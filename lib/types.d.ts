@@ -668,11 +668,11 @@ export type ServerErrorResponse = {
     };
 };
 export type NoServerError = {
-    error: never;
+    error?: never;
 };
 export type ServerSuccessResponse = {
     success: true;
-} | NoServerError;
+} & NoServerError;
 export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
     contacts: [
@@ -688,7 +688,7 @@ export type ServerSentMessageResponse = {
         }
     ];
 };
-export type ServerMessageResponse = (ServerSentMessageResponse | NoServerError) | ServerErrorResponse;
+export type ServerMessageResponse = (ServerSentMessageResponse & NoServerError) | ServerErrorResponse;
 export type ServerMarkAsReadResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerQR = {
     code: string;
@@ -696,23 +696,23 @@ export type ServerQR = {
     deep_link_url: string;
     qr_image_url?: string;
 };
-export type ServerCreateQRResponse = (ServerQR | NoServerError) | ServerErrorResponse;
+export type ServerCreateQRResponse = (ServerQR & NoServerError) | ServerErrorResponse;
 export type ServerRetrieveQRResponse = ({
     data: ServerQR[];
 } | NoServerError) | ServerErrorResponse;
-export type ServerUpdateQRResponse = (ServerQR | NoServerError) | ServerErrorResponse;
+export type ServerUpdateQRResponse = (ServerQR & NoServerError) | ServerErrorResponse;
 export type ServerDeleteQRResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerMedia = {
     id: string;
 };
-export type ServerMediaUploadResponse = (ServerMedia | NoServerError) | ServerErrorResponse;
+export type ServerMediaUploadResponse = (ServerMedia & NoServerError) | ServerErrorResponse;
 export type ValidMimeTypes = "audio/aac" | "audio/mp4" | "audio/mpeg" | "audio/amr" | "audio/ogg" | "text/plain" | "application/pdf" | "application/vnd.ms-powerpoint" | "application/msword" | "application/vnd.ms-excel" | "application/vnd.openxmlformats-officedocument.wordprocessingml.document" | "application/vnd.openxmlformats-officedocument.presentationml.presentation" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" | "image/jpeg" | "image/png" | "video/mp4" | "video/3gp" | "image/webp";
-export type ServerMediaRetrieveResponse = (({
+export type ServerMediaRetrieveResponse = ({
     messaging_product: "whatsapp";
     url: string;
     mime_type: ValidMimeTypes;
     sha256: string;
     file_size: string;
-} & ServerMedia) | NoServerError) | ServerErrorResponse;
+} & ServerMedia & NoServerError) | ServerErrorResponse;
 export type ServerMediaDeleteResponse = ServerSuccessResponse | ServerErrorResponse;
 //# sourceMappingURL=types.d.ts.map
