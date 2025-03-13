@@ -883,12 +883,7 @@ export type ServerCreateQRResponse =
     | ServerErrorResponse;
 
 export type ServerRetrieveQRResponse =
-    | (
-          | {
-                data: ServerQR[];
-            }
-          | NoServerError
-      )
+    | ({ data: ServerQR[] } & NoServerError)
     | ServerErrorResponse;
 
 export type ServerUpdateQRResponse =
