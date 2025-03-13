@@ -936,3 +936,45 @@ export type ServerMediaRetrieveResponse =
 export type ServerMediaDeleteResponse =
     | ServerSuccessResponse
     | ServerErrorResponse;
+
+export type ServerBlockedError = Pick<
+    ServerErrorResponse["error"],
+    "message" | "type" | "code"
+> & {
+    error_data: {
+        details: string;
+    };
+};
+
+export type ServerBlockedUser = {
+    input: string;
+    wa_id: string;
+};
+
+export type ServerBlockFailedUser = {
+    input: string;
+    errors: Omit<ServerBlockedError, "type">[];
+};
+
+export type ServerBlockResponse =
+    | {
+          messaging_product: "whatsapp";
+          block_users: {
+              added_users: ServerBlockedUser[];
+              failed_users?: ServerBlockFailedUser[];
+          };
+          errors?: ServerBlockedError;
+      }
+    | ServerErrorResponse;
+
+export type ServerUnblockResponse =
+    | {
+          messaging_product: "whatsapp";
+          block_users: {
+              removed_users: ServerBlockedUser[];
+              // Not sure if this actually exists...
+              failed_users?: ServerBlockFailedUser[];
+          };
+          errors?: ServerBlockedError;
+      }
+    | ServerErrorResponse;
