@@ -699,7 +699,7 @@ export type ServerQR = {
 export type ServerCreateQRResponse = (ServerQR & NoServerError) | ServerErrorResponse;
 export type ServerRetrieveQRResponse = ({
     data: ServerQR[];
-} | NoServerError) | ServerErrorResponse;
+} & NoServerError) | ServerErrorResponse;
 export type ServerUpdateQRResponse = (ServerQR & NoServerError) | ServerErrorResponse;
 export type ServerDeleteQRResponse = ServerSuccessResponse | ServerErrorResponse;
 export type ServerMedia = {
