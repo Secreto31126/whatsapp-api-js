@@ -115,6 +115,12 @@ export type OnMessageArgs = {
         biz_opaque_callback_data?: string
     ) => Promise<ServerMessageResponse | Response>;
     /**
+     * Block the user who sent the message
+     *
+     * @returns The {@link WhatsAppAPI.blockUser} return value
+     */
+    block: () => ReturnType<WhatsAppAPI["blockUser"]>;
+    /**
      * Utility function for offloading code from the main thread,
      * useful for long running tasks such as AI generation
      */

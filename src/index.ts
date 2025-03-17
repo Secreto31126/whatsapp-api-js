@@ -970,6 +970,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                         context ? message.id : undefined,
                         biz_opaque_callback_data
                     ),
+                block: () => this.blockUser(phoneID, from),
                 offload: WhatsAppAPI.offload,
                 Whatsapp: this
             };
