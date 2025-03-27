@@ -1483,6 +1483,83 @@ describe("WhatsAppAPI", () => {
         });
     });
 
+    describe("Block", () => {
+        const bot = "1";
+        const user = "2";
+
+        const Whatsapp = new WhatsAppAPI({
+            v,
+            token,
+            appSecret,
+            ponyfill: {
+                fetch: undici_fetch,
+                subtle
+            }
+        });
+
+        describe("Block user", () => {
+            it("should block a user", async () => {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    block_users: {
+                        added_users: [{ input: user, wa_id: user }]
+                    }
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${bot}/block_users`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            block_users: [{ user }]
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.blockUser(bot, user);
+
+                deepEqual(response, expectedResponse);
+            });
+        });
+
+        describe("Unblock user", () => {
+            it("should unblock a user", async () => {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    block_users: {
+                        added_users: [{ input: user, wa_id: user }],
+                    }
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${bot}/block_users`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            block_users: [{ user }]
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.unblockUser(bot, user);
+
+                deepEqual(response, expectedResponse);
+            });
+        });
+    });
+
     describe("Webhooks", () => {
         describe("Get", () => {
             const mode = "subscribe";
@@ -1765,6 +1842,36 @@ describe("WhatsAppAPI", () => {
                     await new Promise((resolve) => setTimeout(resolve, 0));
 
                     sinon_assert.calledOnce(spy_on_sent);
+                });
+
+                it("should block a user with the method block", async () => {
+                    const expectedResponse = {
+                        messaging_product: "whatsapp",
+                        block_users: {
+                            added_users: [{ input: user, wa_id: user }],
+                        }
+                    };
+
+                    clientFacebook
+                        .intercept({
+                            path: `/${phoneID}/block_users`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json"
+                            }
+                        })
+                        .reply(200, expectedResponse)
+                        .times(1);
+
+                    let res;
+                    Whatsapp.on.message = async ({ block }) => {
+                        res = await block();
+                    };
+
+                    await Whatsapp.post(valid_message_mock);
+
+                    deepEqual(res, expectedResponse);
                 });
 
                 it("should not block the main thread with the user's callback with the method offload", async () => {
