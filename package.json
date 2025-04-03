@@ -145,7 +145,7 @@
         "@eslint/js": "9.23.0",
         "@reporters/github": "1.7.2",
         "@reporters/silent": "1.2.7",
-        "@types/eslint__js": "8.42.3",
+        "@types/eslint__js": "9.14.0",
         "@types/express": "5.0.1",
         "@types/node": "18.19.86",
         "@vercel/node": "5.1.14",
