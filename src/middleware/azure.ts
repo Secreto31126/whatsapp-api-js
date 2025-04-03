@@ -37,7 +37,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * ```
      *
      * @override
-     * @param req - The request object from Express.js
+     * @param req - The request object from Azure Functions
      * @returns The status code to be sent to the client
      */
     async handle_post(req: HttpRequest): Promise<number> {
@@ -58,7 +58,7 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
     }
 
     /**
-     * GET request handler for Express.js
+     * GET request handler for Azure Function
      *
      * @example
      * ```ts
@@ -90,11 +90,11 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      * ```
      *
      * @override
-     * @param req - The request object from Express.js
+     * @param req - The request object from Azure Functions
      * @returns The challenge string to be sent to the client
      * @throws The error code
      */
-    handle_get(req: Request): string {
+    handle_get(req: HttpRequest): string {
         try {
             return this.get(
                 Object.fromEntries(new URL(req.url).searchParams) as GetParams
