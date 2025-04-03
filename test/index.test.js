@@ -1533,7 +1533,7 @@ describe("WhatsAppAPI", () => {
                 const expectedResponse = {
                     messaging_product: "whatsapp",
                     block_users: {
-                        added_users: [{ input: user, wa_id: user }],
+                        added_users: [{ input: user, wa_id: user }]
                     }
                 };
 
@@ -1848,7 +1848,7 @@ describe("WhatsAppAPI", () => {
                     const expectedResponse = {
                         messaging_product: "whatsapp",
                         block_users: {
-                            added_users: [{ input: user, wa_id: user }],
+                            added_users: [{ input: user, wa_id: user }]
                         }
                     };
 
