@@ -1844,6 +1844,41 @@ describe("WhatsAppAPI", () => {
                     sinon_assert.calledOnce(spy_on_sent);
                 });
 
+                it("should mark a message as read with the method received", async () => {
+                    const expectedResponse = {
+                        success: true
+                    };
+
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${phoneID}/messages`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                messaging_product: "whatsapp",
+                                status: "read",
+                                message_id: message.id,
+                                typing_indicator: {
+                                    type: "text"
+                                }
+                            })
+                        })
+                        .reply(200, expectedResponse)
+                        .times(1);
+
+                    let res;
+                    Whatsapp.on.message = async ({ received }) => {
+                        res = await received("text");
+                    };
+
+                    await Whatsapp.post(valid_message_mock);
+
+                    deepEqual(res, expectedResponse);
+                });
+
                 it("should block a user with the method block", async () => {
                     const expectedResponse = {
                         messaging_product: "whatsapp",
