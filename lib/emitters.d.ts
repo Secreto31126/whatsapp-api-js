@@ -1,4 +1,4 @@
-import type { ClientMessage, ClientMessageRequest, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types.d.ts";
+import type { ClientMessage, ClientMessageRequest, ClientTypingIndicators, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types.d.ts";
 import type { WhatsAppAPI } from "./index.d.ts";
 import type { MaybePromise } from "./utils.d.ts";
 /**
@@ -97,6 +97,13 @@ export type OnMessageArgs = {
      * @returns The {@link WhatsAppAPI.sendMessage} return value
      */
     reply: (response: ClientMessage, context?: boolean, biz_opaque_callback_data?: string) => Promise<ServerMessageResponse | Response>;
+    /**
+     * Mark the received message as read, and optionally display a typing indicator
+     *
+     * @param indicator - The type of reply indicator
+     * @returns The {@link WhatsAppAPI.markAsRead} return value
+     */
+    received: (indicator?: ClientTypingIndicators) => ReturnType<WhatsAppAPI["markAsRead"]>;
     /**
      * Block the user who sent the message
      *

@@ -1,5 +1,5 @@
 /** @module WhatsAppAPI */
-import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse } from "./types.js";
+import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse } from "./types.js";
 import type { OnMessage, OnSent, OnStatus } from "./emitters.d.ts";
 /**
  * The main API Class
@@ -191,13 +191,16 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     broadcastMessage<T>(phoneID: string, to: T[], message_builder: (data: T) => [string, ClientMessage], batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
     /**
-     * Mark a message as read
+     * Mark a message as read, and optionally include a reply indicator
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/typing-indicators
      *
      * @param phoneID - The bot's phone ID
      * @param messageId - The message ID
+     * @param indicator - The type of reply indicator
      * @returns The server response
      */
-    markAsRead(phoneID: string, messageId: string): Promise<ServerMarkAsReadResponse | Response>;
+    markAsRead(phoneID: string, messageId: string, indicator?: ClientTypingIndicators): Promise<ServerMarkAsReadResponse | Response>;
     /**
      * Generate a QR code for sharing the bot
      *

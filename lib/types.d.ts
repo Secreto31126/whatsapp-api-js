@@ -264,6 +264,7 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
 export interface TemplateComponent extends ClientBuildableMessageComponent {
 }
 export type ClientMessageNames = "text" | "audio" | "document" | "image" | "sticker" | "video" | "location" | "contacts" | "interactive" | "template" | "reaction";
+export type ClientTypingIndicators = "text";
 export type ClientMessageRequest = {
     /**
      * The messaging product
