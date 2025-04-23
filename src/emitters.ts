@@ -1,6 +1,7 @@
 import type {
     ClientMessage,
     ClientMessageRequest,
+    ClientTypingIndicators,
     ServerMessage,
     ServerMessageResponse,
     ServerConversation,
@@ -114,6 +115,15 @@ export type OnMessageArgs = {
         context?: boolean,
         biz_opaque_callback_data?: string
     ) => Promise<ServerMessageResponse | Response>;
+    /**
+     * Mark the received message as read, and optionally display a typing indicator
+     *
+     * @param indicator - The type of reply indicator
+     * @returns The {@link WhatsAppAPI.markAsRead} return value
+     */
+    received: (
+        indicator?: ClientTypingIndicators
+    ) => ReturnType<WhatsAppAPI["markAsRead"]>;
     /**
      * Block the user who sent the message
      *

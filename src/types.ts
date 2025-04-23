@@ -355,6 +355,8 @@ export type ClientMessageNames =
     | "template"
     | "reaction";
 
+export type ClientTypingIndicators = "text";
+
 // #region Client Message Request
 
 export type ClientMessageRequest = {

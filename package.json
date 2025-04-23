@@ -1,6 +1,6 @@
 {
     "name": "whatsapp-api-js",
-    "version": "5.2.0",
+    "version": "5.3.0",
     "author": "Secreto31126",
     "description": "A TypeScript server agnostic Whatsapp's Official API framework",
     "license": "MIT",

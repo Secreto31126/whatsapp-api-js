@@ -6,6 +6,7 @@ import {
     type PostData,
     type GetParams,
     type ClientMessageRequest,
+    type ClientTypingIndicators,
     type ServerMessageResponse,
     type ServerMarkAsReadResponse,
     type ServerCreateQRResponse,
@@ -426,15 +427,19 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     }
 
     /**
-     * Mark a message as read
+     * Mark a message as read, and optionally include a reply indicator
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/typing-indicators
      *
      * @param phoneID - The bot's phone ID
      * @param messageId - The message ID
+     * @param indicator - The type of reply indicator
      * @returns The server response
      */
     async markAsRead(
         phoneID: string,
-        messageId: string
+        messageId: string,
+        indicator?: ClientTypingIndicators
     ): Promise<ServerMarkAsReadResponse | Response> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
@@ -446,7 +451,10 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
                     status: "read",
-                    message_id: messageId
+                    message_id: messageId,
+                    typing_indicator: indicator
+                        ? { type: indicator }
+                        : undefined
                 })
             }
         );
@@ -970,6 +978,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
                         context ? message.id : undefined,
                         biz_opaque_callback_data
                     ),
+                received: (i) => this.markAsRead(phoneID, message.id, i),
                 block: () => this.blockUser(phoneID, from),
                 offload: WhatsAppAPI.offload,
                 Whatsapp: this
