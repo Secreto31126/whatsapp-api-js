@@ -43,7 +43,7 @@ app.post("/message", async (req, res) => {
 });
 ```
 
-- Node 18:
+- Node 18 (deprecated):
 
 ```js
 import { WhatsAppAPI } from "whatsapp-api-js";
