@@ -8,7 +8,7 @@
  */
 import type { Text, Audio, Document, Image, Sticker, Video, Location, Interactive, Template, Reaction, Contacts } from "./messages/index.d.ts";
 import type { AtLeastOne } from "./utils.d.ts";
-export declare const DEFAULT_API_VERSION = "v22.0";
+export declare const DEFAULT_API_VERSION = "v24.0";
 /**
  * The main constructor arguments for the API
  */
@@ -583,12 +583,13 @@ export type ServerContacts = {
 export type ServerInitiation = "authentication" | "marketing" | "utility" | "service" | "referral_conversion";
 export type ServerStatus = "sent" | "delivered" | "read" | "failed";
 export type ServerPricing = {
-    pricing_model: "CBP";
+    pricing_model: "PMP";
     /**
      * @deprecated Since v16 with the release of the new pricing model
      */
     billable?: boolean;
-    category: ServerInitiation | "authentication-international";
+    type: "regular" | "free_customer_service" | "free_entry_point";
+    category: ServerInitiation | "authentication_international" | "marketing_lite";
 };
 export type ServerConversation = {
     id: string;
@@ -633,7 +634,7 @@ export type PostData = {
                         recipient_id: string;
                         biz_opaque_callback_data?: string;
                     } & ({
-                        conversation: ServerConversation;
+                        conversation?: ServerConversation;
                         pricing: ServerPricing;
                         errors: undefined;
                     } | {
