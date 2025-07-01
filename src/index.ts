@@ -75,10 +75,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      */
     private subtle?: Pick<typeof crypto.subtle, "importKey" | "sign">;
     /**
-     * If true, API operations will return the fetch promise instead. Intended for low level debugging.
-     */
-    private parsed: boolean;
-    /**
      * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
     private secure: boolean;
@@ -139,7 +135,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         appSecret,
         webhookVerifyToken,
         v,
-        parsed = true,
         secure = true,
         ponyfill = {}
     }: WhatsAppAPIConstructorArguments) {
@@ -188,8 +183,6 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             );
             this.v = DEFAULT_API_VERSION;
         }
-
-        this.parsed = !!parsed;
     }
 
     //#region Message Operations
@@ -227,7 +220,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         message: ClientMessage,
         context?: string,
         biz_opaque_callback_data?: string
-    ): Promise<ServerMessageResponse | Response> {
+    ): Promise<ServerMessageResponse> {
         const type = message._type;
 
         const request = {
@@ -254,9 +247,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             }
         );
 
-        const response = this.parsed
-            ? ((await (await promise).json()) as ServerMessageResponse)
-            : undefined;
+        const response = await this.getBody<ServerMessageResponse>(promise);
+        const has_msg = "messages" in response;
 
         const args: OnSentArgs = {
             phoneID,
@@ -264,17 +256,11 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             type,
             message,
             request,
-            id: response
-                ? "messages" in response
-                    ? response.messages[0].id
-                    : undefined
-                : undefined,
-            held_for_quality_assessment: response
-                ? "messages" in response
-                    ? "message_status" in response.messages[0]
-                        ? response.messages[0].message_status ===
-                          "held_for_quality_assessment"
-                        : undefined
+            id: has_msg ? response.messages[0].id : undefined,
+            held_for_quality_assessment: has_msg
+                ? "message_status" in response.messages[0]
+                    ? response.messages[0].message_status ===
+                      "held_for_quality_assessment"
                     : undefined
                 : undefined,
             response,
@@ -440,7 +426,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         messageId: string,
         indicator?: ClientTypingIndicators
-    ): Promise<ServerMarkAsReadResponse | Response> {
+    ): Promise<ServerMarkAsReadResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/messages`,
             {
@@ -478,7 +464,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         message: string,
         format: "png" | "svg" = "png"
-    ): Promise<ServerCreateQRResponse | Response> {
+    ): Promise<ServerCreateQRResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls?generate_qr_image=${format}&prefilled_message=${message}`,
             {
@@ -499,7 +485,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     async retrieveQR(
         phoneID: string,
         id?: string
-    ): Promise<ServerRetrieveQRResponse | Response> {
+    ): Promise<ServerRetrieveQRResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id ?? ""}`
         );
@@ -519,7 +505,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         id: string,
         message: string
-    ): Promise<ServerUpdateQRResponse | Response> {
+    ): Promise<ServerUpdateQRResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}?prefilled_message=${message}`,
             {
@@ -540,7 +526,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     async deleteQR(
         phoneID: string,
         id: string
-    ): Promise<ServerDeleteQRResponse | Response> {
+    ): Promise<ServerDeleteQRResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${phoneID}/message_qrdls/${id}`,
             {
@@ -567,7 +553,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     async retrieveMedia(
         id: string,
         phoneID?: string
-    ): Promise<ServerMediaRetrieveResponse | Response> {
+    ): Promise<ServerMediaRetrieveResponse> {
         const params = phoneID ? `phone_number_id=${phoneID}` : "";
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${id}?${params}`
@@ -643,7 +629,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         phoneID: string,
         form: unknown,
         check = true
-    ): Promise<ServerMediaUploadResponse | Response> {
+    ): Promise<ServerMediaUploadResponse> {
         if (check) {
             if (
                 !form ||
@@ -762,7 +748,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     async deleteMedia(
         id: string,
         phoneID?: string
-    ): Promise<ServerMediaDeleteResponse | Response> {
+    ): Promise<ServerMediaDeleteResponse> {
         const params = phoneID ? `phone_number_id=${phoneID}` : "";
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${id}?${params}`,
@@ -792,7 +778,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     async blockUser(
         phoneID: string,
         ...users: string[]
-    ): Promise<ServerBlockResponse | Response> {
+    ): Promise<ServerBlockResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/block_users`,
             {
@@ -822,7 +808,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     async unblockUser(
         phoneID: string,
         ...users: string[]
-    ): Promise<ServerUnblockResponse | Response> {
+    ): Promise<ServerUnblockResponse> {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/block_users`,
             {
@@ -1164,10 +1150,8 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      * @param promise - The fetch response
      * @returns The json body parsed
      */
-    private async getBody<T>(
-        promise: Promise<Response>
-    ): Promise<T | Response> {
-        return this.parsed ? ((await (await promise).json()) as T) : promise;
+    private async getBody<T>(promise: Promise<Response>): Promise<T> {
+        return (await promise).json();
     }
 
     /**
