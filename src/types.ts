@@ -744,12 +744,16 @@ export type ServerInitiation =
 export type ServerStatus = "sent" | "delivered" | "read" | "failed";
 
 export type ServerPricing = {
-    pricing_model: "CBP";
+    pricing_model: "PMP";
     /**
      * @deprecated Since v16 with the release of the new pricing model
      */
     billable?: boolean;
-    category: ServerInitiation | "authentication-international";
+    type: "regular" | "free_customer_service" | "free_entry_point";
+    category:
+        | ServerInitiation
+        | "authentication_international"
+        | "marketing_lite";
 };
 
 export type ServerConversation = {
@@ -801,7 +805,7 @@ export type PostData = {
                               biz_opaque_callback_data?: string;
                           } & (
                               | {
-                                    conversation: ServerConversation;
+                                    conversation?: ServerConversation;
                                     pricing: ServerPricing;
                                     errors: undefined;
                                 }
