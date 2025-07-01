@@ -176,49 +176,6 @@ describe("WhatsAppAPI", () => {
         });
     });
 
-    describe("Parsed", () => {
-        it("should set parsed to true by default", () => {
-            const Whatsapp = new WhatsAppAPI({
-                v,
-                token,
-                appSecret,
-                ponyfill: {
-                    fetch: undici_fetch,
-                    subtle
-                }
-            });
-            equal(Whatsapp.parsed, true);
-        });
-
-        it("should be able to set parsed to true", () => {
-            const Whatsapp = new WhatsAppAPI({
-                v,
-                token,
-                appSecret,
-                parsed: true,
-                ponyfill: {
-                    fetch: undici_fetch,
-                    subtle
-                }
-            });
-            equal(Whatsapp.parsed, true);
-        });
-
-        it("should be able to set parsed to false", () => {
-            const Whatsapp = new WhatsAppAPI({
-                v,
-                token,
-                appSecret,
-                parsed: false,
-                ponyfill: {
-                    fetch: undici_fetch,
-                    subtle
-                }
-            });
-            equal(Whatsapp.parsed, false);
-        });
-    });
-
     describe("Logger", () => {
         const bot = "1";
         const user = "2";
@@ -518,29 +475,6 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/messages`,
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(request)
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.sendMessage(bot, user, message)
-                ).json();
-
-                deepEqual(response, expectedResponse);
-            });
         });
 
         describe("Broadcast", () => {
@@ -600,37 +534,6 @@ describe("WhatsAppAPI", () => {
                 deepEqual(response, expectedArrayResponse);
             });
 
-            it("should return the raw fetch responses if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/messages`,
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(request)
-                    })
-                    .reply(200, expectedResponse)
-                    .times(3);
-
-                const response = await Promise.all(
-                    (
-                        await Promise.all(
-                            await Whatsapp.broadcastMessage(
-                                bot,
-                                [user, user, user],
-                                message
-                            )
-                        )
-                    ).map((e) => e.json())
-                );
-
-                deepEqual(response, expectedArrayResponse);
-            });
-
             it("should fail if batch_size or delay aren't valid", () => {
                 throws(() =>
                     Whatsapp.broadcastMessage(bot, [user], message, 0)
@@ -665,31 +568,6 @@ describe("WhatsAppAPI", () => {
                     .times(1);
 
                 const response = await Whatsapp.markAsRead(bot, id);
-
-                deepEqual(response, expectedResponse);
-            });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = {
-                    success: true
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/messages`,
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.markAsRead(bot, id)
-                ).json();
 
                 deepEqual(response, expectedResponse);
             });
@@ -808,41 +686,6 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const format = "png";
-
-                const expectedResponse = {
-                    code,
-                    prefilled_message: message,
-                    deep_link_url: `https://wa.me/message/${code}`,
-                    qr_image_url:
-                        "https://scontent.faep22-1.fna.fbcdn.net/m1/v/t6/another_weird_url"
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/message_qrdls`,
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        },
-                        query: {
-                            generate_qr_image: format,
-                            prefilled_message: message
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.createQR(bot, message)
-                ).json();
-
-                deepEqual(response, expectedResponse);
-            });
         });
 
         describe("Retrieve", () => {
@@ -897,34 +740,6 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = {
-                    data: [
-                        {
-                            code,
-                            prefilled_message: message,
-                            deep_link_url: `https://wa.me/message/${code}`
-                        }
-                    ]
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/message_qrdls/`,
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (await Whatsapp.retrieveQR(bot)).json();
-
-                deepEqual(response, expectedResponse);
-            });
         });
 
         describe("Update", () => {
@@ -959,36 +774,6 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = {
-                    code,
-                    prefilled_message: new_message,
-                    deep_link_url: `https://wa.me/message/${code}`
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        },
-                        query: {
-                            prefilled_message: new_message
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.updateQR(bot, code, new_message)
-                ).json();
-
-                deepEqual(response, expectedResponse);
-            });
         });
 
         describe("Delete", () => {
@@ -1009,31 +794,6 @@ describe("WhatsAppAPI", () => {
                     .times(1);
 
                 const response = await Whatsapp.deleteQR(bot, code);
-
-                deepEqual(response, expectedResponse);
-            });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = {
-                    success: true
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/message_qrdls/${code}`,
-                        method: "DELETE",
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.deleteQR(bot, code)
-                ).json();
 
                 deepEqual(response, expectedResponse);
             });
@@ -1241,37 +1001,6 @@ describe("WhatsAppAPI", () => {
                     await Whatsapp.uploadMedia(bot, form, false);
                 });
             });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = { id };
-
-                form.append(
-                    "file",
-                    new Blob(["Hello World"], { type: "text/plain" })
-                );
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${bot}/media`,
-                        method: "POST",
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        },
-                        query: {
-                            messaging_product: "whatsapp"
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.uploadMedia(bot, form)
-                ).json();
-
-                deepEqual(response, expectedResponse);
-            });
         });
 
         describe("Retrieve", () => {
@@ -1327,35 +1056,6 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = {
-                    messaging_product: "whatsapp",
-                    url: "URL",
-                    mime_type: "image/jpeg",
-                    sha256: "HASH",
-                    file_size: "SIZE",
-                    id
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${id}`,
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (
-                    await Whatsapp.retrieveMedia(id)
-                ).json();
-
-                deepEqual(response, expectedResponse);
-            });
         });
 
         describe("Delete", () => {
@@ -1400,29 +1100,6 @@ describe("WhatsAppAPI", () => {
                     .times(1);
 
                 const response = await Whatsapp.deleteMedia(id, bot);
-
-                deepEqual(response, expectedResponse);
-            });
-
-            it("should return the raw fetch response if parsed is false", async () => {
-                Whatsapp.parsed = false;
-
-                const expectedResponse = {
-                    success: true
-                };
-
-                clientFacebook
-                    .intercept({
-                        path: `/${Whatsapp.v}/${id}`,
-                        method: "DELETE",
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    })
-                    .reply(200, expectedResponse)
-                    .times(1);
-
-                const response = await (await Whatsapp.deleteMedia(id)).json();
 
                 deepEqual(response, expectedResponse);
             });
