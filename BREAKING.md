@@ -1,5 +1,40 @@
 # Breaking changes
 
+## 6.0.0
+
+### WhatsAppAPI methods no longer return the raw fetch response
+
+The `parsed` option was removed from the WhatsAppAPI constructor, and
+now all methods return the API response directly instead of
+`Promise<T | Response>`.
+
+It didn't give the insights it was expected to provide, and it was
+cumbersome to work around.
+
+### Updated types to follow API pricing changes
+
+With the release of the new per-message pricing model, some minor
+types where changed on the webhooks payloads, more specific in the
+pricing and conversation objects.
+
+To the average user, this change should most certainly have no impact.
+
+For more information, check the Cloud API "Updates to Pricing"
+changelog:
+https://developers.facebook.com/docs/whatsapp/pricing/updates-to-pricing
+
+### Drop testing for Node.js 18
+
+Node.js 18 reached EoL, so there's no point in testing with it
+anymore. The setup method Node18 was marked as deprecated. It's
+strongly recommended to stop using any setup method, as they have all
+become mere noops.
+
+### Bumped API version
+
+The default API version was bumped to `v24.0`, the new one with the
+the realease of the PMP model.
+
 ## 5.0.0
 
 ### post() and get() errors
