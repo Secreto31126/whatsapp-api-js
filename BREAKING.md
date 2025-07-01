@@ -256,7 +256,6 @@ the original catalog messages.
 Among the affected classes and files are:
 
 - `interactive.ts`
-
     - `ActionCatalog` -> `ActionProduct`: `ActionCatalog` is now used for the
       Catalog messages. The original class was renamed as `ActionProduct`.
     - `Product` and `ProductSection`: These classes were moved from the file
@@ -266,7 +265,6 @@ Among the affected classes and files are:
       `types.ts`.
 
 - `template.ts`
-
     - `ButtonComponent` -> `URLComponent`, `PayloadComponent`, `CatalogComponent`,
       `MPMComponent`, `CopyComponent`, `SkipButtonComponent`: As the API now
       supports mixing button types, the `ButtonComponent` was splitted into

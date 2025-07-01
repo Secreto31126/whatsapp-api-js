@@ -4,7 +4,6 @@ This project accepts PR! Just keep in mind the following rules:
 
 1. If you are planning to write a new feature or bug fix,
    consider opening an issue to get a confirmation
-
     - Minor changes like typos fixes in documentation can be
       created without previous discussion
 
