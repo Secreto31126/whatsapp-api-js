@@ -13,6 +13,7 @@ export declare function NodeNext(settings: WhatsAppAPIConstructorArguments): Wha
  *
  * @remarks Assumes that the fetch function is available globally
  *
+ * @deprecated Node 18 reached EoL and is no longer supported by the library
  * @param settings - The WhatsAppAPI arguments
  * @returns A WhatsAppAPI arguments object for Node\@^18
  */
