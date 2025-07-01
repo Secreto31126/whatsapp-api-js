@@ -282,33 +282,6 @@ describe("WhatsAppAPI", () => {
             });
         });
 
-        it("should run the logger with id and response as undefined if parsed is set to false", async () => {
-            Whatsapp.parsed = false;
-
-            clientFacebook
-                .intercept({
-                    path: `/${Whatsapp.v}/${bot}/messages`,
-                    method: "POST",
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                })
-                .reply(200, expectedResponse)
-                .times(1);
-
-            Whatsapp.sendMessage(bot, user, message);
-
-            // Callbacks are executed in the next tick
-            await new Promise((resolve) => setTimeout(resolve, 0));
-
-            sinon_assert.calledOnceWithMatch(spy_on_sent, {
-                phoneID: bot,
-                to: user,
-                message: apiValidMessage,
-                request
-            });
-        });
-
         it("should not block the main thread with the user's callback", async () => {
             // Emulates a blocking function
             function block(delay) {
@@ -401,10 +374,6 @@ describe("WhatsAppAPI", () => {
                 fetch: undici_fetch,
                 subtle
             }
-        });
-
-        beforeEach(() => {
-            Whatsapp.parsed = true;
         });
 
         describe("Send", () => {
@@ -587,10 +556,6 @@ describe("WhatsAppAPI", () => {
                 fetch: undici_fetch,
                 subtle
             }
-        });
-
-        beforeEach(() => {
-            Whatsapp.parsed = true;
         });
 
         describe("Create", () => {
@@ -816,7 +781,6 @@ describe("WhatsAppAPI", () => {
 
         let form;
         beforeEach(() => {
-            Whatsapp.parsed = true;
             form = new FormData();
         });
 
