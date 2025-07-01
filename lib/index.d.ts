@@ -33,10 +33,6 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     private subtle?;
     /**
-     * If true, API operations will return the fetch promise instead. Intended for low level debugging.
-     */
-    private parsed;
-    /**
      * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
     private secure;
@@ -90,7 +86,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @throws If fetch is not defined in the enviroment and the provided ponyfill isn't a function
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
      */
-    constructor({ token, appSecret, webhookVerifyToken, v, parsed, secure, ponyfill }: WhatsAppAPIConstructorArguments);
+    constructor({ token, appSecret, webhookVerifyToken, v, secure, ponyfill }: WhatsAppAPIConstructorArguments);
     /**
      * Send a Whatsapp message
      *
@@ -118,7 +114,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
      * @returns The server response
      */
-    sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse | Response>;
+    sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse>;
     /**
      * Send a Whatsapp message to multiple phone numbers.
      *
@@ -200,7 +196,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param indicator - The type of reply indicator
      * @returns The server response
      */
-    markAsRead(phoneID: string, messageId: string, indicator?: ClientTypingIndicators): Promise<ServerMarkAsReadResponse | Response>;
+    markAsRead(phoneID: string, messageId: string, indicator?: ClientTypingIndicators): Promise<ServerMarkAsReadResponse>;
     /**
      * Generate a QR code for sharing the bot
      *
@@ -209,7 +205,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param format - The format of the QR code
      * @returns The server response
      */
-    createQR(phoneID: string, message: string, format?: "png" | "svg"): Promise<ServerCreateQRResponse | Response>;
+    createQR(phoneID: string, message: string, format?: "png" | "svg"): Promise<ServerCreateQRResponse>;
     /**
      * Get one or many QR codes of the bot
      *
@@ -217,7 +213,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param id - The QR's id to find. If not specified, all QRs will be returned
      * @returns The server response
      */
-    retrieveQR(phoneID: string, id?: string): Promise<ServerRetrieveQRResponse | Response>;
+    retrieveQR(phoneID: string, id?: string): Promise<ServerRetrieveQRResponse>;
     /**
      * Update a QR code of the bot
      *
@@ -226,7 +222,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param message - The new quick message for the QR code
      * @returns The server response
      */
-    updateQR(phoneID: string, id: string, message: string): Promise<ServerUpdateQRResponse | Response>;
+    updateQR(phoneID: string, id: string, message: string): Promise<ServerUpdateQRResponse>;
     /**
      * Delete a QR code of the bot
      *
@@ -234,7 +230,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param id - The QR's id to delete
      * @returns The server response
      */
-    deleteQR(phoneID: string, id: string): Promise<ServerDeleteQRResponse | Response>;
+    deleteQR(phoneID: string, id: string): Promise<ServerDeleteQRResponse>;
     /**
      * Get a Media object data with an ID
      *
@@ -244,7 +240,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param phoneID - Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns The server response
      */
-    retrieveMedia(id: string, phoneID?: string): Promise<ServerMediaRetrieveResponse | Response>;
+    retrieveMedia(id: string, phoneID?: string): Promise<ServerMediaRetrieveResponse>;
     /**
      * Upload a Media to the API server
      *
@@ -308,7 +304,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @throws If check is set to true and the form doesn't have valid required properties (file, type)
      * @throws If check is set to true and the form file is too big for the file type
      */
-    uploadMedia(phoneID: string, form: unknown, check?: boolean): Promise<ServerMediaUploadResponse | Response>;
+    uploadMedia(phoneID: string, form: unknown, check?: boolean): Promise<ServerMediaUploadResponse>;
     /**
      * Get a Media fetch from an url.
      * When using this method, be sure to pass a trusted url, since the request will be authenticated with the token.
@@ -339,7 +335,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param phoneID - Business phone number ID. If included, the operation will only be processed if the ID matches the ID of the business phone number that the media was uploaded on.
      * @returns The server response
      */
-    deleteMedia(id: string, phoneID?: string): Promise<ServerMediaDeleteResponse | Response>;
+    deleteMedia(id: string, phoneID?: string): Promise<ServerMediaDeleteResponse>;
     /**
      * Block a user from sending messages to the bot
      *
@@ -351,7 +347,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param users - The user phone numbers to block (the API doesn't fail if it's empty)
      * @returns The server response
      */
-    blockUser(phoneID: string, ...users: string[]): Promise<ServerBlockResponse | Response>;
+    blockUser(phoneID: string, ...users: string[]): Promise<ServerBlockResponse>;
     /**
      * Unblock a user from the bot's block list
      *
@@ -361,7 +357,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @param users - The user phone numbers to unblock (the API doesn't fail if it's empty)
      * @returns The server response
      */
-    unblockUser(phoneID: string, ...users: string[]): Promise<ServerUnblockResponse | Response>;
+    unblockUser(phoneID: string, ...users: string[]): Promise<ServerUnblockResponse>;
     /**
      * POST helper, must be called inside the post function of your code.
      * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.

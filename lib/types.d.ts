@@ -64,11 +64,6 @@ export type TheBasicConstructorArguments = {
      */
     v?: string;
     /**
-     * Whether to return a pre-processed response from the API or the raw fetch response.
-     * Intended for low level debugging.
-     */
-    parsed?: boolean;
-    /**
      * If set to false, none of the API checks will be performed, and it will be used in a less secure way.
      *
      * Defaults to true.
