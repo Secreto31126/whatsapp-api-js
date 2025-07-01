@@ -22,7 +22,7 @@ import type {
 } from "./messages/index.d.ts";
 import type { AtLeastOne } from "./utils.d.ts";
 
-export const DEFAULT_API_VERSION = "v22.0";
+export const DEFAULT_API_VERSION = "v24.0";
 
 /**
  * The main constructor arguments for the API
