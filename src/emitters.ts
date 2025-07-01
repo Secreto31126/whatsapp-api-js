@@ -45,19 +45,19 @@ export type OnSentArgs = {
      */
     request: ClientMessageRequest;
     /**
-     * The message id, undefined if parsed is set to false
+     * The message id
      */
     id?: string;
     /**
      * If true, the message send was delayed until quality can be validated and it will
-     * either be sent or dropped at this point. Undefined if parsed is set to false or
-     * the message_status property is not present in the response.
+     * either be sent or dropped at this point. Undefined if the message_status property
+     * is not present in the response.
      */
     held_for_quality_assessment?: boolean;
     /**
-     * The parsed response from the server, undefined if parsed is set to false
+     * The response from the server
      */
-    response?: ServerMessageResponse;
+    response: ServerMessageResponse;
     /**
      * Utility function for offloading code from the main thread,
      * useful for long running tasks such as AI generation
