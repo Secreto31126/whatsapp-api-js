@@ -17,9 +17,20 @@ import {
     type ServerMediaUploadResponse,
     type ServerMediaDeleteResponse,
     type ServerBlockResponse,
-    type ServerUnblockResponse
+    type ServerUnblockResponse,
+    type ServerPreacceptCallResponse,
+    type ServerAcceptCallResponse,
+    type ServerTerminateCallResponse,
+    type ServerRejectCallResponse,
+    type ServerInitiateCallResponse
 } from "./types.js";
 import type {
+    OnCallConnect,
+    OnCallConnectArgs,
+    OnCallStatus,
+    OnCallStatusArgs,
+    OnCallTerminate,
+    OnCallTerminateArgs,
     OnMessage,
     OnMessageArgs,
     OnSent,
@@ -79,7 +90,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      */
     private secure: boolean;
     /**
-     * The callbacks for the events (message, sent, status)
+     * The callbacks for the events (message, sent, status, call)
      *
      * @example
      * ```ts
@@ -99,7 +110,14 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         message?: OnMessage<EmittersReturnType>;
         sent?: OnSent;
         status?: OnStatus<EmittersReturnType>;
-    } = {};
+        call: {
+            connect?: OnCallConnect<EmittersReturnType>;
+            terminate?: OnCallTerminate<EmittersReturnType>;
+            status?: OnCallStatus<EmittersReturnType>;
+        };
+    } = {
+        call: {}
+    };
     //#endregion
 
     /**
@@ -446,6 +464,189 @@ export class WhatsAppAPI<EmittersReturnType = void> {
         );
 
         return this.getBody<ServerMarkAsReadResponse>(promise);
+    }
+
+    //#endregion
+
+    //#region Call Operations
+
+    /**
+     * Initiate a call.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
+     *
+     * @param phoneID - The bot's phone ID
+     * @param to - The callee phone number
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
+     * @returns The server response
+     */
+    async initiateCall(
+        phoneID: string,
+        to: string,
+        sdp: string,
+        biz_opaque_callback_data?: string
+    ): Promise<ServerInitiateCallResponse> {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${phoneID}/calls`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    to,
+                    action: "connect",
+                    biz_opaque_callback_data,
+                    session: {
+                        sdp_type: "offer",
+                        sdp
+                    }
+                })
+            }
+        );
+
+        return this.getBody<ServerInitiateCallResponse>(promise);
+    }
+
+    /**
+     * Pre-accept a call, before attempting to open the WebRTC connection.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @returns The server response
+     */
+    async preacceptCall(
+        phoneID: string,
+        callID: `wacid.${string}`,
+        sdp: string
+    ): Promise<ServerPreacceptCallResponse> {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${phoneID}/calls`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    call_id: callID,
+                    action: "pre_accept",
+                    session: {
+                        sdp_type: "offer",
+                        sdp
+                    }
+                })
+            }
+        );
+
+        return this.getBody<ServerPreacceptCallResponse>(promise);
+    }
+
+    /**
+     * Reject a call, before attempting to open the WebRTC connection.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @returns The server response
+     */
+    async rejectCall(
+        phoneID: string,
+        callID: `wacid.${string}`
+    ): Promise<ServerRejectCallResponse> {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${phoneID}/calls`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    call_id: callID,
+                    action: "reject"
+                })
+            }
+        );
+
+        return this.getBody<ServerRejectCallResponse>(promise);
+    }
+
+    /**
+     * Accept a call, after opening the WebRTC connection.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
+     * @returns The server response
+     */
+    async acceptCall(
+        phoneID: string,
+        callID: `wacid.${string}`,
+        sdp: string,
+        biz_opaque_callback_data?: string
+    ): Promise<ServerAcceptCallResponse> {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${phoneID}/calls`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    call_id: callID,
+                    action: "accept",
+                    biz_opaque_callback_data,
+                    session: {
+                        sdp_type: "offer",
+                        sdp
+                    }
+                })
+            }
+        );
+
+        return this.getBody<ServerAcceptCallResponse>(promise);
+    }
+
+    /**
+     * Terminate a call.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @returns The server response
+     */
+    async terminateCall(
+        phoneID: string,
+        callID: `wacid.${string}`
+    ): Promise<ServerTerminateCallResponse> {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${phoneID}/calls`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    call_id: callID,
+                    action: "terminate"
+                })
+            }
+        );
+
+        return this.getBody<ServerTerminateCallResponse>(promise);
     }
 
     //#endregion
@@ -831,8 +1032,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     // #region Webhooks
 
     /**
-     * POST helper, must be called inside the post function of your code.
-     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     * POST helper, must be called inside the post function of your server.
+     * When setting up the webhook, you can subscribe to messages and calls.
+     * Unexpected events will throw an {@link WhatsAppAPIUnexpectedError}.
      *
      * raw_body and signature are required when secure is `true` on initialization (default).
      *
@@ -900,8 +1102,9 @@ export class WhatsAppAPI<EmittersReturnType = void> {
     ): Promise<EmittersReturnType | undefined>;
 
     /**
-     * POST helper, must be called inside the post function of your code.
-     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     * POST helper, must be called inside the post function of your server.
+     * When setting up the webhook, you can subscribe to messages and calls.
+     * Unexpected events will throw an {@link WhatsAppAPIUnexpectedError}.
      *
      * raw_body and signature are NOT required when secure is `false` on initialization.
      *
@@ -938,67 +1141,147 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             throw new WhatsAppAPIUnexpectedError("Invalid payload", 400);
         }
 
-        const value = data.entry[0].changes[0].value;
+        const { field, value } = data.entry[0].changes[0];
         const phoneID = value.metadata.phone_number_id;
 
         // Check if the message is a message or a status update
-        if ("messages" in value) {
-            const message = value.messages[0];
+        if (field === "messages") {
+            if (field in value) {
+                const message = value.messages[0];
 
-            const contact = value.contacts?.[0];
+                const contact = value.contacts?.[0];
 
-            const from = contact?.wa_id ?? message.from;
-            const name = contact?.profile.name;
+                const from = contact?.wa_id ?? message.from;
+                const name = contact?.profile.name;
 
-            const args: OnMessageArgs = {
-                phoneID,
-                from,
-                message,
-                name,
-                raw: data,
-                reply: (response, context = false, biz_opaque_callback_data) =>
-                    this.sendMessage(
+                const args: OnMessageArgs = {
+                    phoneID,
+                    from,
+                    message,
+                    name,
+                    raw: data,
+                    reply: (
+                        response,
+                        context = false,
+                        biz_opaque_callback_data
+                    ) =>
+                        this.sendMessage(
+                            phoneID,
+                            from,
+                            response,
+                            context ? message.id : undefined,
+                            biz_opaque_callback_data
+                        ),
+                    received: (i) => this.markAsRead(phoneID, message.id, i),
+                    block: () => this.blockUser(phoneID, from),
+                    offload: WhatsAppAPI.offload,
+                    Whatsapp: this
+                };
+
+                return this.on?.message?.(args);
+            } else if ("statuses" in value) {
+                const statuses = value.statuses[0];
+
+                const phone = statuses.recipient_id;
+                const status = statuses.status;
+                const id = statuses.id;
+                const timestamp = statuses.timestamp;
+                const conversation = statuses.conversation;
+                const pricing = statuses.pricing;
+                const error = statuses.errors?.[0];
+                const biz_opaque_callback_data =
+                    statuses.biz_opaque_callback_data;
+
+                const args: OnStatusArgs = {
+                    phoneID,
+                    phone,
+                    status,
+                    id,
+                    timestamp,
+                    conversation,
+                    pricing,
+                    error,
+                    biz_opaque_callback_data,
+                    raw: data,
+                    offload: WhatsAppAPI.offload,
+                    Whatsapp: this
+                };
+
+                return this.on?.status?.(args);
+            }
+        } else if (field === "calls") {
+            if (field in value) {
+                const call = value.calls[0];
+
+                const contact = value.contacts?.[0];
+
+                const from = contact?.wa_id ?? call.from;
+                const name = contact?.profile.name;
+
+                if (call.event === "connect") {
+                    const args: OnCallConnectArgs = {
                         phoneID,
                         from,
-                        response,
-                        context ? message.id : undefined,
-                        biz_opaque_callback_data
-                    ),
-                received: (i) => this.markAsRead(phoneID, message.id, i),
-                block: () => this.blockUser(phoneID, from),
-                offload: WhatsAppAPI.offload,
-                Whatsapp: this
-            };
+                        call,
+                        name,
+                        raw: data,
+                        preaccept: () =>
+                            this.preacceptCall(
+                                phoneID,
+                                call.id,
+                                call.session.sdp
+                            ),
+                        accept: (biz_opaque_callback_data) =>
+                            this.acceptCall(
+                                phoneID,
+                                call.id,
+                                call.session.sdp,
+                                biz_opaque_callback_data
+                            ),
+                        reject: () => this.rejectCall(phoneID, call.id),
+                        terminate: () => this.terminateCall(phoneID, call.id),
+                        offload: WhatsAppAPI.offload,
+                        Whatsapp: this
+                    };
 
-            return this.on?.message?.(args);
-        } else if ("statuses" in value) {
-            const statuses = value.statuses[0];
+                    return this.on?.call?.connect?.(args);
+                } else if (call.event === "terminate") {
+                    const args: OnCallTerminateArgs = {
+                        phoneID,
+                        from,
+                        call,
+                        name,
+                        raw: data,
+                        offload: WhatsAppAPI.offload,
+                        Whatsapp: this
+                    };
 
-            const phone = statuses.recipient_id;
-            const status = statuses.status;
-            const id = statuses.id;
-            const timestamp = statuses.timestamp;
-            const conversation = statuses.conversation;
-            const pricing = statuses.pricing;
-            const error = statuses.errors?.[0];
-            const biz_opaque_callback_data = statuses.biz_opaque_callback_data;
+                    return this.on?.call?.terminate?.(args);
+                }
+            } else if ("statuses" in value) {
+                const statuses = value.statuses[0];
 
-            const args: OnStatusArgs = {
-                phoneID,
-                phone,
-                status,
-                id,
-                timestamp,
-                conversation,
-                pricing,
-                error,
-                biz_opaque_callback_data,
-                raw: data,
-                offload: WhatsAppAPI.offload,
-                Whatsapp: this
-            };
+                const phone = statuses.recipient_id;
+                const status = statuses.status;
+                const id = statuses.id;
+                const timestamp = statuses.timestamp;
+                const biz_opaque_callback_data =
+                    statuses.biz_opaque_callback_data;
 
-            return this.on?.status?.(args);
+                const args: OnCallStatusArgs = {
+                    phoneID,
+                    phone,
+                    status,
+                    id,
+                    timestamp,
+                    biz_opaque_callback_data,
+                    raw: data,
+                    offload: WhatsAppAPI.offload,
+                    Whatsapp: this
+                };
+
+                return this.on?.call?.status?.(args);
+            }
         }
 
         // If unknown payload, just ignore it
