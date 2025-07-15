@@ -619,14 +619,12 @@ export type ServerOrderMessage = {
     type: "order";
     order: {
         catalog_id: string;
-        product_items: [
-            {
-                product_retailer_id: string;
-                quantity: string;
-                item_price: string;
-                currency: string;
-            }
-        ];
+        product_items: {
+            product_retailer_id: string;
+            quantity: string;
+            item_price: string;
+            currency: string;
+        }[];
         text?: string;
     };
 };
