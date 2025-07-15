@@ -32,8 +32,7 @@ become mere noops.
 
 ### Bumped API version
 
-The default API version was bumped to `v24.0`, the new one with the
-the realease of the PMP model.
+The default API version was bumped to `v23.0`.
 
 ## 5.0.0
 
