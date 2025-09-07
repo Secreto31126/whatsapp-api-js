@@ -437,43 +437,40 @@ export type ServerContactsMessage = {
         }
     ];
 };
+export type ServerInteractiveButtonMessage = {
+    type: "button_reply";
+    button_reply: {
+        id: string;
+        title: string;
+    };
+};
+export type ServerInteractiveListMessage = {
+    type: "list_reply";
+    list_reply: {
+        id: string;
+        title: string;
+        description?: string;
+    };
+};
+export type ServerInteractiveNFMMessage = {
+    type: "nfm_reply";
+    nfm_reply: {
+        name: "address_message";
+        body?: string;
+        response_json: string;
+    } | {
+        name: "flow";
+        body: "Sent";
+        response_json: string;
+    } | {
+        name?: string;
+        body?: string;
+        response_json: string;
+    };
+};
 export type ServerInteractiveMessage = {
     type: "interactive";
-    interactive: {
-        type: "button_reply";
-        button_reply: {
-            id: string;
-            title: string;
-        };
-        list_reply: never;
-        nfm_reply: never;
-    } | {
-        type: "list_reply";
-        list_reply: {
-            id: string;
-            title: string;
-            description: string;
-        };
-        button_reply: never;
-        nfm_reply: never;
-    } | {
-        type: "nfm_reply";
-        nfm_reply: {
-            name: "address_message";
-            body?: string;
-            response_json: string;
-        } | {
-            name: "flow";
-            body: "Sent";
-            response_json: string;
-        } | {
-            name?: string;
-            body?: string;
-            response_json: string;
-        };
-        button_reply: never;
-        list_reply: never;
-    };
+    interactive: ServerInteractiveButtonMessage | ServerInteractiveListMessage | ServerInteractiveNFMMessage;
 };
 export type ServerButtonMessage = {
     type: "button";
@@ -493,14 +490,12 @@ export type ServerOrderMessage = {
     type: "order";
     order: {
         catalog_id: string;
-        product_items: [
-            {
-                product_retailer_id: string;
-                quantity: string;
-                item_price: string;
-                currency: string;
-            }
-        ];
+        product_items: {
+            product_retailer_id: string;
+            quantity: string;
+            item_price: string;
+            currency: string;
+        }[];
         text?: string;
     };
 };
