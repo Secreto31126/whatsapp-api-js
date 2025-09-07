@@ -988,3 +988,53 @@ export class LTOComponent implements TemplateComponent {
         return this;
     }
 }
+
+/**
+ * Components API object
+ *
+ * @group Template
+ */
+export class TapTargetComponent implements TemplateComponent {
+    /**
+     * The type of the component
+     */
+    readonly type = "tap_target_configuration";
+    /**
+     * The parameters of the component
+     */
+    readonly parameters: [
+        {
+            type: "tap_target_configuration";
+            tap_target_configuration: {
+                url: string;
+                title: string;
+            };
+        }
+    ];
+
+    /**
+     * Builds a tap target configuration component for a Template message
+     *
+     * @param url - The URL to open when the user taps the target
+     * @param title - The title of the tap target
+     */
+    constructor(url: string, title: string) {
+        this.parameters = [
+            {
+                type: "tap_target_configuration",
+                tap_target_configuration: {
+                    url,
+                    title
+                }
+            }
+        ];
+    }
+
+    /**
+     * @override
+     * @internal
+     */
+    _build(): this {
+        return this;
+    }
+}

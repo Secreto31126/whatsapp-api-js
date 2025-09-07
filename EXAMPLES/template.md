@@ -264,6 +264,18 @@ const template_limited_time_offer_message = new Template(
 );
 ```
 
+## Complex template with Tap Target component
+
+```ts
+import { Template, TapTargetComponent } from "whatsapp-api-js/messages";
+
+const template_tap_target_message = new Template(
+    "template_name",
+    "en",
+    new TapTargetComponent("https://example.com", "Tap to rate us!")
+);
+```
+
 ## OTP prefab template
 
 ```ts
