@@ -596,6 +596,7 @@ export type ServerInteractiveCallPermissionMessage = {
     type: "call_permission_reply";
     call_permission_reply: {
         response: "accept" | "reject";
+        is_permanent: false;
         expiration_timestamp: number;
         response_source: "user_action" | "automatic";
     };
