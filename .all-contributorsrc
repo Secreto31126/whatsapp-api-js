@@ -9,18 +9,11 @@
     "commitConvention": "eslint",
     "contributors": [
         {
-            "login": "DiegoCarrillogt",
-            "name": "Diego Carrillo",
-            "avatar_url": "https://avatars.githubusercontent.com/u/29462621?v=4",
-            "profile": "https://github.com/DiegoCarrillogt",
-            "contributions": ["financial"]
-        },
-        {
             "login": "HysMX",
             "name": "Omar",
             "avatar_url": "https://avatars.githubusercontent.com/u/50180189?v=4",
             "profile": "https://github.com/HysMX",
-            "contributions": ["bug", "financial"]
+            "contributions": ["bug"]
         },
         {
             "login": "RahulLanjewar93",
