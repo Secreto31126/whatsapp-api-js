@@ -475,6 +475,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param to - The callee phone number
      * @param sdp - The SDP invitation string (RFC 8866)
@@ -515,6 +516,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param callID - The call ID
      * @param sdp - The SDP invitation string (RFC 8866)
@@ -552,6 +554,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param callID - The call ID
      * @returns The server response
@@ -583,6 +586,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param callID - The call ID
      * @param sdp - The SDP invitation string (RFC 8866)
@@ -623,6 +627,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param callID - The call ID
      * @returns The server response
