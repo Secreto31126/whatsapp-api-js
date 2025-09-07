@@ -955,7 +955,7 @@ export class ActionFlow implements InteractiveAction {
     /**
      * Builds a flow component for an Interactive message
      *
-     * @note flow_message_version defaults to "3"
+     * @remarks flow_message_version defaults to "3"
      *
      * @param parameters - The Flow parameters
      * @throws If parameters.flow_cta is empty or over 20 characters
