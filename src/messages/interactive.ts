@@ -268,7 +268,7 @@ export class Interactive extends ClientMessage {
      *         mode: "published",
      *         flow_action: "data_exchange",
      *     }),
-     *     new Body("Hello World")                                          ```
+     *     new Body("Hello World")
      * );
      * ```
      * @param action - The action for the interactive message
