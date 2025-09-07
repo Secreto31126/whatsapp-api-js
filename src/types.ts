@@ -338,6 +338,28 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface TemplateComponent extends ClientBuildableMessageComponent {}
 
+export class TemplateNamedParameter {
+    /**
+     * The name of the parameter, optional if using number variables
+     */
+    readonly parameter_name?: string;
+
+    /**
+     * @param parameter_name - The name of the parameter
+     * @throws If parameter_name is over 20 characters or contains characters other than lowercase a-z and _
+     */
+    constructor(parameter_name?: string) {
+        if (!parameter_name) return;
+
+        if (!/^[a-z_]{1,20}$/.test(parameter_name))
+            throw new Error(
+                "parameter_name can't be over 20 characters long and must contain only lowercase a-z and _"
+            );
+
+        this.parameter_name = parameter_name;
+    }
+}
+
 export type ClientMessageNames =
     | "text"
     | "audio"

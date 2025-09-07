@@ -1,6 +1,7 @@
 import {
     ClientMessage,
     ClientLimitedMessageComponent,
+    TemplateNamedParameter,
     type ClientBuildableMessageComponent,
     type ClientTypedMessageComponent,
     type TemplateComponent
@@ -55,6 +56,7 @@ export type ButtonParameter = {
 type BuildingPointers = {
     theres_only_body: boolean;
     button_counter: number;
+    variables_type?: "number" | "name";
 };
 
 /**
@@ -118,6 +120,7 @@ export class Template extends ClientMessage {
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
+     * @throws If there's inconsistent use of named and numbered parameters in {@link HeaderComponent} and {@link BodyComponent}.
      * @throws If the template isn't text-based (only one {@link BodyComponent} is given) and one of the parameters is a string and it's over 1024 characters.
      */
     constructor(
@@ -641,8 +644,22 @@ export class HeaderComponent implements TemplateComponent {
     /**
      * @override
      * @internal
+     * @throws If there's inconsistent use of named and numbered parameters in Template components
      */
-    _build(): this {
+    _build(data: BuildingPointers): this {
+        if (!data.variables_type) {
+            data.variables_type = this.parameters[0].parameter_name
+                ? "name"
+                : "number";
+        }
+
+        const var_type = data.variables_type === "name";
+        if (!this.parameters.every((p) => !!p.parameter_name === var_type)) {
+            throw new Error(
+                "Inconsistent use of named and numbered parameters in Template components"
+            );
+        }
+
         return this;
     }
 }
@@ -652,7 +669,7 @@ export class HeaderComponent implements TemplateComponent {
  *
  * @group Template
  */
-export class HeaderParameter {
+export class HeaderParameter extends TemplateNamedParameter {
     /**
      * The type of the parameter
      */
@@ -703,10 +720,13 @@ export class HeaderParameter {
      * For text parameter, the character limit is 60.
      * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
      * For Location parameter, the location must have a name and address.
+     * Both Header and Body components must use the same type of variables, either named or numbered.
      *
      * @param parameter - The parameter to be used in the template's header
+     * @param parameter_name - Name of the parameter, optional if using numbered variables
      * @throws If parameter is a string and it's over 60 characters
      * @throws If parameter is a Location and it doesn't have a name and address
+     * @throws If parameter_name is over 20 characters long or contains invalid characters (only lowercase a-z and _ are allowed)
      */
     constructor(
         parameter:
@@ -717,8 +737,11 @@ export class HeaderParameter {
             | Document
             | Video
             | Location
-            | CatalogProduct
+            | CatalogProduct,
+        parameter_name?: string
     ) {
+        super(parameter_name);
+
         if (typeof parameter === "string") {
             if (parameter.length > 60)
                 throw new Error("Header text must be 60 characters or less");
@@ -770,11 +793,25 @@ export class BodyComponent implements TemplateComponent {
     /**
      * @override
      * @internal
+     * @throws If there's inconsistent use of named and numbered parameters in Template components
      * @throws If theres_only_body is false and one of the parameters is a string and it's over 1024 characters
      */
-    _build({ theres_only_body }: BuildingPointers): this {
+    _build(data: BuildingPointers): this {
+        if (!data.variables_type) {
+            data.variables_type = this.parameters[0].parameter_name
+                ? "name"
+                : "number";
+        }
+
+        const var_type = data.variables_type === "name";
+        if (!this.parameters.every((p) => !!p.parameter_name === var_type)) {
+            throw new Error(
+                "Inconsistent use of named and numbered parameters in Template components"
+            );
+        }
+
         // If it needs to check for the shorter max text length
-        if (!theres_only_body) {
+        if (!data.theres_only_body) {
             for (const param of this.parameters) {
                 if (param.text && param.text?.length > 1024) {
                     throw new Error(
@@ -793,7 +830,7 @@ export class BodyComponent implements TemplateComponent {
  *
  * @group Template
  */
-export class BodyParameter {
+export class BodyParameter extends TemplateNamedParameter {
     /**
      * The type of the parameter
      */
@@ -814,13 +851,21 @@ export class BodyParameter {
     /**
      * Builds a parameter object for a BodyComponent.
      * For text parameter, the character limit is 32768 if only one BodyComponent is used for the Template, else it's 1024.
+     * Both Header and Body components must use the same type of variables, either named or numbered.
      *
      * @param parameter - The parameter to be used in the template
+     * @param parameter_name - Name of the parameter, optional if using numbered variables
      * @throws If parameter is a string and it's over 32768 characters
      * @throws If parameter is a string, there are other components in the Template and it's over 1024 characters
+     * @throws If parameter_name is over 20 characters long or contains invalid characters (only lowercase a-z and _ are allowed)
      * @see {@link BodyComponent._build} The method that checks the 1024 character limit
      */
-    constructor(parameter: string | Currency | DateTime) {
+    constructor(
+        parameter: string | Currency | DateTime,
+        parameter_name?: string
+    ) {
+        super(parameter_name);
+
         if (typeof parameter === "string") {
             // Check the upper limit of the string length here
             // If a shorter one is needed, check and throw an
