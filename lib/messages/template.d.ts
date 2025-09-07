@@ -1,4 +1,4 @@
-import { ClientMessage, ClientLimitedMessageComponent, type ClientBuildableMessageComponent, type ClientTypedMessageComponent, type TemplateComponent } from "../types.js";
+import { ClientMessage, ClientLimitedMessageComponent, TemplateNamedParameter, type ClientBuildableMessageComponent, type ClientTypedMessageComponent, type TemplateComponent } from "../types.js";
 import type { AtLeastOne, XOR } from "../utils.d.ts";
 import type { Location } from "./location.d.ts";
 import type { Document, Image, Video } from "./media.d.ts";
@@ -42,6 +42,7 @@ export type ButtonParameter = {
 type BuildingPointers = {
     theres_only_body: boolean;
     button_counter: number;
+    variables_type?: "number" | "name";
 };
 /**
  * Template API object
@@ -100,6 +101,7 @@ export declare class Template extends ClientMessage {
      * @param name - Name of the template
      * @param language - The code of the language or locale to use. Accepts both language and language_locale formats (e.g., en and en_US).
      * @param components - Components objects containing the parameters of the message. For text-based templates, the only supported component is {@link BodyComponent}.
+     * @throws If there's inconsistent use of named and numbered parameters in {@link HeaderComponent} and {@link BodyComponent}.
      * @throws If the template isn't text-based (only one {@link BodyComponent} is given) and one of the parameters is a string and it's over 1024 characters.
      */
     constructor(name: string, language: string | Language, ...components: TemplateComponent[]);
@@ -389,15 +391,16 @@ export declare class HeaderComponent implements TemplateComponent {
     /**
      * @override
      * @internal
+     * @throws If there's inconsistent use of named and numbered parameters in Template components
      */
-    _build(): this;
+    _build(data: BuildingPointers): this;
 }
 /**
  * Parameter API object
  *
  * @group Template
  */
-export declare class HeaderParameter {
+export declare class HeaderParameter extends TemplateNamedParameter {
     /**
      * The type of the parameter
      */
@@ -439,12 +442,15 @@ export declare class HeaderParameter {
      * For text parameter, the character limit is 60.
      * For Document parameter, only PDF documents are supported for document-based message templates (not checked).
      * For Location parameter, the location must have a name and address.
+     * Both Header and Body components must use the same type of variables, either named or numbered.
      *
      * @param parameter - The parameter to be used in the template's header
+     * @param parameter_name - Name of the parameter, optional if using numbered variables
      * @throws If parameter is a string and it's over 60 characters
      * @throws If parameter is a Location and it doesn't have a name and address
+     * @throws If parameter_name is over 20 characters long or contains invalid characters (only lowercase a-z and _ are allowed)
      */
-    constructor(parameter: string | Currency | DateTime | Image | Document | Video | Location | CatalogProduct);
+    constructor(parameter: string | Currency | DateTime | Image | Document | Video | Location | CatalogProduct, parameter_name?: string);
 }
 /**
  * Components API object
@@ -469,16 +475,17 @@ export declare class BodyComponent implements TemplateComponent {
     /**
      * @override
      * @internal
+     * @throws If there's inconsistent use of named and numbered parameters in Template components
      * @throws If theres_only_body is false and one of the parameters is a string and it's over 1024 characters
      */
-    _build({ theres_only_body }: BuildingPointers): this;
+    _build(data: BuildingPointers): this;
 }
 /**
  * Parameter API object
  *
  * @group Template
  */
-export declare class BodyParameter {
+export declare class BodyParameter extends TemplateNamedParameter {
     /**
      * The type of the parameter
      */
@@ -498,13 +505,16 @@ export declare class BodyParameter {
     /**
      * Builds a parameter object for a BodyComponent.
      * For text parameter, the character limit is 32768 if only one BodyComponent is used for the Template, else it's 1024.
+     * Both Header and Body components must use the same type of variables, either named or numbered.
      *
      * @param parameter - The parameter to be used in the template
+     * @param parameter_name - Name of the parameter, optional if using numbered variables
      * @throws If parameter is a string and it's over 32768 characters
      * @throws If parameter is a string, there are other components in the Template and it's over 1024 characters
+     * @throws If parameter_name is over 20 characters long or contains invalid characters (only lowercase a-z and _ are allowed)
      * @see {@link BodyComponent._build} The method that checks the 1024 character limit
      */
-    constructor(parameter: string | Currency | DateTime);
+    constructor(parameter: string | Currency | DateTime, parameter_name?: string);
 }
 /**
  * Components API object

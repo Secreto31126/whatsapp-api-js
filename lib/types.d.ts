@@ -258,6 +258,17 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
 }
 export interface TemplateComponent extends ClientBuildableMessageComponent {
 }
+export declare class TemplateNamedParameter {
+    /**
+     * The name of the parameter, optional if using number variables
+     */
+    readonly parameter_name?: string;
+    /**
+     * @param parameter_name - The name of the parameter
+     * @throws If parameter_name is over 20 characters or contains characters other than lowercase a-z and _
+     */
+    constructor(parameter_name?: string);
+}
 export type ClientMessageNames = "text" | "audio" | "document" | "image" | "sticker" | "video" | "location" | "contacts" | "interactive" | "template" | "reaction";
 export type ClientTypingIndicators = "text";
 export type ClientMessageRequest = {
