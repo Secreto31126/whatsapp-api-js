@@ -59,4 +59,5 @@ the most basic methods or features.
     - [Complex template with Carousel](template.md#complex-template-with-carousel)
     - [Complex template with Product Carousel](template.md#complex-template-with-product-carousel)
     - [Complex template with Limited-Time Offer](template.md#complex-template-with-limited-time-offer)
+    - [Complex template with Tap Target component](template.md#complex-template-with-tap-target-component)
     - [OTP prefab template](template.md#otp-prefab-template)
