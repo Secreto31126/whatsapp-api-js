@@ -151,6 +151,21 @@ const interactive_catalog_message = new Interactive(
 );
 ```
 
+## Call Permission Request
+
+```ts
+import {
+    Interactive,
+    ActionCallPermission,
+    Body
+} from "whatsapp-api-js/messages";
+
+const interactive_call_permission_message = new Interactive(
+    new ActionCallPermission(),
+    new Body("Can we call you?")
+);
+```
+
 ## Payments and Address Request
 
 Check out [#154](https://github.com/Secreto31126/whatsapp-api-js/issues/154) for more information.
@@ -167,3 +182,4 @@ https://whatsappapijs.web.app/classes/messages.ActionCTA.html
 https://whatsappapijs.web.app/classes/messages.ActionNavigateFlow.html
 https://whatsappapijs.web.app/classes/messages.ActionDataExchangeFlow.html
 https://whatsappapijs.web.app/classes/messages.ActionLocation.html
+https://whatsappapijs.web.app/classes/messages.ActionCallPermission.html
