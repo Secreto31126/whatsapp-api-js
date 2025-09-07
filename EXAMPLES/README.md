@@ -47,6 +47,7 @@ the most basic methods or features.
 - [Templates](templates.md)
     - [Simple template with no variables](template.md#simple-template-with-no-variables)
     - [Simple template with simple variables in header and body](template.md#simple-template-with-simple-variables-in-header-and-body)
+    - [Simple template with named variables in header and body](template.md#simple-template-with-named-variables-in-header-and-body)
     - [Simple template with header media](template.md#simple-template-with-header-media)
     - [Complex template with reply buttons](template.md#complex-template-with-reply-buttons)
     - [Complex template with call to action url](template.md#complex-template-with-call-to-action-url)

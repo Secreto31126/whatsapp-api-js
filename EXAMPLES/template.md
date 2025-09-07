@@ -37,6 +37,33 @@ const template_variables_message = new Template(
 );
 ```
 
+## Simple template with named variables in header and body
+
+```ts
+import {
+    Template,
+    HeaderComponent,
+    HeaderParameter,
+    BodyComponent,
+    BodyParameter,
+    Currency,
+    DateTime
+} from "whatsapp-api-js/messages";
+
+const template_variables_message = new Template(
+    "template_name",
+    "en",
+    new HeaderComponent(
+        new HeaderParameter("1234", "delivery_id"),
+        new HeaderParameter(new DateTime("07/09/2025"), "date")
+    ),
+    new BodyComponent(
+        new BodyParameter("User", "name"),
+        new BodyParameter(new Currency(1.5 * 1000, "USD", "U$1.5"), "cost")
+    )
+);
+```
+
 ## Simple template with header media
 
 ```ts
