@@ -11,7 +11,7 @@ export interface API {
      *
      * @param phoneID - The bot's phone ID
      * @param message - The quick message on the QR code
-     * @param format - The format of the QR code, default is "png"
+     * @param format - The format of the QR code
      * @returns The server response
      */
     createQR(

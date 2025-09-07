@@ -83,7 +83,6 @@ export interface API {
      * @param check - Wether the FormData should be checked before uploading.
      * The FormData must have the method .get("name") to work with the checks.
      * If it doesn't (for example, using the module "form-data"), set this to false.
-     * Defaults to true.
      * @returns The server response
      * @throws If check is set to true and form is not a FormData
      * @throws If check is set to true and the form doesn't have valid required properties (file, type)
