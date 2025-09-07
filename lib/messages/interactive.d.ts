@@ -225,7 +225,7 @@ export declare class Interactive extends ClientMessage {
      *         mode: "published",
      *         flow_action: "data_exchange",
      *     }),
-     *     new Body("Hello World")                                          ```
+     *     new Body("Hello World")
      * );
      * ```
      * @param action - The action for the interactive message
@@ -687,7 +687,7 @@ export declare class ActionFlow implements InteractiveAction {
     /**
      * Builds a flow component for an Interactive message
      *
-     * @note flow_message_version defaults to "3"
+     * @remarks flow_message_version defaults to "3"
      *
      * @param parameters - The Flow parameters
      * @throws If parameters.flow_cta is empty or over 20 characters

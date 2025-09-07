@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/apis/index.ts"],
+  "sourcesContent": ["/**\n * @module apis\n *\n * @description\n * The definitions of the WhatsApp Cloud API methods\n * that are implemented by the {@link WhatsAppAPI} class.\n */\n\nexport * as Message from \"./message.js\";\nexport * as Call from \"./call.js\";\nexport * as QR from \"./qr.js\";\nexport * as Media from \"./media.js\";\nexport * as Block from \"./block.js\";\nexport * as Webhook from \"./webhook.js\";\n"],
+  "mappings": "AAQA,YAAY,aAAa;AACzB,YAAY,UAAU;AACtB,YAAY,QAAQ;AACpB,YAAY,WAAW;AACvB,YAAY,WAAW;AACvB,YAAY,aAAa;",
+  "names": []
+}

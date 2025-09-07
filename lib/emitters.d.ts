@@ -228,7 +228,7 @@ export type OnCallConnectArgs = {
     reject: () => ReturnType<WhatsAppAPI["rejectCall"]>;
     /**
      * A method to easily accept the call after the WebRTC connection.
-     * It's strongly recommended to call {@link OnCallArgs.preaccept} first
+     * It's strongly recommended to call {@link OnCallConnectArgs.preaccept} first
      *
      * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking
      * @returns The {@link WhatsAppAPI.acceptCall} return value
