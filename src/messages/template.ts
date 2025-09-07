@@ -1015,16 +1015,16 @@ export class TapTargetComponent implements TemplateComponent {
     /**
      * Builds a tap target configuration component for a Template message
      *
-     * @param url - The URL to open when the user taps the target
      * @param title - The title of the tap target
+     * @param url - The URL to open when the user taps the target
      */
-    constructor(url: string, title: string) {
+    constructor(title: string, url: string) {
         this.parameters = [
             {
                 type: "tap_target_configuration",
                 tap_target_configuration: {
-                    url,
-                    title
+                    title,
+                    url
                 }
             }
         ];
