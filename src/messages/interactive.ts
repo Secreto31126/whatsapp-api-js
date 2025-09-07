@@ -300,6 +300,23 @@ export class Interactive extends ClientMessage {
      * @param body - The body of the interactive message
      */
     constructor(action: ActionLocation, body: Body);
+    /**
+     * Creates an Interactive Call Permission request object for the API
+     *
+     * @example
+     * ```ts
+     * import { Interactive, ActionCallPermission, Body } from "whatsapp-api-js/messages";
+     *
+     * const interactive_call_permission_message = new Interactive(
+     *     new ActionCallPermission(),
+     *     new Body("Can we call you?")
+     * );
+     * ```
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body of the interactive message
+     */
+    constructor(action: ActionCallPermission, body: Body);
 
     /**
      * Create an Interactive object for the API
@@ -1068,5 +1085,25 @@ export class ActionLocation implements InteractiveAction {
      */
     get _type(): "location_request_message" {
         return "location_request_message";
+    }
+}
+
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export class ActionCallPermission implements InteractiveAction {
+    /**
+     * The name of the component
+     */
+    readonly name = "call_permission_request";
+
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "call_permission_request" {
+        return "call_permission_request";
     }
 }
