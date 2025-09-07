@@ -999,7 +999,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             }
         );
 
-        return this.getBody(promise);
+        return this.getBody<ServerBlockResponse>(promise);
     }
 
     /**
@@ -1029,7 +1029,7 @@ export class WhatsAppAPI<EmittersReturnType = void> {
             }
         );
 
-        return this.getBody(promise);
+        return this.getBody<ServerUnblockResponse>(promise);
     }
 
     // #endregion
