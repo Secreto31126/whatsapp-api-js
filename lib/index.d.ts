@@ -1,6 +1,6 @@
 /** @module WhatsAppAPI */
-import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse } from "./types.js";
-import type { OnMessage, OnSent, OnStatus } from "./emitters.d.ts";
+import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse, type ServerPreacceptCallResponse, type ServerAcceptCallResponse, type ServerTerminateCallResponse, type ServerRejectCallResponse, type ServerInitiateCallResponse } from "./types.js";
+import type { OnCallConnect, OnCallStatus, OnCallTerminate, OnMessage, OnSent, OnStatus } from "./emitters.d.ts";
 /**
  * The main API Class
  *
@@ -37,7 +37,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     private secure;
     /**
-     * The callbacks for the events (message, sent, status)
+     * The callbacks for the events (message, sent, status, call)
      *
      * @example
      * ```ts
@@ -57,6 +57,11 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
         message?: OnMessage<EmittersReturnType>;
         sent?: OnSent;
         status?: OnStatus<EmittersReturnType>;
+        call: {
+            connect?: OnCallConnect<EmittersReturnType>;
+            terminate?: OnCallTerminate<EmittersReturnType>;
+            status?: OnCallStatus<EmittersReturnType>;
+        };
     };
     /**
      * Main entry point for the API.
@@ -197,6 +202,66 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      * @returns The server response
      */
     markAsRead(phoneID: string, messageId: string, indicator?: ClientTypingIndicators): Promise<ServerMarkAsReadResponse>;
+    /**
+     * Initiate a call.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param to - The callee phone number
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
+     * @returns The server response
+     */
+    initiateCall(phoneID: string, to: string, sdp: string, biz_opaque_callback_data?: string): Promise<ServerInitiateCallResponse>;
+    /**
+     * Pre-accept a call, before attempting to open the WebRTC connection.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @returns The server response
+     */
+    preacceptCall(phoneID: string, callID: `wacid.${string}`, sdp: string): Promise<ServerPreacceptCallResponse>;
+    /**
+     * Reject a call, before attempting to open the WebRTC connection.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @returns The server response
+     */
+    rejectCall(phoneID: string, callID: `wacid.${string}`): Promise<ServerRejectCallResponse>;
+    /**
+     * Accept a call, after opening the WebRTC connection.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
+     * @returns The server response
+     */
+    acceptCall(phoneID: string, callID: `wacid.${string}`, sdp: string, biz_opaque_callback_data?: string): Promise<ServerAcceptCallResponse>;
+    /**
+     * Terminate a call.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/user-initiated-calls
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param callID - The call ID
+     * @returns The server response
+     */
+    terminateCall(phoneID: string, callID: `wacid.${string}`): Promise<ServerTerminateCallResponse>;
     /**
      * Generate a QR code for sharing the bot
      *
@@ -359,8 +424,9 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     unblockUser(phoneID: string, ...users: string[]): Promise<ServerUnblockResponse>;
     /**
-     * POST helper, must be called inside the post function of your code.
-     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     * POST helper, must be called inside the post function of your server.
+     * When setting up the webhook, you can subscribe to messages and calls.
+     * Unexpected events will throw an {@link WhatsAppAPIUnexpectedError}.
      *
      * raw_body and signature are required when secure is `true` on initialization (default).
      *
@@ -423,8 +489,9 @@ export declare class WhatsAppAPI<EmittersReturnType = void> {
      */
     post(data: PostData, raw_body: string, signature: string): Promise<EmittersReturnType | undefined>;
     /**
-     * POST helper, must be called inside the post function of your code.
-     * When setting up the webhook, only subscribe to messages. Other subscritions support might be added later.
+     * POST helper, must be called inside the post function of your server.
+     * When setting up the webhook, you can subscribe to messages and calls.
+     * Unexpected events will throw an {@link WhatsAppAPIUnexpectedError}.
      *
      * raw_body and signature are NOT required when secure is `false` on initialization.
      *

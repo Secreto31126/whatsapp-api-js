@@ -1,4 +1,4 @@
-import type { ClientMessage, ClientMessageRequest, ClientTypingIndicators, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, PostData } from "./types.d.ts";
+import type { ClientMessage, ClientMessageRequest, ClientTypingIndicators, ServerMessage, ServerMessageResponse, ServerConversation, ServerPricing, ServerError, ServerCallConnect, ServerCallTerminate, PostData } from "./types.d.ts";
 import type { WhatsAppAPI } from "./index.d.ts";
 import type { MaybePromise } from "./utils.d.ts";
 /**
@@ -164,6 +164,170 @@ export type OnStatusArgs = {
      * The error object
      */
     error?: ServerError;
+    /**
+     * Arbitrary string included in sent messages
+     */
+    biz_opaque_callback_data?: string;
+    /**
+     * The raw data from the API
+     */
+    raw: PostData;
+    /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: InstanceType<typeof WhatsAppAPI>;
+};
+/**
+ * Callback for "call connect" event
+ *
+ * @public
+ * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
+ * @param args - The arguments object
+ */
+export type OnCallConnect<Returns> = (args: OnCallConnectArgs) => MaybePromise<Returns>;
+/**
+ * @public
+ */
+export type OnCallConnectArgs = {
+    /**
+     * The bot's phoneID
+     */
+    phoneID: string;
+    /**
+     * The user's phone number
+     */
+    from: string;
+    /**
+     * The connection call object
+     */
+    call: ServerCallConnect;
+    /**
+     * The username
+     */
+    name?: string;
+    /**
+     * The raw data from the API
+     */
+    raw: PostData;
+    /**
+     * A method to easily preaccept the call, before establishing the WebRTC connection.
+     *
+     * @returns The {@link WhatsAppAPI.preacceptCall} return value
+     */
+    preaccept: () => ReturnType<WhatsAppAPI["preacceptCall"]>;
+    /**
+     * A method to easily reject the call, before establishing the WebRTC connection.
+     *
+     * @returns The {@link WhatsAppAPI.rejectCall} return value
+     */
+    reject: () => ReturnType<WhatsAppAPI["rejectCall"]>;
+    /**
+     * A method to easily accept the call after the WebRTC connection.
+     * It's strongly recommended to call {@link OnCallArgs.preaccept} first
+     *
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking
+     * @returns The {@link WhatsAppAPI.acceptCall} return value
+     */
+    accept: (biz_opaque_callback_data?: string) => ReturnType<WhatsAppAPI["acceptCall"]>;
+    /**
+     * A method to easily terminate the call, after establishing the WebRTC connection.
+     *
+     * @remarks This shouldn't be used within the OnCall callback, unless you expect your
+     * calls to be super short, wants to lock the main loop, or will pass the function as
+     * a callback to another method.
+     *
+     * @returns The {@link WhatsAppAPI.rejectCall} return value
+     */
+    terminate: () => ReturnType<WhatsAppAPI["rejectCall"]>;
+    /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: InstanceType<typeof WhatsAppAPI>;
+};
+/**
+ * Callback for "call terminate" event
+ *
+ * @public
+ * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
+ * @param args - The arguments object
+ */
+export type OnCallTerminate<Returns> = (args: OnCallTerminateArgs) => MaybePromise<Returns>;
+/**
+ * @public
+ */
+export type OnCallTerminateArgs = {
+    /**
+     * The bot's phoneID
+     */
+    phoneID: string;
+    /**
+     * The user's phone number
+     */
+    from: string;
+    /**
+     * The terminated call object
+     */
+    call: ServerCallTerminate;
+    /**
+     * The username
+     */
+    name?: string;
+    /**
+     * The raw data from the API
+     */
+    raw: PostData;
+    /**
+     * Utility function for offloading code from the main thread,
+     * useful for long running tasks such as AI generation
+     */
+    offload: typeof WhatsAppAPI.offload;
+    /**
+     * The WhatsAppAPI instance that emitted the event
+     */
+    Whatsapp: InstanceType<typeof WhatsAppAPI>;
+};
+/**
+ * Callback for "call status" event, triggered while initiating a call
+ *
+ * @public
+ * @template Returns - The return type of the callback, defined by WhatsAppAPI generic parameter
+ * @param args - The arguments object
+ */
+export type OnCallStatus<Returns> = (args: OnCallStatusArgs) => MaybePromise<Returns>;
+/**
+ * @public
+ */
+export type OnCallStatusArgs = {
+    /**
+     * The bot's phoneID
+     */
+    phoneID: string;
+    /**
+     * The user's phone number
+     */
+    phone: string;
+    /**
+     * The call status
+     */
+    status: "RINGING" | "ACCEPTED" | "REJECTED";
+    /**
+     * The call ID
+     */
+    id: `wacid.${string}`;
+    /**
+     * The call timestamp
+     */
+    timestamp: string;
     /**
      * Arbitrary string included in sent messages
      */

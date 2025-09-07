@@ -254,7 +254,7 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
      * @overload
      * @internal
      */
-    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message";
+    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message" | "call_permission_request";
 }
 export interface TemplateComponent extends ClientBuildableMessageComponent {
 }
@@ -468,9 +468,18 @@ export type ServerInteractiveNFMMessage = {
         response_json: string;
     };
 };
+export type ServerInteractiveCallPermissionMessage = {
+    type: "call_permission_reply";
+    call_permission_reply: {
+        response: "accept" | "reject";
+        is_permanent: false;
+        expiration_timestamp: number;
+        response_source: "user_action" | "automatic";
+    };
+};
 export type ServerInteractiveMessage = {
     type: "interactive";
-    interactive: ServerInteractiveButtonMessage | ServerInteractiveListMessage | ServerInteractiveNFMMessage;
+    interactive: ServerInteractiveButtonMessage | ServerInteractiveListMessage | ServerInteractiveNFMMessage | ServerInteractiveCallPermissionMessage;
 };
 export type ServerButtonMessage = {
     type: "button";
@@ -569,6 +578,28 @@ export type ServerMessage = {
         thumbnail_url: string;
     });
 } & ServerMessageTypes;
+export type ServerCall = {
+    id: `wacid.${string}`;
+    from: string;
+    to: string;
+    timestamp: `${number}`;
+    direction: "USER_INITIATED" | "BUSINESS_INITIATED";
+};
+export type ServerCallConnect = ServerCall & {
+    event: "connect";
+    session: {
+        sdp_type: "offer";
+        sdp: string;
+    };
+};
+export type ServerCallTerminate = ServerCall & {
+    event: "terminate";
+    status: "COMPLETED" | "FAILED";
+    biz_opaque_callback_data: string;
+    start_time?: `${number}`;
+    end_time?: `${number}`;
+    duration?: number;
+};
 export type ServerContacts = {
     profile: {
         name?: string;
@@ -606,41 +637,62 @@ export type GetParams = {
     "hub.verify_token": string;
     "hub.challenge": string;
 };
+export type PostDataMessageField = {
+    field: "messages";
+    value: {
+        contacts?: [ServerContacts];
+        messages: [ServerMessage];
+    } | {
+        statuses: [
+            {
+                id: string;
+                status: ServerStatus;
+                timestamp: string;
+                recipient_id: string;
+                biz_opaque_callback_data?: string;
+            } & ({
+                conversation?: ServerConversation;
+                pricing: ServerPricing;
+                errors: undefined;
+            } | {
+                conversation: undefined;
+                pricing: undefined;
+                errors: [ServerError];
+            })
+        ];
+    };
+};
+export type PostDataCallField = {
+    field: "calls";
+    value: {
+        contacts: [ServerContacts];
+        calls: [ServerCallConnect | ServerCallTerminate];
+    } | {
+        statuses: [
+            {
+                id: `wacid.${string}`;
+                status: "RINGING" | "ACCEPTED" | "REJECTED";
+                timestamp: `${number}`;
+                recipient_id: string;
+                biz_opaque_callback_data?: string;
+                type: "call";
+            }
+        ];
+    };
+};
 export type PostData = {
     object: "whatsapp_business_account";
     entry: {
         id: string;
-        changes: {
+        changes: ({
             value: {
                 messaging_product: "whatsapp";
                 metadata: {
                     display_phone_number: string;
                     phone_number_id: string;
                 };
-            } & ({
-                contacts?: [ServerContacts];
-                messages: [ServerMessage];
-            } | {
-                statuses: [
-                    {
-                        id: string;
-                        status: ServerStatus;
-                        timestamp: string;
-                        recipient_id: string;
-                        biz_opaque_callback_data?: string;
-                    } & ({
-                        conversation?: ServerConversation;
-                        pricing: ServerPricing;
-                        errors: undefined;
-                    } | {
-                        conversation: undefined;
-                        pricing: undefined;
-                        errors: [ServerError];
-                    })
-                ];
-            });
-            field: "messages";
-        }[];
+            };
+        } & (PostDataMessageField | PostDataCallField))[];
     }[];
 };
 /**
@@ -682,6 +734,24 @@ export type ServerSentMessageResponse = {
 };
 export type ServerMessageResponse = (ServerSentMessageResponse & NoServerError) | ServerErrorResponse;
 export type ServerMarkAsReadResponse = ServerSuccessResponse | ServerErrorResponse;
+export type ServerInitiateCallResponse = {
+    messaging_product: "whatsapp";
+    calls: [{
+        id: `wacid.${string}`;
+    }];
+} | ServerErrorResponse;
+export type ServerPreacceptCallResponse = (ServerSuccessResponse & {
+    messaging_product: "whatsapp";
+}) | ServerErrorResponse;
+export type ServerRejectCallResponse = (ServerSuccessResponse & {
+    messaging_product: "whatsapp";
+}) | ServerErrorResponse;
+export type ServerAcceptCallResponse = (ServerSuccessResponse & {
+    messaging_product: "whatsapp";
+}) | ServerErrorResponse;
+export type ServerTerminateCallResponse = (ServerSuccessResponse & {
+    messaging_product: "whatsapp";
+}) | ServerErrorResponse;
 export type ServerQR = {
     code: string;
     prefilled_message: string;
