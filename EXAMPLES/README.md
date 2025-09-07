@@ -36,6 +36,7 @@ the most basic methods or features.
     - [Navigate Flow](interactive.md#navigate-flow)
     - [Data Exchange Flow](interactive.md#data-exchange-flow)
     - [Location Request](interactive.md#location-request)
+    - [Call Permission Request](interactive.md#call-permission-request)
     - [Payments and Location request](interactive.md#payments-and-location-request)
 - [Contacts](contacts.md)
     - [Simple contact](contacts.md#simple-contact)
