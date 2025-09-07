@@ -39,7 +39,7 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
               with:
                   name: build
                   path: lib
@@ -72,7 +72,7 @@ jobs:
               with:
                   node-version: 22.x
                   registry-url: https://registry.npmjs.org/
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
               with:
                   name: build
                   path: lib
@@ -101,7 +101,7 @@ jobs:
               with:
                   node-version: 22.x
                   registry-url: https://registry.npmjs.org/
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
               with:
                   name: build
                   path: lib
