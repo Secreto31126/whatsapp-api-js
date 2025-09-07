@@ -68,6 +68,47 @@ Whatsapp.on.message = async ({ reply }) => {
 };
 ```
 
+## Initiating a call
+
+```ts
+import { WebRTCMagic } from "some-magical-webrtc-library";
+
+const spd = await WebRTCMagic.offer();
+Whatsapp.initiateCall(
+    "from (bot phoneID)",
+    "to (phone number/wa_id)",
+    spd
+);
+
+// If the user accepts the call, you can connect
+// to it as shown in the following example
+```
+
+## Connecting to a call
+
+The call.connect event is triggered on user initiated calls
+or when the bot is calling and the user picks up.
+
+```ts
+import { WebRTCMagic } from "some-magical-webrtc-library";
+
+Whatsapp.on.call.connect = async ({ preaccept, accept, call }) => {
+    await preaccept();
+
+    // Handle the call with your favorite WebRTC library
+    const rtc = new WebRTCMagic(call.session.sdp);
+
+    rtc.on("connected", async (connection) => {
+        await accept();
+        await connection.play("rickroll.mp3");
+    });
+};
+
+Whatsapp.on.call.terminate = async ({ from, call }) => {
+    console.log(`Call from ${from} lasted ${call.duration} seconds`);
+};
+```
+
 ## Documentation
 
 https://whatsappapijs.web.app/classes/WhatsAppAPI.WhatsAppAPI.html

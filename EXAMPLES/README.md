@@ -11,6 +11,8 @@ the most basic methods or features.
     - [Using the middlewares](main.md#using-the-middlewares)
     - [Sending a message](main.md#sending-a-message)
     - [Replying to a message](main.md#replying-to-a-message)
+    - [Initiating a call](main.md#initiating-a-call)
+    - [Connecting to a call](main.md#connecting-to-a-call)
 - [Text](text.md)
     - [Simple text](text.md#simple-text)
     - [Text with URL preview](text.md#text-with-url-preview)
