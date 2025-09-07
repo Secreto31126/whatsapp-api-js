@@ -279,6 +279,22 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return response ?? promise;
     }
 
+    broadcastMessage(
+        phoneID: string,
+        to: string[],
+        message: ClientMessage,
+        batch_size: number,
+        delay: number
+    ): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+
+    broadcastMessage<T>(
+        phoneID: string,
+        to: T[],
+        message_builder: (data: T) => [string, ClientMessage],
+        batch_size: number,
+        delay: number
+    ): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+
     broadcastMessage<T>(
         phoneID: string,
         to: string[] | T[],
@@ -685,6 +701,14 @@ export class WhatsAppAPI<EmittersReturnType = void>
     // #endregion
 
     // #region Webhooks
+
+    async post(
+        data: PostData,
+        raw_body: string,
+        signature: string
+    ): Promise<EmittersReturnType | undefined>;
+
+    async post(data: PostData): Promise<EmittersReturnType | undefined>;
 
     async post(data: PostData, raw_body?: string, signature?: string) {
         // Validating the payload
