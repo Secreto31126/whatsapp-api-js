@@ -154,7 +154,11 @@ const interactive_catalog_message = new Interactive(
 ## Call Permission Request
 
 ```ts
-import { Interactive, ActionCallPermission, Body } from "whatsapp-api-js/messages";
+import {
+    Interactive,
+    ActionCallPermission,
+    Body
+} from "whatsapp-api-js/messages";
 
 const interactive_call_permission_message = new Interactive(
     new ActionCallPermission(),

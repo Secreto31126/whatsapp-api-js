@@ -74,11 +74,7 @@ Whatsapp.on.message = async ({ reply }) => {
 import { WebRTCMagic } from "some-magical-webrtc-library";
 
 const spd = await WebRTCMagic.offer();
-Whatsapp.initiateCall(
-    "from (bot phoneID)",
-    "to (phone number/wa_id)",
-    spd
-);
+Whatsapp.initiateCall("from (bot phoneID)", "to (phone number/wa_id)", spd);
 
 // If the user accepts the call, you can connect
 // to it as shown in the following example
