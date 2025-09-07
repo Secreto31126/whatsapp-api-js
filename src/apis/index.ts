@@ -1,3 +1,11 @@
+/**
+ * @module apis
+ *
+ * @description
+ * The definitions of the WhatsApp Cloud API methods
+ * that are implemented by the {@link WhatsAppAPI} class.
+ */
+
 export * as Message from "./message.js";
 export * as Call from "./call.js";
 export * as QR from "./qr.js";
