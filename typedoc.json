@@ -6,6 +6,7 @@
         "src/utils.ts",
         "src/errors.ts",
         "src/emitters.ts",
+        "src/apis/index.ts",
         "src/messages/index.ts",
         "src/setup/index.ts",
         "src/middleware/index.ts"
