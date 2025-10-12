@@ -80,6 +80,12 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private appSecret?: string;
     /**
+     * The HMAC key derived from the app secret
+     *
+     * @remarks This is lazily initialized by {@link verifyRequestSignature}
+     */
+    private key?: CryptoKey;
+    /**
      * The webhook verify token
      */
     private webhookVerifyToken?: string;
@@ -94,7 +100,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
     /**
      * The CryptoSubtle library for checking the signatures
      */
-    private subtle?: Pick<typeof crypto.subtle, "importKey" | "sign">;
+    private subtle?: Pick<typeof crypto.subtle, "importKey" | "verify">;
     /**
      * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
@@ -946,27 +952,24 @@ export class WhatsAppAPI<EmittersReturnType = void>
         if (!signature) return false;
 
         const encoder = new TextEncoder();
-        const keyBuffer = encoder.encode(this.appSecret);
 
-        const key = await this.subtle.importKey.call(
-            null,
-            "raw",
-            keyBuffer,
-            { name: "HMAC", hash: "SHA-256" },
-            true,
-            ["sign", "verify"]
+        if (!this.key) {
+            this.key = await this.subtle.importKey.call(
+                null,
+                "raw",
+                encoder.encode(this.appSecret),
+                { name: "HMAC", hash: "SHA-256" },
+                true,
+                ["verify"]
+            );
+        }
+
+        return crypto.subtle.verify(
+            "HMAC",
+            this.key,
+            encoder.encode(signature),
+            encoder.encode(escapeUnicode(raw_body))
         );
-
-        const data = encoder.encode(escapeUnicode(raw_body));
-        const result = await this.subtle.sign.call(null, "HMAC", key, data);
-        const result_array = Array.from(new Uint8Array(result));
-
-        // Convert an array of bytes to a hex string
-        const check = result_array
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-
-        return signature === check;
     }
 
     /**
