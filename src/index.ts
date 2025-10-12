@@ -966,13 +966,11 @@ export class WhatsAppAPI<EmittersReturnType = void>
             );
         }
 
-        const data = encoder.encode(escapeUnicode(raw_body));
-
         return crypto.subtle.verify(
             "HMAC",
             this.key,
             encoder.encode(signature),
-            data
+            encoder.encode(escapeUnicode(raw_body))
         );
     }
 
