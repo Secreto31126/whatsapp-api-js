@@ -81,9 +81,7 @@ jobs:
               run: sleep 60s
 
             - name: Ok, now publish it
-              run: npm publish --provenance
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+              run: npm publish
 
     preview-npm:
         name: Beta Release
@@ -110,9 +108,7 @@ jobs:
               run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
 
             - name: Beta Release
-              run: npm publish --tag beta --provenance
-              env:
-                  NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+              run: npm publish --tag beta
 
     web-release:
         name: Deploy website
