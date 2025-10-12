@@ -1,10 +1,14 @@
 /* eslint-disable-next-line */
 // @ts-nocheck
 
-// Unit tests with mocha and sinon
+// Unit tests with node:test and sinon
 import { equal, throws, rejects, deepEqual } from "assert";
-import { spy as sinon_spy, assert as sinon_assert, stub as sinon_stub } from "sinon";
 import { describe, it, beforeEach, afterEach } from "node:test";
+import {
+    spy as sinon_spy,
+    assert as sinon_assert,
+    stub as sinon_stub
+} from "sinon";
 
 // Import the module
 import { WhatsAppAPI } from "../lib/middleware/node-http.js";
