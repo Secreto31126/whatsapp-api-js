@@ -1351,12 +1351,19 @@ describe("WhatsAppAPI", () => {
 
             beforeEach(() => {
                 Whatsapp.appSecret = appSecret;
+                Whatsapp.key = undefined;
                 Whatsapp.secure = true;
             });
 
             describe("Validation", () => {
                 describe("Secure truthy (default)", () => {
                     it("shouldn't throw if all parameters are valid", async () => {
+                        await Whatsapp.post(valid_message_mock, body, signature);
+                    });
+
+                    it("shouldn't throw on multiple consecutive requests", async () => {
+                        await Whatsapp.post(valid_message_mock, body, signature);
+                        await Whatsapp.post(valid_message_mock, body, signature);
                         await Whatsapp.post(valid_message_mock, body, signature);
                     });
 
