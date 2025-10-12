@@ -100,7 +100,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
     /**
      * The CryptoSubtle library for checking the signatures
      */
-    private subtle?: Pick<typeof crypto.subtle, "importKey" | "sign">;
+    private subtle?: Pick<typeof crypto.subtle, "importKey" | "verify">;
     /**
      * If false, the API will be used in a less secure way, removing the need for appSecret. Defaults to true.
      */
@@ -962,26 +962,18 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 keyBuffer,
                 { name: "HMAC", hash: "SHA-256" },
                 true,
-                ["sign", "verify"]
+                ["verify"]
             );
         }
 
         const data = encoder.encode(escapeUnicode(raw_body));
-        const result = await this.subtle.sign.call(
-            null,
+
+        return crypto.subtle.verify(
             "HMAC",
             this.key,
+            encoder.encode(signature),
             data
         );
-
-        const result_array = Array.from(new Uint8Array(result));
-
-        // Convert an array of bytes to a hex string
-        const check = result_array
-            .map((b) => b.toString(16).padStart(2, "0"))
-            .join("");
-
-        return signature === check;
     }
 
     /**
