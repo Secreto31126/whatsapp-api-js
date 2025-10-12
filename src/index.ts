@@ -208,7 +208,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         }
 
         // Let's hope the user is using a valid ponyfill
-        this.fetch = ponyfill.fetch?.bind(null) || fetch.bind(null);
+        this.fetch = ponyfill.fetch || fetch;
 
         if (v) this.v = v;
         else {
@@ -923,7 +923,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         url: string | URL | Request,
         options: RequestInit = {}
     ): Promise<Response> {
-        return this.fetch(url, {
+        return this.fetch.call(null, url, {
             ...options,
             headers: {
                 Authorization: `Bearer ${this.token}`,

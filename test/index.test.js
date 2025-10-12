@@ -4,11 +4,7 @@
 // Unit tests with node:test and sinon
 import { equal, throws, rejects, deepEqual } from "assert";
 import { describe, it, beforeEach, afterEach } from "node:test";
-import {
-    spy as sinon_spy,
-    assert as sinon_assert,
-    stub as sinon_stub
-} from "sinon";
+import { spy as sinon_spy, assert as sinon_assert } from "sinon";
 
 // Import the module
 import { WhatsAppAPI } from "../lib/middleware/node-http.js";
@@ -127,7 +123,6 @@ describe("WhatsAppAPI", () => {
 
             it("should work with any specified ponyfill", () => {
                 const spy = sinon_spy();
-                sinon_stub(spy, "bind").callsFake(() => spy);
 
                 const Whatsapp = new WhatsAppAPI({
                     v,
