@@ -105,7 +105,7 @@ export type TheBasicConstructorArguments = {
         /**
          * The subtle ponyfill to use for the signatures. If not specified, it defaults to crypto.subtle from the enviroment.
          */
-        subtle?: Pick<typeof crypto.subtle, "importKey" | "sign">;
+        subtle?: Pick<typeof crypto.subtle, "importKey" | "verify">;
     };
 };
 /**

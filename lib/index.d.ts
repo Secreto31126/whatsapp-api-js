@@ -18,6 +18,12 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
      */
     private appSecret?;
     /**
+     * The HMAC key derived from the app secret
+     *
+     * @remarks This is lazily initialized by {@link verifyRequestSignature}
+     */
+    private key?;
+    /**
      * The webhook verify token
      */
     private webhookVerifyToken?;
