@@ -966,7 +966,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return crypto.subtle.verify(
             "HMAC",
             this.key,
-            encoder.encode(signature),
+            Buffer.from(signature, "hex"),
             encoder.encode(escapeUnicode(raw_body))
         );
     }
