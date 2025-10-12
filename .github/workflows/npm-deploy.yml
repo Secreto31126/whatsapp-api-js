@@ -8,7 +8,7 @@ on:
         types: [created]
 
 permissions:
-  id-token: write  # Required for OIDC
+    id-token: write  # Required for OIDC
 
 jobs:
     build:
