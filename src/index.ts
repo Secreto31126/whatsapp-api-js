@@ -202,7 +202,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         }
 
         // Let's hope the user is using a valid ponyfill
-        this.fetch = ponyfill.fetch || fetch;
+        this.fetch = ponyfill.fetch?.bind(null) || fetch.bind(null);
 
         if (v) this.v = v;
         else {
@@ -270,7 +270,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         };
 
         try {
-            await this.on?.sent?.(args);
+            await this.on?.sent?.call(null, args);
         } catch (error) {
             // Eh... I don't like it nor hate it
             console.error(error);
@@ -763,7 +763,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     Whatsapp: this
                 };
 
-                return this.on?.message?.(args);
+                return this.on?.message?.call(null, args);
             } else if ("statuses" in value) {
                 const statuses = value.statuses[0];
 
@@ -792,7 +792,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     Whatsapp: this
                 };
 
-                return this.on?.status?.(args);
+                return this.on?.status?.call(null, args);
             }
         } else if (field === "calls") {
             if (field in value) {
@@ -829,7 +829,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                         Whatsapp: this
                     };
 
-                    return this.on?.call?.connect?.(args);
+                    return this.on?.call?.connect?.call(null, args);
                 } else if (call.event === "terminate") {
                     const args: OnCallTerminateArgs = {
                         phoneID,
@@ -841,7 +841,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                         Whatsapp: this
                     };
 
-                    return this.on?.call?.terminate?.(args);
+                    return this.on?.call?.terminate?.call(null, args);
                 }
             } else if ("statuses" in value) {
                 const statuses = value.statuses[0];
@@ -865,7 +865,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     Whatsapp: this
                 };
 
-                return this.on?.call?.status?.(args);
+                return this.on?.call?.status?.call(null, args);
             }
         }
 
@@ -948,7 +948,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
         const encoder = new TextEncoder();
         const keyBuffer = encoder.encode(this.appSecret);
 
-        const key = await this.subtle.importKey(
+        const key = await this.subtle.importKey.call(
+            null,
             "raw",
             keyBuffer,
             { name: "HMAC", hash: "SHA-256" },
@@ -957,7 +958,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         );
 
         const data = encoder.encode(escapeUnicode(raw_body));
-        const result = await this.subtle.sign("HMAC", key, data);
+        const result = await this.subtle.sign.call(null, "HMAC", key, data);
         const result_array = Array.from(new Uint8Array(result));
 
         // Convert an array of bytes to a hex string
