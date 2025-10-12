@@ -83,6 +83,8 @@ jobs:
                   name: build
                   path: lib
 
+            - run: npm install -g npm@latest
+
             - name: Give me 1 minute to reconsider my life actions
               run: sleep 60s
 
@@ -109,6 +111,8 @@ jobs:
               with:
                   name: build
                   path: lib
+
+            - run: npm install -g npm@latest
 
             - name: Set package version to prerelease tag
               run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
