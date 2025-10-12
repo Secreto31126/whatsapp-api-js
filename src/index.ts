@@ -954,12 +954,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         const encoder = new TextEncoder();
 
         if (!this.key) {
-            const keyBuffer = encoder.encode(this.appSecret);
-
             this.key = await this.subtle.importKey.call(
                 null,
                 "raw",
-                keyBuffer,
+                encoder.encode(this.appSecret),
                 { name: "HMAC", hash: "SHA-256" },
                 true,
                 ["verify"]
