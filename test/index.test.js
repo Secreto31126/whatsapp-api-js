@@ -3,7 +3,7 @@
 
 // Unit tests with mocha and sinon
 import { equal, throws, rejects, deepEqual } from "assert";
-import { spy as sinon_spy, assert as sinon_assert } from "sinon";
+import { spy as sinon_spy, assert as sinon_assert, stub as sinon_stub } from "sinon";
 import { describe, it, beforeEach, afterEach } from "node:test";
 
 // Import the module
@@ -123,6 +123,8 @@ describe("WhatsAppAPI", () => {
 
             it("should work with any specified ponyfill", () => {
                 const spy = sinon_spy();
+                sinon_stub(spy, "bind").callsFake(() => spy);
+
                 const Whatsapp = new WhatsAppAPI({
                     v,
                     token,
@@ -246,6 +248,23 @@ describe("WhatsAppAPI", () => {
                 id,
                 response: expectedResponse
             });
+        });
+
+        it("should run the logger with nullified this", async () => {
+            clientFacebook
+                .intercept({
+                    path: `/${Whatsapp.v}/${bot}/messages`,
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .reply(200, expectedResponse)
+                .times(1);
+
+            await Whatsapp.sendMessage(bot, user, message);
+
+            sinon_assert.calledOn(spy_on_sent, null);
         });
 
         it("should handle failed deliveries responses", async () => {
@@ -1449,6 +1468,12 @@ describe("WhatsAppAPI", () => {
                     });
                 });
 
+                it("should run the callback with nullified this", async () => {
+                    await Whatsapp.post(valid_message_mock);
+
+                    sinon_assert.calledOn(spy_on_message, null);
+                });
+
                 it("should return the on.message return value", async () => {
                     Whatsapp.on.message = async () => {
                         return "Hi";
@@ -1629,6 +1654,12 @@ describe("WhatsAppAPI", () => {
                     });
                 });
 
+                it("should run the callback with nullified this", async () => {
+                    await Whatsapp.post(valid_status_mock);
+
+                    sinon_assert.calledOn(spy_on_status, null);
+                });
+
                 it("should return the on.status return value", async () => {
                     Whatsapp.on.status = async () => {
                         return "Hi";
@@ -1729,6 +1760,23 @@ describe("WhatsAppAPI", () => {
                 .times(1);
 
             Whatsapp.$$apiFetch$$("https://example.com/");
+        });
+
+        it("should run the fetch method with nullified this", async () => {
+            const spy_on_fetch = sinon_spy();
+            const Whatsapp = new WhatsAppAPI({
+                v,
+                token,
+                appSecret,
+                ponyfill: {
+                    fetch: spy_on_fetch,
+                    subtle
+                }
+            });
+
+            await Whatsapp.$$apiFetch$$("https://example.com/");
+
+            sinon_assert.calledOn(spy_on_fetch, null);
         });
 
         it("should make an authenticated request to any url with custom options", async () => {
