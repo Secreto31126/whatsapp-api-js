@@ -1353,13 +1353,29 @@ describe("WhatsAppAPI", () => {
             describe("Validation", () => {
                 describe("Secure truthy (default)", () => {
                     it("shouldn't throw if all parameters are valid", async () => {
-                        await Whatsapp.post(valid_message_mock, body, signature);
+                        await Whatsapp.post(
+                            valid_message_mock,
+                            body,
+                            signature
+                        );
                     });
 
                     it("shouldn't throw on multiple consecutive requests", async () => {
-                        await Whatsapp.post(valid_message_mock, body, signature);
-                        await Whatsapp.post(valid_message_mock, body, signature);
-                        await Whatsapp.post(valid_message_mock, body, signature);
+                        await Whatsapp.post(
+                            valid_message_mock,
+                            body,
+                            signature
+                        );
+                        await Whatsapp.post(
+                            valid_message_mock,
+                            body,
+                            signature
+                        );
+                        await Whatsapp.post(
+                            valid_message_mock,
+                            body,
+                            signature
+                        );
                     });
 
                     it("should throw WhatsAppAPIMissingRawBodyError if rawBody is missing", async () => {
