@@ -506,10 +506,10 @@ export type ServerImageMessage = {
 export type ServerStickerMessage = {
     type: "sticker";
     sticker: {
-        id: string;
         animated: boolean;
         mime_type: "image/webp";
         sha256: string;
+        id: string;
     };
 };
 
