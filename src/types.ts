@@ -702,6 +702,12 @@ export type ServerRequestWelcomeMessage = {
     type: "request_welcome";
 };
 
+/**
+ * @deprecated This type... never actually existed?
+ * I'm having such a mandela effect...
+ *
+ * @see {@link ServerUnsupportedMessage}
+ */
 export type ServerUnknownMessage = {
     type: "unknown";
     errors: [
@@ -709,6 +715,23 @@ export type ServerUnknownMessage = {
             code: number;
             details: "Message type is not currently supported";
             title: "Unsupported message type";
+        }
+    ];
+};
+
+export type ServerUnsupportedMessage = {
+    type: "unsupported";
+    unsupported: {
+        type: string;
+    };
+    errors: [
+        {
+            code: 131051;
+            title: "Message type unknown";
+            details: "Message type unknown";
+            error_data: {
+                details: "Message type is currently not supported.";
+            };
         }
     ];
 };
@@ -728,7 +751,8 @@ export type ServerMessageTypes =
     | ServerOrderMessage
     | ServerSystemMessage
     | ServerRequestWelcomeMessage
-    | ServerUnknownMessage;
+    | ServerUnknownMessage
+    | ServerUnsupportedMessage;
 
 export type ServerMessage = {
     from: string;
