@@ -408,6 +408,13 @@ export type ClientMessageRequest = {
      * Cloud API does not process this field, it just returns it as part of sent/delivered/read message webhooks.
      */
     biz_opaque_callback_data?: string;
+    /**
+     * The recipient's identity key hash, used to detect profile changes by the user.
+     * If provided, the API will not deliver if the server hash doesn't match.
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers#identity-change-check
+     */
+    recipient_identity_key_hash?: string;
 } & {
     [Type in ClientMessageNames]?: ClientMessage;
 } & (
@@ -729,6 +736,9 @@ export type ServerMessage = {
             product_retailer_id: string;
         };
     };
+    /**
+     * This property used to exist, but now disappeared from the docs.
+     */
     identity?: {
         acknowledged: boolean;
         created_timestamp: string;
@@ -789,6 +799,7 @@ export type ServerContacts = {
         name?: string;
     };
     wa_id: string;
+    identity_key_hash?: string;
 };
 
 export type ServerInitiation =
