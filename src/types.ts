@@ -476,6 +476,7 @@ export type ServerTextMessage = {
 export type ServerAudioMessage = {
     type: "audio";
     audio: {
+        voice: boolean;
         mime_type: string;
         sha256: string;
         id: string;
@@ -520,6 +521,7 @@ export type ServerStickerMessage = {
 export type ServerVideoMessage = {
     type: "video";
     video: {
+        caption?: string;
         mime_type: string;
         sha256: string;
         id: string;
@@ -657,7 +659,7 @@ export type ServerButtonMessage = {
 export type ServerReactionMessage = {
     type: "reaction";
     reaction: {
-        emoji: string;
+        emoji?: string;
         message_id: string;
     };
 };
@@ -668,8 +670,8 @@ export type ServerOrderMessage = {
         catalog_id: string;
         product_items: {
             product_retailer_id: string;
-            quantity: string;
-            item_price: string;
+            quantity: number;
+            item_price: number;
             currency: string;
         }[];
         text?: string;
@@ -731,6 +733,7 @@ export type ServerMessageTypes =
 export type ServerMessage = {
     from: string;
     id: string;
+    group_id: string;
     timestamp: string;
     context?: {
         forwarded?: boolean;
@@ -760,7 +763,10 @@ export type ServerMessage = {
         source_type: "ad" | "post";
         headline: string;
         body: string;
-        ctwa_clid: string;
+        ctwa_clid?: string;
+        welcome_message: {
+            text: string;
+        };
         media_type: "image" | "video";
     } & (
         | {
@@ -815,7 +821,7 @@ export type ServerInitiation =
     | "service"
     | "referral_conversion";
 
-export type ServerStatus = "sent" | "delivered" | "read" | "failed";
+export type ServerStatus = "sent" | "delivered" | "read" | "played" | "failed";
 
 export type ServerPricing = {
     pricing_model: "PMP";
@@ -845,6 +851,7 @@ export type ServerError = {
     error_data: {
         details: string;
     };
+    href: string;
 };
 
 export type GetParams = {
