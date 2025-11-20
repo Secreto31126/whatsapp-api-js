@@ -479,6 +479,7 @@ export type ServerAudioMessage = {
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -490,6 +491,7 @@ export type ServerDocumentMessage = {
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -500,6 +502,7 @@ export type ServerImageMessage = {
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -510,6 +513,7 @@ export type ServerStickerMessage = {
         mime_type: "image/webp";
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -519,6 +523,7 @@ export type ServerVideoMessage = {
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -529,6 +534,7 @@ export type ServerLocationMessage = {
         longitude: string;
         name?: string;
         address?: string;
+        url?: string;
     };
 };
 
