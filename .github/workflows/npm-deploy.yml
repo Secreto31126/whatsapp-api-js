@@ -9,7 +9,6 @@ on:
 
 permissions:
     id-token: write # Required for OIDC
-    contents: write # Required for web-release.yml
 
 jobs:
     build:
