@@ -408,6 +408,13 @@ export type ClientMessageRequest = {
      * Cloud API does not process this field, it just returns it as part of sent/delivered/read message webhooks.
      */
     biz_opaque_callback_data?: string;
+    /**
+     * The recipient's identity key hash, used to detect profile changes by the user.
+     * If provided, the API will not deliver if the server hash doesn't match.
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers#identity-change-check
+     */
+    recipient_identity_key_hash?: string;
 } & {
     [Type in ClientMessageNames]?: ClientMessage;
 } & (
@@ -469,9 +476,11 @@ export type ServerTextMessage = {
 export type ServerAudioMessage = {
     type: "audio";
     audio: {
+        voice: boolean;
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -483,6 +492,7 @@ export type ServerDocumentMessage = {
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -493,25 +503,29 @@ export type ServerImageMessage = {
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
 export type ServerStickerMessage = {
     type: "sticker";
     sticker: {
-        id: string;
         animated: boolean;
         mime_type: "image/webp";
         sha256: string;
+        id: string;
+        url: string;
     };
 };
 
 export type ServerVideoMessage = {
     type: "video";
     video: {
+        caption?: string;
         mime_type: string;
         sha256: string;
         id: string;
+        url: string;
     };
 };
 
@@ -522,6 +536,7 @@ export type ServerLocationMessage = {
         longitude: string;
         name?: string;
         address?: string;
+        url?: string;
     };
 };
 
@@ -644,7 +659,7 @@ export type ServerButtonMessage = {
 export type ServerReactionMessage = {
     type: "reaction";
     reaction: {
-        emoji: string;
+        emoji?: string;
         message_id: string;
     };
 };
@@ -655,8 +670,8 @@ export type ServerOrderMessage = {
         catalog_id: string;
         product_items: {
             product_retailer_id: string;
-            quantity: string;
-            item_price: string;
+            quantity: number;
+            item_price: number;
             currency: string;
         }[];
         text?: string;
@@ -687,6 +702,12 @@ export type ServerRequestWelcomeMessage = {
     type: "request_welcome";
 };
 
+/**
+ * @deprecated This type... never actually existed?
+ * I'm having such a mandela effect...
+ *
+ * @see {@link ServerUnsupportedMessage}
+ */
 export type ServerUnknownMessage = {
     type: "unknown";
     errors: [
@@ -694,6 +715,23 @@ export type ServerUnknownMessage = {
             code: number;
             details: "Message type is not currently supported";
             title: "Unsupported message type";
+        }
+    ];
+};
+
+export type ServerUnsupportedMessage = {
+    type: "unsupported";
+    unsupported: {
+        type: string;
+    };
+    errors: [
+        {
+            code: 131051;
+            title: "Message type unknown";
+            details: "Message type unknown";
+            error_data: {
+                details: "Message type is currently not supported.";
+            };
         }
     ];
 };
@@ -713,11 +751,13 @@ export type ServerMessageTypes =
     | ServerOrderMessage
     | ServerSystemMessage
     | ServerRequestWelcomeMessage
-    | ServerUnknownMessage;
+    | ServerUnknownMessage
+    | ServerUnsupportedMessage;
 
 export type ServerMessage = {
     from: string;
     id: string;
+    group_id: string;
     timestamp: string;
     context?: {
         forwarded?: boolean;
@@ -729,6 +769,9 @@ export type ServerMessage = {
             product_retailer_id: string;
         };
     };
+    /**
+     * This property used to exist, but now disappeared from the docs.
+     */
     identity?: {
         acknowledged: boolean;
         created_timestamp: string;
@@ -744,7 +787,10 @@ export type ServerMessage = {
         source_type: "ad" | "post";
         headline: string;
         body: string;
-        ctwa_clid: string;
+        ctwa_clid?: string;
+        welcome_message: {
+            text: string;
+        };
         media_type: "image" | "video";
     } & (
         | {
@@ -789,6 +835,7 @@ export type ServerContacts = {
         name?: string;
     };
     wa_id: string;
+    identity_key_hash?: string;
 };
 
 export type ServerInitiation =
@@ -798,7 +845,7 @@ export type ServerInitiation =
     | "service"
     | "referral_conversion";
 
-export type ServerStatus = "sent" | "delivered" | "read" | "failed";
+export type ServerStatus = "sent" | "delivered" | "read" | "played" | "failed";
 
 export type ServerPricing = {
     pricing_model: "PMP";
@@ -828,6 +875,7 @@ export type ServerError = {
     error_data: {
         details: string;
     };
+    href: string;
 };
 
 export type GetParams = {
