@@ -35,6 +35,11 @@ import { Audio } from "whatsapp-api-js/messages";
 
 const audio_message = new Audio("https://www.example.com/audio.mp3");
 const audio_id_message = new Audio("12345678", true);
+const voice_message = new Audio(
+    "https://www.example.com/audio.ogg",
+    false,
+    true
+);
 ```
 
 ## Document

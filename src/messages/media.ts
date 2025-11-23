@@ -32,6 +32,11 @@ export abstract class Media extends ClientMessage {
  */
 export class Audio extends Media {
     /**
+     * Whether the audio is a voice note
+     */
+    readonly voice?: boolean;
+
+    /**
      * @override
      * @internal
      */
@@ -42,6 +47,10 @@ export class Audio extends Media {
     /**
      * Create an Audio object for the API
      *
+     * Setting voice to true adds transcriptions support, auto download,
+     * and the "played" status is sent when heard by the recipient.
+     * The file should be .ogg with OPUS codec for full voice note support.
+     *
      * @example
      * ```ts
      * import { Audio } from "whatsapp-api-js/messages";
@@ -49,13 +58,17 @@ export class Audio extends Media {
      * const audio_message = new Audio("https://www.example.com/audio.mp3");
      *
      * const audio_id_message = new Audio("12345678", true);
+     *
+     * const voice_message = new Audio("https://www.example.com/audio.ogg", false, true);
      * ```
      *
      * @param audio - The audio file's link or id
      * @param isItAnID - Whether audio is an id (true) or a link (false)
+     * @param voice - Whether the audio is a voice note
      */
-    constructor(audio: string, isItAnID = false) {
+    constructor(audio: string, isItAnID = false, voice?: boolean) {
         super(audio, isItAnID);
+        if (voice) this.voice = voice;
     }
 }
 
