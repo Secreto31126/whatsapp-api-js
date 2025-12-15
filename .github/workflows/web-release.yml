@@ -31,7 +31,7 @@ jobs:
               run: npm run document
 
             - name: Store docs
-              uses: actions/upload-artifact@v5
+              uses: actions/upload-artifact@v6
               with:
                   name: docs
                   path: docs
@@ -46,7 +46,7 @@ jobs:
 
             - run: mkdir docs
             - name: Copy docs
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: docs
                   path: docs
@@ -82,7 +82,7 @@ jobs:
               run: mkdir ${{ inputs.tag_name }}
 
             - name: Copy docs into Endpoint
-              uses: actions/download-artifact@v6
+              uses: actions/download-artifact@v7
               with:
                   name: docs
                   path: ${{ inputs.tag_name }}
