@@ -1,5 +1,9 @@
 export type AtLeastOne<T> = [T, ...T[]];
 
+export function hasAtLeastOne<T>(obj: T[]): obj is AtLeastOne<T> {
+    return obj.length >= 1;
+}
+
 export type MaybePromise<T> = T | Promise<T> | PromiseLike<T>;
 
 export function escapeUnicode(str: string) {
