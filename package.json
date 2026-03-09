@@ -140,7 +140,7 @@
         "url": "git+https://github.com/Secreto31126/whatsapp-api-js.git"
     },
     "devDependencies": {
-        "@adonisjs/http-server": "7.8.0",
+        "@adonisjs/http-server": "8.0.0",
         "@azure/functions": "^4.7.0",
         "@eslint/js": "10.0.1",
         "@reporters/github": "1.12.0",
