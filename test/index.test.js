@@ -1335,6 +1335,7 @@ describe("WhatsAppAPI", () => {
                 user,
                 status,
                 id,
+                name,
                 conversation,
                 pricing,
                 biz_opaque_callback_data
