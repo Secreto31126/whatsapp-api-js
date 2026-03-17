@@ -17,8 +17,14 @@ import { agent, clientFacebook, clientExample } from "./server.mocks.js";
 import { MessageWebhookMock, StatusWebhookMock } from "./webhooks.mocks.js";
 import { setGlobalDispatcher, fetch as undici_fetch, FormData } from "undici";
 import { Blob } from "node:buffer";
-import { webcrypto } from "node:crypto";
-const { subtle } = webcrypto; // Assert availability in node 16.0.0
+
+// Import the example payloads from WhatsApp
+import payload_incoming_v25 from "./payloads/v25/incoming.json" with { type: 'json' };
+import payload_sent_v25 from "./payloads/v25/sent.json" with { type: 'json' };
+import payload_delivered_v25 from "./payloads/v25/delivered.json" with { type: 'json' };
+import payload_read_v25 from "./payloads/v25/read.json" with { type: 'json' };
+
+const subtle = crypto.subtle;
 
 setGlobalDispatcher(agent);
 
@@ -1758,6 +1764,31 @@ describe("WhatsAppAPI", () => {
                     // assert.throws(function() {
                     //     Whatsapp.post(moddedMock);
                     // }, TypeError);
+                });
+            });
+
+            describe("Payloads", () => {
+                beforeEach(() => {
+                    Whatsapp.secure = false;
+                });
+
+                after(() => {
+                    Whatsapp.secure = true;
+                });
+
+                describe("v25", () => {
+                    const payloads = [
+                        ["Incoming", payload_incoming_v25],
+                        ["Sent", payload_sent_v25],
+                        ["Delivered", payload_delivered_v25],
+                        ["Read", payload_read_v25]
+                    ];
+
+                    for (const [name, payload] of payloads) {
+                        it(`works with a ${name} payload`, async () => {
+                            await Whatsapp.post(payload);
+                        });
+                    }
                 });
             });
         });
