@@ -19,10 +19,10 @@ import { setGlobalDispatcher, fetch as undici_fetch, FormData } from "undici";
 import { Blob } from "node:buffer";
 
 // Import the example payloads from WhatsApp
-import payload_incoming_v25 from "./payloads/v25/incoming.json" with { type: 'json' };
-import payload_sent_v25 from "./payloads/v25/sent.json" with { type: 'json' };
-import payload_delivered_v25 from "./payloads/v25/delivered.json" with { type: 'json' };
-import payload_read_v25 from "./payloads/v25/read.json" with { type: 'json' };
+import payload_incoming_v25 from "./payloads/v25/incoming.json" with { type: "json" };
+import payload_sent_v25 from "./payloads/v25/sent.json" with { type: "json" };
+import payload_delivered_v25 from "./payloads/v25/delivered.json" with { type: "json" };
+import payload_read_v25 from "./payloads/v25/read.json" with { type: "json" };
 
 const subtle = crypto.subtle;
 
@@ -449,7 +449,11 @@ describe("WhatsAppAPI", () => {
                     .reply(200, expectedResponse)
                     .times(1);
 
-                const response = await Whatsapp.sendMessage(bot, { phone: user }, message);
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { phone: user },
+                    message
+                );
 
                 deepEqual(response, expectedResponse);
             });
@@ -468,7 +472,11 @@ describe("WhatsAppAPI", () => {
                     .reply(200, expectedResponse)
                     .times(1);
 
-                const response = await Whatsapp.sendMessage(bot, { bsuid: user }, message);
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { bsuid: user },
+                    message
+                );
 
                 deepEqual(response, expectedResponse);
             });
@@ -487,7 +495,11 @@ describe("WhatsAppAPI", () => {
                     .reply(200, expectedResponse)
                     .times(1);
 
-                const response = await Whatsapp.sendMessage(bot, { phone: user, bsuid: user }, message);
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { phone: user, bsuid: user },
+                    message
+                );
 
                 deepEqual(response, expectedResponse);
             });
@@ -506,7 +518,11 @@ describe("WhatsAppAPI", () => {
                     .reply(200, expectedResponse)
                     .times(1);
 
-                const response = await Whatsapp.sendMessage(bot, { group }, message);
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { group },
+                    message
+                );
 
                 deepEqual(response, expectedResponse);
             });
@@ -1493,7 +1509,9 @@ describe("WhatsAppAPI", () => {
                     .reply(200, expectedResponse)
                     .times(1);
 
-                const response = await Whatsapp.unblockUser(bot, { phone: user });
+                const response = await Whatsapp.unblockUser(bot, {
+                    phone: user
+                });
 
                 deepEqual(response, expectedResponse);
             });
