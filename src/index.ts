@@ -898,7 +898,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const recipient: ClientRecipientIdentifier = {
                     phone: !group_id ? (wa_id ?? from) : undefined,
                     bsuid: !group_id ? (parent_user_id ?? user_id) : undefined,
-                    group: group_id! // Cheese
+                    group: group_id
                 };
 
                 const args: OnMessageArgs = {
@@ -958,7 +958,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const recipient: ClientRecipientIdentifier = {
                     phone: !is_group ? recipient_id : undefined,
                     bsuid: !is_group ? recipient_user_id : undefined,
-                    group: (is_group ? recipient_id : undefined)! // Even worse cheese
+                    group: is_group ? recipient_id : undefined
                 };
 
                 const args: OnStatusArgs = {
