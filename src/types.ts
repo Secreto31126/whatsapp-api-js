@@ -150,6 +150,29 @@ export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
 export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
     ExtraTypesThatMakeTypescriptWork;
 
+export type ClientIndividualRecipientIdentifier = Partial<{
+    /**
+     * Identify a user by its wa_id (the phone number)
+     */
+    phone: string;
+    /**
+     * Identify a user by its bsuid
+     */
+    bsuid: string;
+}>;
+
+export type ClientRecipientIdentifier =
+    | ClientIndividualRecipientIdentifier
+    | {
+          /**
+           * Identify a group by its group id
+           *
+           * @remarks This value is incompatible with phone and bsuid,
+           * as it represents a group rather than a individual user
+           */
+          group: string;
+      };
+
 /**
  * The base class of all the library messages
  *
@@ -383,13 +406,17 @@ export type ClientMessageRequest = {
      */
     messaging_product: "whatsapp";
     /**
-     * The user's phone number
+     * The user's phone number (takes precedence over `recipient`)
      */
-    to: string;
+    to?: string;
     /**
-     * Currently you can only send messages to individuals
+     * The user's BSUID
      */
-    recipient_type: "individual";
+    recipient?: string;
+    /**
+     * Either an individual or a group message, defaults to "individual"
+     */
+    recipient_type?: "individual" | "group";
     /**
      * The message to reply to
      */
@@ -542,26 +569,23 @@ export type ServerLocationMessage = {
 
 export type ServerContactsMessage = {
     type: "contacts";
+    origin?: "contact_request/other";
     contacts: [
         {
-            addresses?: [
-                {
-                    city?: string;
-                    country?: string;
-                    country_code?: string;
-                    state?: string;
-                    street?: string;
-                    type?: string;
-                    zip?: string;
-                }
-            ];
+            addresses?: {
+                city?: string;
+                country?: string;
+                country_code?: string;
+                state?: string;
+                street?: string;
+                type?: string;
+                zip?: string;
+            }[];
             birthday?: string;
-            emails?: [
-                {
-                    email?: string;
-                    type?: string;
-                }
-            ];
+            emails?: {
+                email?: string;
+                type?: string;
+            }[];
             name: {
                 formatted_name: string;
                 first_name?: string;
@@ -575,19 +599,16 @@ export type ServerContactsMessage = {
                 department?: string;
                 title?: string;
             };
-            phones?: [
-                {
-                    phone?: string;
-                    wa_id?: string;
-                    type?: string;
-                }
-            ];
-            urls?: [
-                {
-                    url?: string;
-                    type?: string;
-                }
-            ];
+            phones?: {
+                phone?: string;
+                wa_id?: string;
+                type?: string;
+            }[];
+            urls?: {
+                url?: string;
+                type?: string;
+            }[];
+            vcard?: string;
         }
     ];
 };
@@ -682,19 +703,34 @@ export type ServerSystemMessage = {
     type: "system";
     system: {
         body: string;
-        identity: string;
+        identity?: string;
         /**
          * @deprecated Since v12.0 it is undefined, use `wa_id` instead.
          *
          * I'm actually stunned this exists, since I started the library with v13 or 14.
          */
-        new_wa_id: number | string;
-        wa_id: string;
+        new_wa_id?: number | string;
+        /**
+         * Will be omitted if the user has enabled the username feature
+         * Will be set to the user’s phone number if the user has not enabled the usernames feature
+         */
+        wa_id?: string;
+        /**
+         * Will be set to the user’s new BSUID
+         */
+        user_id: string;
+        /**
+         * Will be set to the user’s new parent BSUID, if you have enabled parent BSUIDs
+         *
+         * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
+         */
+        parent_user_id?: string;
         type:
             | "customer_changed_number"
             | "customer_identity_changed"
-            | string /* Backwards compatibility */;
-        customer: string;
+            | "user_changed_user_id"
+            | string /** @deprecated Backwards compatibility */;
+        customer?: string;
     };
 };
 
@@ -754,10 +790,77 @@ export type ServerMessageTypes =
     | ServerUnknownMessage
     | ServerUnsupportedMessage;
 
-export type ServerMessage = {
-    from: string;
+export type ServerStatusPayload = {
+    /**
+     * The message's ids
+     */
     id: string;
-    group_id: string;
+    /**
+     * The message's status
+     */
+    status: ServerStatus;
+    /**
+     * The message's timestamp
+     */
+    timestamp: string;
+    /**
+     * Will be set to the user’s phone number, if you sent the message to the user’s phone number.
+     * Will be set to the group ID, if you sent the message to a group.
+     * Will be omitted if you sent the message to the user’s BSUID or parent BSUID.
+     */
+    recipient_id?: string;
+    /**
+     * If the recipient is a user or a group, defaults to "individual"
+     */
+    recipient_type?: "individual" | "group";
+    /**
+     * Will be set to the user’s BSUID or parent BSUID, if you sent the message to the user’s BSUID or parent BSUID
+     */
+    recipient_user_id?: string;
+    /**
+     * Will be set to the user’s parent BSUID if you have enabled parent BSUIDs
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
+     */
+    parent_user_id?: string;
+    biz_opaque_callback_data?: string;
+} & (
+    | {
+          conversation?: ServerConversation;
+          pricing: ServerPricing;
+          errors: undefined;
+      }
+    | {
+          conversation: undefined;
+          pricing: undefined;
+          errors: [ServerError];
+      }
+);
+
+export type ServerMessage = {
+    /**
+     * Will be omitted if the user has enabled the username feature
+     * Will be set to the user’s phone number if the user has not enabled the usernames feature
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#phone-numbers
+     */
+    from?: string;
+    /**
+     * Set to the user’s BSUID
+     */
+    from_user_id: string;
+    /**
+     * Set to the user’s parent BSUID, if you have enabled parent BSUIDs
+     */
+    from_parent_user_id?: string;
+    /**
+     * The message id
+     */
+    id: string;
+    /**
+     * The group id, if comming from a group
+     */
+    group_id?: string;
     timestamp: string;
     context?: {
         forwarded?: boolean;
@@ -832,9 +935,33 @@ export type ServerCallTerminate = ServerCall & {
 
 export type ServerContacts = {
     profile: {
+        /**
+         * Value will be set to the WhatsApp user’s display name
+         */
         name?: string;
+        /**
+         * Will be set to the WhatsApp user’s username if the user has enabled the usernames feature,
+         * will be omitted entirely for sent status messages webhooks, or if the user has not enabled the usernames feature
+         */
+        username?: string;
     };
-    wa_id: string;
+    /**
+     * User phone number, will be omitted if the user has enabled the usernames feature,
+     * will be set to the user’s phone number if you sent the message to the user’s phone number
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#phone-numbers
+     */
+    wa_id?: string;
+    /**
+     * Will be set to the WhatsApp user’s BSUID
+     */
+    user_id: string;
+    /**
+     * Will be set to the user’s parent BSUID if you have enabled parent BSUIDs
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
+     */
+    parent_user_id?: string;
     identity_key_hash?: string;
 };
 
@@ -886,33 +1013,10 @@ export type GetParams = {
 
 export type PostDataMessageField = {
     field: "messages";
-    value:
-        | {
-              contacts?: [ServerContacts];
-              messages: [ServerMessage];
-          }
-        | {
-              statuses: [
-                  {
-                      id: string;
-                      status: ServerStatus;
-                      timestamp: string;
-                      recipient_id: string;
-                      biz_opaque_callback_data?: string;
-                  } & (
-                      | {
-                            conversation?: ServerConversation;
-                            pricing: ServerPricing;
-                            errors: undefined;
-                        }
-                      | {
-                            conversation: undefined;
-                            pricing: undefined;
-                            errors: [ServerError];
-                        }
-                  )
-              ];
-          };
+    value: { contacts: [ServerContacts] } & (
+        | { messages: [ServerMessage] }
+        | { statuses: [ServerStatusPayload] }
+    );
 };
 
 export type PostDataCallField = {
@@ -981,8 +1085,23 @@ export type ServerSentMessageResponse = {
     messaging_product: "whatsapp";
     contacts: [
         {
+            /**
+             * Will return the user’s phone number, if the message was sent to the user’s phone number
+             * Will return the user’s BSUID or parent BSUID, if it was sent to their BSUID or parent BSUID
+             * Will return the group ID, it sent to a group
+             */
             input: string;
-            wa_id: string;
+            /**
+             * Will return the user’s phone number, if the message was sent to the user’s phone number
+             */
+            wa_id?: string;
+            /**
+             * Will return the user’s BSUID or parent BSUID, if the message was sent to user’s BSUID or parent BSUID,
+             * or if you included both the user’s phone number and their BSUID or parent BSUID when sending the message
+             * (causing the message to be sent to the user’s phone number, which takes precedence)
+             * Will be omitted if the message was sent to the user’s phone number
+             */
+            user_id?: string;
         }
     ];
     messages: [
@@ -1100,8 +1219,21 @@ export type ServerBlockedError = Pick<
 };
 
 export type ServerBlockedUser = {
+    /**
+     * Will be set to the user’s BSUID or parent BSUID if you used the user’s BSUID or parent BSUID to block or unblock the user.
+     * Will be set to the user’s phone number if you used the user’s phone number to block or unblock the user.
+     */
     input: string;
-    wa_id: string;
+    /**
+     * Will be omitted if you used the user’s BSUID or parent BSUID to block or unblock the user.
+     * Will be set to the user’s phone number if you used their phone number to block or unblock the user.
+     */
+    wa_id?: string;
+    /**
+     * Will be set to the user’s BSUID or parent BSUID if you used the user’s BSUID or parent BSUID to block or unlock the user.
+     * Will be omitted if you used the user’s phone number to block or unblock the user.
+     */
+    user_id?: string;
 };
 
 export type ServerBlockFailedUser = {
