@@ -1517,7 +1517,7 @@ describe("WhatsAppAPI", () => {
 
                 const response = await Whatsapp.unblockUser(bot, { bsuid });
 
-                deepEqual(response, expectedResponse);
+                deepEqual(response, expectedResponseWithBSUID);
             });
         });
     });
