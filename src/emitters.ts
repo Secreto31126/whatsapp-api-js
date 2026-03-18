@@ -99,6 +99,10 @@ export type OnMessageArgs = {
     /**
      * The user's phone number
      *
+     * @remarks The value will be undefined if the user enabled
+     * usernames privacy, but for backwards compatibility the type
+     * wasn't modified. Please upgrade to v7 before july 2026.
+     *
      * @deprecated Prefer using `contact.wa_id`.
      */
     from: string;
