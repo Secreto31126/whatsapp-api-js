@@ -200,7 +200,7 @@ export type OnStatusArgs = {
     /**
      * The user's phone number (wa_id)
      *
-     * @deprecated Prefer using `wa_id`
+     * @deprecated Prefer using `contact.wa_id`
      */
     phone?: string;
     /**
