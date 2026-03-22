@@ -150,28 +150,30 @@ export type ExtraTypesThatMakeTypescriptWork = SecureLightSwitch;
 export type WhatsAppAPIConstructorArguments = TheBasicConstructorArguments &
     ExtraTypesThatMakeTypescriptWork;
 
-export type ClientIndividualRecipientIdentifier = Partial<{
+export type ClientIndividualRecipientIdentifier = {
     /**
      * Identify a user by its wa_id (the phone number)
      */
-    phone: string;
+    phone?: string;
     /**
      * Identify a user by its bsuid
      */
-    bsuid: string;
-}>;
+    bsuid?: string;
+};
+
+export type ClientGroupRecipientIdentifier = {
+    /**
+     * Identify a group by its group id
+     *
+     * @remarks This value is incompatible with phone and bsuid,
+     * as it represents a group rather than a individual user
+     */
+    group: string;
+};
 
 export type ClientRecipientIdentifier =
     | ClientIndividualRecipientIdentifier
-    | {
-          /**
-           * Identify a group by its group id
-           *
-           * @remarks This value is incompatible with phone and bsuid,
-           * as it represents a group rather than a individual user
-           */
-          group: string;
-      };
+    | ClientGroupRecipientIdentifier;
 
 /**
  * The base class of all the library messages

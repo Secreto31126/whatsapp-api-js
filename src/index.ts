@@ -250,16 +250,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         context?: string,
         biz_opaque_callback_data?: string
     ) {
-        const legacy = WhatsAppAPI.legacy(recipient);
+        const r = WhatsAppAPI.toRecipient(recipient);
+        const individual = WhatsAppAPI.isIndividualRecipient(r);
 
-        const is_group = !legacy && "group" in recipient;
-
-        if (
-            !is_group &&
-            !legacy &&
-            !("phone" in recipient) &&
-            !("bsuid" in recipient)
-        ) {
+        if (individual && !("phone" in r) && !("bsuid" in r)) {
             throw new Error("At least one recipient type must be provided");
         }
 
@@ -268,18 +262,13 @@ export class WhatsAppAPI<EmittersReturnType = void>
         const request = {
             messaging_product: "whatsapp",
 
-            recipient_type: !legacy && is_group ? "group" : "individual",
-            to:
-                !is_group && !legacy
-                    ? recipient.phone
-                    : !legacy
-                      ? recipient.group
-                      : recipient,
+            recipient_type: individual ? "individual" : "group",
+            to: individual ? r.phone : r.group,
 
             type,
             [type]: message,
 
-            recipient: !is_group && !legacy ? recipient.bsuid : undefined,
+            recipient: individual ? r.bsuid : undefined,
             context: context ? { message_id: context } : undefined,
             biz_opaque_callback_data
         } as ClientMessageRequest; // Trust me TS, this is a valid message
@@ -301,15 +290,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
         const args: OnSentArgs = {
             phoneID,
-            to:
-                !is_group && !legacy
-                    ? ((recipient.phone ?? recipient.bsuid) as string)
-                    : is_group
-                      ? recipient.group
-                      : recipient,
-            recipient: !legacy
-                ? recipient
-                : ({ phone: recipient } as ClientRecipientIdentifier),
+            to: individual ? (r.phone ?? r.bsuid!) : r.group,
+            recipient: r,
             type,
             message,
             request,
@@ -485,7 +467,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         sdp: string,
         biz_opaque_callback_data?: string
     ) {
-        const legacy = WhatsAppAPI.legacy(callee);
+        callee = WhatsAppAPI.toRecipient(callee);
 
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/calls`,
@@ -496,8 +478,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    to: !legacy ? callee.phone : callee,
-                    recipient: !legacy ? callee.bsuid : undefined,
+                    to: callee.phone,
+                    recipient: callee.bsuid,
                     action: "connect",
                     biz_opaque_callback_data,
                     session: {
@@ -787,7 +769,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         phoneID: string,
         ...users: string[] | ClientIndividualRecipientIdentifier[]
     ) {
-        const legacy = WhatsAppAPI.legacy(users);
+        users = WhatsAppAPI.toRecipient(users);
 
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/block_users`,
@@ -798,12 +780,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    block_users: !legacy
-                        ? users.map(({ phone, bsuid }) => ({
-                              user: phone,
-                              user_id: bsuid
-                          }))
-                        : users.map((user) => ({ user }))
+                    block_users: users.map(({ phone, bsuid }) => ({
+                        user: phone,
+                        user_id: bsuid
+                    }))
                 })
             }
         );
@@ -828,7 +808,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         phoneID: string,
         ...users: string[] | ClientIndividualRecipientIdentifier[]
     ) {
-        const legacy = WhatsAppAPI.legacy(users);
+        users = WhatsAppAPI.toRecipient(users);
 
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/block_users`,
@@ -839,12 +819,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    block_users: !legacy
-                        ? users.map(({ phone, bsuid }) => ({
-                              user: phone,
-                              user_id: bsuid
-                          }))
-                        : users.map((user) => ({ user }))
+                    block_users: users.map(({ phone, bsuid }) => ({
+                        user: phone,
+                        user_id: bsuid
+                    }))
                 })
             }
         );
@@ -893,7 +871,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const { wa_id, user_id, parent_user_id, profile } = contact;
                 const { name } = profile;
 
-                const legacy_from = wa_id ?? from!;
+                const legacy_from = wa_id ?? from ?? parent_user_id ?? user_id;
 
                 const recipient: ClientRecipientIdentifier = {
                     phone: !group_id ? (wa_id ?? from) : undefined,
@@ -1176,10 +1154,41 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     /**
      * @deprecated Will be removed in v7, when recipient no longer supports strings
+     */
+    private static toRecipient<
+        T extends
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+    >(r: string | T): T;
+
+    /**
+     * @deprecated Will be removed in v7, when recipient no longer supports strings
+     */
+    private static toRecipient<
+        T extends
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+    >(r: string[] | T[]): T[];
+
+    /**
+     * @deprecated Will be removed in v7, when recipient no longer supports strings
      * @param r - The param to validate
      * @returns If the value is of a legacy type
      */
-    private static legacy(r: unknown): r is string | string[] {
-        return typeof (Array.isArray(r) ? r[0] : r) === "string";
+    private static toRecipient<
+        T extends
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+    >(r: string | T | string[] | T[]) {
+        if (Array.isArray(r)) return r.map(WhatsAppAPI.toRecipient);
+        if (typeof r !== "string") return r;
+        if (/^[a-zA-Z]{2}\..+/.test(r)) return { bsuid: r } as T;
+        return { phone: r } as T;
+    }
+
+    private static isIndividualRecipient(
+        r: ClientRecipientIdentifier
+    ): r is ClientIndividualRecipientIdentifier {
+        return !("group" in r);
     }
 }
