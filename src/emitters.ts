@@ -227,12 +227,6 @@ export type OnStatusArgs = {
      */
     recipient: ClientRecipientIdentifier;
     /**
-     * The user's display name
-     *
-     * @deprecated Prefer using `contact.profile.name`.
-     */
-    name?: string;
-    /**
      * The message status
      */
     status: string;

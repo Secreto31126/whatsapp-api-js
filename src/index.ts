@@ -948,7 +948,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     ...value.contacts?.[0]
                 };
 
-                const { wa_id, user_id, parent_user_id, profile } = contact;
+                const { wa_id, user_id, parent_user_id } = contact;
 
                 const error = statuses.errors?.[0];
 
@@ -965,8 +965,6 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     phone: wa_id ?? parent_user_id ?? user_id,
                     type: type ?? "individual",
                     contact,
-                    // TODO: Remove in v7
-                    name: profile?.name,
                     recipient,
                     status,
                     id,
