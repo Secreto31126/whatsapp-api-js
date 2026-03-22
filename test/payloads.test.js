@@ -20,7 +20,7 @@ describe("Payload Examples", () => {
             text: {
                 body: "this is a text message"
             }
-        }
+        };
 
         beforeEach(() => {
             whatsapp.on.message = spy();
@@ -34,11 +34,13 @@ describe("Payload Examples", () => {
         function complete_payload(data) {
             return {
                 object: "whatsapp_business_account",
-                entry: [{
-                    id: "1",
-                    // @ts-expect-error Callback is defined with spy
-                    changes: [data]
-                }]
+                entry: [
+                    {
+                        id: "1",
+                        // @ts-expect-error Callback is defined with spy
+                        changes: [data]
+                    }
+                ]
             };
         }
 
@@ -46,33 +48,34 @@ describe("Payload Examples", () => {
             describe("With phone", () => {
                 it("has parent bsuid", async () => {
                     const payload = complete_payload({
-                        "field": "messages",
-                        "value": {
-                            "messaging_product": "whatsapp",
-                            "metadata": {
-                                "display_phone_number": "16505551111",
-                                "phone_number_id": "123456123"
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            metadata: {
+                                display_phone_number: "16505551111",
+                                phone_number_id: "123456123"
                             },
-                            "contacts": [
+                            contacts: [
                                 {
-                                    "profile": {
-                                        "name": "test user name"
+                                    profile: {
+                                        name: "test user name"
                                     },
-                                    "wa_id": "16315551181",
-                                    "user_id": "US.13491208655302741918",
-                                    "parent_user_id": "US.ENT.506847293015824"
+                                    wa_id: "16315551181",
+                                    user_id: "US.13491208655302741918",
+                                    parent_user_id: "US.ENT.506847293015824"
                                 }
                             ],
-                            "messages": [
+                            messages: [
                                 {
-                                    "id": "ABGGFlA5Fpa",
-                                    "timestamp": "1504902988",
-                                    "from": "16315551181",
-                                    "from_user_id": "US.13491208655302741918",
-                                    "from_parent_user_id": "US.ENT.506847293015824",
-                                    "type": "text",
-                                    "text": {
-                                        "body": "this is a text message"
+                                    id: "ABGGFlA5Fpa",
+                                    timestamp: "1504902988",
+                                    from: "16315551181",
+                                    from_user_id: "US.13491208655302741918",
+                                    from_parent_user_id:
+                                        "US.ENT.506847293015824",
+                                    type: "text",
+                                    text: {
+                                        body: "this is a text message"
                                     }
                                 }
                             ]
@@ -104,31 +107,31 @@ describe("Payload Examples", () => {
 
                 it("doesn't have parent bsuid", async () => {
                     const payload = complete_payload({
-                        "field": "messages",
-                        "value": {
-                            "messaging_product": "whatsapp",
-                            "metadata": {
-                                "display_phone_number": "16505551111",
-                                "phone_number_id": "123456123"
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            metadata: {
+                                display_phone_number: "16505551111",
+                                phone_number_id: "123456123"
                             },
-                            "contacts": [
+                            contacts: [
                                 {
-                                    "profile": {
-                                        "name": "test user name"
+                                    profile: {
+                                        name: "test user name"
                                     },
-                                    "wa_id": "16315551181",
-                                    "user_id": "US.13491208655302741918"
+                                    wa_id: "16315551181",
+                                    user_id: "US.13491208655302741918"
                                 }
                             ],
-                            "messages": [
+                            messages: [
                                 {
-                                    "id": "ABGGFlA5Fpa",
-                                    "timestamp": "1504902988",
-                                    "from": "16315551181",
-                                    "from_user_id": "US.13491208655302741918",
-                                    "type": "text",
-                                    "text": {
-                                        "body": "this is a text message"
+                                    id: "ABGGFlA5Fpa",
+                                    timestamp: "1504902988",
+                                    from: "16315551181",
+                                    from_user_id: "US.13491208655302741918",
+                                    type: "text",
+                                    text: {
+                                        body: "this is a text message"
                                     }
                                 }
                             ]
@@ -162,32 +165,33 @@ describe("Payload Examples", () => {
             describe("With username", () => {
                 it("has parent bsuid", async () => {
                     const payload = complete_payload({
-                        "field": "messages",
-                        "value": {
-                            "messaging_product": "whatsapp",
-                            "metadata": {
-                                "display_phone_number": "16505551111",
-                                "phone_number_id": "123456123"
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            metadata: {
+                                display_phone_number: "16505551111",
+                                phone_number_id: "123456123"
                             },
-                            "contacts": [
+                            contacts: [
                                 {
-                                    "profile": {
-                                        "name": "test user name",
-                                        "username": "@testusername"
+                                    profile: {
+                                        name: "test user name",
+                                        username: "@testusername"
                                     },
-                                    "user_id": "US.13491208655302741918",
-                                    "parent_user_id": "US.ENT.506847293015824"
+                                    user_id: "US.13491208655302741918",
+                                    parent_user_id: "US.ENT.506847293015824"
                                 }
                             ],
-                            "messages": [
+                            messages: [
                                 {
-                                    "id": "ABGGFlA5Fpa",
-                                    "timestamp": "1504902988",
-                                    "from_user_id": "US.13491208655302741918",
-                                    "from_parent_user_id": "US.ENT.506847293015824",
-                                    "type": "text",
-                                    "text": {
-                                        "body": "this is a text message"
+                                    id: "ABGGFlA5Fpa",
+                                    timestamp: "1504902988",
+                                    from_user_id: "US.13491208655302741918",
+                                    from_parent_user_id:
+                                        "US.ENT.506847293015824",
+                                    type: "text",
+                                    text: {
+                                        body: "this is a text message"
                                     }
                                 }
                             ]
@@ -219,30 +223,30 @@ describe("Payload Examples", () => {
 
                 it("doesn't have parent bsuid", async () => {
                     const payload = complete_payload({
-                        "field": "messages",
-                        "value": {
-                            "messaging_product": "whatsapp",
-                            "metadata": {
-                                "display_phone_number": "16505551111",
-                                "phone_number_id": "123456123"
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            metadata: {
+                                display_phone_number: "16505551111",
+                                phone_number_id: "123456123"
                             },
-                            "contacts": [
+                            contacts: [
                                 {
-                                    "profile": {
-                                        "name": "test user name",
-                                        "username": "@testusername"
+                                    profile: {
+                                        name: "test user name",
+                                        username: "@testusername"
                                     },
-                                    "user_id": "US.13491208655302741918"
+                                    user_id: "US.13491208655302741918"
                                 }
                             ],
-                            "messages": [
+                            messages: [
                                 {
-                                    "id": "ABGGFlA5Fpa",
-                                    "timestamp": "1504902988",
-                                    "from_user_id": "US.13491208655302741918",
-                                    "type": "text",
-                                    "text": {
-                                        "body": "this is a text message"
+                                    id: "ABGGFlA5Fpa",
+                                    timestamp: "1504902988",
+                                    from_user_id: "US.13491208655302741918",
+                                    type: "text",
+                                    text: {
+                                        body: "this is a text message"
                                     }
                                 }
                             ]
@@ -276,34 +280,35 @@ describe("Payload Examples", () => {
             describe("With phone and username", () => {
                 it("has parent bsuid", async () => {
                     const payload = complete_payload({
-                        "field": "messages",
-                        "value": {
-                            "messaging_product": "whatsapp",
-                            "metadata": {
-                                "display_phone_number": "16505551111",
-                                "phone_number_id": "123456123"
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            metadata: {
+                                display_phone_number: "16505551111",
+                                phone_number_id: "123456123"
                             },
-                            "contacts": [
+                            contacts: [
                                 {
-                                    "profile": {
-                                        "name": "test user name",
-                                        "username": "@testusername"
+                                    profile: {
+                                        name: "test user name",
+                                        username: "@testusername"
                                     },
-                                    "wa_id": "16315551181",
-                                    "user_id": "US.13491208655302741918",
-                                    "parent_user_id": "US.ENT.506847293015824"
+                                    wa_id: "16315551181",
+                                    user_id: "US.13491208655302741918",
+                                    parent_user_id: "US.ENT.506847293015824"
                                 }
                             ],
-                            "messages": [
+                            messages: [
                                 {
-                                    "id": "ABGGFlA5Fpa",
-                                    "timestamp": "1504902988",
-                                    "from": "16315551181",
-                                    "from_user_id": "US.13491208655302741918",
-                                    "from_parent_user_id": "US.ENT.506847293015824",
-                                    "type": "text",
-                                    "text": {
-                                        "body": "this is a text message"
+                                    id: "ABGGFlA5Fpa",
+                                    timestamp: "1504902988",
+                                    from: "16315551181",
+                                    from_user_id: "US.13491208655302741918",
+                                    from_parent_user_id:
+                                        "US.ENT.506847293015824",
+                                    type: "text",
+                                    text: {
+                                        body: "this is a text message"
                                     }
                                 }
                             ]
@@ -335,32 +340,32 @@ describe("Payload Examples", () => {
 
                 it("doesn't have parent bsuid", async () => {
                     const payload = complete_payload({
-                        "field": "messages",
-                        "value": {
-                            "messaging_product": "whatsapp",
-                            "metadata": {
-                                "display_phone_number": "16505551111",
-                                "phone_number_id": "123456123"
+                        field: "messages",
+                        value: {
+                            messaging_product: "whatsapp",
+                            metadata: {
+                                display_phone_number: "16505551111",
+                                phone_number_id: "123456123"
                             },
-                            "contacts": [
+                            contacts: [
                                 {
-                                    "profile": {
-                                        "name": "test user name",
-                                        "username": "@testusername"
+                                    profile: {
+                                        name: "test user name",
+                                        username: "@testusername"
                                     },
-                                    "wa_id": "16315551181",
-                                    "user_id": "US.13491208655302741918"
+                                    wa_id: "16315551181",
+                                    user_id: "US.13491208655302741918"
                                 }
                             ],
-                            "messages": [
+                            messages: [
                                 {
-                                    "id": "ABGGFlA5Fpa",
-                                    "timestamp": "1504902988",
-                                    "from": "16315551181",
-                                    "from_user_id": "US.13491208655302741918",
-                                    "type": "text",
-                                    "text": {
-                                        "body": "this is a text message"
+                                    id: "ABGGFlA5Fpa",
+                                    timestamp: "1504902988",
+                                    from: "16315551181",
+                                    from_user_id: "US.13491208655302741918",
+                                    type: "text",
+                                    text: {
+                                        body: "this is a text message"
                                     }
                                 }
                             ]
@@ -397,43 +402,44 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -462,43 +468,45 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -529,41 +537,41 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -592,41 +600,42 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -659,42 +668,43 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -723,42 +733,44 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -789,40 +801,40 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "user_id": "US.13491208655302741918"
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -851,40 +863,41 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "user_id": "US.13491208655302741918"
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -917,43 +930,44 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -982,43 +996,45 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1049,41 +1065,41 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1112,41 +1128,42 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "sent",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "sent",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         },
-                                        "pricing": {
-                                            "billable": true,
-                                            "pricing_model": "PMP",
-                                            "type": "regular",
-                                            "category": "marketing"
+                                        pricing: {
+                                            billable: true,
+                                            pricing_model: "PMP",
+                                            type: "regular",
+                                            category: "marketing"
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1181,37 +1198,38 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1240,37 +1258,39 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1301,35 +1321,35 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1358,35 +1378,36 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1419,37 +1440,38 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1478,37 +1500,39 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1539,35 +1563,35 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918"
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1596,35 +1620,36 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918"
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1657,38 +1682,39 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1717,38 +1743,40 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1779,36 +1807,36 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1837,36 +1865,37 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "delivered",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "conversation": {
-                                            "id": "CONVERSATION_ID",
-                                            "expiration_timestamp": "1504903988",
-                                            "origin": {
-                                                "type": "marketing"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "delivered",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        conversation: {
+                                            id: "CONVERSATION_ID",
+                                            expiration_timestamp: "1504903988",
+                                            origin: {
+                                                type: "marketing"
                                             }
                                         }
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -1901,30 +1930,31 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -1953,30 +1983,32 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -2007,28 +2039,28 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -2057,28 +2089,29 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name"
+                                        profile: {
+                                            name: "test user name"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -2111,30 +2144,31 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -2163,30 +2197,32 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -2217,28 +2253,28 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918"
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -2267,28 +2303,29 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "user_id": "US.13491208655302741918"
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -2321,31 +2358,32 @@ describe("Payload Examples", () => {
                 describe("Has parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -2374,31 +2412,33 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918",
-                                        "parent_recipient_user_id": "US.ENT.506847293015824"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918",
+                                        parent_recipient_user_id:
+                                            "US.ENT.506847293015824"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918",
-                                        "parent_user_id": "US.ENT.506847293015824"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918",
+                                        parent_user_id: "US.ENT.506847293015824"
                                     }
                                 ]
                             }
@@ -2429,29 +2469,29 @@ describe("Payload Examples", () => {
                 describe("Doesn't have parent bsuid", () => {
                     it("was sent to phone", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_id": "16315551181"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_id: "16315551181"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }
@@ -2480,29 +2520,30 @@ describe("Payload Examples", () => {
 
                     it("was sent to bsuid", async () => {
                         const payload = complete_payload({
-                            "field": "messages",
-                            "value": {
-                                "messaging_product": "whatsapp",
-                                "metadata": {
-                                    "display_phone_number": "16505551111",
-                                    "phone_number_id": "123456123"
+                            field: "messages",
+                            value: {
+                                messaging_product: "whatsapp",
+                                metadata: {
+                                    display_phone_number: "16505551111",
+                                    phone_number_id: "123456123"
                                 },
-                                "statuses": [
+                                statuses: [
                                     {
-                                        "id": "ABGGFlA5Fpa",
-                                        "status": "read",
-                                        "timestamp": "1504902988",
-                                        "recipient_user_id": "US.13491208655302741918"
+                                        id: "ABGGFlA5Fpa",
+                                        status: "read",
+                                        timestamp: "1504902988",
+                                        recipient_user_id:
+                                            "US.13491208655302741918"
                                     }
                                 ],
-                                "contacts": [
+                                contacts: [
                                     {
-                                        "profile": {
-                                            "name": "test user name",
-                                            "username": "@testusername"
+                                        profile: {
+                                            name: "test user name",
+                                            username: "@testusername"
                                         },
-                                        "wa_id": "16315551181",
-                                        "user_id": "US.13491208655302741918"
+                                        wa_id: "16315551181",
+                                        user_id: "US.13491208655302741918"
                                     }
                                 ]
                             }

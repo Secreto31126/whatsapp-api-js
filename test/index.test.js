@@ -444,7 +444,11 @@ describe("WhatsAppAPI", () => {
                     .reply(200, expectedResponse)
                     .times(1);
 
-                const response = await Whatsapp.sendMessage(bot, user_id, message);
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    user_id,
+                    message
+                );
 
                 deepEqual(response, expectedResponse);
             });
