@@ -13,7 +13,7 @@ export interface API {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
      *
-     * @deprecated Prefer using the new signature that recieves a recipient identifier
+     * @deprecated Prefer using the new signature that receives a recipient identifier
      *
      * @beta
      * @param phoneID - The bot's phone ID

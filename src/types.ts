@@ -860,7 +860,7 @@ export type ServerMessage = {
      */
     id: string;
     /**
-     * The group id, if comming from a group
+     * The group id, if coming from a group
      */
     group_id?: string;
     timestamp: string;
