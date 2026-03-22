@@ -345,6 +345,7 @@ describe("WhatsAppAPI", () => {
         const bot = "2";
         const user = "3";
         const group = "4";
+        const user_id = "US.5";
         const id = "something_random";
         const context = "another_random_id";
         const tracker = "tracker";
@@ -374,7 +375,7 @@ describe("WhatsAppAPI", () => {
 
         const requestWithBSUID = {
             ...request,
-            recipient: user
+            recipient: user_id
         };
 
         const requestWithOnlyBSUID = {
@@ -429,6 +430,25 @@ describe("WhatsAppAPI", () => {
                 deepEqual(response, expectedResponse);
             });
 
+            it("should be able to send a basic message to a bsuid (legacy)", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithOnlyBSUID)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(bot, user_id, message);
+
+                deepEqual(response, expectedResponse);
+            });
+
             it("should be able to send a basic message to a phone", async () => {
                 clientFacebook
                     .intercept({
@@ -468,7 +488,7 @@ describe("WhatsAppAPI", () => {
 
                 const response = await Whatsapp.sendMessage(
                     bot,
-                    { bsuid: user },
+                    { bsuid: user_id },
                     message
                 );
 
@@ -491,7 +511,7 @@ describe("WhatsAppAPI", () => {
 
                 const response = await Whatsapp.sendMessage(
                     bot,
-                    { phone: user, bsuid: user },
+                    { phone: user, bsuid: user_id },
                     message
                 );
 
