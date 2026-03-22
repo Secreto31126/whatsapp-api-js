@@ -254,8 +254,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
         const r = WhatsAppAPI.toRecipient(recipient);
         const individual = WhatsAppAPI.isIndividualRecipient(r);
 
-        if (individual && !("phone" in r) && !("bsuid" in r)) {
-            throw new Error("At least one recipient type must be provided");
+        if (individual && !r.phone && !r.bsuid) {
+            throw new Error("At least one recipient id must be provided");
         }
 
         const type = message._type;
@@ -469,6 +469,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         biz_opaque_callback_data?: string
     ) {
         callee = WhatsAppAPI.toRecipient(callee);
+
+        if (!callee.phone && !callee.bsuid) {
+            throw new Error("At least one recipient id must be provided");
+        }
 
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/calls`,

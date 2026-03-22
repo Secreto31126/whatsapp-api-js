@@ -78,6 +78,7 @@ export interface API {
      * @param context - The message ID of the message to reply to
      * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
      * @returns The server response
+     * @throws If the recipient identifier doesn't have any data
      */
     sendMessage(
         phoneID: string,

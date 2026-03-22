@@ -40,6 +40,7 @@ export interface API {
      * @param sdp - The SDP invitation string (RFC 8866)
      * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
      * @returns The server response
+     * @throws If the recipient identifier doesn't have any data
      */
     initiateCall(
         phoneID: string,
