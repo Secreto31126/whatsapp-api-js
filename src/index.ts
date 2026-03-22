@@ -9,6 +9,7 @@ import {
     type ClientIndividualRecipientIdentifier,
     type ClientRecipientIdentifier,
     type ClientTypingIndicators,
+    type ServerContacts,
     type ServerMessageResponse,
     type ServerMarkAsReadResponse,
     type ServerCreateQRResponse,
@@ -865,27 +866,39 @@ export class WhatsAppAPI<EmittersReturnType = void>
         if (field === "messages") {
             if (field in value) {
                 const message = value.messages[0];
-                const contact = value.contacts[0];
 
-                const { from, group_id } = message;
+                const {
+                    // Force prettier to be prettier :]
+                    from,
+                    from_user_id,
+                    from_parent_user_id,
+                    group_id
+                } = message;
+
+                const contact: ServerContacts = {
+                    wa_id: from,
+                    user_id: from_user_id,
+                    parent_user_id: from_parent_user_id,
+                    ...value.contacts?.[0]
+                };
+
                 const { wa_id, user_id, parent_user_id, profile } = contact;
-                const { name } = profile;
-
-                const legacy_from = wa_id ?? from ?? parent_user_id ?? user_id;
 
                 const recipient: ClientRecipientIdentifier = {
-                    phone: !group_id ? (wa_id ?? from) : undefined,
+                    phone: !group_id ? wa_id : undefined,
                     bsuid: !group_id ? (parent_user_id ?? user_id) : undefined,
                     group: group_id
                 };
 
                 const args: OnMessageArgs = {
                     phoneID,
-                    from: legacy_from,
+                    // TODO: Remove in v7
+                    from: wa_id ?? parent_user_id ?? user_id,
                     contact,
                     recipient,
                     message,
-                    name,
+                    // TODO: Remove in v7
+                    name: profile?.name,
                     raw: data,
                     reply: (
                         response,
@@ -912,13 +925,12 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 return this.on?.message?.call(null, args);
             } else if ("statuses" in value) {
                 const statuses = value.statuses[0];
-                const contact = value.contacts[0];
 
                 const {
-                    recipient_id: legacy_phone,
                     recipient_type: type,
                     recipient_id,
                     recipient_user_id,
+                    parent_recipient_user_id,
                     status,
                     id,
                     timestamp,
@@ -927,24 +939,34 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     biz_opaque_callback_data
                 } = statuses;
 
-                const name = contact.profile.name;
+                // Contact data isn't provided for failed statuses
+                // Try to fill it as much as possible for most scenarios
+                const contact: ServerContacts = {
+                    wa_id: recipient_id,
+                    user_id: recipient_user_id,
+                    parent_user_id: parent_recipient_user_id,
+                    ...value.contacts?.[0]
+                };
+
+                const { wa_id, user_id, parent_user_id, profile } = contact;
 
                 const error = statuses.errors?.[0];
 
                 const is_group = type === "group";
-
                 const recipient: ClientRecipientIdentifier = {
-                    phone: !is_group ? recipient_id : undefined,
-                    bsuid: !is_group ? recipient_user_id : undefined,
+                    phone: !is_group ? wa_id : undefined,
+                    bsuid: !is_group ? (parent_user_id ?? user_id) : undefined,
                     group: is_group ? recipient_id : undefined
                 };
 
                 const args: OnStatusArgs = {
                     phoneID,
-                    phone: legacy_phone,
+                    // TODO: Remove in v7
+                    phone: wa_id ?? parent_user_id ?? user_id,
                     type: type ?? "individual",
                     contact,
-                    name,
+                    // TODO: Remove in v7
+                    name: profile?.name,
                     recipient,
                     status,
                     id,
@@ -967,7 +989,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const contact = value.contacts?.[0];
 
                 const from = contact?.wa_id ?? call.from;
-                const name = contact?.profile.name;
+                const name = contact?.profile?.name;
 
                 if (call.event === "connect") {
                     const args: OnCallConnectArgs = {

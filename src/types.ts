@@ -818,13 +818,13 @@ export type ServerStatusPayload = {
     /**
      * Will be set to the user’s BSUID or parent BSUID, if you sent the message to the user’s BSUID or parent BSUID
      */
-    recipient_user_id?: string;
+    recipient_user_id: string;
     /**
      * Will be set to the user’s parent BSUID if you have enabled parent BSUIDs
      *
      * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
      */
-    parent_user_id?: string;
+    parent_recipient_user_id?: string;
     biz_opaque_callback_data?: string;
 } & (
     | {
@@ -936,7 +936,7 @@ export type ServerCallTerminate = ServerCall & {
 };
 
 export type ServerContacts = {
-    profile: {
+    profile?: {
         /**
          * Value will be set to the WhatsApp user’s display name
          */
@@ -1015,7 +1015,7 @@ export type GetParams = {
 
 export type PostDataMessageField = {
     field: "messages";
-    value: { contacts: [ServerContacts] } & (
+    value: { contacts?: [ServerContacts] } & (
         | { messages: [ServerMessage] }
         | { statuses: [ServerStatusPayload] }
     );

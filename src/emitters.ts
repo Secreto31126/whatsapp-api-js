@@ -97,11 +97,8 @@ export type OnMessageArgs = {
      */
     phoneID: string;
     /**
-     * The user's phone number
-     *
-     * @remarks The value will be undefined if the user enabled
-     * usernames privacy, but for backwards compatibility the type
-     * wasn't modified. Please upgrade to v7 before july 2026.
+     * The user's phone number (wa_id),
+     * with fallback to parent_user_id and user_id.
      *
      * @deprecated Prefer using `contact.wa_id`.
      */
@@ -198,7 +195,8 @@ export type OnStatusArgs = {
      */
     phoneID: string;
     /**
-     * The user's phone number (wa_id)
+     * The user's phone number (wa_id),
+     * with fallback to parent_user_id and user_id
      *
      * @deprecated Prefer using `contact.wa_id`
      */
