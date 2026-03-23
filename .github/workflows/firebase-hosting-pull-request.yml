@@ -18,9 +18,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
-            - run: |
-                  npm ci --only=dev
-                  npm run document
+            - uses: pnpm/action-setup@v4
+              with:
+                  version: 10
+                  run_install: true
+
+            - run: pnpm document
 
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:

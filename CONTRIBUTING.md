@@ -25,9 +25,9 @@ cd whatsapp-api-js
 ```
 
 ```sh
-npm ci
+pnpm i
 ```
 
 ```sh
-npm run test:build
+pnpm run test:build
 ```

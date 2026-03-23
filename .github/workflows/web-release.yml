@@ -20,15 +20,18 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
+                  run_install: true
             - uses: actions/setup-node@v6
               with:
                   node-version: 24.x
-
-            - name: Setup
-              run: npm ci
+                  cache: pnpm
 
             - name: Document
-              run: npm run document
+              run: pnpm document
 
             - name: Store docs
               uses: actions/upload-artifact@v7

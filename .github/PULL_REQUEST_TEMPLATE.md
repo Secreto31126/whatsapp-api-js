@@ -6,4 +6,4 @@
 
 ### Tests
 
-- [ ] Run the tests with `npm run test` and lint the project with `npm run lint` and `npm run prettier`
+- [ ] Run the tests with `pnpm run test` and lint the project with `pnpm run lint` and `pnpm run prettier`

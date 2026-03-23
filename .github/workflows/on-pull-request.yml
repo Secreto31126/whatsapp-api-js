@@ -13,17 +13,22 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
+                  run_install: true
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v6
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: npm
-            - name: Install
-              run: npm ci
+                  cache: pnpm
+
             - name: Compile
-              run: npm run build:code
+              run: pnpm build:code
+
             - name: Tests
-              run: npm run test
+              run: pnpm test
 
     lint_and_format:
         name: Run Lint and Format
@@ -31,13 +36,18 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
+                  run_install: true
             - uses: actions/setup-node@v6
               with:
                   node-version: 24.x
-                  cache: npm
-            - name: Install
-              run: npm ci
+                  cache: pnpm
+
             - name: Linted
-              run: npm run lint
+              run: pnpm lint
+
             - name: Nice
-              run: npm run prettier
+              run: pnpm prettier

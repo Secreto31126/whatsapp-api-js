@@ -14,15 +14,18 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
+                  run_install: true
             - uses: actions/setup-node@v6
               with:
                   node-version: 24.x
-
-            - name: Setup
-              run: npm ci
+                  cache: pnpm
 
             - name: Build
-              run: npm run build
+              run: pnpm build
 
             - name: Store builds
               uses: actions/upload-artifact@v7
@@ -45,18 +48,19 @@ jobs:
               with:
                   name: build
                   path: lib
-
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
+                  run_install: true
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v6
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: npm
-
-            - name: Setup
-              run: npm ci
+                  cache: pnpm
 
             - name: Test
-              run: npm run test
+              run: pnpm test
 
     publish-npm:
         name: Public Release
@@ -70,6 +74,10 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
             - uses: actions/setup-node@v6
               with:
                   node-version: 24.x
@@ -79,13 +87,11 @@ jobs:
                   name: build
                   path: lib
 
-            - run: npm install -g npm@latest
-
             - name: Give me 1 minute to reconsider my life actions
               run: sleep 60s
 
             - name: Ok, now publish it
-              run: npm publish
+              run: pnpm publish --provenance
 
     preview-npm:
         name: Beta Release
@@ -99,6 +105,10 @@ jobs:
 
         steps:
             - uses: actions/checkout@v6
+            - uses: pnpm/action-setup@v5
+              with:
+                  version: 10
+                  cache: true
             - uses: actions/setup-node@v6
               with:
                   node-version: 24.x
@@ -108,13 +118,11 @@ jobs:
                   name: build
                   path: lib
 
-            - run: npm install -g npm@latest
-
             - name: Set package version to prerelease tag
-              run: npm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
+              run: pnpm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
 
             - name: Beta Release
-              run: npm publish --tag beta
+              run: pnpm publish --provenance --tag beta
 
     web-release:
         name: Deploy website

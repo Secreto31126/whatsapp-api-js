@@ -4,7 +4,6 @@
     "extends": [
         "config:recommended",
         "group:allNonMajor",
-        "helpers:disableTypesNodeMajor",
         "schedule:earlyMondays"
     ],
     "commitMessageAction": "",
