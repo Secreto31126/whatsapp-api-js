@@ -344,7 +344,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     broadcastMessage(
         phoneID: string,
-        recipient: ClientRecipientIdentifier[],
+        recipients: ClientRecipientIdentifier[],
         message: ClientMessage,
         batch_size: number,
         delay: number
