@@ -61,9 +61,9 @@ export interface API {
     /**
      * Unblock a user from the bot's block list
      *
-     * @remarks Contrary to blocking, unblocking isn't restricted by the 24 hours rule
-     *
-     * @remarks If an identifier is missing both phone and bsuid,
+     * @remarks
+     * - Contrary to blocking, unblocking isn't restricted by the 24 hours rule
+     * - If an identifier is missing both phone and bsuid,
      * the call will still be executed and an API exception will happen
      *
      * @param phoneID - The bot's phone ID from which to unblock
