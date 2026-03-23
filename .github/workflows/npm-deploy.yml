@@ -122,7 +122,7 @@ jobs:
               run: pnpm version --no-git-tag-version ${GITHUB_REF/refs\/tags\//}
 
             - name: Beta Release
-              run: pnpm publish --provenance --tag beta
+              run: pnpm publish --provenance --tag beta --no-git-checks
 
     web-release:
         name: Deploy website
