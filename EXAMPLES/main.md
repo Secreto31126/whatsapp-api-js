@@ -53,7 +53,7 @@ const text_message = new Text("Hello world!");
 
 Whatsapp.sendMessage(
     "from (bot phoneID)",
-    "to (phone number/wa_id)",
+    { phone: "to (user wa_id)" },
     text_message
 );
 ```
