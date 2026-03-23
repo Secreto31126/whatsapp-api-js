@@ -646,9 +646,9 @@ export class WhatsAppAPI<EmittersReturnType = void>
     //#region Media Operations
 
     async retrieveMedia(id: string, phoneID?: string) {
-        const params = phoneID ? `phone_number_id=${phoneID}` : "";
+        const params = phoneID ? `?phone_number_id=${phoneID}` : "";
         const promise = this.$$apiFetch$$(
-            `https://graph.facebook.com/${this.v}/${id}?${params}`
+            `https://graph.facebook.com/${this.v}/${id}${params}`
         );
 
         return this.getBody<ServerMediaRetrieveResponse>(promise);
@@ -742,9 +742,9 @@ export class WhatsAppAPI<EmittersReturnType = void>
     }
 
     async deleteMedia(id: string, phoneID?: string) {
-        const params = phoneID ? `phone_number_id=${phoneID}` : "";
+        const params = phoneID ? `?phone_number_id=${phoneID}` : "";
         const promise = this.$$apiFetch$$(
-            `https://graph.facebook.com/${this.v}/${id}?${params}`,
+            `https://graph.facebook.com/${this.v}/${id}${params}`,
             {
                 method: "DELETE"
             }
