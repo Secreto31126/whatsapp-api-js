@@ -1,5 +1,5 @@
 /** @module WhatsAppAPI */
-import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse, type ServerPreacceptCallResponse, type ServerAcceptCallResponse, type ServerTerminateCallResponse, type ServerRejectCallResponse, type ServerInitiateCallResponse } from "./types.js";
+import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientIndividualRecipientIdentifier, type ClientRecipientIdentifier, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse, type ServerPreacceptCallResponse, type ServerAcceptCallResponse, type ServerTerminateCallResponse, type ServerRejectCallResponse, type ServerInitiateCallResponse } from "./types.js";
 import type { OnCallConnect, OnCallStatus, OnCallTerminate, OnMessage, OnSent, OnStatus } from "./emitters.d.ts";
 import * as Cloud from "./apis/index.js";
 /**
@@ -99,11 +99,30 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
      * @throws If secure is true, crypto.subtle is not defined in the enviroment and the provided ponyfill isn't an object
      */
     constructor({ token, appSecret, webhookVerifyToken, v, secure, ponyfill }: WhatsAppAPIConstructorArguments);
+    /**
+     * @deprecated Prefer using the new sendMessage signature, where `to` is replaced with
+     * a named parameter for multiple recipient types support.
+     */
     sendMessage(phoneID: string, to: string, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse>;
+    sendMessage(phoneID: string, recipient: ClientRecipientIdentifier, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse>;
+    /**
+     * @deprecated Prefer using the new broadcastMessage signature, where `to` is replaced with
+     * a named parameter for multiple recipient types support.
+     */
     broadcastMessage(phoneID: string, to: string[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+    /**
+     * @deprecated Prefer using the new broadcastMessage signature, where `to` is replaced with
+     * a named parameter for multiple recipient types support.
+     */
     broadcastMessage<T>(phoneID: string, to: T[], message_builder: (data: T) => [string, ClientMessage], batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+    broadcastMessage(phoneID: string, recipient: ClientRecipientIdentifier[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+    broadcastMessage<T>(phoneID: string, recipients: T[], message_builder: (data: T) => [ClientRecipientIdentifier, ClientMessage], batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
     markAsRead(phoneID: string, messageId: string, indicator?: ClientTypingIndicators): Promise<ServerMarkAsReadResponse>;
+    /**
+     * @deprecated Prefer using the new signature that recieves a recipient identifier
+     */
     initiateCall(phoneID: string, to: string, sdp: string, biz_opaque_callback_data?: string): Promise<ServerInitiateCallResponse>;
+    initiateCall(phoneID: string, callee: ClientIndividualRecipientIdentifier, sdp: string, biz_opaque_callback_data?: string): Promise<ServerInitiateCallResponse>;
     preacceptCall(phoneID: string, callID: `wacid.${string}`, sdp: string): Promise<ServerPreacceptCallResponse>;
     rejectCall(phoneID: string, callID: `wacid.${string}`): Promise<ServerRejectCallResponse>;
     acceptCall(phoneID: string, callID: `wacid.${string}`, sdp: string, biz_opaque_callback_data?: string): Promise<ServerAcceptCallResponse>;
@@ -116,8 +135,16 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
     uploadMedia(phoneID: string, form: unknown, check?: boolean): Promise<ServerMediaUploadResponse>;
     fetchMedia(url: string): Promise<Response>;
     deleteMedia(id: string, phoneID?: string): Promise<ServerMediaDeleteResponse>;
+    /**
+     * @deprecated Prefer using the new signature with recipient identifier
+     */
     blockUser(phoneID: string, ...users: string[]): Promise<ServerBlockResponse>;
+    blockUser(phoneID: string, ...users: ClientIndividualRecipientIdentifier[]): Promise<ServerBlockResponse>;
+    /**
+     * @deprecated Prefer using the new signature with recipient identifier
+     */
     unblockUser(phoneID: string, ...users: string[]): Promise<ServerUnblockResponse>;
+    unblockUser(phoneID: string, ...users: ClientIndividualRecipientIdentifier[]): Promise<ServerUnblockResponse>;
     post(data: PostData, raw_body: string, signature: string): Promise<EmittersReturnType | undefined>;
     post(data: PostData): Promise<EmittersReturnType | undefined>;
     get(params: GetParams): string;
@@ -157,5 +184,10 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
      * @param f - The function to offload from the main thread
      */
     static offload(f: () => unknown): void;
+    /**
+     * @deprecated Will be removed in v7, when recipient no longer supports strings
+     */
+    private static toRecipient;
+    private static isIndividualRecipient;
 }
 //# sourceMappingURL=index.d.ts.map

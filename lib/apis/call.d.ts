@@ -1,9 +1,11 @@
-import type { ServerAcceptCallResponse, ServerInitiateCallResponse, ServerPreacceptCallResponse, ServerRejectCallResponse, ServerTerminateCallResponse } from "../types";
+import type { ClientIndividualRecipientIdentifier, ServerAcceptCallResponse, ServerInitiateCallResponse, ServerPreacceptCallResponse, ServerRejectCallResponse, ServerTerminateCallResponse } from "../types";
 export interface API {
     /**
      * Initiate a call.
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
+     *
+     * @deprecated Prefer using the new signature that receives a recipient identifier
      *
      * @beta
      * @param phoneID - The bot's phone ID
@@ -13,6 +15,20 @@ export interface API {
      * @returns The server response
      */
     initiateCall(phoneID: string, to: string, sdp: string, biz_opaque_callback_data?: string): Promise<ServerInitiateCallResponse>;
+    /**
+     * Initiate a call.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param callee - The callee identifier
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
+     * @returns The server response
+     * @throws If the recipient identifier doesn't have any data
+     */
+    initiateCall(phoneID: string, callee: ClientIndividualRecipientIdentifier, sdp: string, biz_opaque_callback_data?: string): Promise<ServerInitiateCallResponse>;
     /**
      * Pre-accept a call, before attempting to open the WebRTC connection.
      *
