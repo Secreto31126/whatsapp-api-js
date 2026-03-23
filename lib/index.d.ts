@@ -115,7 +115,7 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
      * a named parameter for multiple recipient types support.
      */
     broadcastMessage<T>(phoneID: string, to: T[], message_builder: (data: T) => [string, ClientMessage], batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
-    broadcastMessage(phoneID: string, recipient: ClientRecipientIdentifier[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+    broadcastMessage(phoneID: string, recipients: ClientRecipientIdentifier[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
     broadcastMessage<T>(phoneID: string, recipients: T[], message_builder: (data: T) => [ClientRecipientIdentifier, ClientMessage], batch_size: number, delay: number): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
     markAsRead(phoneID: string, messageId: string, indicator?: ClientTypingIndicators): Promise<ServerMarkAsReadResponse>;
     /**

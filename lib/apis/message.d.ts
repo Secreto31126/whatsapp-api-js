@@ -175,7 +175,7 @@ export interface API {
      * ```
      *
      * @param phoneID - The bot's phone ID
-     * @param recipient - The message recipient, either a phone number, a BSUID or a group ID.
+     * @param recipients - The message recipient, either a phone number, a BSUID or a group ID.
      * @param message - A Whatsapp message, built using the corresponding module for each type of message.
      * @param batch_size - The number of messages to send per batch
      * @param delay - The delay between each batch of messages in milliseconds
@@ -183,7 +183,7 @@ export interface API {
      * @throws if batch_size is lower than 1
      * @throws if delay is lower than 0
      */
-    broadcastMessage(phoneID: string, recipient: ClientRecipientIdentifier[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<API["sendMessage"]>>;
+    broadcastMessage(phoneID: string, recipients: ClientRecipientIdentifier[], message: ClientMessage, batch_size: number, delay: number): Array<ReturnType<API["sendMessage"]>>;
     /**
      * @example
      * ```ts
@@ -206,7 +206,7 @@ export interface API {
      *
      * @typeParam T - The type of the data to be used in the message builder
      * @param phoneID - The bot's phone ID
-     * @param to - The users' data
+     * @param recipients - The users' data
      * @param message_builder - A Whatsapp message builder, it returns an array with the phone number and the message.
      * @param batch_size - The number of messages to send per batch
      * @param delay - The delay between each batch of messages in milliseconds
