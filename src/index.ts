@@ -1213,6 +1213,6 @@ export class WhatsAppAPI<EmittersReturnType = void>
     private static isIndividualRecipient(
         r: ClientRecipientIdentifier
     ): r is ClientIndividualRecipientIdentifier {
-        return !("group" in r);
+        return !("group" in r) || !r.group;
     }
 }
