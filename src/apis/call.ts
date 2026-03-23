@@ -1,4 +1,5 @@
 import type {
+    ClientIndividualRecipientIdentifier,
     ServerAcceptCallResponse,
     ServerInitiateCallResponse,
     ServerPreacceptCallResponse,
@@ -12,6 +13,8 @@ export interface API {
      *
      * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
      *
+     * @deprecated Prefer using the new signature that receives a recipient identifier
+     *
      * @beta
      * @param phoneID - The bot's phone ID
      * @param to - The callee phone number
@@ -22,6 +25,26 @@ export interface API {
     initiateCall(
         phoneID: string,
         to: string,
+        sdp: string,
+        biz_opaque_callback_data?: string
+    ): Promise<ServerInitiateCallResponse>;
+
+    /**
+     * Initiate a call.
+     *
+     * @see https://developers.facebook.com/docs/whatsapp/cloud-api/calling/reference#initiate-call
+     *
+     * @beta
+     * @param phoneID - The bot's phone ID
+     * @param callee - The callee identifier
+     * @param sdp - The SDP invitation string (RFC 8866)
+     * @param biz_opaque_callback_data - An arbitrary 512B string, useful for tracking (length not checked by the framework)
+     * @returns The server response
+     * @throws If the recipient identifier doesn't have any data
+     */
+    initiateCall(
+        phoneID: string,
+        callee: ClientIndividualRecipientIdentifier,
         sdp: string,
         biz_opaque_callback_data?: string
     ): Promise<ServerInitiateCallResponse>;

@@ -17,8 +17,8 @@ import { agent, clientFacebook, clientExample } from "./server.mocks.js";
 import { MessageWebhookMock, StatusWebhookMock } from "./webhooks.mocks.js";
 import { setGlobalDispatcher, fetch as undici_fetch, FormData } from "undici";
 import { Blob } from "node:buffer";
-import { webcrypto } from "node:crypto";
-const { subtle } = webcrypto; // Assert availability in node 16.0.0
+
+const subtle = crypto.subtle;
 
 setGlobalDispatcher(agent);
 
@@ -241,6 +241,7 @@ describe("WhatsAppAPI", () => {
             sinon_assert.calledOnceWithMatch(spy_on_sent, {
                 phoneID: bot,
                 to: user,
+                recipient: { phone: user },
                 type,
                 message: apiValidMessage,
                 request,
@@ -343,6 +344,8 @@ describe("WhatsAppAPI", () => {
     describe("Message", () => {
         const bot = "2";
         const user = "3";
+        const group = "4";
+        const user_id = "US.5";
         const id = "something_random";
         const context = "another_random_id";
         const tracker = "tracker";
@@ -352,8 +355,9 @@ describe("WhatsAppAPI", () => {
 
         const request = {
             messaging_product: "whatsapp",
-            type,
+            recipient_type: "individual",
             to: user,
+            type,
             text: message
         };
 
@@ -369,6 +373,22 @@ describe("WhatsAppAPI", () => {
             biz_opaque_callback_data: tracker
         };
 
+        const requestWithBSUID = {
+            ...request,
+            recipient: user_id
+        };
+
+        const requestWithOnlyBSUID = {
+            ...requestWithBSUID
+        };
+        delete requestWithOnlyBSUID.to;
+
+        const requestWithGroup = {
+            ...request
+        };
+        requestWithGroup.to = group;
+        requestWithGroup.recipient_type = "group";
+
         const expectedResponse = {
             messaging_product: "whatsapp",
             contacts: [
@@ -377,11 +397,7 @@ describe("WhatsAppAPI", () => {
                     wa_id: user
                 }
             ],
-            messages: [
-                {
-                    id
-                }
-            ]
+            messages: [{ id }]
         };
 
         const Whatsapp = new WhatsAppAPI({
@@ -395,7 +411,7 @@ describe("WhatsAppAPI", () => {
         });
 
         describe("Send", () => {
-            it("should be able to send a basic message", async () => {
+            it("should be able to send a basic message to a phone (legacy)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -414,7 +430,122 @@ describe("WhatsAppAPI", () => {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to send a reply message (context)", async () => {
+            it("should be able to send a basic message to a bsuid (legacy)", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithOnlyBSUID)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    user_id,
+                    message
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should be able to send a basic message to a phone", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(request)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { phone: user },
+                    message
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should be able to send a basic message to a bsuid", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithOnlyBSUID)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { bsuid: user_id },
+                    message
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should be able to send a basic message to a phone and bsuid", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithBSUID)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { phone: user, bsuid: user_id },
+                    message
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should be able to send a basic message to a group", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithGroup)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { group },
+                    message
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should be able to send a reply message (context) (legacy)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -438,7 +569,31 @@ describe("WhatsAppAPI", () => {
                 deepEqual(response, expectedResponse);
             });
 
-            it("should be able to send with a tracker (biz_opaque_callback_data)", async () => {
+            it("should be able to send a reply message (context)", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithContext)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { phone: user },
+                    message,
+                    context
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should be able to send with a tracker (biz_opaque_callback_data) (legacy)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -462,6 +617,35 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
+
+            it("should be able to send with a tracker (biz_opaque_callback_data)", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestWithTracker)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.sendMessage(
+                    bot,
+                    { phone: user },
+                    message,
+                    undefined,
+                    tracker
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should throw if no identifier is provided", async () => {
+                await rejects(Whatsapp.sendMessage(bot, {}, message));
+            });
         });
 
         describe("Broadcast", () => {
@@ -471,7 +655,7 @@ describe("WhatsAppAPI", () => {
                 expectedResponse
             ];
 
-            it("should be able to broadcast a message to many users", async () => {
+            it("should be able to broadcast a message to many users (legacy)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -496,7 +680,7 @@ describe("WhatsAppAPI", () => {
                 deepEqual(response, expectedArrayResponse);
             });
 
-            it("should be able to broadcast a message to many users with a message_builder", async () => {
+            it("should be able to broadcast a message to many users", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${Whatsapp.v}/${bot}/messages`,
@@ -513,8 +697,58 @@ describe("WhatsAppAPI", () => {
                 const response = await Promise.all(
                     await Whatsapp.broadcastMessage(
                         bot,
+                        [{ phone: user }, { phone: user }, { phone: user }],
+                        message
+                    )
+                );
+
+                deepEqual(response, expectedArrayResponse);
+            });
+
+            it("should be able to broadcast a message to many users with a message_builder (legacy)", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(request)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(3);
+
+                const response = await Promise.all(
+                    Whatsapp.broadcastMessage(
+                        bot,
                         [user, user, user],
                         (data) => [data, message]
+                    )
+                );
+
+                deepEqual(response, expectedArrayResponse);
+            });
+
+            it("should be able to broadcast a message to many users with a message_builder", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/messages`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(request)
+                    })
+                    .reply(200, expectedResponse)
+                    .times(3);
+
+                const response = await Promise.all(
+                    Whatsapp.broadcastMessage(
+                        bot,
+                        [user, user, user],
+                        (data) => [{ phone: data }, message]
                     )
                 );
 
@@ -1145,6 +1379,7 @@ describe("WhatsAppAPI", () => {
     describe("Block", () => {
         const bot = "1";
         const user = "2";
+        const bsuid = "3";
 
         const Whatsapp = new WhatsAppAPI({
             v,
@@ -1157,14 +1392,21 @@ describe("WhatsAppAPI", () => {
         });
 
         describe("Block user", () => {
-            it("should block a user", async () => {
-                const expectedResponse = {
-                    messaging_product: "whatsapp",
-                    block_users: {
-                        added_users: [{ input: user, wa_id: user }]
-                    }
-                };
+            const expectedResponse = {
+                messaging_product: "whatsapp",
+                block_users: {
+                    added_users: [{ input: user, wa_id: user }]
+                }
+            };
 
+            const expectedResponseWithBSUID = {
+                messaging_product: "whatsapp",
+                block_users: {
+                    added_users: [{ input: bsuid, user_id: bsuid }]
+                }
+            };
+
+            it("should block a user by phone (legacy)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${bot}/block_users`,
@@ -1185,17 +1427,68 @@ describe("WhatsAppAPI", () => {
 
                 deepEqual(response, expectedResponse);
             });
+
+            it("should block a user by phone", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${bot}/block_users`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            block_users: [{ user }]
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.blockUser(bot, { phone: user });
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should block a user by bsuid", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${bot}/block_users`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            block_users: [{ user_id: bsuid }]
+                        })
+                    })
+                    .reply(200, expectedResponseWithBSUID)
+                    .times(1);
+
+                const response = await Whatsapp.blockUser(bot, { bsuid });
+
+                deepEqual(response, expectedResponseWithBSUID);
+            });
         });
 
         describe("Unblock user", () => {
-            it("should unblock a user", async () => {
-                const expectedResponse = {
-                    messaging_product: "whatsapp",
-                    block_users: {
-                        added_users: [{ input: user, wa_id: user }]
-                    }
-                };
+            const expectedResponse = {
+                messaging_product: "whatsapp",
+                block_users: {
+                    removed_users: [{ input: user, wa_id: user }]
+                }
+            };
 
+            const expectedResponseWithBSUID = {
+                messaging_product: "whatsapp",
+                block_users: {
+                    removed_users: [{ input: bsuid, user_id: bsuid }]
+                }
+            };
+
+            it("should unblock a user by phone (legacy)", async () => {
                 clientFacebook
                     .intercept({
                         path: `/${bot}/block_users`,
@@ -1215,6 +1508,52 @@ describe("WhatsAppAPI", () => {
                 const response = await Whatsapp.unblockUser(bot, user);
 
                 deepEqual(response, expectedResponse);
+            });
+
+            it("should unblock a user by phone", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${bot}/block_users`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            block_users: [{ user }]
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.unblockUser(bot, {
+                    phone: user
+                });
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should unblock a user by bsuid", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${bot}/block_users`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            block_users: [{ user_id: bsuid }]
+                        })
+                    })
+                    .reply(200, expectedResponseWithBSUID)
+                    .times(1);
+
+                const response = await Whatsapp.unblockUser(bot, { bsuid });
+
+                deepEqual(response, expectedResponseWithBSUID);
             });
         });
     });
@@ -1329,6 +1668,7 @@ describe("WhatsAppAPI", () => {
                 user,
                 status,
                 id,
+                name,
                 conversation,
                 pricing,
                 biz_opaque_callback_data

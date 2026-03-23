@@ -1,6 +1,7 @@
 import type {
     ClientMessage,
     ClientMessageRequest,
+    ClientRecipientIdentifier,
     ClientTypingIndicators,
     ServerMessage,
     ServerMessageResponse,
@@ -9,6 +10,7 @@ import type {
     ServerError,
     ServerCallConnect,
     ServerCallTerminate,
+    ServerContacts,
     PostData
 } from "./types.d.ts";
 import type { WhatsAppAPI } from "./index.d.ts";
@@ -31,9 +33,15 @@ export type OnSentArgs = {
      */
     phoneID: string;
     /**
-     * The user's phone number
+     * The recipient identification,
+     * either the phone number, bsuid or group id
+     * (in that order of priority)
      */
     to: string;
+    /**
+     * A client recipient identifier, provided as is by the sendMessage invocation
+     */
+    recipient: ClientRecipientIdentifier;
     /**
      * The message type
      */
@@ -89,15 +97,41 @@ export type OnMessageArgs = {
      */
     phoneID: string;
     /**
-     * The user's phone number
+     * The user's phone number (wa_id),
+     * with fallback to parent_user_id and user_id.
+     *
+     * @deprecated Prefer using `contact.wa_id`.
      */
     from: string;
+    /**
+     * The client's contact info
+     */
+    contact: ServerContacts;
+    /**
+     * A client recipient identifier, provided as a helper
+     * for replying messages using sendMessage.
+     *
+     * @remarks The code prioritize the parent_user_id over user_id,
+     * as it is the recommended way to use it based on the API docs.
+     *
+     * @example
+     * ```ts
+     * whatsapp.on.message = async ({ phoneID, recipient, reply }) => {
+     *     await whatsapp.sendMessage(phoneID, recipient, new Text("Hi!"));
+     *     // Equivalent to
+     *     await reply(new Text("Hi!"));
+     * }
+     * ```
+     */
+    recipient: ClientRecipientIdentifier;
     /**
      * The messages object
      */
     message: ServerMessage;
     /**
-     * The username
+     * The user's full name
+     *
+     * @deprecated Prefer using `contact.profile.name`.
      */
     name?: string;
     /**
@@ -161,9 +195,37 @@ export type OnStatusArgs = {
      */
     phoneID: string;
     /**
-     * The user's phone number
+     * The user's phone number (wa_id),
+     * with fallback to parent_user_id and user_id
+     *
+     * @deprecated Prefer using `contact.wa_id`
      */
-    phone: string;
+    phone?: string;
+    /**
+     * The recipient type
+     */
+    type: "individual" | "group";
+    /**
+     * The client's contact info
+     */
+    contact: ServerContacts;
+    /**
+     * A client recipient identifier, provided as a helper
+     * for replying messages using sendMessage.
+     *
+     * @remarks The code prioritize the parent_user_id over user_id,
+     * as it is the recommended way to use it based on the API docs.
+     *
+     * @example
+     * ```ts
+     * whatsapp.on.message = async ({ phoneID, recipient, reply }) => {
+     *     await whatsapp.sendMessage(phoneID, recipient, new Text("Hi!"));
+     *     // Equivalent to
+     *     await reply(new Text("Hi!"));
+     * }
+     * ```
+     */
+    recipient: ClientRecipientIdentifier;
     /**
      * The message status
      */

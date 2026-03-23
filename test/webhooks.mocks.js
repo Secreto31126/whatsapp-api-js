@@ -56,6 +56,7 @@ export class StatusWebhookMock {
         phone,
         status,
         messageID,
+        name,
         conversation,
         pricing,
         biz_opaque_callback_data
@@ -85,10 +86,22 @@ export class StatusWebhookMock {
 
         if (phone) {
             this.entry[0].changes[0].value.statuses[0].recipient_id = phone;
+
+            this.entry[0].changes[0].value.contacts = [
+                {
+                    wa_id: phone
+                }
+            ];
         }
 
         if (status) {
             this.entry[0].changes[0].value.statuses[0].status = status;
+        }
+
+        if (name) {
+            if (!this.entry[0].changes[0].value.contacts)
+                this.entry[0].changes[0].value.contacts = [{}];
+            this.entry[0].changes[0].value.contacts[0].profile = { name };
         }
 
         if (messageID) {

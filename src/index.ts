@@ -6,7 +6,10 @@ import {
     type PostData,
     type GetParams,
     type ClientMessageRequest,
+    type ClientIndividualRecipientIdentifier,
+    type ClientRecipientIdentifier,
     type ClientTypingIndicators,
+    type ServerContacts,
     type ServerMessageResponse,
     type ServerMarkAsReadResponse,
     type ServerCreateQRResponse,
@@ -221,26 +224,55 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     //#region Message Operations
 
-    async sendMessage(
+    /**
+     * @deprecated Prefer using the new sendMessage signature, where `to` is replaced with
+     * a named parameter for multiple recipient types support.
+     */
+    sendMessage(
         phoneID: string,
         to: string,
         message: ClientMessage,
         context?: string,
         biz_opaque_callback_data?: string
+    ): Promise<ServerMessageResponse>;
+
+    sendMessage(
+        phoneID: string,
+        recipient: ClientRecipientIdentifier,
+        message: ClientMessage,
+        context?: string,
+        biz_opaque_callback_data?: string
+    ): Promise<ServerMessageResponse>;
+
+    async sendMessage(
+        phoneID: string,
+        recipient: string | ClientRecipientIdentifier,
+        message: ClientMessage,
+        context?: string,
+        biz_opaque_callback_data?: string
     ) {
+        const r = WhatsAppAPI.toRecipient(recipient);
+        const individual = WhatsAppAPI.isIndividualRecipient(r);
+
+        if (individual && !r.phone && !r.bsuid) {
+            throw new Error("At least one recipient id must be provided");
+        }
+
         const type = message._type;
 
         const request = {
             messaging_product: "whatsapp",
+
+            recipient_type: individual ? "individual" : "group",
+            to: individual ? r.phone : r.group,
+
             type,
-            to
-        } as ClientMessageRequest;
+            [type]: message,
 
-        request[type] = message;
-
-        if (context) request.context = { message_id: context };
-        if (biz_opaque_callback_data)
-            request.biz_opaque_callback_data = biz_opaque_callback_data;
+            recipient: individual ? r.bsuid : undefined,
+            context: context ? { message_id: context } : undefined,
+            biz_opaque_callback_data
+        } as ClientMessageRequest; // Trust me TS, this is a valid message
 
         // Make the post request
         const promise = this.$$apiFetch$$(
@@ -259,7 +291,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
         const args: OnSentArgs = {
             phoneID,
-            to,
+            to: individual ? (r.phone ?? r.bsuid!) : r.group,
+            recipient: r,
             type,
             message,
             request,
@@ -282,9 +315,13 @@ export class WhatsAppAPI<EmittersReturnType = void>
             console.error(error);
         }
 
-        return response ?? promise;
+        return response;
     }
 
+    /**
+     * @deprecated Prefer using the new broadcastMessage signature, where `to` is replaced with
+     * a named parameter for multiple recipient types support.
+     */
     broadcastMessage(
         phoneID: string,
         to: string[],
@@ -293,6 +330,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         delay: number
     ): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
 
+    /**
+     * @deprecated Prefer using the new broadcastMessage signature, where `to` is replaced with
+     * a named parameter for multiple recipient types support.
+     */
     broadcastMessage<T>(
         phoneID: string,
         to: T[],
@@ -301,11 +342,32 @@ export class WhatsAppAPI<EmittersReturnType = void>
         delay: number
     ): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
 
+    broadcastMessage(
+        phoneID: string,
+        recipient: ClientRecipientIdentifier[],
+        message: ClientMessage,
+        batch_size: number,
+        delay: number
+    ): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+
     broadcastMessage<T>(
         phoneID: string,
-        to: string[] | T[],
+        recipients: T[],
+        message_builder: (
+            data: T
+        ) => [ClientRecipientIdentifier, ClientMessage],
+        batch_size: number,
+        delay: number
+    ): Array<ReturnType<WhatsAppAPI["sendMessage"]>>;
+
+    broadcastMessage<T>(
+        phoneID: string,
+        to: ClientRecipientIdentifier[] | T[] | string[],
         message_builder:
             | ClientMessage
+            | ((
+                  data: T
+              ) => MaybePromise<[ClientRecipientIdentifier, ClientMessage]>)
             | ((data: T) => MaybePromise<[string, ClientMessage]>),
         batch_size = 50,
         delay = 1000
@@ -325,21 +387,24 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 new Promise((resolve) => {
                     setTimeout(
                         async () => {
-                            let phone: string;
+                            let recipient: string | ClientRecipientIdentifier;
                             let message: ClientMessage;
 
                             if (message_builder instanceof ClientMessage) {
-                                phone = data as string;
+                                recipient = data as typeof recipient;
                                 message = message_builder;
                             } else {
-                                [phone, message] = await message_builder(
+                                [recipient, message] = await message_builder(
                                     data as T
                                 );
                             }
 
-                            this.sendMessage(phoneID, phone, message).then(
-                                resolve
-                            );
+                            this.sendMessage(
+                                phoneID,
+                                // @ts-expect-error Support for string recipients will be removed
+                                recipient,
+                                message
+                            ).then(resolve);
                         },
                         delay * ((i / batch_size) | 0)
                     );
@@ -380,12 +445,35 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     //#region Call Operations
 
-    async initiateCall(
+    /**
+     * @deprecated Prefer using the new signature that recieves a recipient identifier
+     */
+    initiateCall(
         phoneID: string,
         to: string,
         sdp: string,
         biz_opaque_callback_data?: string
+    ): Promise<ServerInitiateCallResponse>;
+
+    initiateCall(
+        phoneID: string,
+        callee: ClientIndividualRecipientIdentifier,
+        sdp: string,
+        biz_opaque_callback_data?: string
+    ): Promise<ServerInitiateCallResponse>;
+
+    async initiateCall(
+        phoneID: string,
+        callee: string | ClientIndividualRecipientIdentifier,
+        sdp: string,
+        biz_opaque_callback_data?: string
     ) {
+        callee = WhatsAppAPI.toRecipient(callee);
+
+        if (!callee.phone && !callee.bsuid) {
+            throw new Error("At least one recipient id must be provided");
+        }
+
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/calls`,
             {
@@ -395,7 +483,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    to,
+                    to: callee.phone,
+                    recipient: callee.bsuid,
                     action: "connect",
                     biz_opaque_callback_data,
                     session: {
@@ -668,7 +757,25 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     // #region Block Operations
 
-    async blockUser(phoneID: string, ...users: string[]) {
+    /**
+     * @deprecated Prefer using the new signature with recipient identifier
+     */
+    blockUser(
+        phoneID: string,
+        ...users: string[]
+    ): Promise<ServerBlockResponse>;
+
+    blockUser(
+        phoneID: string,
+        ...users: ClientIndividualRecipientIdentifier[]
+    ): Promise<ServerBlockResponse>;
+
+    async blockUser(
+        phoneID: string,
+        ...users: string[] | ClientIndividualRecipientIdentifier[]
+    ) {
+        users = WhatsAppAPI.toRecipient(users);
+
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/block_users`,
             {
@@ -678,7 +785,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    block_users: users.map((user) => ({ user }))
+                    block_users: users.map(({ phone, bsuid }) => ({
+                        user: phone,
+                        user_id: bsuid
+                    }))
                 })
             }
         );
@@ -686,7 +796,25 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return this.getBody<ServerBlockResponse>(promise);
     }
 
-    async unblockUser(phoneID: string, ...users: string[]) {
+    /**
+     * @deprecated Prefer using the new signature with recipient identifier
+     */
+    unblockUser(
+        phoneID: string,
+        ...users: string[]
+    ): Promise<ServerUnblockResponse>;
+
+    unblockUser(
+        phoneID: string,
+        ...users: ClientIndividualRecipientIdentifier[]
+    ): Promise<ServerUnblockResponse>;
+
+    async unblockUser(
+        phoneID: string,
+        ...users: string[] | ClientIndividualRecipientIdentifier[]
+    ) {
+        users = WhatsAppAPI.toRecipient(users);
+
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${phoneID}/block_users`,
             {
@@ -696,7 +824,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    block_users: users.map((user) => ({ user }))
+                    block_users: users.map(({ phone, bsuid }) => ({
+                        user: phone,
+                        user_id: bsuid
+                    }))
                 })
             }
         );
@@ -740,16 +871,38 @@ export class WhatsAppAPI<EmittersReturnType = void>
             if (field in value) {
                 const message = value.messages[0];
 
-                const contact = value.contacts?.[0];
+                const {
+                    // Force prettier to be prettier :]
+                    from,
+                    from_user_id,
+                    from_parent_user_id,
+                    group_id
+                } = message;
 
-                const from = contact?.wa_id ?? message.from;
-                const name = contact?.profile.name;
+                const contact: ServerContacts = {
+                    wa_id: from,
+                    user_id: from_user_id,
+                    parent_user_id: from_parent_user_id,
+                    ...value.contacts?.[0]
+                };
+
+                const { wa_id, user_id, parent_user_id, profile } = contact;
+
+                const recipient: ClientRecipientIdentifier = {
+                    phone: !group_id ? wa_id : undefined,
+                    bsuid: !group_id ? (parent_user_id ?? user_id) : undefined,
+                    group: group_id
+                };
 
                 const args: OnMessageArgs = {
                     phoneID,
-                    from,
+                    // TODO: Remove in v7
+                    from: wa_id ?? parent_user_id ?? user_id,
+                    contact,
+                    recipient,
                     message,
-                    name,
+                    // TODO: Remove in v7
+                    name: profile?.name,
                     raw: data,
                     reply: (
                         response,
@@ -758,13 +911,17 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     ) =>
                         this.sendMessage(
                             phoneID,
-                            from,
+                            recipient,
                             response,
                             context ? message.id : undefined,
                             biz_opaque_callback_data
                         ),
                     received: (i) => this.markAsRead(phoneID, message.id, i),
-                    block: () => this.blockUser(phoneID, from),
+                    block: () =>
+                        this.blockUser(
+                            phoneID,
+                            recipient as ClientIndividualRecipientIdentifier
+                        ),
                     offload: WhatsAppAPI.offload,
                     Whatsapp: this
                 };
@@ -773,19 +930,46 @@ export class WhatsAppAPI<EmittersReturnType = void>
             } else if ("statuses" in value) {
                 const statuses = value.statuses[0];
 
-                const phone = statuses.recipient_id;
-                const status = statuses.status;
-                const id = statuses.id;
-                const timestamp = statuses.timestamp;
-                const conversation = statuses.conversation;
-                const pricing = statuses.pricing;
+                const {
+                    recipient_type: type,
+                    recipient_id,
+                    recipient_user_id,
+                    parent_recipient_user_id,
+                    status,
+                    id,
+                    timestamp,
+                    conversation,
+                    pricing,
+                    biz_opaque_callback_data
+                } = statuses;
+
+                // Contact data isn't provided for failed statuses
+                // Try to fill it as much as possible for most scenarios
+                const contact: ServerContacts = {
+                    wa_id: recipient_id,
+                    user_id: recipient_user_id!,
+                    parent_user_id: parent_recipient_user_id,
+                    ...value.contacts?.[0]
+                };
+
+                const { wa_id, user_id, parent_user_id } = contact;
+
                 const error = statuses.errors?.[0];
-                const biz_opaque_callback_data =
-                    statuses.biz_opaque_callback_data;
+
+                const is_group = type === "group";
+                const recipient: ClientRecipientIdentifier = {
+                    phone: !is_group ? wa_id : undefined,
+                    bsuid: !is_group ? (parent_user_id ?? user_id) : undefined,
+                    group: is_group ? recipient_id : undefined
+                };
 
                 const args: OnStatusArgs = {
                     phoneID,
-                    phone,
+                    // TODO: Remove in v7
+                    phone: wa_id ?? parent_user_id ?? user_id,
+                    type: type ?? "individual",
+                    contact,
+                    recipient,
                     status,
                     id,
                     timestamp,
@@ -807,7 +991,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const contact = value.contacts?.[0];
 
                 const from = contact?.wa_id ?? call.from;
-                const name = contact?.profile.name;
+                const name = contact?.profile?.name;
 
                 if (call.event === "connect") {
                     const args: OnCallConnectArgs = {
@@ -990,5 +1174,45 @@ export class WhatsAppAPI<EmittersReturnType = void>
     static offload(f: () => unknown) {
         // Thanks @RahulLanjewar93
         Promise.resolve().then(f);
+    }
+
+    /**
+     * @deprecated Will be removed in v7, when recipient no longer supports strings
+     */
+    private static toRecipient<
+        T extends
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+    >(r: string | T): T;
+
+    /**
+     * @deprecated Will be removed in v7, when recipient no longer supports strings
+     */
+    private static toRecipient<
+        T extends
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+    >(r: string[] | T[]): T[];
+
+    /**
+     * @deprecated Will be removed in v7, when recipient no longer supports strings
+     * @param r - The param to validate
+     * @returns If the value is of a legacy type
+     */
+    private static toRecipient<
+        T extends
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+    >(r: string | T | string[] | T[]) {
+        if (Array.isArray(r)) return r.map(WhatsAppAPI.toRecipient);
+        if (typeof r !== "string") return r;
+        if (/^[a-zA-Z]{2}\..+/.test(r)) return { bsuid: r } as T;
+        return { phone: r } as T;
+    }
+
+    private static isIndividualRecipient(
+        r: ClientRecipientIdentifier
+    ): r is ClientIndividualRecipientIdentifier {
+        return !("group" in r) || !r.group;
     }
 }
