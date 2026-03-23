@@ -816,9 +816,10 @@ export type ServerStatusPayload = {
      */
     recipient_type?: "individual" | "group";
     /**
-     * Will be set to the user’s BSUID or parent BSUID, if you sent the message to the user’s BSUID or parent BSUID
+     * Will be set to the user’s BSUID or parent BSUID, if you sent the message to the user’s BSUID or parent BSUID.
+     * Otherwise, it will be omitted. (Mini rant: ***WHY OMIT IT!!!!????***)
      */
-    recipient_user_id: string;
+    recipient_user_id?: string;
     /**
      * Will be set to the user’s parent BSUID if you have enabled parent BSUIDs
      *
@@ -956,6 +957,29 @@ export type ServerContacts = {
     wa_id?: string;
     /**
      * Will be set to the WhatsApp user’s BSUID
+     *
+     * @remarks I think there's one super edge case scenario where user_id isn't present at all:
+     * - A) A message is sent using only phone number or parent BSUID,
+     *   so following statuses won't include `recipient_user_id` in `statuses`
+     * - B) A failed status event is received for that specific message,
+     *   which will not include a `contacts` entry due to failed event's nature
+     * - Given A) and B), there's no way to know the user_id in the failed status
+     *
+     * Other status events should work fine,
+     * as they will always include `contacts`.
+     *
+     * Internally, the library will always populate the
+     * `recipient`s with as much data as possible,
+     * prioritizing the parent BSUIDs over user_id.
+     * This (SHOULD) ensure at least one BSUID will be
+     * available on every status event.
+     *
+     * If you need a consistent user key across all events,
+     * consider using `(parent_user_id ?? user_id)`.
+     *
+     * This is a guesstimate, can't tell for sure until BSUIDs are operational.
+     *
+     * Such a weird restriction to not include the `contacts` data on failed events...
      */
     user_id: string;
     /**

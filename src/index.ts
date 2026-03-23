@@ -947,7 +947,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 // Try to fill it as much as possible for most scenarios
                 const contact: ServerContacts = {
                     wa_id: recipient_id,
-                    user_id: recipient_user_id,
+                    user_id: recipient_user_id!,
                     parent_user_id: parent_recipient_user_id,
                     ...value.contacts?.[0]
                 };
