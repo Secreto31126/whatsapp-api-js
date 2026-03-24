@@ -917,9 +917,7 @@ export type ServerSentMessageResponse = {
              */
             wa_id?: string;
             /**
-             * Will return the user’s BSUID or parent BSUID, if the message was sent to user’s BSUID or parent BSUID,
-             * or if you included both the user’s phone number and their BSUID or parent BSUID when sending the message
-             * (causing the message to be sent to the user’s phone number, which takes precedence)
+             * Will return the user’s BSUID or parent BSUID, if the message was sent to user’s BSUID or parent BSUID
              * Will be omitted if the message was sent to the user’s phone number
              */
             user_id?: string;
