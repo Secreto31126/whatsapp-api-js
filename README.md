@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/whatsapp-api-js?color=4ccc1c)](https://www.npmjs.com/package/whatsapp-api-js)
 [![Contributors](https://img.shields.io/github/all-contributors/Secreto31126/whatsapp-api-js)](#contributors)
 
-A TypeScript server agnostic Whatsapp's Official API framework.
+A lightweight, dependency-less, efficient TS library for interacting with WhatsApp Cloud API.
 
 ## List of contents
 
