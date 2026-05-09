@@ -633,6 +633,9 @@ packages:
   '@poppinss/string@1.7.1':
     resolution: {integrity: sha512-OrLzv/nGDU6l6dLXIQHe8nbNSWWfuSbpB/TW5nRpZFf49CLuQlIHlSPN9IdSUv2vG+59yGM6LoibsaHn8B8mDw==}
 
+  '@poppinss/string@1.7.2':
+    resolution: {integrity: sha512-A182GLDfi36iDCbhDrHB0xzrPM1fO3GHnhCDIdadf8C6eycgct4m7zusbLwEh6GPaj2Pz5BVos7XK16w7tZ7wQ==}
+
   '@poppinss/types@1.2.1':
     resolution: {integrity: sha512-qUYnzl0m9HJTWsXtr8Xo7CwDx6wcjrvo14bOVbIMIlKJCzKrm3LX55dRTDr1/x4PpSvKVgmxvC6Ly2YiqXKOvQ==}
 
@@ -1893,6 +1896,10 @@ packages:
     resolution: {integrity: sha512-HVk9X1E0gz3mSpoi60h/saazLKXKaZThMLU3u/aNwoYn8/xQyX2MGxL0ui2eaokkD7tF+Zo+cKTHUbe1mmmGzA==}
     engines: {node: '>=8.0.0'}
 
+  slugify@1.6.9:
+    resolution: {integrity: sha512-vZ7rfeehZui7wQs438JXBckYLkIIdfHOXsaVEUMyS5fHo1483l1bMdo0EDSWYclY0yZKFOipDy4KHuKs6ssvdg==}
+    engines: {node: '>=8.0.0'}
+
   smol-toml@1.5.2:
     resolution: {integrity: sha512-QlaZEqcAH3/RtNyet1IPIYPsEWAaYyXXv1Krsi+1L/QHppjX4Ifm8MQsBISz9vE8cHicIq3clogsheili5vhaQ==}
     engines: {node: '>= 18'}
@@ -2543,6 +2550,13 @@ snapshots:
       pluralize: 8.0.0
       slugify: 1.6.8
 
+  '@poppinss/string@1.7.2':
+    dependencies:
+      '@types/pluralize': 0.0.33
+      case-anything: 3.1.2
+      pluralize: 8.0.0
+      slugify: 1.6.9
+
   '@poppinss/types@1.2.1': {}
 
   '@poppinss/utils@6.10.1':
@@ -2558,7 +2572,7 @@ snapshots:
     dependencies:
       '@poppinss/exception': 1.2.3
       '@poppinss/object-builder': 1.1.0
-      '@poppinss/string': 1.7.1
+      '@poppinss/string': 1.7.2
       '@poppinss/types': 1.2.1
       flattie: 1.1.1
 
@@ -3880,6 +3894,8 @@ snapshots:
   slashes@3.0.12: {}
 
   slugify@1.6.8: {}
+
+  slugify@1.6.9: {}
 
   smol-toml@1.5.2: {}
 
