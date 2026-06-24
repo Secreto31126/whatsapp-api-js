@@ -111,8 +111,10 @@ dist
 .vscode/
 
 # Test code
-playground.[tj]s
-playground.[cm][tj]s
+*playground.[tj]s
+*playground.[cm][tj]s
+*playground.[tj]sx
+*playground.[cm][tj]sx
 
 # Documentation
 docs_temp/
