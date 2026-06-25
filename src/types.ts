@@ -533,6 +533,7 @@ export type ServerImageMessage = {
         sha256: string;
         id: string;
         url: string;
+        static_url: string;
     };
 };
 
@@ -766,7 +767,7 @@ export type ServerUnsupportedMessage = {
         {
             code: 131051;
             title: "Message type unknown";
-            details: "Message type unknown";
+            message: "Message type unknown";
             error_data: {
                 details: "Message type is currently not supported.";
             };
@@ -826,12 +827,22 @@ export type ServerStatusPayload = {
      * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
      */
     parent_recipient_user_id?: string;
+    /**
+     * Undocumented on the docs, but exists on the payloads
+     */
+    recipient_logical_id?: string;
     biz_opaque_callback_data?: string;
+    /**
+     * Internal undocumented property
+     */
+    internal_1p_only_data?: {
+        webhook_extra_data: string;
+    };
 } & (
     | {
           conversation?: ServerConversation;
           pricing: ServerPricing;
-          errors: undefined;
+          errors?: undefined;
       }
     | {
           conversation: undefined;
@@ -856,6 +867,10 @@ export type ServerMessage = {
      * Set to the user’s parent BSUID, if you have enabled parent BSUIDs
      */
     from_parent_user_id?: string;
+    /**
+     * Undocumented property
+     */
+    from_logical_id?: string;
     /**
      * The message id
      */
@@ -983,6 +998,10 @@ export type ServerContacts = {
      */
     user_id: string;
     /**
+     * Two letter country code associated to the user's phone number
+     */
+    country_code?: string;
+    /**
      * Will be set to the user’s parent BSUID if you have enabled parent BSUIDs
      *
      * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
@@ -1015,7 +1034,7 @@ export type ServerPricing = {
 
 export type ServerConversation = {
     id: string;
-    expiration_timestamp: number;
+    expiration_timestamp?: string;
     origin: {
         type: ServerInitiation;
     };
@@ -1028,7 +1047,7 @@ export type ServerError = {
     error_data: {
         details: string;
     };
-    href: string;
+    href?: string;
 };
 
 export type GetParams = {
