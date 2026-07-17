@@ -290,6 +290,34 @@ export declare class WhatsAppAPIFailedToVerifyTokenError extends WhatsAppAPIErro
     get docs(): string;
 }
 /**
+ * Thrown when the processed payload exceeds the midddleware's size limits
+ *
+ * @description
+ * This error is triggered when the payload is longer than the expected
+ * message size, in order to prevent a DoS attack.
+ *
+ * Since the API documentation states that the upper bound is 3mb, this
+ * is the suggested value to throw the error, but it may vary from
+ * middleware to middleware.
+ *
+ * @remarks This error is triggered on the limit set by the middleware.
+ * However, your library or service may trigger an error on a lower limit.
+ * In such cases, refer to their documentations to increase the payload
+ * limits if needed.
+ *
+ * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/webhooks/overview#payload-size
+ */
+export declare class WhatsAppAPIPayloadTooLargeError extends WhatsAppAPIError {
+    /**
+     * @internal
+     */
+    constructor();
+    /**
+     * @override
+     */
+    get docs(): string;
+}
+/**
  * Thrown in unusual cases, such as on empty or unknown payloads from the API side.
  *
  * It 100% should never happen, and if it does, feel free to open an issue on
