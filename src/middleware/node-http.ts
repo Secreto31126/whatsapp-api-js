@@ -1,5 +1,9 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
-import { WhatsAppAPIError } from "../errors.js";
+import {
+    WhatsAppAPIError,
+    WhatsAppAPIMissingRawBodyError,
+    WhatsAppAPIPayloadTooLargeError
+} from "../errors.js";
 
 import type { IncomingMessage } from "node:http";
 import type { Readable } from "node:stream";
@@ -47,22 +51,39 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
          * @returns The parsed body
          */
         async function parseBody(readable: Readable) {
-            const chunks = [];
+            const chunks: Buffer[] = [];
 
-            for await (const chunk of readable) {
-                chunks.push(
-                    typeof chunk === "string" ? Buffer.from(chunk) : chunk
-                );
+            let received = 0;
+            for await (const c of readable) {
+                const buf = typeof c === "string" ? Buffer.from(c) : c;
+
+                received += buf.length;
+                if (received > WhatsAppAPI._MAX_PAYLOAD_SIZE) {
+                    readable.destroy();
+                    throw new WhatsAppAPIPayloadTooLargeError();
+                }
+
+                chunks.push(c);
             }
 
             return Buffer.concat(chunks).toString("utf-8");
         }
 
         try {
-            const body = await parseBody(req);
             const signature = req.headers["x-hub-signature-256"];
-
             if (typeof signature !== "string") throw 400;
+
+            const length = req.headers["content-length"];
+
+            if (!length || Number.isNaN(+length)) {
+                throw new WhatsAppAPIMissingRawBodyError();
+            }
+
+            if (+length > WhatsAppAPI._MAX_PAYLOAD_SIZE) {
+                throw new WhatsAppAPIPayloadTooLargeError();
+            }
+
+            const body = await parseBody(req);
 
             await this.post(JSON.parse(body || "{}"), body, signature);
 

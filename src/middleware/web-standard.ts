@@ -1,5 +1,9 @@
 import { WhatsAppAPIMiddleware } from "./globals.js";
-import { WhatsAppAPIError } from "../errors.js";
+import {
+    WhatsAppAPIError,
+    WhatsAppAPIMissingRawBodyError,
+    WhatsAppAPIPayloadTooLargeError
+} from "../errors.js";
 
 import type { GetParams } from "../types.d.ts";
 
@@ -16,6 +20,16 @@ export class WhatsAppAPI extends WhatsAppAPIMiddleware {
      */
     async handle_post(req: Request): Promise<number> {
         try {
+            const length = req.headers.get("Content-Length");
+
+            if (!length || Number.isNaN(+length)) {
+                throw new WhatsAppAPIMissingRawBodyError();
+            }
+
+            if (+length > WhatsAppAPI._MAX_PAYLOAD_SIZE) {
+                throw new WhatsAppAPIPayloadTooLargeError();
+            }
+
             const body = await req.text();
 
             await this.post(
