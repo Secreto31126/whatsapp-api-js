@@ -4,8 +4,11 @@
     "extends": [
         "config:recommended",
         "group:allNonMajor",
+        "helpers:disableTypesNodeMajor",
         "schedule:earlyMondays"
     ],
+    "minimumReleaseAge": "3 days",
+    "minimumReleaseAgeBehaviour": "timestamp-required",
     "commitMessageAction": "",
     "commitMessageTopic": "{{depName}}",
     "commitMessageExtra": "{{#if isMajor}}v{{{newMajor}}}{{else}}{{#if isSingleVersion}}v{{{newVersion}}}{{else}}{{{newValue}}}{{/if}}{{/if}}",
