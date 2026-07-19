@@ -515,7 +515,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     call_id: callID,
                     action: "pre_accept",
                     session: {
-                        sdp_type: "offer",
+                        sdp_type: "answer",
                         sdp
                     }
                 })
@@ -563,7 +563,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     action: "accept",
                     biz_opaque_callback_data,
                     session: {
-                        sdp_type: "offer",
+                        sdp_type: "answer",
                         sdp
                     }
                 })
