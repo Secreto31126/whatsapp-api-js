@@ -515,7 +515,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     call_id: callID,
                     action: "pre_accept",
                     session: {
-                        sdp_type: "offer",
+                        sdp_type: "answer",
                         sdp
                     }
                 })
@@ -563,7 +563,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     action: "accept",
                     biz_opaque_callback_data,
                     session: {
-                        sdp_type: "offer",
+                        sdp_type: "answer",
                         sdp
                     }
                 })
@@ -1181,8 +1181,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private static toRecipient<
         T extends
-            | ClientRecipientIdentifier
-            | ClientIndividualRecipientIdentifier
+            ClientRecipientIdentifier | ClientIndividualRecipientIdentifier
     >(r: string | T): T;
 
     /**
@@ -1190,8 +1189,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private static toRecipient<
         T extends
-            | ClientRecipientIdentifier
-            | ClientIndividualRecipientIdentifier
+            ClientRecipientIdentifier | ClientIndividualRecipientIdentifier
     >(r: string[] | T[]): T[];
 
     /**
@@ -1201,8 +1199,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private static toRecipient<
         T extends
-            | ClientRecipientIdentifier
-            | ClientIndividualRecipientIdentifier
+            ClientRecipientIdentifier | ClientIndividualRecipientIdentifier
     >(r: string | T | string[] | T[]) {
         if (Array.isArray(r)) return r.map(WhatsAppAPI.toRecipient);
         if (typeof r !== "string") return r;

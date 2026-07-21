@@ -172,8 +172,7 @@ export type ClientGroupRecipientIdentifier = {
 };
 
 export type ClientRecipientIdentifier =
-    | ClientIndividualRecipientIdentifier
-    | ClientGroupRecipientIdentifier;
+    ClientIndividualRecipientIdentifier | ClientGroupRecipientIdentifier;
 
 /**
  * The base class of all the library messages
@@ -1027,9 +1026,7 @@ export type ServerPricing = {
     billable?: boolean;
     type: "regular" | "free_customer_service" | "free_entry_point";
     category:
-        | ServerInitiation
-        | "authentication_international"
-        | "marketing_lite";
+        ServerInitiation | "authentication_international" | "marketing_lite";
 };
 
 export type ServerConversation = {
@@ -1059,8 +1056,7 @@ export type GetParams = {
 export type PostDataMessageField = {
     field: "messages";
     value: { contacts?: [ServerContacts] } & (
-        | { messages: [ServerMessage] }
-        | { statuses: [ServerStatusPayload] }
+        { messages: [ServerMessage] } | { statuses: [ServerStatusPayload] }
     );
 };
 
@@ -1156,12 +1152,10 @@ export type ServerSentMessageResponse = {
 };
 
 export type ServerMessageResponse =
-    | (ServerSentMessageResponse & NoServerError)
-    | ServerErrorResponse;
+    (ServerSentMessageResponse & NoServerError) | ServerErrorResponse;
 
 export type ServerMarkAsReadResponse =
-    | ServerSuccessResponse
-    | ServerErrorResponse;
+    ServerSuccessResponse | ServerErrorResponse;
 
 export type ServerInitiateCallResponse =
     | {
@@ -1194,28 +1188,23 @@ export type ServerQR = {
 };
 
 export type ServerCreateQRResponse =
-    | (ServerQR & NoServerError)
-    | ServerErrorResponse;
+    (ServerQR & NoServerError) | ServerErrorResponse;
 
 export type ServerRetrieveQRResponse =
-    | ({ data: ServerQR[] } & NoServerError)
-    | ServerErrorResponse;
+    ({ data: ServerQR[] } & NoServerError) | ServerErrorResponse;
 
 export type ServerUpdateQRResponse =
-    | (ServerQR & NoServerError)
-    | ServerErrorResponse;
+    (ServerQR & NoServerError) | ServerErrorResponse;
 
 export type ServerDeleteQRResponse =
-    | ServerSuccessResponse
-    | ServerErrorResponse;
+    ServerSuccessResponse | ServerErrorResponse;
 
 export type ServerMedia = {
     id: string;
 };
 
 export type ServerMediaUploadResponse =
-    | (ServerMedia & NoServerError)
-    | ServerErrorResponse;
+    (ServerMedia & NoServerError) | ServerErrorResponse;
 
 export type ValidMimeTypes =
     | "audio/aac"
@@ -1249,8 +1238,7 @@ export type ServerMediaRetrieveResponse =
     | ServerErrorResponse;
 
 export type ServerMediaDeleteResponse =
-    | ServerSuccessResponse
-    | ServerErrorResponse;
+    ServerSuccessResponse | ServerErrorResponse;
 
 export type ServerBlockedError = Pick<
     ServerErrorResponse["error"],

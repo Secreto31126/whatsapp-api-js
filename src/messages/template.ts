@@ -296,12 +296,7 @@ export abstract class ButtonComponent implements TemplateComponent {
      * The subtype of the component
      */
     readonly sub_type:
-        | "url"
-        | "quick_reply"
-        | "catalog"
-        | "mpm"
-        | "copy_code"
-        | "flow";
+        "url" | "quick_reply" | "catalog" | "mpm" | "copy_code" | "flow";
     /**
      * The parameter of the component
      */
