@@ -571,9 +571,10 @@ export type ServerLocationMessage = {
 
 export type ServerContactsMessage = {
     type: "contacts";
-    origin?: "contact_request/other";
     contacts: [
         {
+            vcard?: string;
+            origin?: "contact_request" | "other";
             addresses?: {
                 city?: string;
                 country?: string;
@@ -610,7 +611,6 @@ export type ServerContactsMessage = {
                 url?: string;
                 type?: string;
             }[];
-            vcard?: string;
         }
     ];
 };
@@ -816,8 +816,8 @@ export type ServerStatusPayload = {
      */
     recipient_type?: "individual" | "group";
     /**
-     * Will be set to the user’s BSUID or parent BSUID, if you sent the message to the user’s BSUID or parent BSUID.
-     * Otherwise, it will be omitted. (Mini rant: ***WHY OMIT IT!!!!????***)
+     * Will always be set to the user’s BSUID, regardless of whether the message was sent to the user’s phone number or BSUID.
+     * For failed status messages, will be omitted if the message was sent to the user’s phone number.
      */
     recipient_user_id?: string;
     /**
@@ -825,7 +825,7 @@ export type ServerStatusPayload = {
      *
      * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
      */
-    parent_recipient_user_id?: string;
+    recipient_parent_user_id?: string;
     /**
      * Undocumented on the docs, but exists on the payloads
      */
