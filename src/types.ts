@@ -356,7 +356,8 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
         | "cta_url"
         | "flow"
         | "location_request_message"
-        | "call_permission_request";
+        | "call_permission_request"
+        | "request_contact_info";
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
