@@ -30,8 +30,8 @@ importers:
         specifier: 18.19.130
         version: 18.19.130
       '@types/sinon':
-        specifier: 21.0.1
-        version: 21.0.1
+        specifier: 22.0.0
+        version: 22.0.0
       '@vercel/node':
         specifier: 5.8.26
         version: 5.8.26(supports-color@7.2.0)
@@ -66,8 +66,8 @@ importers:
         specifier: 3.9.5
         version: 3.9.5
       sinon:
-        specifier: 21.1.2
-        version: 21.1.2
+        specifier: 22.1.0
+        version: 22.1.0
       typedoc:
         specifier: 0.28.20
         version: 0.28.20(typescript@5.9.3)
@@ -904,8 +904,8 @@ packages:
   '@types/serve-static@2.2.0':
     resolution: {integrity: sha512-8mam4H1NHLtu7nmtalF7eyBH14QyOASmcxHhSfEoRyr0nP/YdoesEtU+uSRvMe96TW/HPTtkoKqQLl53N7UXMQ==}
 
-  '@types/sinon@21.0.1':
-    resolution: {integrity: sha512-5yoJSqLbjH8T9V2bksgRayuhpZy+723/z6wBOR+Soe4ZlXC0eW8Na71TeaZPUWDQvM7LYKa9UGFc6LRqxiR5fQ==}
+  '@types/sinon@22.0.0':
+    resolution: {integrity: sha512-TDbVpbccc2HfiqHR09Argj3mHV1KMW7sCCKj52fsl8lbRLkEn7fB1966EWhOKWUBcqfBueZuPoA7/OK1CKiy3g==}
 
   '@types/sinonjs__fake-timers@15.0.1':
     resolution: {integrity: sha512-Ko2tjWJq8oozHzHV+reuvS5KYIRAokHnGbDwGh/J64LntgpbuylF74ipEL24HCyRjf9FOlBiBHWBR1RlVKsI1w==}
@@ -1273,8 +1273,8 @@ packages:
   didyoumean@1.2.2:
     resolution: {integrity: sha512-gxtyfqMg7GKyhQmb056K7M3xszy/myH8w+B4RT+QXBQsvAOdc3XymqDDPHx1BgPgsdAA5SIifona89YtRATDzw==}
 
-  diff@8.0.4:
-    resolution: {integrity: sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw==}
+  diff@9.0.0:
+    resolution: {integrity: sha512-svtcdpS8CgJyqAjEQIXdb3OjhFVVYjzGAPO8WGCmRbrml64SPw/jJD4GoE98aR7r25A0XcgrK3F02yw9R/vhQw==}
     engines: {node: '>=0.3.1'}
 
   dotenv@17.4.2:
@@ -2065,8 +2065,8 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  sinon@21.1.2:
-    resolution: {integrity: sha512-FS6mN+/bx7e2ajpXkEmOcWB6xBzWiuNoAQT18/+a20SS4U7FSYl8Ms7N6VTUxN/1JAjkx7aXp+THMC8xdpp0gA==}
+  sinon@22.1.0:
+    resolution: {integrity: sha512-n1ajF2rBWMTtEwbKcw4UdFg4nCnDdq/U6RDoxtOd7oapOlRoJ5ynwFx60owROyhDpA9QhMZi0pCO/xtmwFjG7w==}
 
   slashes@3.0.12:
     resolution: {integrity: sha512-Q9VME8WyGkc7pJf6QEkj3wE+2CnvZMI+XJhwdTPR8Z/kWQRXi7boAWLDibRPyHRTUTPx5FaU7MsyrjI3yLB4HA==}
@@ -2940,7 +2940,7 @@ snapshots:
       '@types/http-errors': 2.0.5
       '@types/node': 18.19.130
 
-  '@types/sinon@21.0.1':
+  '@types/sinon@22.0.0':
     dependencies:
       '@types/sinonjs__fake-timers': 15.0.1
 
@@ -3385,7 +3385,7 @@ snapshots:
 
   didyoumean@1.2.2: {}
 
-  diff@8.0.4: {}
+  diff@9.0.0: {}
 
   dotenv@17.4.2: {}
 
@@ -4178,12 +4178,12 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  sinon@21.1.2:
+  sinon@22.1.0:
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 15.4.0
       '@sinonjs/samsam': 10.0.2
-      diff: 8.0.4
+      diff: 9.0.0
 
   slashes@3.0.12: {}
 
