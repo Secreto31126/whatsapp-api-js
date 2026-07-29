@@ -269,6 +269,23 @@ export declare class Interactive extends ClientMessage {
      * @param body - The body of the interactive message
      */
     constructor(action: ActionCallPermission, body: Body);
+    /**
+     * Creates an Interactive Contact Request object for the API
+     *
+     * @example
+     * ```ts
+     * import { Interactive, ActionContactRequest, Body } from "whatsapp-api-js/messages";
+     *
+     * const interactive_contact_request_message = new Interactive(
+     *     new ActionContactRequest(),
+     *     new Body("Can we get your number?")
+     * );
+     * ```
+     *
+     * @param action - The action for the interactive message
+     * @param body - The body of the interactive message
+     */
+    constructor(action: ActionContactRequest, body: Body);
 }
 /**
  * Body API object
@@ -767,5 +784,21 @@ export declare class ActionCallPermission implements InteractiveAction {
      * @internal
      */
     get _type(): "call_permission_request";
+}
+/**
+ * Action API object
+ *
+ * @group Interactive
+ */
+export declare class ActionContactRequest implements InteractiveAction {
+    /**
+     * The name of the component
+     */
+    readonly name = "request_contact_info";
+    /**
+     * @override
+     * @internal
+     */
+    get _type(): "request_contact_info";
 }
 //# sourceMappingURL=interactive.d.ts.map

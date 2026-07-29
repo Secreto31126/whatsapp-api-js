@@ -274,7 +274,7 @@ export interface InteractiveAction extends ClientTypedMessageComponent {
      * @overload
      * @internal
      */
-    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message" | "call_permission_request";
+    get _type(): "list" | "button" | "catalog_message" | "product" | "product_list" | "cta_url" | "flow" | "location_request_message" | "call_permission_request" | "request_contact_info";
 }
 export interface TemplateComponent extends ClientBuildableMessageComponent {
 }
