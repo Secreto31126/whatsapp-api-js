@@ -11,7 +11,7 @@ jobs:
         name: Build from source
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
               with:
                   ref: ${{ github.ref }}
             - uses: pnpm/action-setup@v6
@@ -40,7 +40,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: build
         steps:
-            - uses: actions/checkout@v6
+            - uses: actions/checkout@v7
               with:
                   ref: alpha
 
