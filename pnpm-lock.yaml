@@ -21,8 +21,8 @@ importers:
         specifier: 2.0.2
         version: 2.0.2
       '@reporters/silent':
-        specifier: 1.3.1
-        version: 1.3.1
+        specifier: 2.0.1
+        version: 2.0.1
       '@types/express':
         specifier: 5.0.6
         version: 5.0.6
@@ -806,8 +806,8 @@ packages:
   '@reporters/github@2.0.2':
     resolution: {integrity: sha512-j8sLwKkyCi8EE3yHOpWNYd3Ig8Irnxju3v2yntEPcukcvQTTAAz6iT4opdQ+/g22PqPbT/Mqstsb1HK8YQburw==}
 
-  '@reporters/silent@1.3.1':
-    resolution: {integrity: sha512-ehMsAWZfhgLkmCGZd8Qpelvlqci255KMDdQ97SwKQIKxPvtP/aUVfH+Nkgcpim+zu1A7rO3EowTEeW7xu0YNjA==}
+  '@reporters/silent@2.0.1':
+    resolution: {integrity: sha512-SH9mo5e+RR5MReRbXTpQsS33+9iMjYwDW4eov4MbMoC/CFjNwQQQp8vGEPiaDzklHSSPqFPWexX8JxarJPIU2w==}
 
   '@rollup/pluginutils@5.3.0':
     resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
@@ -2829,7 +2829,7 @@ snapshots:
       '@actions/core': 3.0.1
       stack-utils: 2.0.6
 
-  '@reporters/silent@1.3.1': {}
+  '@reporters/silent@2.0.1': {}
 
   '@rollup/pluginutils@5.3.0':
     dependencies:
