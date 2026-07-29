@@ -532,6 +532,7 @@ export type ServerImageMessage = {
         sha256: string;
         id: string;
         url: string;
+        static_url: string;
     };
 };
 
@@ -570,9 +571,10 @@ export type ServerLocationMessage = {
 
 export type ServerContactsMessage = {
     type: "contacts";
-    origin?: "contact_request/other";
     contacts: [
         {
+            vcard?: string;
+            origin?: "contact_request" | "other";
             addresses?: {
                 city?: string;
                 country?: string;
@@ -609,7 +611,6 @@ export type ServerContactsMessage = {
                 url?: string;
                 type?: string;
             }[];
-            vcard?: string;
         }
     ];
 };
@@ -765,7 +766,7 @@ export type ServerUnsupportedMessage = {
         {
             code: 131051;
             title: "Message type unknown";
-            details: "Message type unknown";
+            message: "Message type unknown";
             error_data: {
                 details: "Message type is currently not supported.";
             };
@@ -815,8 +816,8 @@ export type ServerStatusPayload = {
      */
     recipient_type?: "individual" | "group";
     /**
-     * Will be set to the user’s BSUID or parent BSUID, if you sent the message to the user’s BSUID or parent BSUID.
-     * Otherwise, it will be omitted. (Mini rant: ***WHY OMIT IT!!!!????***)
+     * Will always be set to the user’s BSUID, regardless of whether the message was sent to the user’s phone number or BSUID.
+     * For failed status messages, will be omitted if the message was sent to the user’s phone number.
      */
     recipient_user_id?: string;
     /**
@@ -824,13 +825,23 @@ export type ServerStatusPayload = {
      *
      * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
      */
-    parent_recipient_user_id?: string;
+    recipient_parent_user_id?: string;
+    /**
+     * Undocumented on the docs, but exists on the payloads
+     */
+    recipient_logical_id?: string;
     biz_opaque_callback_data?: string;
+    /**
+     * Internal undocumented property
+     */
+    internal_1p_only_data?: {
+        webhook_extra_data: string;
+    };
 } & (
     | {
           conversation?: ServerConversation;
           pricing: ServerPricing;
-          errors: undefined;
+          errors?: undefined;
       }
     | {
           conversation: undefined;
@@ -855,6 +866,10 @@ export type ServerMessage = {
      * Set to the user’s parent BSUID, if you have enabled parent BSUIDs
      */
     from_parent_user_id?: string;
+    /**
+     * Undocumented property
+     */
+    from_logical_id?: string;
     /**
      * The message id
      */
@@ -982,6 +997,10 @@ export type ServerContacts = {
      */
     user_id: string;
     /**
+     * Two letter country code associated to the user's phone number
+     */
+    country_code?: string;
+    /**
      * Will be set to the user’s parent BSUID if you have enabled parent BSUIDs
      *
      * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
@@ -1012,7 +1031,7 @@ export type ServerPricing = {
 
 export type ServerConversation = {
     id: string;
-    expiration_timestamp: number;
+    expiration_timestamp?: string;
     origin: {
         type: ServerInitiation;
     };
@@ -1025,7 +1044,7 @@ export type ServerError = {
     error_data: {
         details: string;
     };
-    href: string;
+    href?: string;
 };
 
 export type GetParams = {

@@ -934,7 +934,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                     recipient_type: type,
                     recipient_id,
                     recipient_user_id,
-                    parent_recipient_user_id,
+                    recipient_parent_user_id,
                     status,
                     id,
                     timestamp,
@@ -948,7 +948,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const contact: ServerContacts = {
                     wa_id: recipient_id,
                     user_id: recipient_user_id!,
-                    parent_user_id: parent_recipient_user_id,
+                    parent_user_id: recipient_parent_user_id,
                     ...value.contacts?.[0]
                 };
 
