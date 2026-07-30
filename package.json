@@ -157,7 +157,7 @@
         "eslint-config-prettier": "10.1.8",
         "eslint-plugin-tsdoc": "0.5.2",
         "glob": "13.0.6",
-        "globals": "17.7.0",
+        "globals": "17.8.0",
         "prettier": "3.9.6",
         "sinon": "22.1.0",
         "typedoc": "0.28.20",
