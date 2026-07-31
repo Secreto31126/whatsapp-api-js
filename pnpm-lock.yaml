@@ -33,8 +33,8 @@ importers:
         specifier: 22.0.0
         version: 22.0.0
       '@vercel/node':
-        specifier: 5.8.27
-        version: 5.8.27(supports-color@7.2.0)
+        specifier: 5.9.0
+        version: 5.9.0(supports-color@7.2.0)
       all-contributors-cli:
         specifier: 6.26.1
         version: 6.26.1
@@ -1019,8 +1019,8 @@ packages:
     resolution: {integrity: sha512-8C71BQkGjiMmXtop7pHVJu1l2NNShFdkCyD6a2ezzs5vU/L3LRtb69EtcteFwz0mYMPzIgOw0n6OV4VBUWZd7A==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@vercel/build-utils@13.35.0':
-    resolution: {integrity: sha512-UQmy2Ht1S3Evz7V9IfA1MyK452gjfPwZRnjGVRV/iVrB9MSCg4tMKmXTVYIarRMuUPbBmnJpoJ1mXPI/pHkJvg==}
+  '@vercel/build-utils@13.36.0':
+    resolution: {integrity: sha512-5Az1XAzro80WJDuANR2UpDWyYnMi2S4Ms1tYvg1YfwiruipyRr0FUf8s0WG8ErBZTBWf95nfZfofpcRJIBDV5w==}
 
   '@vercel/error-utils@2.2.0':
     resolution: {integrity: sha512-WFWiRxfPzoYWYifaj4thSKvAaZZwUOqD4k5GINRIgZgCiS2E3iAJbWbIsIZmkQdTecWFHcWGA6q48CjisgpOBA==}
@@ -1030,11 +1030,11 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  '@vercel/node@5.8.27':
-    resolution: {integrity: sha512-Nsly5g2N70nkBKzXgTLUtjI2wwF0wHSzt6kzFMW2my1ZuYNEexWtIbvS0cV5ykBLSo5XUhhen6EWYM81oRvxdw==}
+  '@vercel/node@5.9.0':
+    resolution: {integrity: sha512-uuN9OTSOqhzszonUC7gpOqoaLvPIMffCp3Xsmnb+jWWn1chVQvW0X59yUkx+pVFgT6HA+CIp89PNA3IY08ITHA==}
 
-  '@vercel/python-analysis@0.11.1':
-    resolution: {integrity: sha512-EPPLuXJQhIDUx08H9nG76AR2HSgBquwe3OAX5s2w20M923iaWeGGVkhX/4yZ89CJfXEZgE1Aj/mX7lVHOVIcYA==}
+  '@vercel/python-analysis@0.12.0':
+    resolution: {integrity: sha512-T9YgtINVJfZmDhXe6ULKoLC1Zr3LU3Cl4CgC+m+S1KsNDPlfGfXdr93K7aOqkMaJEDLpUH8dqrPP3/TuZXTjRw==}
 
   '@vercel/static-config@3.4.0':
     resolution: {integrity: sha512-wCq90CMUB//ggnFh77NQO1xaLFsS4LigQIqKrH6ohnr9Br/KI1FhlErx62WfCOuueWaW+LVsbLOqNXIUjK8t6A==}
@@ -3127,9 +3127,9 @@ snapshots:
       '@typescript-eslint/types': 8.65.0
       eslint-visitor-keys: 5.0.1
 
-  '@vercel/build-utils@13.35.0':
+  '@vercel/build-utils@13.36.0':
     dependencies:
-      '@vercel/python-analysis': 0.11.1
+      '@vercel/python-analysis': 0.12.0
       cjs-module-lexer: 1.2.3
       es-module-lexer: 1.5.0
 
@@ -3154,13 +3154,13 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/node@5.8.27(supports-color@7.2.0)':
+  '@vercel/node@5.9.0(supports-color@7.2.0)':
     dependencies:
       '@edge-runtime/node-utils': 2.3.0
       '@edge-runtime/primitives': 4.1.0
       '@edge-runtime/vm': 3.2.0
       '@types/node': 20.11.0
-      '@vercel/build-utils': 13.35.0
+      '@vercel/build-utils': 13.36.0
       '@vercel/error-utils': 2.2.0
       '@vercel/nft': 1.10.0(supports-color@7.2.0)
       '@vercel/static-config': 3.4.0
@@ -3183,7 +3183,7 @@ snapshots:
       - rollup
       - supports-color
 
-  '@vercel/python-analysis@0.11.1':
+  '@vercel/python-analysis@0.12.0':
     dependencies:
       '@bytecodealliance/preview2-shim': 0.17.6
       '@renovatebot/pep440': 4.2.1
