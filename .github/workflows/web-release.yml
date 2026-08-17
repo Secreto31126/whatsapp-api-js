@@ -94,7 +94,7 @@ jobs:
               run: bash build.sh
 
             - name: Commit changes
-              uses: EndBug/add-and-commit@v10
+              uses: EndBug/add-and-commit@v11
               with:
                   default_author: github_actor
                   message: Added ${{ inputs.tag_name }} docs
