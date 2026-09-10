@@ -5,6 +5,7 @@
         "target": "ESNext",
         "module": "Preserve",
         "moduleResolution": "Bundler",
+        "rootDir": "src",
         "outDir": "lib",
         "declaration": true,
         "declarationMap": true,
