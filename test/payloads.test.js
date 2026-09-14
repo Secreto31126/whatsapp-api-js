@@ -28,7 +28,7 @@ describe("Payload Examples", () => {
         });
 
         /**
-         * @param {unknown} data
+         * @param {import("../lib/types").PostData["entry"][number]["changes"][number]} data
          * @returns {import("../lib/types").PostData}
          */
         function complete_payload(data) {
@@ -37,7 +37,6 @@ describe("Payload Examples", () => {
                 entry: [
                     {
                         id: "1",
-                        // @ts-expect-error Callback is defined with spy
                         changes: [data]
                     }
                 ]
