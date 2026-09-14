@@ -828,9 +828,22 @@ export type ServerStatusPayload = {
      */
     recipient_parent_user_id?: string;
     /**
+     * WhatsApp user phone number. Only included if message sent to a group.
+     */
+    recipient_participant_id?: string;
+    /**
+     * Only included if identity change check enabled
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers
+     */
+    recipient_identity_key_hash?: string;
+    /**
      * Undocumented on the docs, but exists on the payloads
      */
     recipient_logical_id?: string;
+    /**
+     * Only included if message sent with biz_opaque_callback_data
+     */
     biz_opaque_callback_data?: string;
     /**
      * Internal undocumented property
@@ -840,16 +853,28 @@ export type ServerStatusPayload = {
     };
 } & (
     | {
-          conversation?: ServerConversation;
-          pricing: ServerPricing;
-          errors?: undefined;
+          recipient_type?: "individual";
+          recipient_id?: string;
+          recipient_participant_id?: undefined;
       }
     | {
-          conversation: undefined;
-          pricing: undefined;
-          errors: [ServerError];
+          recipient_type: "group";
+          recipient_id: string;
+          recipient_participant_id: string;
       }
-);
+) &
+    (
+        | {
+              conversation?: ServerConversation;
+              pricing?: ServerPricing;
+              errors?: undefined;
+          }
+        | {
+              conversation: undefined;
+              pricing: undefined;
+              errors: [ServerError];
+          }
+    );
 
 export type ServerMessage = {
     /**

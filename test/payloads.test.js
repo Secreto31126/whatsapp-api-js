@@ -6,7 +6,7 @@ import { spy, assert } from "sinon";
 import { WhatsAppAPI } from "../lib/index.js";
 
 describe("Payload Examples", () => {
-    describe("v25", () => {
+    describe("v26", () => {
         const whatsapp = new WhatsAppAPI({
             token: "fake",
             secure: false,
@@ -99,7 +99,8 @@ describe("Payload Examples", () => {
                         },
                         recipient: {
                             phone: "16315551181",
-                            bsuid: "US.ENT.506847293015824"
+                            bsuid: "US.13491208655302741918",
+                            pbsuid: "US.ENT.506847293015824"
                         }
                     });
                 });
@@ -215,7 +216,8 @@ describe("Payload Examples", () => {
                         },
                         recipient: {
                             phone: undefined,
-                            bsuid: "US.ENT.506847293015824"
+                            bsuid: "US.13491208655302741918",
+                            pbsuid: "US.ENT.506847293015824"
                         }
                     });
                 });
@@ -332,7 +334,8 @@ describe("Payload Examples", () => {
                         },
                         recipient: {
                             phone: "16315551181",
-                            bsuid: "US.ENT.506847293015824"
+                            bsuid: "US.13491208655302741918",
+                            pbsuid: "US.ENT.506847293015824"
                         }
                     });
                 });
@@ -414,7 +417,7 @@ describe("Payload Examples", () => {
                                         status: "sent",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -460,7 +463,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -481,7 +485,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -527,7 +531,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -680,7 +685,7 @@ describe("Payload Examples", () => {
                                         status: "sent",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -725,7 +730,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -746,7 +752,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -791,7 +797,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: undefined,
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -942,7 +949,7 @@ describe("Payload Examples", () => {
                                         status: "sent",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -988,7 +995,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1009,7 +1017,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1055,7 +1063,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1210,7 +1219,7 @@ describe("Payload Examples", () => {
                                         status: "delivered",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1250,7 +1259,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1271,7 +1281,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1311,7 +1321,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1452,7 +1463,7 @@ describe("Payload Examples", () => {
                                         status: "delivered",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1492,7 +1503,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1513,7 +1525,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1553,7 +1565,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: undefined,
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1694,7 +1707,7 @@ describe("Payload Examples", () => {
                                         status: "delivered",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1735,7 +1748,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1756,7 +1770,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824",
                                         conversation: {
                                             id: "CONVERSATION_ID",
@@ -1797,7 +1811,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1942,7 +1957,7 @@ describe("Payload Examples", () => {
                                         status: "read",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824"
                                     }
                                 ],
@@ -1975,7 +1990,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -1996,7 +2012,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824"
                                     }
                                 ],
@@ -2029,7 +2045,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -2156,7 +2173,7 @@ describe("Payload Examples", () => {
                                         status: "read",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824"
                                     }
                                 ],
@@ -2189,7 +2206,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -2210,7 +2228,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824"
                                     }
                                 ],
@@ -2243,7 +2261,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: undefined,
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -2370,7 +2389,7 @@ describe("Payload Examples", () => {
                                         status: "read",
                                         timestamp: "1504902988",
                                         recipient_id: "16315551181",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824"
                                     }
                                 ],
@@ -2404,7 +2423,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
@@ -2425,7 +2445,7 @@ describe("Payload Examples", () => {
                                         timestamp: "1504902988",
                                         recipient_user_id:
                                             "US.13491208655302741918",
-                                        parent_recipient_user_id:
+                                        recipient_parent_user_id:
                                             "US.ENT.506847293015824"
                                     }
                                 ],
@@ -2459,7 +2479,8 @@ describe("Payload Examples", () => {
                             },
                             recipient: {
                                 phone: "16315551181",
-                                bsuid: "US.ENT.506847293015824"
+                                bsuid: "US.13491208655302741918",
+                                pbsuid: "US.ENT.506847293015824"
                             }
                         });
                     });
