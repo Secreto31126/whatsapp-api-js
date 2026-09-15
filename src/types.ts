@@ -574,7 +574,7 @@ export type ServerContactsMessage = {
     type: "contacts";
     contacts: [
         {
-            vcard?: string;
+            vcard?: string | null;
             origin?: "contact_request" | "other";
             addresses?: {
                 city?: string;

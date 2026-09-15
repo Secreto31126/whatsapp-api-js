@@ -1,5 +1,6 @@
 // Unit tests with node:test and sinon
-import { describe, it, beforeEach } from "node:test";
+import { describe, it, beforeEach, mock } from "node:test";
+import { strictEqual, partialDeepStrictEqual } from "node:assert";
 import { spy, assert } from "sinon";
 
 // Import the module
@@ -22,9 +23,14 @@ describe("Payload Examples", () => {
             }
         };
 
+        let msgSpy = spy();
+        let stsSpy = spy();
         beforeEach(() => {
-            whatsapp.on.message = spy();
-            whatsapp.on.status = spy();
+            msgSpy = spy();
+            stsSpy = spy();
+
+            whatsapp.on.message = msgSpy;
+            whatsapp.on.status = stsSpy;
         });
 
         /**
@@ -396,6 +402,189 @@ describe("Payload Examples", () => {
                         }
                     });
                 });
+            });
+        });
+
+        describe("Contacts message", () => {
+            const message = {
+                type: "contacts",
+                contacts: [
+                    {
+                        name: {
+                            first_name: "Jane",
+                            last_name: "Doe",
+                            formatted_name: "Jane Doe"
+                        },
+                        phones: [
+                            {
+                                phone: "12185551765",
+                                wa_id: "12185551765",
+                                type: "MOBILE"
+                            }
+                        ],
+                        vcard: null,
+                        origin: "contact_request"
+                    }
+                ]
+            };
+
+            /**
+             * @type {import("node:test").Mock<import("../lib/emitters.js").OnMessage<void>>}
+             */
+            let messageSpy;
+            beforeEach(() => {
+                messageSpy = mock.fn();
+                whatsapp.on.message = messageSpy;
+            });
+
+            it("has parent bsuid", async () => {
+                const payload = complete_payload({
+                    field: "messages",
+                    value: {
+                        messaging_product: "whatsapp",
+                        metadata: {
+                            display_phone_number: "16505551111",
+                            phone_number_id: "123456123"
+                        },
+                        contacts: [
+                            {
+                                profile: {
+                                    name: "test user name",
+                                    username: "@testusername"
+                                },
+                                user_id: "US.13491208655302741918",
+                                parent_user_id: "US.ENT.506847293015824"
+                            }
+                        ],
+                        messages: [
+                            {
+                                id: "ABGGFlA5Fpa",
+                                timestamp: "1504902988",
+                                from_user_id: "US.13491208655302741918",
+                                from_parent_user_id: "US.ENT.506847293015824",
+                                type: "contacts",
+                                contacts: [
+                                    {
+                                        name: {
+                                            first_name: "Jane",
+                                            last_name: "Doe",
+                                            formatted_name: "Jane Doe"
+                                        },
+                                        phones: [
+                                            {
+                                                phone: "12185551765",
+                                                wa_id: "12185551765",
+                                                type: "MOBILE"
+                                            }
+                                        ],
+                                        vcard: null,
+                                        origin: "contact_request"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                });
+
+                await whatsapp.post(payload);
+
+                const args = messageSpy.mock.calls[0].arguments;
+
+                strictEqual(messageSpy.mock.callCount(), 1);
+                partialDeepStrictEqual(args, [
+                    {
+                        phoneID,
+                        message,
+                        contact: {
+                            profile: {
+                                name: "test user name",
+                                username: "@testusername"
+                            },
+                            wa_id: undefined,
+                            user_id: "US.13491208655302741918",
+                            parent_user_id: "US.ENT.506847293015824"
+                        },
+                        recipient: {
+                            phone: undefined,
+                            bsuid: "US.13491208655302741918",
+                            pbsuid: "US.ENT.506847293015824"
+                        }
+                    }
+                ]);
+            });
+
+            it("doesn't have parent bsuid", async () => {
+                const payload = complete_payload({
+                    field: "messages",
+                    value: {
+                        messaging_product: "whatsapp",
+                        metadata: {
+                            display_phone_number: "16505551111",
+                            phone_number_id: "123456123"
+                        },
+                        contacts: [
+                            {
+                                profile: {
+                                    name: "test user name",
+                                    username: "@testusername"
+                                },
+                                user_id: "US.13491208655302741918"
+                            }
+                        ],
+                        messages: [
+                            {
+                                id: "ABGGFlA5Fpa",
+                                timestamp: "1504902988",
+                                from_user_id: "US.13491208655302741918",
+                                type: "contacts",
+                                contacts: [
+                                    {
+                                        name: {
+                                            first_name: "Jane",
+                                            last_name: "Doe",
+                                            formatted_name: "Jane Doe"
+                                        },
+                                        phones: [
+                                            {
+                                                phone: "12185551765",
+                                                wa_id: "12185551765",
+                                                type: "MOBILE"
+                                            }
+                                        ],
+                                        vcard: null,
+                                        origin: "contact_request"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                });
+
+                await whatsapp.post(payload);
+
+                const args = messageSpy.mock.calls[0].arguments;
+
+                strictEqual(messageSpy.mock.callCount(), 1);
+                partialDeepStrictEqual(args, [
+                    {
+                        phoneID,
+                        message,
+                        contact: {
+                            profile: {
+                                name: "test user name",
+                                username: "@testusername"
+                            },
+                            wa_id: undefined,
+                            user_id: "US.13491208655302741918",
+                            parent_user_id: undefined
+                        },
+                        recipient: {
+                            phone: undefined,
+                            bsuid: "US.13491208655302741918",
+                            pbsuid: undefined
+                        }
+                    }
+                ]);
             });
         });
 
