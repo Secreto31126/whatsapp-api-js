@@ -723,15 +723,24 @@ export type ServerSystemMessage = {
          */
         user_id: string;
         /**
+         * Will be set to the BSUID the user had before the change
+         */
+        previous_user_id: string;
+        /**
          * Will be set to the user’s new parent BSUID, if you have enabled parent BSUIDs
          *
          * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
          */
         parent_user_id?: string;
+        /**
+         * Will be set to the parent BSUID the user had before the change, if you have enabled parent BSUIDs
+         */
+        previous_parent_user_id?: string;
         type:
             | "customer_changed_number"
             | "customer_identity_changed"
             | "user_changed_user_id"
+            | "user_changed_number"
             | string /** @deprecated Backwards compatibility */;
         customer?: string;
     };
