@@ -158,7 +158,11 @@ export type ClientIndividualRecipientIdentifier = {
     /**
      * Identify a user by its bsuid
      */
-    bsuid?: string;
+    bsuid: string;
+    /**
+     * Identify a user by its parent bsuid
+     */
+    pbsuid?: string;
 };
 
 export type ClientGroupRecipientIdentifier = {
@@ -574,7 +578,7 @@ export type ServerContactsMessage = {
     type: "contacts";
     contacts: [
         {
-            vcard?: string;
+            vcard?: string | null;
             origin?: "contact_request" | "other";
             addresses?: {
                 city?: string;
@@ -723,15 +727,24 @@ export type ServerSystemMessage = {
          */
         user_id: string;
         /**
+         * Will be set to the BSUID the user had before the change
+         */
+        previous_user_id: string;
+        /**
          * Will be set to the user’s new parent BSUID, if you have enabled parent BSUIDs
          *
          * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#parent-business-scoped-user-ids
          */
         parent_user_id?: string;
+        /**
+         * Will be set to the parent BSUID the user had before the change, if you have enabled parent BSUIDs
+         */
+        previous_parent_user_id?: string;
         type:
             | "customer_changed_number"
             | "customer_identity_changed"
             | "user_changed_user_id"
+            | "user_changed_number"
             | string /** @deprecated Backwards compatibility */;
         customer?: string;
     };
@@ -828,9 +841,22 @@ export type ServerStatusPayload = {
      */
     recipient_parent_user_id?: string;
     /**
+     * WhatsApp user phone number. Only included if message sent to a group.
+     */
+    recipient_participant_id?: string;
+    /**
+     * Only included if identity change check enabled
+     *
+     * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-phone-numbers/phone-numbers
+     */
+    recipient_identity_key_hash?: string;
+    /**
      * Undocumented on the docs, but exists on the payloads
      */
     recipient_logical_id?: string;
+    /**
+     * Only included if message sent with biz_opaque_callback_data
+     */
     biz_opaque_callback_data?: string;
     /**
      * Internal undocumented property
@@ -840,16 +866,28 @@ export type ServerStatusPayload = {
     };
 } & (
     | {
-          conversation?: ServerConversation;
-          pricing: ServerPricing;
-          errors?: undefined;
+          recipient_type?: "individual";
+          recipient_id?: string;
+          recipient_participant_id?: undefined;
       }
     | {
-          conversation: undefined;
-          pricing: undefined;
-          errors: [ServerError];
+          recipient_type: "group";
+          recipient_id: string;
+          recipient_participant_id: string;
       }
-);
+) &
+    (
+        | {
+              conversation?: ServerConversation;
+              pricing?: ServerPricing;
+              errors?: undefined;
+          }
+        | {
+              conversation: undefined;
+              pricing: undefined;
+              errors: [ServerError];
+          }
+    );
 
 export type ServerMessage = {
     /**

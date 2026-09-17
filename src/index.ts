@@ -25,7 +25,8 @@ import {
     type ServerAcceptCallResponse,
     type ServerTerminateCallResponse,
     type ServerRejectCallResponse,
-    type ServerInitiateCallResponse
+    type ServerInitiateCallResponse,
+    type ClientGroupRecipientIdentifier
 } from "./types.js";
 import type {
     OnCallConnect,
@@ -246,7 +247,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     async sendMessage(
         phoneID: string,
-        recipient: string | ClientRecipientIdentifier,
+        recipient:
+            | string
+            | Partial<ClientIndividualRecipientIdentifier>
+            | ClientGroupRecipientIdentifier,
         message: ClientMessage,
         context?: string,
         biz_opaque_callback_data?: string
@@ -254,7 +258,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         const r = WhatsAppAPI.toRecipient(recipient);
         const individual = WhatsAppAPI.isIndividualRecipient(r);
 
-        if (individual && !r.phone && !r.bsuid) {
+        if (individual && !r.phone && !r.bsuid && !r.pbsuid) {
             throw new Error("At least one recipient id must be provided");
         }
 
@@ -269,7 +273,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
             type,
             [type]: message,
 
-            recipient: individual ? r.bsuid : undefined,
+            recipient: individual ? (r.pbsuid ?? r.bsuid) : undefined,
             context: context ? { message_id: context } : undefined,
             biz_opaque_callback_data
         } as ClientMessageRequest; // Trust me TS, this is a valid message
@@ -291,7 +295,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
         const args: OnSentArgs = {
             phoneID,
-            to: individual ? (r.phone ?? r.bsuid!) : r.group,
+            to: individual ? (r.phone ?? r.pbsuid ?? r.bsuid!) : r.group,
             recipient: r,
             type,
             message,
@@ -888,11 +892,15 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
                 const { wa_id, user_id, parent_user_id, profile } = contact;
 
-                const recipient: ClientRecipientIdentifier = {
-                    phone: !group_id ? wa_id : undefined,
-                    bsuid: !group_id ? (parent_user_id ?? user_id) : undefined,
-                    group: group_id
-                };
+                const recipient: ClientRecipientIdentifier = !group_id
+                    ? {
+                          phone: wa_id,
+                          bsuid: user_id,
+                          pbsuid: parent_user_id
+                      }
+                    : {
+                          group: group_id
+                      };
 
                 const args: OnMessageArgs = {
                     phoneID,
@@ -957,11 +965,15 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 const error = statuses.errors?.[0];
 
                 const is_group = type === "group";
-                const recipient: ClientRecipientIdentifier = {
-                    phone: !is_group ? wa_id : undefined,
-                    bsuid: !is_group ? (parent_user_id ?? user_id) : undefined,
-                    group: is_group ? recipient_id : undefined
-                };
+                const recipient: ClientRecipientIdentifier = !is_group
+                    ? {
+                          phone: wa_id,
+                          bsuid: user_id,
+                          pbsuid: parent_user_id
+                      }
+                    : {
+                          group: recipient_id
+                      };
 
                 const args: OnStatusArgs = {
                     phoneID,
@@ -1181,7 +1193,12 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private static toRecipient<
         T extends
-            ClientRecipientIdentifier | ClientIndividualRecipientIdentifier
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+            | Partial<
+                  | ClientRecipientIdentifier
+                  | ClientIndividualRecipientIdentifier
+              >
     >(r: string | T): T;
 
     /**
@@ -1189,7 +1206,12 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private static toRecipient<
         T extends
-            ClientRecipientIdentifier | ClientIndividualRecipientIdentifier
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+            | Partial<
+                  | ClientRecipientIdentifier
+                  | ClientIndividualRecipientIdentifier
+              >
     >(r: string[] | T[]): T[];
 
     /**
@@ -1199,7 +1221,12 @@ export class WhatsAppAPI<EmittersReturnType = void>
      */
     private static toRecipient<
         T extends
-            ClientRecipientIdentifier | ClientIndividualRecipientIdentifier
+            | ClientRecipientIdentifier
+            | ClientIndividualRecipientIdentifier
+            | Partial<
+                  | ClientRecipientIdentifier
+                  | ClientIndividualRecipientIdentifier
+              >
     >(r: string | T | string[] | T[]) {
         if (Array.isArray(r)) return r.map(WhatsAppAPI.toRecipient);
         if (typeof r !== "string") return r;
@@ -1209,7 +1236,17 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     private static isIndividualRecipient(
         r: ClientRecipientIdentifier
-    ): r is ClientIndividualRecipientIdentifier {
+    ): r is ClientIndividualRecipientIdentifier;
+
+    private static isIndividualRecipient(
+        r: Partial<ClientRecipientIdentifier>
+    ): r is Partial<ClientIndividualRecipientIdentifier>;
+
+    private static isIndividualRecipient(
+        r: ClientRecipientIdentifier | Partial<ClientRecipientIdentifier>
+    ): r is
+        | Partial<ClientIndividualRecipientIdentifier>
+        | ClientIndividualRecipientIdentifier {
         return !("group" in r) || !r.group;
     }
 }
