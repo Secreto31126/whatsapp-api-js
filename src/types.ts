@@ -158,7 +158,11 @@ export type ClientIndividualRecipientIdentifier = {
     /**
      * Identify a user by its bsuid
      */
-    bsuid?: string;
+    bsuid: string;
+    /**
+     * Identify a user by its parent bsuid
+     */
+    pbsuid?: string;
 };
 
 export type ClientGroupRecipientIdentifier = {
