@@ -25,7 +25,7 @@ export type OnSentArgs = {
     /**
      * A client recipient identifier, provided as is by the sendMessage invocation
      */
-    recipient: ClientRecipientIdentifier;
+    recipient: Partial<ClientRecipientIdentifier>;
     /**
      * The message type
      */

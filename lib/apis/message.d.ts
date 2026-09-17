@@ -1,4 +1,4 @@
-import type { ClientMessage, ClientRecipientIdentifier, ClientTypingIndicators, ServerMarkAsReadResponse, ServerMessageResponse } from "../types";
+import type { ClientMessage, ClientRecipientIdentifier, ClientIndividualRecipientIdentifier, ClientGroupRecipientIdentifier, ClientTypingIndicators, ServerMarkAsReadResponse, ServerMessageResponse } from "../types";
 export interface API {
     /**
      * Send a Whatsapp message
@@ -66,7 +66,7 @@ export interface API {
      * @returns The server response
      * @throws If the recipient identifier doesn't have any data
      */
-    sendMessage(phoneID: string, recipient: ClientRecipientIdentifier, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse>;
+    sendMessage(phoneID: string, recipient: Partial<ClientIndividualRecipientIdentifier> | ClientGroupRecipientIdentifier, message: ClientMessage, context?: string, biz_opaque_callback_data?: string): Promise<ServerMessageResponse>;
     /**
      * Send a Whatsapp message to multiple phone numbers.
      *
