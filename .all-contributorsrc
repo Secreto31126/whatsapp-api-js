@@ -28,6 +28,13 @@
             "avatar_url": "https://avatars.githubusercontent.com/u/79026094?v=4",
             "profile": "https://github.com/felixarjuna",
             "contributions": ["bug", "security"]
+        },
+        {
+            "login": "EQSTLab",
+            "name": "EQSTLab",
+            "avatar_url": "https://avatars.githubusercontent.com/u/148991397?v=4",
+            "profile": "https://github.com/EQSTLab",
+            "contributions": ["bug", "security"]
         }
     ],
     "contributorsPerLine": 7,
