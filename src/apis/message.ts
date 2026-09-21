@@ -1,6 +1,8 @@
 import type {
     ClientMessage,
     ClientRecipientIdentifier,
+    ClientIndividualRecipientIdentifier,
+    ClientGroupRecipientIdentifier,
     ClientTypingIndicators,
     ServerMarkAsReadResponse,
     ServerMessageResponse
@@ -82,7 +84,9 @@ export interface API {
      */
     sendMessage(
         phoneID: string,
-        recipient: ClientRecipientIdentifier,
+        recipient:
+            | Partial<ClientIndividualRecipientIdentifier>
+            | ClientGroupRecipientIdentifier,
         message: ClientMessage,
         context?: string,
         biz_opaque_callback_data?: string
