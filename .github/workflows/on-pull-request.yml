@@ -9,20 +9,15 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                node-version: [22.x, 24.x, 26.x]
+                runtime: [node@22, node@24, node@26]
 
         steps:
             - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
+            - name: Use ${{ matrix.runtime }}
+              uses: pnpm/setup@v3
               with:
-                  version: 12
                   cache: true
-                  run_install: true
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v7
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: pnpm
+                  runtime: ${{ matrix.runtime }}
 
             - name: Compile
               run: pnpm build:code
@@ -36,15 +31,9 @@ jobs:
 
         steps:
             - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
+            - uses: pnpm/setup@v3
               with:
-                  version: 12
                   cache: true
-                  run_install: true
-            - uses: actions/setup-node@v7
-              with:
-                  node-version: 24.x
-                  cache: pnpm
 
             - name: Linted
               run: pnpm lint

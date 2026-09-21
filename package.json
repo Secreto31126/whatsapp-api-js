@@ -7,7 +7,23 @@
     "type": "module",
     "sideEffects": false,
     "engines": {
-        "node": ">=16"
+        "runtime": {
+            "name": "node",
+            "version": ">=22.13.0",
+            "onFail": "warn"
+        }
+    },
+    "devEngines": {
+        "runtime": {
+            "name": "node",
+            "version": "26.9.0",
+            "onFail": "warn"
+        },
+        "packageManager": {
+            "name": "pnpm",
+            "version": "12.4.2",
+            "onFail": "warn"
+        }
     },
     "files": [
         "lib/**/*"

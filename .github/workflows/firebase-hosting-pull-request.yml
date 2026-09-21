@@ -18,10 +18,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
-            - uses: pnpm/action-setup@v6
-              with:
-                  version: 12
-                  run_install: true
+            - uses: pnpm/setup@v3
 
             - run: pnpm document
 
