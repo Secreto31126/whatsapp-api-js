@@ -26,7 +26,19 @@ import {
     type ServerTerminateCallResponse,
     type ServerRejectCallResponse,
     type ServerInitiateCallResponse,
-    type ClientGroupRecipientIdentifier
+    type ClientGroupRecipientIdentifier,
+    type ClientGroupJoinApprovalMode,
+    type ServerGroupField,
+    type ServerCreateGroupResponse,
+    type ServerRetrieveGroupsResponse,
+    type ServerRetrieveGroupResponse,
+    type ServerUpdateGroupResponse,
+    type ServerDeleteGroupResponse,
+    type ServerGroupInviteLinkResponse,
+    type ServerRemoveGroupParticipantsResponse,
+    type ServerRetrieveGroupJoinRequestsResponse,
+    type ServerApproveGroupJoinRequestsResponse,
+    type ServerRejectGroupJoinRequestsResponse
 } from "./types.js";
 import type {
     OnCallConnect,
@@ -72,6 +84,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         Cloud.QR.API,
         Cloud.Media.API,
         Cloud.Block.API,
+        Cloud.Groups.API,
         Cloud.Webhook.API<EmittersReturnType>
 {
     //#region Properties
@@ -837,6 +850,222 @@ export class WhatsAppAPI<EmittersReturnType = void>
         );
 
         return this.getBody<ServerUnblockResponse>(promise);
+    }
+
+    // #endregion
+
+    // #region Group Operations
+
+    async createGroup(
+        phoneID: string,
+        subject: string,
+        description?: string,
+        joinApprovalMode?: ClientGroupJoinApprovalMode
+    ) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${phoneID}/groups`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    subject,
+                    description,
+                    join_approval_mode: joinApprovalMode
+                })
+            }
+        );
+
+        return this.getBody<ServerCreateGroupResponse>(promise);
+    }
+
+    async retrieveGroups(
+        phoneID: string,
+        limit?: number,
+        after?: string,
+        before?: string
+    ) {
+        const params = new URLSearchParams();
+
+        if (limit !== undefined) params.set("limit", limit.toString());
+        if (after) params.set("after", after);
+        if (before) params.set("before", before);
+
+        const query = params.toString();
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${phoneID}/groups${query ? `?${query}` : ""}`
+        );
+
+        return this.getBody<ServerRetrieveGroupsResponse>(promise);
+    }
+
+    async retrieveGroup(groupID: string, fields?: ServerGroupField[]) {
+        const query = fields?.length ? `?fields=${fields.join(",")}` : "";
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}${query}`
+        );
+
+        return this.getBody<ServerRetrieveGroupResponse>(promise);
+    }
+
+    async updateGroup(
+        groupID: string,
+        settings: { subject?: string; description?: string }
+    ) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    subject: settings.subject,
+                    description: settings.description
+                })
+            }
+        );
+
+        return this.getBody<ServerUpdateGroupResponse>(promise);
+    }
+
+    async updateGroupPicture(groupID: string, form: unknown, check = true) {
+        if (check) {
+            if (
+                !form ||
+                typeof form !== "object" ||
+                !("get" in form) ||
+                typeof form.get !== "function"
+            )
+                throw new TypeError(
+                    "Picture's Form must be an instance of FormData"
+                );
+
+            const file = form.get("file") as Blob;
+
+            if (file.type !== "image/jpeg")
+                throw new Error(
+                    `Invalid picture type: ${file.type}, it must be image/jpeg`
+                );
+
+            if (file.size && file.size > 5_000_000)
+                throw new Error(
+                    `Picture is too big (${file.size} bytes), the limit is 5000000 bytes`
+                );
+        }
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}?messaging_product=whatsapp`,
+            {
+                method: "POST",
+                body: form as FormData
+            }
+        );
+
+        return this.getBody<ServerUpdateGroupResponse>(promise);
+    }
+
+    async deleteGroup(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        return this.getBody<ServerDeleteGroupResponse>(promise);
+    }
+
+    async retrieveGroupInviteLink(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/invite_link`
+        );
+
+        return this.getBody<ServerGroupInviteLinkResponse>(promise);
+    }
+
+    async resetGroupInviteLink(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/invite_link`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp"
+                })
+            }
+        );
+
+        return this.getBody<ServerGroupInviteLinkResponse>(promise);
+    }
+
+    async removeGroupParticipants(groupID: string, ...users: string[]) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/participants`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    participants: users.map((user) => ({ user }))
+                })
+            }
+        );
+
+        return this.getBody<ServerRemoveGroupParticipantsResponse>(promise);
+    }
+
+    async retrieveGroupJoinRequests(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/join_requests`
+        );
+
+        return this.getBody<ServerRetrieveGroupJoinRequestsResponse>(promise);
+    }
+
+    async approveGroupJoinRequests(groupID: string, ...requests: string[]) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/join_requests`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    join_requests: requests
+                })
+            }
+        );
+
+        return this.getBody<ServerApproveGroupJoinRequestsResponse>(promise);
+    }
+
+    async rejectGroupJoinRequests(groupID: string, ...requests: string[]) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/join_requests`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    join_requests: requests
+                })
+            }
+        );
+
+        return this.getBody<ServerRejectGroupJoinRequestsResponse>(promise);
     }
 
     // #endregion

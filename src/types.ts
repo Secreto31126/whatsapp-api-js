@@ -1333,3 +1333,127 @@ export type ServerUnblockResponse =
           errors?: ServerBlockedError;
       }
     | ServerErrorResponse;
+
+export type ClientGroupJoinApprovalMode = "approval_required" | "auto_approve";
+
+export type ServerGroupField =
+    | "join_approval_mode"
+    | "subject"
+    | "description"
+    | "suspended"
+    | "creation_timestamp"
+    | "participants"
+    | "total_participant_count";
+
+export type ServerGroupError = {
+    code: number;
+    message: string;
+    title: string;
+    error_data: {
+        details: string;
+    };
+};
+
+export type ServerGroupPaging = {
+    cursors: {
+        before: string;
+        after: string;
+    };
+    previous?: string;
+    next?: string;
+};
+
+export type ServerGroupSuccessResponse =
+    ({ messaging_product: "whatsapp" } & NoServerError) | ServerErrorResponse;
+
+/**
+ * Meta doesn't document this response, the group's data arrives
+ * on the group_lifecycle_update webhook
+ */
+export type ServerCreateGroupResponse = ServerGroupSuccessResponse;
+
+export type ServerRetrieveGroupsResponse =
+    | ({
+          data: {
+              groups: {
+                  id: string;
+                  subject: string;
+                  created_at: string;
+              }[];
+          };
+          paging: ServerGroupPaging;
+      } & NoServerError)
+    | ServerErrorResponse;
+
+export type ServerGroup = {
+    id: string;
+    join_approval_mode?: ClientGroupJoinApprovalMode;
+    subject?: string;
+    description?: string;
+    suspended?: boolean;
+    /**
+     * UNIX timestamp in seconds
+     */
+    creation_timestamp?: number;
+    participants?: { wa_id: string }[];
+    /**
+     * Doesn't include the business
+     */
+    total_participant_count?: number;
+};
+
+export type ServerRetrieveGroupResponse =
+    | ({ messaging_product: "whatsapp" } & ServerGroup & NoServerError)
+    | ServerErrorResponse;
+
+export type ServerUpdateGroupResponse = ServerGroupSuccessResponse;
+
+export type ServerDeleteGroupResponse = ServerGroupSuccessResponse;
+
+export type ServerGroupInviteLinkResponse =
+    | ({
+          messaging_product: "whatsapp";
+          /**
+           * Always starts with https://chat.whatsapp.com/
+           */
+          invite_link: string;
+      } & NoServerError)
+    | ServerErrorResponse;
+
+export type ServerRemoveGroupParticipantsResponse = ServerGroupSuccessResponse;
+
+export type ServerGroupJoinRequest = {
+    join_request_id: string;
+    wa_id: string;
+    creation_timestamp: string;
+};
+
+export type ServerRetrieveGroupJoinRequestsResponse =
+    | ({
+          data: ServerGroupJoinRequest[];
+          paging: ServerGroupPaging;
+      } & NoServerError)
+    | ServerErrorResponse;
+
+export type ServerGroupFailedJoinRequest = {
+    join_request_id: string;
+    errors: ServerGroupError[];
+};
+
+export type ServerApproveGroupJoinRequestsResponse =
+    | ({
+          messaging_product: "whatsapp";
+          approved_join_requests: string[];
+          failed_join_requests?: ServerGroupFailedJoinRequest[];
+          errors?: ServerGroupError[];
+      } & NoServerError)
+    | ServerErrorResponse;
+
+export type ServerRejectGroupJoinRequestsResponse =
+    | ({
+          messaging_product: "whatsapp";
+          rejected_join_requests: string[];
+          failed_join_requests?: ServerGroupFailedJoinRequest[];
+          errors?: ServerGroupError[];
+      } & NoServerError)
+    | ServerErrorResponse;

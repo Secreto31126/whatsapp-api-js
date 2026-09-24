@@ -1558,6 +1558,528 @@ describe("WhatsAppAPI", () => {
         });
     });
 
+    describe("Groups", () => {
+        const bot = "1";
+        const group = "2";
+        const user = "3";
+        const request = "4";
+        const subject = "Hello World";
+        const description = "A group for testing";
+        const invite_link = "https://chat.whatsapp.com/something_random";
+
+        const Whatsapp = new WhatsAppAPI({
+            v,
+            token,
+            appSecret,
+            ponyfill: {
+                fetch: undici_fetch,
+                subtle
+            }
+        });
+
+        const success = { messaging_product: "whatsapp" };
+
+        describe("Create", () => {
+            it("should create a group with only a subject", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/groups`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            subject
+                        })
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.createGroup(bot, subject);
+
+                deepEqual(response, success);
+            });
+
+            it("should create a group with a description and join approval", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/groups`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            subject,
+                            description,
+                            join_approval_mode: "approval_required"
+                        })
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.createGroup(
+                    bot,
+                    subject,
+                    description,
+                    "approval_required"
+                );
+
+                deepEqual(response, success);
+            });
+        });
+
+        describe("Retrieve all", () => {
+            const expectedResponse = {
+                data: {
+                    groups: [{ id: group, subject, created_at: "1735689600" }]
+                },
+                paging: {
+                    cursors: {
+                        before: "before_cursor",
+                        after: "after_cursor"
+                    }
+                }
+            };
+
+            it("should retrieve the groups", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/groups`,
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.retrieveGroups(bot);
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should retrieve the groups with pagination", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${bot}/groups`,
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            limit: "10",
+                            after: "after_cursor"
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.retrieveGroups(
+                    bot,
+                    10,
+                    "after_cursor"
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+        });
+
+        describe("Retrieve one", () => {
+            it("should retrieve only the group id if no fields are given", async () => {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    id: group
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}`,
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.retrieveGroup(group);
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should retrieve the requested fields", async () => {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    id: group,
+                    subject,
+                    participants: [{ wa_id: user }]
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}`,
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            fields: "subject,participants"
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.retrieveGroup(group, [
+                    "subject",
+                    "participants"
+                ]);
+
+                deepEqual(response, expectedResponse);
+            });
+        });
+
+        describe("Update", () => {
+            it("should update the subject and description", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            subject,
+                            description
+                        })
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.updateGroup(group, {
+                    subject,
+                    description
+                });
+
+                deepEqual(response, success);
+            });
+
+            it("should update only the description", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            description
+                        })
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.updateGroup(group, {
+                    description
+                });
+
+                deepEqual(response, success);
+            });
+        });
+
+        describe("Update picture", () => {
+            let form;
+            beforeEach(() => {
+                form = new FormData();
+            });
+
+            it("should upload the picture", async () => {
+                form.append(
+                    "file",
+                    new Blob(["Not a real JPEG"], { type: "image/jpeg" })
+                );
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        },
+                        query: {
+                            messaging_product: "whatsapp"
+                        }
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.updateGroupPicture(group, form);
+
+                deepEqual(response, success);
+            });
+
+            describe("Check truthy (default)", () => {
+                it("should fail if the form param is not a FormData instance", async () => {
+                    await rejects(Whatsapp.updateGroupPicture(group, {}));
+
+                    await rejects(Whatsapp.updateGroupPicture(group, []));
+
+                    await rejects(
+                        Whatsapp.updateGroupPicture(group, "Hello World")
+                    );
+                });
+
+                it("should fail if the form param does not contain a file", async () => {
+                    await rejects(Whatsapp.updateGroupPicture(group, form));
+                });
+
+                it("should fail if the picture is not a JPEG", async () => {
+                    form.append(
+                        "file",
+                        new Blob(["Not a real PNG"], { type: "image/png" })
+                    );
+
+                    await rejects(Whatsapp.updateGroupPicture(group, form));
+                });
+
+                it("should fail if the picture is bigger than 5MB", async () => {
+                    form.append(
+                        "file",
+                        new Blob([new Uint8Array(5_000_001)], {
+                            type: "image/jpeg"
+                        })
+                    );
+
+                    await rejects(Whatsapp.updateGroupPicture(group, form));
+                });
+            });
+
+            describe("Check falsy", () => {
+                it("should not check the form", async () => {
+                    form.append(
+                        "file",
+                        new Blob(["Not a real PNG"], { type: "image/png" })
+                    );
+
+                    clientFacebook
+                        .intercept({
+                            path: `/${Whatsapp.v}/${group}`,
+                            method: "POST",
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            },
+                            query: {
+                                messaging_product: "whatsapp"
+                            }
+                        })
+                        .reply(200, {})
+                        .times(2);
+
+                    await Whatsapp.updateGroupPicture(group, form, false);
+
+                    await Whatsapp.updateGroupPicture(group, {}, false);
+                });
+            });
+        });
+
+        describe("Delete", () => {
+            it("should delete a group", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.deleteGroup(group);
+
+                deepEqual(response, success);
+            });
+        });
+
+        describe("Invite link", () => {
+            const expectedResponse = {
+                messaging_product: "whatsapp",
+                invite_link
+            };
+
+            it("should retrieve the invite link", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/invite_link`,
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.retrieveGroupInviteLink(group);
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should reset the invite link", async () => {
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/invite_link`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp"
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.resetGroupInviteLink(group);
+
+                deepEqual(response, expectedResponse);
+            });
+        });
+
+        describe("Participants", () => {
+            it("should remove participants", async () => {
+                const other = "5";
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/participants`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            participants: [{ user }, { user: other }]
+                        })
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.removeGroupParticipants(
+                    group,
+                    user,
+                    other
+                );
+
+                deepEqual(response, success);
+            });
+        });
+
+        describe("Join requests", () => {
+            it("should retrieve the join requests", async () => {
+                const expectedResponse = {
+                    data: [
+                        {
+                            join_request_id: request,
+                            wa_id: user,
+                            creation_timestamp: "1735689600"
+                        }
+                    ],
+                    paging: {
+                        cursors: {
+                            before: "before_cursor",
+                            after: "after_cursor"
+                        }
+                    }
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/join_requests`,
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response =
+                    await Whatsapp.retrieveGroupJoinRequests(group);
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should approve join requests", async () => {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    approved_join_requests: [request]
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/join_requests`,
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            join_requests: [request]
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.approveGroupJoinRequests(
+                    group,
+                    request
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+
+            it("should reject join requests", async () => {
+                const expectedResponse = {
+                    messaging_product: "whatsapp",
+                    rejected_join_requests: [request]
+                };
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/join_requests`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            join_requests: [request]
+                        })
+                    })
+                    .reply(200, expectedResponse)
+                    .times(1);
+
+                const response = await Whatsapp.rejectGroupJoinRequests(
+                    group,
+                    request
+                );
+
+                deepEqual(response, expectedResponse);
+            });
+        });
+    });
+
     describe("Webhooks", () => {
         describe("Get", () => {
             const mode = "subscribe";
