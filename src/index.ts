@@ -54,11 +54,11 @@ import type {
     OnStatus,
     OnStatusArgs
 } from "./emitters.d.ts";
+import type { MaybePromise, AtLeastOne } from "./utils.js";
 
 import * as Cloud from "./apis/index.js";
 
-import { escapeUnicode, MaybePromise } from "./utils.js";
-import type { AtLeastOne } from "./utils.js";
+import { escapeUnicode } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";
 import {
     WhatsAppAPIMissingAppSecretError,
