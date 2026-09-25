@@ -54,9 +54,9 @@ import type {
     OnStatus,
     OnStatusArgs
 } from "./emitters.d.ts";
-import type { MaybePromise, AtLeastOne } from "./utils.js";
+import type { MaybePromise, AtLeastOne } from "./utils.d.ts";
 
-import * as Cloud from "./apis/index.js";
+import * as Cloud from "./apis/index.d.ts";
 
 import { escapeUnicode } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";

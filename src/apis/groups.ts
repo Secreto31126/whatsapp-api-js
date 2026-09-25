@@ -12,8 +12,8 @@ import type {
     ServerRetrieveGroupJoinRequestsResponse,
     ServerApproveGroupJoinRequestsResponse,
     ServerRejectGroupJoinRequestsResponse
-} from "../types";
-import type { AtLeastOne } from "../utils";
+} from "../types.d.ts";
+import type { AtLeastOne } from "../utils.d.ts";
 
 export interface API {
     /**
