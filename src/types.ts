@@ -1388,7 +1388,7 @@ export type ServerGroupUserIdentity = {
     /**
      * The user's BSUID
      */
-    user_id?: string;
+    user_id: string;
     /**
      * The user's parent BSUID, only if you enabled parent BSUIDs
      */
