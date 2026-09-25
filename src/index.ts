@@ -58,6 +58,7 @@ import type {
 import * as Cloud from "./apis/index.js";
 
 import { escapeUnicode, MaybePromise } from "./utils.js";
+import type { AtLeastOne } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";
 import {
     WhatsAppAPIMissingAppSecretError,
@@ -671,19 +672,23 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return this.getBody<ServerMediaRetrieveResponse>(promise);
     }
 
+    private static apiFileChecks(form: unknown, name: string): Blob {
+        if (
+            !form ||
+            typeof form !== "object" ||
+            !("get" in form) ||
+            typeof form.get !== "function"
+        )
+            throw new TypeError(
+                `${name}'s Form must be an instance of FormData`
+            );
+
+        return form.get("file") as Blob;
+    }
+
     async uploadMedia(phoneID: string, form: unknown, check = true) {
         if (check) {
-            if (
-                !form ||
-                typeof form !== "object" ||
-                !("get" in form) ||
-                typeof form.get !== "function"
-            )
-                throw new TypeError(
-                    "File's Form must be an instance of FormData"
-                );
-
-            const file = form.get("file") as Blob;
+            const file = WhatsAppAPI.apiFileChecks(form, "File");
 
             if (!file.type)
                 throw new Error("File's Blob must have a type specified");
@@ -893,10 +898,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         if (after) params.set("after", after);
         if (before) params.set("before", before);
 
-        const query = params.toString();
+        const query = params.size ? `?${params}` : "";
 
         const promise = this.$$apiFetch$$(
-            `https://graph.facebook.com/${this.v}/${phoneID}/groups${query ? `?${query}` : ""}`
+            `https://graph.facebook.com/${this.v}/${phoneID}/groups${query}`
         );
 
         return this.getBody<ServerRetrieveGroupsResponse>(promise);
@@ -925,8 +930,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    subject: settings.subject,
-                    description: settings.description
+                    ...settings
                 })
             }
         );
@@ -936,17 +940,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     async updateGroupPicture(groupID: string, form: unknown, check = true) {
         if (check) {
-            if (
-                !form ||
-                typeof form !== "object" ||
-                !("get" in form) ||
-                typeof form.get !== "function"
-            )
-                throw new TypeError(
-                    "Picture's Form must be an instance of FormData"
-                );
-
-            const file = form.get("file") as Blob;
+            const file = WhatsAppAPI.apiFileChecks(form, "Picture");
 
             if (file.type !== "image/jpeg")
                 throw new Error(
@@ -1006,7 +1000,13 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return this.getBody<ServerGroupInviteLinkResponse>(promise);
     }
 
-    async removeGroupParticipants(groupID: string, ...users: string[]) {
+    async removeGroupParticipants(
+        groupID: string,
+        ...users: AtLeastOne<ClientIndividualRecipientIdentifier>
+    ) {
+        if (users.length > 8)
+            throw new Error("Users can't have more than 8 users");
+
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${groupID}/participants`,
             {
@@ -1016,7 +1016,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
                 },
                 body: JSON.stringify({
                     messaging_product: "whatsapp",
-                    participants: users.map((user) => ({ user }))
+                    participants: users.map(({ phone, bsuid }) => ({
+                        user: phone,
+                        user_id: bsuid
+                    }))
                 })
             }
         );
@@ -1032,7 +1035,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return this.getBody<ServerRetrieveGroupJoinRequestsResponse>(promise);
     }
 
-    async approveGroupJoinRequests(groupID: string, ...requests: string[]) {
+    async approveGroupJoinRequests(
+        groupID: string,
+        ...requests: AtLeastOne<string>
+    ) {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${groupID}/join_requests`,
             {
@@ -1050,7 +1056,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return this.getBody<ServerApproveGroupJoinRequestsResponse>(promise);
     }
 
-    async rejectGroupJoinRequests(groupID: string, ...requests: string[]) {
+    async rejectGroupJoinRequests(
+        groupID: string,
+        ...requests: AtLeastOne<string>
+    ) {
         const promise = this.$$apiFetch$$(
             `https://graph.facebook.com/${this.v}/${groupID}/join_requests`,
             {

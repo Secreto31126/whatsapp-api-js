@@ -1345,16 +1345,7 @@ export type ServerGroupField =
     | "participants"
     | "total_participant_count";
 
-export type ServerGroupError = {
-    code: number;
-    message: string;
-    title: string;
-    error_data: {
-        details: string;
-    };
-};
-
-export type ServerGroupPaging = {
+export type ServerPaging = {
     cursors: {
         before: string;
         after: string;
@@ -1381,9 +1372,32 @@ export type ServerRetrieveGroupsResponse =
                   created_at: string;
               }[];
           };
-          paging: ServerGroupPaging;
+          paging: ServerPaging;
       } & NoServerError)
     | ServerErrorResponse;
+
+/**
+ * @see https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids#groups-api
+ */
+export type ServerGroupUserIdentity = {
+    /**
+     * Omitted if the user has the usernames feature enabled and their phone
+     * number can't be included; otherwise set to the user's phone number
+     */
+    wa_id?: string;
+    /**
+     * The user's BSUID
+     */
+    user_id?: string;
+    /**
+     * The user's parent BSUID, only if you enabled parent BSUIDs
+     */
+    parent_user_id?: string;
+    /**
+     * Only if the user has the usernames feature enabled
+     */
+    username?: string;
+};
 
 export type ServerGroup = {
     id: string;
@@ -1395,7 +1409,7 @@ export type ServerGroup = {
      * UNIX timestamp in seconds
      */
     creation_timestamp?: number;
-    participants?: { wa_id: string }[];
+    participants?: ServerGroupUserIdentity[];
     /**
      * Doesn't include the business
      */
@@ -1413,10 +1427,7 @@ export type ServerDeleteGroupResponse = ServerGroupSuccessResponse;
 export type ServerGroupInviteLinkResponse =
     | ({
           messaging_product: "whatsapp";
-          /**
-           * Always starts with https://chat.whatsapp.com/
-           */
-          invite_link: string;
+          invite_link: `https://chat.whatsapp.com/${string}`;
       } & NoServerError)
     | ServerErrorResponse;
 
@@ -1424,20 +1435,19 @@ export type ServerRemoveGroupParticipantsResponse = ServerGroupSuccessResponse;
 
 export type ServerGroupJoinRequest = {
     join_request_id: string;
-    wa_id: string;
     creation_timestamp: string;
-};
+} & ServerGroupUserIdentity;
 
 export type ServerRetrieveGroupJoinRequestsResponse =
     | ({
           data: ServerGroupJoinRequest[];
-          paging: ServerGroupPaging;
+          paging: ServerPaging;
       } & NoServerError)
     | ServerErrorResponse;
 
 export type ServerGroupFailedJoinRequest = {
     join_request_id: string;
-    errors: ServerGroupError[];
+    errors: ServerError[];
 };
 
 export type ServerApproveGroupJoinRequestsResponse =
@@ -1445,7 +1455,7 @@ export type ServerApproveGroupJoinRequestsResponse =
           messaging_product: "whatsapp";
           approved_join_requests: string[];
           failed_join_requests?: ServerGroupFailedJoinRequest[];
-          errors?: ServerGroupError[];
+          errors?: ServerError[];
       } & NoServerError)
     | ServerErrorResponse;
 
@@ -1454,6 +1464,6 @@ export type ServerRejectGroupJoinRequestsResponse =
           messaging_product: "whatsapp";
           rejected_join_requests: string[];
           failed_join_requests?: ServerGroupFailedJoinRequest[];
-          errors?: ServerGroupError[];
+          errors?: ServerError[];
       } & NoServerError)
     | ServerErrorResponse;

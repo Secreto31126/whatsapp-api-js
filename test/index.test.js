@@ -1975,11 +1975,54 @@ describe("WhatsAppAPI", () => {
 
                 const response = await Whatsapp.removeGroupParticipants(
                     group,
-                    user,
-                    other
+                    { phone: user },
+                    { phone: other }
                 );
 
                 deepEqual(response, success);
+            });
+
+            it("should remove participants by bsuid", async () => {
+                const bsuid = "3";
+
+                clientFacebook
+                    .intercept({
+                        path: `/${Whatsapp.v}/${group}/participants`,
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            messaging_product: "whatsapp",
+                            participants: [{ user_id: bsuid }]
+                        })
+                    })
+                    .reply(200, success)
+                    .times(1);
+
+                const response = await Whatsapp.removeGroupParticipants(group, {
+                    bsuid
+                });
+
+                deepEqual(response, success);
+            });
+
+            it("should reject more than 8 participants", async () => {
+                await rejects(
+                    Whatsapp.removeGroupParticipants(
+                        group,
+                        { phone: "1" },
+                        { phone: "2" },
+                        { phone: "3" },
+                        { phone: "4" },
+                        { phone: "5" },
+                        { phone: "6" },
+                        { phone: "7" },
+                        { phone: "8" },
+                        { phone: "9" }
+                    )
+                );
             });
         });
 

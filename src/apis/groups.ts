@@ -1,5 +1,6 @@
 import type {
     ClientGroupJoinApprovalMode,
+    ClientIndividualRecipientIdentifier,
     ServerGroupField,
     ServerCreateGroupResponse,
     ServerRetrieveGroupsResponse,
@@ -12,6 +13,7 @@ import type {
     ServerApproveGroupJoinRequestsResponse,
     ServerRejectGroupJoinRequestsResponse
 } from "../types";
+import type { AtLeastOne } from "../utils";
 
 export interface API {
     /**
@@ -22,6 +24,7 @@ export interface API {
      *
      * @remarks Only available for Official Business Accounts
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param subject - The group's name (128 characters max)
      * @param description - The group's description (2048 characters max)
@@ -38,6 +41,7 @@ export interface API {
     /**
      * Get the active groups of the bot
      *
+     * @beta
      * @param phoneID - The bot's phone ID
      * @param limit - How many groups to get, between 1 and 1024 (Meta defaults to 25)
      * @param after - Cursor to get the next page
@@ -54,6 +58,7 @@ export interface API {
     /**
      * Get the info of a group
      *
+     * @beta
      * @param groupID - The group's ID
      * @param fields - The fields to get. If empty, only the group's id is returned
      * @returns The server response
@@ -68,6 +73,7 @@ export interface API {
      *
      * @see {@link updateGroupPicture} to change the group's picture
      *
+     * @beta
      * @param groupID - The group's ID
      * @param settings - The new subject (128 characters max) and/or description (2048 characters max)
      * @returns The server response
@@ -80,8 +86,11 @@ export interface API {
     /**
      * Update the picture of a group
      *
-     * The image must be a square JPEG of at least 192x192 pixels and up to 5MB.
+     * @remarks
+     * - The image must be a square JPEG of at least 192x192 pixels and up to 5MB
+     * - The image scale and resolution isn't validated by the library
      *
+     * @beta
      * @param groupID - The group's ID
      * @param form - The picture's FormData, with the image in the "file" field
      * @param check - If the FormData should be checked before uploading
@@ -99,6 +108,7 @@ export interface API {
     /**
      * Delete a group
      *
+     * @beta
      * @param groupID - The group's ID
      * @returns The server response
      */
@@ -107,6 +117,7 @@ export interface API {
     /**
      * Get the invite link of a group
      *
+     * @beta
      * @param groupID - The group's ID
      * @returns The server response
      */
@@ -117,6 +128,7 @@ export interface API {
     /**
      * Create a new invite link for a group, the old one stops working
      *
+     * @beta
      * @param groupID - The group's ID
      * @returns The server response
      */
@@ -127,15 +139,17 @@ export interface API {
     /**
      * Remove participants from a group
      *
-     * There's no way to add participants, users can only join with the invite link.
+     * @remarks There's no way to add participants, users can only join via the invite link.
      *
+     * @beta
      * @param groupID - The group's ID
-     * @param users - The phone numbers or WhatsApp IDs to remove (8 max per call)
+     * @param users - The recipient identifiers (phone and/or bsuid) of the users to remove
      * @returns The server response
+     * @throws If more than 8 users are provided
      */
     removeGroupParticipants(
         groupID: string,
-        ...users: string[]
+        ...users: AtLeastOne<ClientIndividualRecipientIdentifier>
     ): Promise<ServerRemoveGroupParticipantsResponse>;
 
     /**
@@ -143,6 +157,7 @@ export interface API {
      *
      * @remarks Only useful if the group was created with "approval_required"
      *
+     * @beta
      * @param groupID - The group's ID
      * @returns The server response
      */
@@ -153,24 +168,26 @@ export interface API {
     /**
      * Let users into a group
      *
+     * @beta
      * @param groupID - The group's ID
      * @param requests - The join request IDs to approve
      * @returns The server response
      */
     approveGroupJoinRequests(
         groupID: string,
-        ...requests: string[]
+        ...requests: AtLeastOne<string>
     ): Promise<ServerApproveGroupJoinRequestsResponse>;
 
     /**
      * Reject users from joining a group
      *
+     * @beta
      * @param groupID - The group's ID
      * @param requests - The join request IDs to reject
      * @returns The server response
      */
     rejectGroupJoinRequests(
         groupID: string,
-        ...requests: string[]
+        ...requests: AtLeastOne<string>
     ): Promise<ServerRejectGroupJoinRequestsResponse>;
 }
