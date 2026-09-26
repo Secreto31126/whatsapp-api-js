@@ -26,7 +26,19 @@ import {
     type ServerTerminateCallResponse,
     type ServerRejectCallResponse,
     type ServerInitiateCallResponse,
-    type ClientGroupRecipientIdentifier
+    type ClientGroupRecipientIdentifier,
+    type ClientGroupJoinApprovalMode,
+    type ServerGroupField,
+    type ServerCreateGroupResponse,
+    type ServerRetrieveGroupsResponse,
+    type ServerRetrieveGroupResponse,
+    type ServerUpdateGroupResponse,
+    type ServerDeleteGroupResponse,
+    type ServerGroupInviteLinkResponse,
+    type ServerRemoveGroupParticipantsResponse,
+    type ServerRetrieveGroupJoinRequestsResponse,
+    type ServerApproveGroupJoinRequestsResponse,
+    type ServerRejectGroupJoinRequestsResponse
 } from "./types.js";
 import type {
     OnCallConnect,
@@ -42,10 +54,11 @@ import type {
     OnStatus,
     OnStatusArgs
 } from "./emitters.d.ts";
+import type { MaybePromise, AtLeastOne } from "./utils.d.ts";
 
-import * as Cloud from "./apis/index.js";
+import type * as Cloud from "./apis/index.d.ts";
 
-import { escapeUnicode, MaybePromise } from "./utils.js";
+import { escapeUnicode } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";
 import {
     WhatsAppAPIMissingAppSecretError,
@@ -72,6 +85,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
         Cloud.QR.API,
         Cloud.Media.API,
         Cloud.Block.API,
+        Cloud.Groups.API,
         Cloud.Webhook.API<EmittersReturnType>
 {
     //#region Properties
@@ -660,63 +674,8 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     async uploadMedia(phoneID: string, form: unknown, check = true) {
         if (check) {
-            if (
-                !form ||
-                typeof form !== "object" ||
-                !("get" in form) ||
-                typeof form.get !== "function"
-            )
-                throw new TypeError(
-                    "File's Form must be an instance of FormData"
-                );
-
-            const file = form.get("file") as Blob;
-
-            if (!file.type)
-                throw new Error("File's Blob must have a type specified");
-
-            const validMediaTypes = [
-                "audio/aac",
-                "audio/mp4",
-                "audio/mpeg",
-                "audio/amr",
-                "audio/ogg",
-                "text/plain",
-                "application/pdf",
-                "application/vnd.ms-powerpoint",
-                "application/msword",
-                "application/vnd.ms-excel",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "image/jpeg",
-                "image/png",
-                "video/mp4",
-                "video/3gp",
-                "image/webp"
-            ];
-
-            if (!validMediaTypes.includes(file.type))
-                throw new Error(`Invalid media type: ${file.type}`);
-
-            const validMediaSizes = {
-                audio: 16_000_000,
-                text: 100_000_000,
-                application: 100_000_000,
-                image: 5_000_000,
-                video: 16_000_000,
-                sticker: 500_000
-            };
-
-            const mediaType =
-                file.type === "image/webp"
-                    ? "sticker"
-                    : (file.type.split("/")[0] as keyof typeof validMediaSizes);
-
-            if (file.size && file.size > validMediaSizes[mediaType])
-                throw new Error(
-                    `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
-                );
+            const file = WhatsAppAPI.getFormFile(form);
+            WhatsAppAPI.apiFileCheck(file);
         }
 
         const promise = this.$$apiFetch$$(
@@ -837,6 +796,223 @@ export class WhatsAppAPI<EmittersReturnType = void>
         );
 
         return this.getBody<ServerUnblockResponse>(promise);
+    }
+
+    // #endregion
+
+    // #region Group Operations
+
+    async createGroup(
+        phoneID: string,
+        subject: string,
+        description?: string,
+        joinApprovalMode?: ClientGroupJoinApprovalMode
+    ) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${phoneID}/groups`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    subject,
+                    description,
+                    join_approval_mode: joinApprovalMode
+                })
+            }
+        );
+
+        return this.getBody<ServerCreateGroupResponse>(promise);
+    }
+
+    async retrieveGroups(
+        phoneID: string,
+        limit?: number,
+        after?: string,
+        before?: string
+    ) {
+        const params = new URLSearchParams();
+
+        if (limit !== undefined) params.set("limit", limit.toString());
+        if (after) params.set("after", after);
+        if (before) params.set("before", before);
+
+        const query = params.size ? `?${params}` : "";
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${phoneID}/groups${query}`
+        );
+
+        return this.getBody<ServerRetrieveGroupsResponse>(promise);
+    }
+
+    async retrieveGroup(groupID: string, fields?: ServerGroupField[]) {
+        const query = fields?.length ? `?fields=${fields.join(",")}` : "";
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}${query}`
+        );
+
+        return this.getBody<ServerRetrieveGroupResponse>(promise);
+    }
+
+    async updateGroup(
+        groupID: string,
+        settings: { subject?: string; description?: string }
+    ) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    ...settings
+                })
+            }
+        );
+
+        return this.getBody<ServerUpdateGroupResponse>(promise);
+    }
+
+    async updateGroupPicture(groupID: string, form: unknown, check = true) {
+        if (check) {
+            const file = WhatsAppAPI.getFormFile(form);
+
+            if (file.type !== "image/jpeg")
+                throw new Error(
+                    `Invalid picture type (${file.type}), group pictures must be image/jpeg`
+                );
+
+            WhatsAppAPI.apiFileCheck(file);
+        }
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}?messaging_product=whatsapp`,
+            {
+                method: "POST",
+                body: form as FormData
+            }
+        );
+
+        return this.getBody<ServerUpdateGroupResponse>(promise);
+    }
+
+    async deleteGroup(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        return this.getBody<ServerDeleteGroupResponse>(promise);
+    }
+
+    async retrieveGroupInviteLink(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/invite_link`
+        );
+
+        return this.getBody<ServerGroupInviteLinkResponse>(promise);
+    }
+
+    async resetGroupInviteLink(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/invite_link`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp"
+                })
+            }
+        );
+
+        return this.getBody<ServerGroupInviteLinkResponse>(promise);
+    }
+
+    async removeGroupParticipants(
+        groupID: string,
+        ...users: AtLeastOne<ClientIndividualRecipientIdentifier>
+    ) {
+        if (users.length > 8)
+            throw new Error("Users can't have more than 8 users");
+
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/participants`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    participants: users.map(({ phone, bsuid }) => ({
+                        user: phone,
+                        user_id: bsuid
+                    }))
+                })
+            }
+        );
+
+        return this.getBody<ServerRemoveGroupParticipantsResponse>(promise);
+    }
+
+    async retrieveGroupJoinRequests(groupID: string) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/join_requests`
+        );
+
+        return this.getBody<ServerRetrieveGroupJoinRequestsResponse>(promise);
+    }
+
+    async approveGroupJoinRequests(
+        groupID: string,
+        ...requests: AtLeastOne<string>
+    ) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/join_requests`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    join_requests: requests
+                })
+            }
+        );
+
+        return this.getBody<ServerApproveGroupJoinRequestsResponse>(promise);
+    }
+
+    async rejectGroupJoinRequests(
+        groupID: string,
+        ...requests: AtLeastOne<string>
+    ) {
+        const promise = this.$$apiFetch$$(
+            `https://graph.facebook.com/${this.v}/${groupID}/join_requests`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    messaging_product: "whatsapp",
+                    join_requests: requests
+                })
+            }
+        );
+
+        return this.getBody<ServerRejectGroupJoinRequestsResponse>(promise);
     }
 
     // #endregion
@@ -1186,6 +1362,81 @@ export class WhatsAppAPI<EmittersReturnType = void>
     static offload(f: () => unknown) {
         // Thanks @RahulLanjewar93
         Promise.resolve().then(f);
+    }
+
+    /**
+     * Retrieves the file from an unknown form
+     *
+     * @param form - The unknown form
+     * @returns The blob in key "file"
+     * @throws If the unknown isn't an object or doesn't have a get method
+     */
+    private static getFormFile(form: unknown) {
+        if (
+            !form ||
+            typeof form !== "object" ||
+            !("get" in form) ||
+            typeof form.get !== "function"
+        )
+            throw new TypeError(`Form must be an instance of FormData`);
+
+        return form.get("file") as Blob;
+    }
+
+    /**
+     * Check if the file matches API requirements
+     *
+     * @param file - The blob file
+     * @throws If the blob doesn't have a mime type defined
+     * @throws If the blob type isn't valid
+     * @throws If the blob size is greater than the limit for the given type
+     */
+    private static apiFileCheck(file: Blob): void {
+        if (!file.type)
+            throw new Error("File's Blob must have a type specified");
+
+        const validMediaSizes = {
+            audio: 16_000_000,
+            text: 100_000_000,
+            application: 100_000_000,
+            image: 5_000_000,
+            video: 16_000_000,
+            sticker: 500_000
+        } as const;
+
+        const validMediaTypes: Record<string, keyof typeof validMediaSizes> = {
+            "audio/aac": "audio",
+            "audio/mp4": "audio",
+            "audio/mpeg": "audio",
+            "audio/amr": "audio",
+            "audio/ogg": "audio",
+            "text/plain": "text",
+            "application/pdf": "application",
+            "application/vnd.ms-powerpoint": "application",
+            "application/msword": "application",
+            "application/vnd.ms-excel": "application",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                "application",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+                "application",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                "application",
+            "image/jpeg": "image",
+            "image/png": "image",
+            "video/mp4": "video",
+            "video/3gp": "video",
+            "image/webp": "sticker"
+        };
+
+        if (!(file.type in validMediaTypes))
+            throw new Error(`Invalid media type: ${file.type}`);
+
+        const mediaType = validMediaTypes[file.type];
+
+        if (file.size && file.size > validMediaSizes[mediaType])
+            throw new Error(
+                `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
+            );
     }
 
     /**
