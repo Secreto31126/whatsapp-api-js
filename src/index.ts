@@ -56,7 +56,7 @@ import type {
 } from "./emitters.d.ts";
 import type { MaybePromise, AtLeastOne } from "./utils.d.ts";
 
-import * as Cloud from "./apis/index.d.ts";
+import type * as Cloud from "./apis/index.d.ts";
 
 import { escapeUnicode } from "./utils.js";
 import { DEFAULT_API_VERSION } from "./types.js";
