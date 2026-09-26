@@ -1,14 +1,15 @@
 /** @module WhatsAppAPI */
-import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientIndividualRecipientIdentifier, type ClientRecipientIdentifier, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse, type ServerPreacceptCallResponse, type ServerAcceptCallResponse, type ServerTerminateCallResponse, type ServerRejectCallResponse, type ServerInitiateCallResponse } from "./types.js";
+import { ClientMessage, type WhatsAppAPIConstructorArguments, type PostData, type GetParams, type ClientIndividualRecipientIdentifier, type ClientRecipientIdentifier, type ClientTypingIndicators, type ServerMessageResponse, type ServerMarkAsReadResponse, type ServerCreateQRResponse, type ServerRetrieveQRResponse, type ServerUpdateQRResponse, type ServerDeleteQRResponse, type ServerMediaRetrieveResponse, type ServerMediaUploadResponse, type ServerMediaDeleteResponse, type ServerBlockResponse, type ServerUnblockResponse, type ServerPreacceptCallResponse, type ServerAcceptCallResponse, type ServerTerminateCallResponse, type ServerRejectCallResponse, type ServerInitiateCallResponse, type ClientGroupJoinApprovalMode, type ServerGroupField, type ServerRetrieveGroupsResponse, type ServerRetrieveGroupResponse, type ServerGroupInviteLinkResponse, type ServerRetrieveGroupJoinRequestsResponse, type ServerApproveGroupJoinRequestsResponse, type ServerRejectGroupJoinRequestsResponse } from "./types.js";
 import type { OnCallConnect, OnCallStatus, OnCallTerminate, OnMessage, OnSent, OnStatus } from "./emitters.d.ts";
-import * as Cloud from "./apis/index.js";
+import type { AtLeastOne } from "./utils.d.ts";
+import type * as Cloud from "./apis/index.d.ts";
 /**
  * The main API Class
  *
  * @template EmittersReturnType - The return type of the emitters
  * ({@link OnMessage}, {@link OnStatus})
  */
-export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Message.API, Cloud.Call.API, Cloud.QR.API, Cloud.Media.API, Cloud.Block.API, Cloud.Webhook.API<EmittersReturnType> {
+export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Message.API, Cloud.Call.API, Cloud.QR.API, Cloud.Media.API, Cloud.Block.API, Cloud.Groups.API, Cloud.Webhook.API<EmittersReturnType> {
     /**
      * The API token
      */
@@ -145,6 +146,21 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
      */
     unblockUser(phoneID: string, ...users: string[]): Promise<ServerUnblockResponse>;
     unblockUser(phoneID: string, ...users: ClientIndividualRecipientIdentifier[]): Promise<ServerUnblockResponse>;
+    createGroup(phoneID: string, subject: string, description?: string, joinApprovalMode?: ClientGroupJoinApprovalMode): Promise<import("./types.js").ServerGroupSuccessResponse>;
+    retrieveGroups(phoneID: string, limit?: number, after?: string, before?: string): Promise<ServerRetrieveGroupsResponse>;
+    retrieveGroup(groupID: string, fields?: ServerGroupField[]): Promise<ServerRetrieveGroupResponse>;
+    updateGroup(groupID: string, settings: {
+        subject?: string;
+        description?: string;
+    }): Promise<import("./types.js").ServerGroupSuccessResponse>;
+    updateGroupPicture(groupID: string, form: unknown, check?: boolean): Promise<import("./types.js").ServerGroupSuccessResponse>;
+    deleteGroup(groupID: string): Promise<import("./types.js").ServerGroupSuccessResponse>;
+    retrieveGroupInviteLink(groupID: string): Promise<ServerGroupInviteLinkResponse>;
+    resetGroupInviteLink(groupID: string): Promise<ServerGroupInviteLinkResponse>;
+    removeGroupParticipants(groupID: string, ...users: AtLeastOne<ClientIndividualRecipientIdentifier>): Promise<import("./types.js").ServerGroupSuccessResponse>;
+    retrieveGroupJoinRequests(groupID: string): Promise<ServerRetrieveGroupJoinRequestsResponse>;
+    approveGroupJoinRequests(groupID: string, ...requests: AtLeastOne<string>): Promise<ServerApproveGroupJoinRequestsResponse>;
+    rejectGroupJoinRequests(groupID: string, ...requests: AtLeastOne<string>): Promise<ServerRejectGroupJoinRequestsResponse>;
     post(data: PostData, raw_body: string, signature: string): Promise<EmittersReturnType | undefined>;
     post(data: PostData): Promise<EmittersReturnType | undefined>;
     get(params: GetParams): string;
@@ -184,6 +200,23 @@ export declare class WhatsAppAPI<EmittersReturnType = void> implements Cloud.Mes
      * @param f - The function to offload from the main thread
      */
     static offload(f: () => unknown): void;
+    /**
+     * Retrieves the file from an unknown form
+     *
+     * @param form - The unknown form
+     * @returns The blob in key "file"
+     * @throws If the unknown isn't an object or doesn't have a get method
+     */
+    private static getFormFile;
+    /**
+     * Check if the file matches API requirements
+     *
+     * @param file - The blob file
+     * @throws If the blob doesn't have a mime type defined
+     * @throws If the blob type isn't valid
+     * @throws If the blob size is greater than the limit for the given type
+     */
+    private static apiFileCheck;
     /**
      * @deprecated Will be removed in v7, when recipient no longer supports strings
      */
