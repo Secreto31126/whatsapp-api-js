@@ -672,69 +672,10 @@ export class WhatsAppAPI<EmittersReturnType = void>
         return this.getBody<ServerMediaRetrieveResponse>(promise);
     }
 
-    private static apiFileChecks(form: unknown, name: string): Blob {
-        if (
-            !form ||
-            typeof form !== "object" ||
-            !("get" in form) ||
-            typeof form.get !== "function"
-        )
-            throw new TypeError(
-                `${name}'s Form must be an instance of FormData`
-            );
-
-        return form.get("file") as Blob;
-    }
-
     async uploadMedia(phoneID: string, form: unknown, check = true) {
         if (check) {
-            const file = WhatsAppAPI.apiFileChecks(form, "File");
-
-            if (!file.type)
-                throw new Error("File's Blob must have a type specified");
-
-            const validMediaTypes = [
-                "audio/aac",
-                "audio/mp4",
-                "audio/mpeg",
-                "audio/amr",
-                "audio/ogg",
-                "text/plain",
-                "application/pdf",
-                "application/vnd.ms-powerpoint",
-                "application/msword",
-                "application/vnd.ms-excel",
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "image/jpeg",
-                "image/png",
-                "video/mp4",
-                "video/3gp",
-                "image/webp"
-            ];
-
-            if (!validMediaTypes.includes(file.type))
-                throw new Error(`Invalid media type: ${file.type}`);
-
-            const validMediaSizes = {
-                audio: 16_000_000,
-                text: 100_000_000,
-                application: 100_000_000,
-                image: 5_000_000,
-                video: 16_000_000,
-                sticker: 500_000
-            };
-
-            const mediaType =
-                file.type === "image/webp"
-                    ? "sticker"
-                    : (file.type.split("/")[0] as keyof typeof validMediaSizes);
-
-            if (file.size && file.size > validMediaSizes[mediaType])
-                throw new Error(
-                    `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
-                );
+            const file = WhatsAppAPI.getFormFile(form);
+            WhatsAppAPI.apiFileCheck(file);
         }
 
         const promise = this.$$apiFetch$$(
@@ -940,17 +881,14 @@ export class WhatsAppAPI<EmittersReturnType = void>
 
     async updateGroupPicture(groupID: string, form: unknown, check = true) {
         if (check) {
-            const file = WhatsAppAPI.apiFileChecks(form, "Picture");
+            const file = WhatsAppAPI.getFormFile(form);
 
             if (file.type !== "image/jpeg")
                 throw new Error(
-                    `Invalid picture type: ${file.type}, it must be image/jpeg`
+                    `Invalid picture type (${file.type}), group pictures must be image/jpeg`
                 );
 
-            if (file.size && file.size > 5_000_000)
-                throw new Error(
-                    `Picture is too big (${file.size} bytes), the limit is 5000000 bytes`
-                );
+            WhatsAppAPI.apiFileCheck(file);
         }
 
         const promise = this.$$apiFetch$$(
@@ -1424,6 +1362,83 @@ export class WhatsAppAPI<EmittersReturnType = void>
     static offload(f: () => unknown) {
         // Thanks @RahulLanjewar93
         Promise.resolve().then(f);
+    }
+
+    /**
+     * Retrieves the file from an unknown form
+     *
+     * @param form - The unknown form
+     * @returns The blob in key "file"
+     * @throws If the unknown isn't an object or doesn't have a get method
+     */
+    private static getFormFile(form: unknown) {
+        if (
+            !form ||
+            typeof form !== "object" ||
+            !("get" in form) ||
+            typeof form.get !== "function"
+        )
+            throw new TypeError(
+                `${name}'s Form must be an instance of FormData`
+            );
+
+        return form.get("file") as Blob;
+    }
+
+    /**
+     * Check if the file matches API requirements
+     *
+     * @param file - The blob file
+     * @throws If the blob doesn't have a mime type defined
+     * @throws If the blob type isn't valid
+     * @throws If the blob size is greater than the limit for the given type
+     */
+    private static apiFileCheck(file: Blob): void {
+        if (!file.type)
+            throw new Error("File's Blob must have a type specified");
+
+        const validMediaSizes = {
+            audio: 16_000_000,
+            text: 100_000_000,
+            application: 100_000_000,
+            image: 5_000_000,
+            video: 16_000_000,
+            sticker: 500_000
+        } as const;
+
+        const validMediaTypes: Record<string, keyof typeof validMediaSizes> = {
+            "audio/aac": "audio",
+            "audio/mp4": "audio",
+            "audio/mpeg": "audio",
+            "audio/amr": "audio",
+            "audio/ogg": "audio",
+            "text/plain": "text",
+            "application/pdf": "application",
+            "application/vnd.ms-powerpoint": "application",
+            "application/msword": "application",
+            "application/vnd.ms-excel": "application",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                "application",
+            "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+                "application",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                "application",
+            "image/jpeg": "image",
+            "image/png": "image",
+            "video/mp4": "video",
+            "video/3gp": "video",
+            "image/webp": "sticker"
+        };
+
+        if (!(file.type in validMediaTypes))
+            throw new Error(`Invalid media type: ${file.type}`);
+
+        const mediaType = validMediaTypes[file.type];
+
+        if (file.size && file.size > validMediaSizes[mediaType])
+            throw new Error(
+                `File is too big (${file.size} bytes) for a ${mediaType} (${validMediaSizes[mediaType]} bytes limit)`
+            );
     }
 
     /**
