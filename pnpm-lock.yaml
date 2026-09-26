@@ -200,8 +200,8 @@ importers:
         specifier: 12.0.0
         version: 12.0.0
       dotenv:
-        specifier: 17.4.2
-        version: 17.4.2
+        specifier: 18.0.3
+        version: 18.0.3
       esbuild:
         specifier: 0.28.2
         version: 0.28.2
@@ -1446,9 +1446,10 @@ packages:
     resolution: {integrity: sha512-svtcdpS8CgJyqAjEQIXdb3OjhFVVYjzGAPO8WGCmRbrml64SPw/jJD4GoE98aR7r25A0XcgrK3F02yw9R/vhQw==}
     engines: {node: '>=0.3.1'}
 
-  dotenv@17.4.2:
-    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
+  dotenv@18.0.3:
+    resolution: {integrity: sha512-/8CJTyL817qPnfbQrJgOEcrU3fDrJkRIoXBE566wHuvIXKOCHUZhPqGPbCPi9SogjdGnreF0TlvnTgK6J/8zpA==}
     engines: {node: '>=12'}
+    hasBin: true
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -3585,7 +3586,7 @@ snapshots:
 
   diff@9.0.0: {}
 
-  dotenv@17.4.2: {}
+  dotenv@18.0.3: {}
 
   dunder-proto@1.0.1:
     dependencies:
