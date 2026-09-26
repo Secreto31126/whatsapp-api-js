@@ -1378,9 +1378,7 @@ export class WhatsAppAPI<EmittersReturnType = void>
             !("get" in form) ||
             typeof form.get !== "function"
         )
-            throw new TypeError(
-                `Form must be an instance of FormData`
-            );
+            throw new TypeError(`Form must be an instance of FormData`);
 
         return form.get("file") as Blob;
     }
