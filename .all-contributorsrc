@@ -1,43 +1,68 @@
 {
-    "projectName": "whatsapp-api-js",
-    "projectOwner": "Secreto31126",
-    "repoType": "github",
-    "repoHost": "https://github.com",
-    "files": ["README.md"],
-    "imageSize": 100,
-    "commit": false,
-    "commitConvention": "eslint",
-    "contributors": [
-        {
-            "login": "HysMX",
-            "name": "Omar",
-            "avatar_url": "https://avatars.githubusercontent.com/u/50180189?v=4",
-            "profile": "https://github.com/HysMX",
-            "contributions": ["bug"]
-        },
-        {
-            "login": "RahulLanjewar93",
-            "name": "Rahul Lanjewar",
-            "avatar_url": "https://avatars.githubusercontent.com/u/63550998?v=4",
-            "profile": "https://github.com/RahulLanjewar93",
-            "contributions": ["code", "doc", "ideas"]
-        },
-        {
-            "login": "felixarjuna",
-            "name": "Felix Arjuna",
-            "avatar_url": "https://avatars.githubusercontent.com/u/79026094?v=4",
-            "profile": "https://github.com/felixarjuna",
-            "contributions": ["bug", "security"]
-        },
-        {
-            "login": "EQSTLab",
-            "name": "EQSTLab",
-            "avatar_url": "https://avatars.githubusercontent.com/u/148991397?v=4",
-            "profile": "https://github.com/EQSTLab",
-            "contributions": ["bug", "security"]
-        }
-    ],
-    "contributorsPerLine": 7,
-    "linkToUsage": false
+  "projectName": "whatsapp-api-js",
+  "projectOwner": "Secreto31126",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "HysMX",
+      "name": "Omar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/50180189?v=4",
+      "profile": "https://github.com/HysMX",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "RahulLanjewar93",
+      "name": "Rahul Lanjewar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/63550998?v=4",
+      "profile": "https://github.com/RahulLanjewar93",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas"
+      ]
+    },
+    {
+      "login": "felixarjuna",
+      "name": "Felix Arjuna",
+      "avatar_url": "https://avatars.githubusercontent.com/u/79026094?v=4",
+      "profile": "https://github.com/felixarjuna",
+      "contributions": [
+        "bug",
+        "security"
+      ]
+    },
+    {
+      "login": "EQSTLab",
+      "name": "EQSTLab",
+      "avatar_url": "https://avatars.githubusercontent.com/u/148991397?v=4",
+      "profile": "https://github.com/EQSTLab",
+      "contributions": [
+        "bug",
+        "security"
+      ]
+    },
+    {
+      "login": "soyjuza",
+      "name": "juan zapata",
+      "avatar_url": "https://avatars.githubusercontent.com/u/255245319?v=4",
+      "profile": "https://github.com/soyjuza",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "linkToUsage": false,
+  "commitType": "docs"
 }
-
