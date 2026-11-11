@@ -165,7 +165,7 @@
         "@types/node": "22.20.4",
         "@types/sinon": "22.0.0",
         "@vercel/node": "5.10.2",
-        "all-contributors-cli": "6.26.1",
+        "all-contributors-cli": "7.0.1",
         "c8": "12.0.0",
         "dotenv": "17.4.2",
         "esbuild": "0.28.2",
