@@ -2536,11 +2536,18 @@ describe("WhatsAppAPI", () => {
                     moddedMock = new MessageWebhookMock();
                     await rejects(Whatsapp.post(moddedMock), TypeError);
 
+                    // An empty list has nothing to emit, so it's ignored like any unexpected payload
                     moddedMock = new MessageWebhookMock(phoneID);
-                    await rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(
+                        Whatsapp.post(moddedMock),
+                        LibErrors.WhatsAppAPIUnexpectedError
+                    );
 
                     moddedMock = new MessageWebhookMock(phoneID, user);
-                    await rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(
+                        Whatsapp.post(moddedMock),
+                        LibErrors.WhatsAppAPIUnexpectedError
+                    );
 
                     // Missing name doesn't throw error
                 });
@@ -2630,8 +2637,12 @@ describe("WhatsAppAPI", () => {
                     moddedMock = new StatusWebhookMock();
                     await rejects(Whatsapp.post(moddedMock), TypeError);
 
+                    // An empty list has nothing to emit, so it's ignored like any unexpected payload
                     moddedMock = new StatusWebhookMock(phoneID);
-                    await rejects(Whatsapp.post(moddedMock), TypeError);
+                    await rejects(
+                        Whatsapp.post(moddedMock),
+                        LibErrors.WhatsAppAPIUnexpectedError
+                    );
 
                     // In conclution, it's pointless. As soon as any of the other parameters are defined,
                     // the code will return undefined for the missing ones, without any error.
@@ -2655,6 +2666,236 @@ describe("WhatsAppAPI", () => {
                     // assert.throws(function() {
                     //     Whatsapp.post(moddedMock);
                     // }, TypeError);
+                });
+            });
+        });
+        describe("Post batched and non-message payloads", () => {
+            const phoneID = "100000000000001";
+            const otherPhoneID = "100000000000002";
+            const userA = "15550000001";
+            const userB = "15550000002";
+
+            const textMessage = (from, id, body) => ({
+                from,
+                id,
+                timestamp: "1700000000",
+                type: "text",
+                text: { body }
+            });
+
+            const messageA = textMessage(userA, "wamid.A", "first");
+            const messageB = textMessage(userB, "wamid.B", "second");
+
+            const messagesChange = (phone, messages, contacts) => ({
+                field: "messages",
+                value: {
+                    messaging_product: "whatsapp",
+                    metadata: {
+                        display_phone_number: phone,
+                        phone_number_id: phone
+                    },
+                    contacts,
+                    messages
+                }
+            });
+
+            const statusesChange = (phone, statuses) => ({
+                field: "messages",
+                value: {
+                    messaging_product: "whatsapp",
+                    metadata: {
+                        display_phone_number: phone,
+                        phone_number_id: phone
+                    },
+                    statuses
+                }
+            });
+
+            const deliveredStatus = (recipient_id, id) => ({
+                id,
+                status: "delivered",
+                timestamp: "1700000001",
+                recipient_id
+            });
+
+            // Non-message webhooks don't carry value.metadata
+            const templateStatusChange = {
+                field: "message_template_status_update",
+                value: {
+                    event: "APPROVED",
+                    message_template_id: 123456789,
+                    message_template_name: "test_template",
+                    message_template_language: "en_US",
+                    reason: "NONE"
+                }
+            };
+
+            const payload = (...entries) => ({
+                object: "whatsapp_business_account",
+                entry: entries.map((changes, i) => ({
+                    id: `WABA_ID_${i}`,
+                    changes
+                }))
+            });
+
+            const Whatsapp = new WhatsAppAPI({
+                v,
+                token,
+                secure: false,
+                ponyfill: {
+                    fetch: undici_fetch,
+                    subtle
+                }
+            });
+
+            let spy_on_message;
+            let spy_on_status;
+            beforeEach(() => {
+                spy_on_message = sinon_spy();
+                spy_on_status = sinon_spy();
+                Whatsapp.on.message = spy_on_message;
+                Whatsapp.on.status = spy_on_status;
+            });
+
+            it("should call on.message for every message in a change", async () => {
+                await Whatsapp.post(
+                    payload([
+                        messagesChange(
+                            phoneID,
+                            [messageA, messageB],
+                            [
+                                { wa_id: userA, profile: { name: "A" } },
+                                { wa_id: userB, profile: { name: "B" } }
+                            ]
+                        )
+                    ])
+                );
+
+                sinon_assert.calledTwice(spy_on_message);
+                sinon_assert.calledWithMatch(spy_on_message.firstCall, {
+                    phoneID,
+                    from: userA,
+                    name: "A",
+                    message: messageA
+                });
+                sinon_assert.calledWithMatch(spy_on_message.secondCall, {
+                    phoneID,
+                    from: userB,
+                    name: "B",
+                    message: messageB
+                });
+            });
+
+            it("should call on.message for messages in every entry", async () => {
+                await Whatsapp.post(
+                    payload(
+                        [
+                            messagesChange(
+                                phoneID,
+                                [messageA],
+                                [{ wa_id: userA }]
+                            )
+                        ],
+                        [
+                            messagesChange(
+                                otherPhoneID,
+                                [messageB],
+                                [{ wa_id: userB }]
+                            )
+                        ]
+                    )
+                );
+
+                sinon_assert.calledTwice(spy_on_message);
+                sinon_assert.calledWithMatch(spy_on_message.firstCall, {
+                    phoneID,
+                    message: messageA
+                });
+                sinon_assert.calledWithMatch(spy_on_message.secondCall, {
+                    phoneID: otherPhoneID,
+                    message: messageB
+                });
+            });
+
+            it("should handle a messages change and a statuses change in the same entry", async () => {
+                await Whatsapp.post(
+                    payload([
+                        messagesChange(phoneID, [messageA], [{ wa_id: userA }]),
+                        statusesChange(phoneID, [
+                            deliveredStatus(userB, "wamid.SENT")
+                        ])
+                    ])
+                );
+
+                sinon_assert.calledOnceWithMatch(spy_on_message, {
+                    message: messageA
+                });
+                sinon_assert.calledOnceWithMatch(spy_on_status, {
+                    phone: userB,
+                    id: "wamid.SENT"
+                });
+            });
+
+            it("should call on.status for every status in a change", async () => {
+                await Whatsapp.post(
+                    payload([
+                        statusesChange(phoneID, [
+                            deliveredStatus(userA, "wamid.S1"),
+                            deliveredStatus(userB, "wamid.S2")
+                        ])
+                    ])
+                );
+
+                sinon_assert.calledTwice(spy_on_status);
+                sinon_assert.calledWithMatch(spy_on_status.firstCall, {
+                    phone: userA,
+                    id: "wamid.S1"
+                });
+                sinon_assert.calledWithMatch(spy_on_status.secondCall, {
+                    phone: userB,
+                    id: "wamid.S2"
+                });
+            });
+
+            it("should return the first emitter's return value", async () => {
+                Whatsapp.on.message = async ({ message }) => message.id;
+
+                const response = await Whatsapp.post(
+                    payload([
+                        messagesChange(
+                            phoneID,
+                            [messageA, messageB],
+                            [{ wa_id: userA }, { wa_id: userB }]
+                        )
+                    ])
+                );
+
+                equal(response, "wamid.A");
+            });
+
+            it("should ignore non-message fields with WhatsAppAPIUnexpectedError (200) instead of crashing", async () => {
+                await rejects(
+                    Whatsapp.post(payload([templateStatusChange])),
+                    (err) =>
+                        err instanceof LibErrors.WhatsAppAPIUnexpectedError &&
+                        err.httpStatus === 200
+                );
+
+                sinon_assert.notCalled(spy_on_message);
+                sinon_assert.notCalled(spy_on_status);
+            });
+
+            it("should still handle messages batched after a non-message field", async () => {
+                await Whatsapp.post(
+                    payload([
+                        templateStatusChange,
+                        messagesChange(phoneID, [messageA], [{ wa_id: userA }])
+                    ])
+                );
+
+                sinon_assert.calledOnceWithMatch(spy_on_message, {
+                    phoneID,
+                    message: messageA
                 });
             });
         });

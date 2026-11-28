@@ -1043,209 +1043,248 @@ export class WhatsAppAPI<EmittersReturnType = void>
             throw new WhatsAppAPIUnexpectedError("Invalid payload", 400);
         }
 
-        const { field, value } = data.entry[0].changes[0];
-        const phoneID = value.metadata.phone_number_id;
+        // A single delivery may batch several entries, changes, messages and statuses.
+        // The emitters run once per event, and the first emitter's return value is
+        // returned, so single event payloads behave as before.
+        let handled = false;
+        let response: EmittersReturnType | undefined;
+        const emitted = (result: EmittersReturnType | undefined) => {
+            if (!handled) response = result;
+            handled = true;
+        };
 
-        // Check if the message is a message or a status update
-        if (field === "messages") {
-            if (field in value) {
-                const message = value.messages[0];
+        // Contacts are listed per sender, match them by ID when batched
+        const findContact = (
+            contacts: ServerContacts[] | undefined,
+            wa_id?: string,
+            user_id?: string
+        ) =>
+            contacts?.find(
+                (c) =>
+                    (wa_id && c.wa_id === wa_id) ||
+                    (user_id && c.user_id === user_id)
+            ) ?? contacts?.[0];
 
-                const {
-                    // Force prettier to be prettier :]
-                    from,
-                    from_user_id,
-                    from_parent_user_id,
-                    group_id
-                } = message;
+        for (const { field, value } of data.entry.flatMap((e) => e.changes)) {
+            // Other fields (e.g. message_template_status_update) don't include metadata
+            if (field !== "messages" && field !== "calls") continue;
 
-                const contact: ServerContacts = {
-                    wa_id: from,
-                    user_id: from_user_id,
-                    parent_user_id: from_parent_user_id,
-                    ...value.contacts?.[0]
-                };
+            const phoneID = value.metadata.phone_number_id;
 
-                const { wa_id, user_id, parent_user_id, profile } = contact;
+            // Check if the message is a message or a status update
+            if (field === "messages") {
+                if (field in value) {
+                    for (const message of value.messages) {
+                        const {
+                            // Force prettier to be prettier :]
+                            from,
+                            from_user_id,
+                            from_parent_user_id,
+                            group_id
+                        } = message;
 
-                const recipient: ClientRecipientIdentifier = !group_id
-                    ? {
-                          phone: wa_id,
-                          bsuid: user_id,
-                          pbsuid: parent_user_id
-                      }
-                    : {
-                          group: group_id
-                      };
+                        const contact: ServerContacts = {
+                            wa_id: from,
+                            user_id: from_user_id,
+                            parent_user_id: from_parent_user_id,
+                            ...findContact(value.contacts, from, from_user_id)
+                        };
 
-                const args: OnMessageArgs = {
-                    phoneID,
-                    // TODO: Remove in v7
-                    from: wa_id ?? parent_user_id ?? user_id,
-                    contact,
-                    recipient,
-                    message,
-                    // TODO: Remove in v7
-                    name: profile?.name,
-                    raw: data,
-                    reply: (
-                        response,
-                        context = false,
-                        biz_opaque_callback_data
-                    ) =>
-                        this.sendMessage(
+                        const { wa_id, user_id, parent_user_id, profile } =
+                            contact;
+
+                        const recipient: ClientRecipientIdentifier = !group_id
+                            ? {
+                                  phone: wa_id,
+                                  bsuid: user_id,
+                                  pbsuid: parent_user_id
+                              }
+                            : {
+                                  group: group_id
+                              };
+
+                        const args: OnMessageArgs = {
                             phoneID,
+                            // TODO: Remove in v7
+                            from: wa_id ?? parent_user_id ?? user_id,
+                            contact,
                             recipient,
-                            response,
-                            context ? message.id : undefined,
-                            biz_opaque_callback_data
-                        ),
-                    received: (i) => this.markAsRead(phoneID, message.id, i),
-                    block: () =>
-                        this.blockUser(
-                            phoneID,
-                            recipient as ClientIndividualRecipientIdentifier
-                        ),
-                    offload: WhatsAppAPI.offload,
-                    Whatsapp: this
-                };
-
-                return this.on?.message?.call(null, args);
-            } else if ("statuses" in value) {
-                const statuses = value.statuses[0];
-
-                const {
-                    recipient_type: type,
-                    recipient_id,
-                    recipient_user_id,
-                    recipient_parent_user_id,
-                    status,
-                    id,
-                    timestamp,
-                    conversation,
-                    pricing,
-                    biz_opaque_callback_data
-                } = statuses;
-
-                // Contact data isn't provided for failed statuses
-                // Try to fill it as much as possible for most scenarios
-                const contact: ServerContacts = {
-                    wa_id: recipient_id,
-                    user_id: recipient_user_id!,
-                    parent_user_id: recipient_parent_user_id,
-                    ...value.contacts?.[0]
-                };
-
-                const { wa_id, user_id, parent_user_id } = contact;
-
-                const error = statuses.errors?.[0];
-
-                const is_group = type === "group";
-                const recipient: ClientRecipientIdentifier = !is_group
-                    ? {
-                          phone: wa_id,
-                          bsuid: user_id,
-                          pbsuid: parent_user_id
-                      }
-                    : {
-                          group: recipient_id
-                      };
-
-                const args: OnStatusArgs = {
-                    phoneID,
-                    // TODO: Remove in v7
-                    phone: wa_id ?? parent_user_id ?? user_id,
-                    type: type ?? "individual",
-                    contact,
-                    recipient,
-                    status,
-                    id,
-                    timestamp,
-                    conversation,
-                    pricing,
-                    error,
-                    biz_opaque_callback_data,
-                    raw: data,
-                    offload: WhatsAppAPI.offload,
-                    Whatsapp: this
-                };
-
-                return this.on?.status?.call(null, args);
-            }
-        } else if (field === "calls") {
-            if (field in value) {
-                const call = value.calls[0];
-
-                const contact = value.contacts?.[0];
-
-                const from = contact?.wa_id ?? call.from;
-                const name = contact?.profile?.name;
-
-                if (call.event === "connect") {
-                    const args: OnCallConnectArgs = {
-                        phoneID,
-                        from,
-                        call,
-                        name,
-                        raw: data,
-                        preaccept: () =>
-                            this.preacceptCall(
-                                phoneID,
-                                call.id,
-                                call.session.sdp
-                            ),
-                        accept: (biz_opaque_callback_data) =>
-                            this.acceptCall(
-                                phoneID,
-                                call.id,
-                                call.session.sdp,
+                            message,
+                            // TODO: Remove in v7
+                            name: profile?.name,
+                            raw: data,
+                            reply: (
+                                response,
+                                context = false,
                                 biz_opaque_callback_data
-                            ),
-                        reject: () => this.rejectCall(phoneID, call.id),
-                        terminate: () => this.terminateCall(phoneID, call.id),
-                        offload: WhatsAppAPI.offload,
-                        Whatsapp: this
-                    };
+                            ) =>
+                                this.sendMessage(
+                                    phoneID,
+                                    recipient,
+                                    response,
+                                    context ? message.id : undefined,
+                                    biz_opaque_callback_data
+                                ),
+                            received: (i) =>
+                                this.markAsRead(phoneID, message.id, i),
+                            block: () =>
+                                this.blockUser(
+                                    phoneID,
+                                    recipient as ClientIndividualRecipientIdentifier
+                                ),
+                            offload: WhatsAppAPI.offload,
+                            Whatsapp: this
+                        };
 
-                    return this.on?.call?.connect?.call(null, args);
-                } else if (call.event === "terminate") {
-                    const args: OnCallTerminateArgs = {
-                        phoneID,
-                        from,
-                        call,
-                        name,
-                        raw: data,
-                        offload: WhatsAppAPI.offload,
-                        Whatsapp: this
-                    };
+                        emitted(await this.on?.message?.call(null, args));
+                    }
+                } else if ("statuses" in value) {
+                    for (const statuses of value.statuses) {
+                        const {
+                            recipient_type: type,
+                            recipient_id,
+                            recipient_user_id,
+                            recipient_parent_user_id,
+                            status,
+                            id,
+                            timestamp,
+                            conversation,
+                            pricing,
+                            biz_opaque_callback_data
+                        } = statuses;
 
-                    return this.on?.call?.terminate?.call(null, args);
+                        // Contact data isn't provided for failed statuses
+                        // Try to fill it as much as possible for most scenarios
+                        const contact: ServerContacts = {
+                            wa_id: recipient_id,
+                            user_id: recipient_user_id!,
+                            parent_user_id: recipient_parent_user_id,
+                            ...findContact(
+                                value.contacts,
+                                recipient_id,
+                                recipient_user_id
+                            )
+                        };
+
+                        const { wa_id, user_id, parent_user_id } = contact;
+
+                        const error = statuses.errors?.[0];
+
+                        const is_group = type === "group";
+                        const recipient: ClientRecipientIdentifier = !is_group
+                            ? {
+                                  phone: wa_id,
+                                  bsuid: user_id,
+                                  pbsuid: parent_user_id
+                              }
+                            : {
+                                  group: recipient_id
+                              };
+
+                        const args: OnStatusArgs = {
+                            phoneID,
+                            // TODO: Remove in v7
+                            phone: wa_id ?? parent_user_id ?? user_id,
+                            type: type ?? "individual",
+                            contact,
+                            recipient,
+                            status,
+                            id,
+                            timestamp,
+                            conversation,
+                            pricing,
+                            error,
+                            biz_opaque_callback_data,
+                            raw: data,
+                            offload: WhatsAppAPI.offload,
+                            Whatsapp: this
+                        };
+
+                        emitted(await this.on?.status?.call(null, args));
+                    }
                 }
-            } else if ("statuses" in value) {
-                const statuses = value.statuses[0];
+            } else if (field === "calls") {
+                if (field in value) {
+                    for (const call of value.calls) {
+                        const contact = findContact(value.contacts, call.from);
 
-                const phone = statuses.recipient_id;
-                const status = statuses.status;
-                const id = statuses.id;
-                const timestamp = statuses.timestamp;
-                const biz_opaque_callback_data =
-                    statuses.biz_opaque_callback_data;
+                        const from = contact?.wa_id ?? call.from;
+                        const name = contact?.profile?.name;
 
-                const args: OnCallStatusArgs = {
-                    phoneID,
-                    phone,
-                    status,
-                    id,
-                    timestamp,
-                    biz_opaque_callback_data,
-                    raw: data,
-                    offload: WhatsAppAPI.offload,
-                    Whatsapp: this
-                };
+                        if (call.event === "connect") {
+                            const args: OnCallConnectArgs = {
+                                phoneID,
+                                from,
+                                call,
+                                name,
+                                raw: data,
+                                preaccept: () =>
+                                    this.preacceptCall(
+                                        phoneID,
+                                        call.id,
+                                        call.session.sdp
+                                    ),
+                                accept: (biz_opaque_callback_data) =>
+                                    this.acceptCall(
+                                        phoneID,
+                                        call.id,
+                                        call.session.sdp,
+                                        biz_opaque_callback_data
+                                    ),
+                                reject: () => this.rejectCall(phoneID, call.id),
+                                terminate: () =>
+                                    this.terminateCall(phoneID, call.id),
+                                offload: WhatsAppAPI.offload,
+                                Whatsapp: this
+                            };
 
-                return this.on?.call?.status?.call(null, args);
+                            emitted(
+                                await this.on?.call?.connect?.call(null, args)
+                            );
+                        } else if (call.event === "terminate") {
+                            const args: OnCallTerminateArgs = {
+                                phoneID,
+                                from,
+                                call,
+                                name,
+                                raw: data,
+                                offload: WhatsAppAPI.offload,
+                                Whatsapp: this
+                            };
+
+                            emitted(
+                                await this.on?.call?.terminate?.call(null, args)
+                            );
+                        }
+                    }
+                } else if ("statuses" in value) {
+                    for (const statuses of value.statuses) {
+                        const phone = statuses.recipient_id;
+                        const status = statuses.status;
+                        const id = statuses.id;
+                        const timestamp = statuses.timestamp;
+                        const biz_opaque_callback_data =
+                            statuses.biz_opaque_callback_data;
+
+                        const args: OnCallStatusArgs = {
+                            phoneID,
+                            phone,
+                            status,
+                            id,
+                            timestamp,
+                            biz_opaque_callback_data,
+                            raw: data,
+                            offload: WhatsAppAPI.offload,
+                            Whatsapp: this
+                        };
+
+                        emitted(await this.on?.call?.status?.call(null, args));
+                    }
+                }
             }
         }
+
+        if (handled) return response;
 
         // If unknown payload, just ignore it
         // Facebook doesn't care about your server's opinion
